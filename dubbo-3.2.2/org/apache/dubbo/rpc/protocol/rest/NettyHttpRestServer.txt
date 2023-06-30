@@ -1,0 +1,298 @@
+Compiled from "NettyHttpRestServer.java"
+public class org.apache.dubbo.rpc.protocol.rest.NettyHttpRestServer implements org.apache.dubbo.rpc.protocol.rest.RestProtocolServer {
+  private final org.apache.dubbo.rpc.protocol.rest.PathAndInvokerMapper pathAndInvokerMapper;
+
+  private final org.apache.dubbo.rpc.protocol.rest.exception.mapper.ExceptionMapper exceptionMapper;
+
+  private org.apache.dubbo.rpc.protocol.rest.netty.NettyServer server;
+
+  private java.lang.String address;
+
+  private final java.util.Map<java.lang.String, java.lang.Object> attributes;
+
+  public org.apache.dubbo.rpc.protocol.rest.NettyHttpRestServer();
+    Code:
+       0: aload_0
+       1: invokespecial #5                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #6                  // class org/apache/dubbo/rpc/protocol/rest/PathAndInvokerMapper
+       8: dup
+       9: invokespecial #7                  // Method org/apache/dubbo/rpc/protocol/rest/PathAndInvokerMapper."<init>":()V
+      12: putfield      #4                  // Field pathAndInvokerMapper:Lorg/apache/dubbo/rpc/protocol/rest/PathAndInvokerMapper;
+      15: aload_0
+      16: new           #8                  // class org/apache/dubbo/rpc/protocol/rest/exception/mapper/ExceptionMapper
+      19: dup
+      20: invokespecial #9                  // Method org/apache/dubbo/rpc/protocol/rest/exception/mapper/ExceptionMapper."<init>":()V
+      23: putfield      #3                  // Field exceptionMapper:Lorg/apache/dubbo/rpc/protocol/rest/exception/mapper/ExceptionMapper;
+      26: aload_0
+      27: aload_0
+      28: invokevirtual #10                 // Method getNettyServer:()Lorg/apache/dubbo/rpc/protocol/rest/netty/NettyServer;
+      31: putfield      #11                 // Field server:Lorg/apache/dubbo/rpc/protocol/rest/netty/NettyServer;
+      34: aload_0
+      35: new           #12                 // class java/util/concurrent/ConcurrentHashMap
+      38: dup
+      39: invokespecial #13                 // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      42: putfield      #14                 // Field attributes:Ljava/util/Map;
+      45: return
+
+  protected org.apache.dubbo.rpc.protocol.rest.netty.NettyServer getNettyServer();
+    Code:
+       0: new           #15                 // class org/apache/dubbo/rpc/protocol/rest/netty/NettyServer
+       3: dup
+       4: invokespecial #16                 // Method org/apache/dubbo/rpc/protocol/rest/netty/NettyServer."<init>":()V
+       7: areturn
+
+  public java.lang.String getAddress();
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field address:Ljava/lang/String;
+       4: areturn
+
+  public void setAddress(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #17                 // Field address:Ljava/lang/String;
+       5: return
+
+  public void close();
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field server:Lorg/apache/dubbo/rpc/protocol/rest/netty/NettyServer;
+       4: invokevirtual #18                 // Method org/apache/dubbo/rpc/protocol/rest/netty/NettyServer.stop:()V
+       7: return
+
+  public java.util.Map<java.lang.String, java.lang.Object> getAttributes();
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field attributes:Ljava/util/Map;
+       4: areturn
+
+  public void start(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #19                 // Method registerExceptionMapper:(Lorg/apache/dubbo/common/URL;)V
+       5: aload_1
+       6: ldc           #20                 // String bind.ip
+       8: aload_1
+       9: invokevirtual #21                 // Method org/apache/dubbo/common/URL.getHost:()Ljava/lang/String;
+      12: invokevirtual #22                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      15: astore_2
+      16: aload_1
+      17: invokevirtual #23                 // Method org/apache/dubbo/common/URL.isAnyHost:()Z
+      20: ifne          38
+      23: aload_2
+      24: invokestatic  #24                 // Method org/apache/dubbo/common/utils/NetUtils.isValidLocalHost:(Ljava/lang/String;)Z
+      27: ifeq          38
+      30: aload_0
+      31: getfield      #11                 // Field server:Lorg/apache/dubbo/rpc/protocol/rest/netty/NettyServer;
+      34: aload_2
+      35: invokevirtual #25                 // Method org/apache/dubbo/rpc/protocol/rest/netty/NettyServer.setHostname:(Ljava/lang/String;)V
+      38: aload_0
+      39: getfield      #11                 // Field server:Lorg/apache/dubbo/rpc/protocol/rest/netty/NettyServer;
+      42: aload_1
+      43: ldc           #26                 // String bind.port
+      45: aload_1
+      46: invokevirtual #27                 // Method org/apache/dubbo/common/URL.getPort:()I
+      49: invokevirtual #28                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;I)I
+      52: invokevirtual #29                 // Method org/apache/dubbo/rpc/protocol/rest/netty/NettyServer.setPort:(I)V
+      55: aload_0
+      56: getfield      #11                 // Field server:Lorg/apache/dubbo/rpc/protocol/rest/netty/NettyServer;
+      59: aload_0
+      60: aload_1
+      61: invokevirtual #30                 // Method getChildChannelOptionMap:(Lorg/apache/dubbo/common/URL;)Ljava/util/Map;
+      64: invokevirtual #31                 // Method org/apache/dubbo/rpc/protocol/rest/netty/NettyServer.setChildChannelOptions:(Ljava/util/Map;)V
+      67: aload_0
+      68: getfield      #11                 // Field server:Lorg/apache/dubbo/rpc/protocol/rest/netty/NettyServer;
+      71: aload_0
+      72: aload_1
+      73: invokevirtual #32                 // Method getChannelOptionMap:(Lorg/apache/dubbo/common/URL;)Ljava/util/Map;
+      76: invokevirtual #33                 // Method org/apache/dubbo/rpc/protocol/rest/netty/NettyServer.setChannelOptions:(Ljava/util/Map;)V
+      79: aload_0
+      80: getfield      #11                 // Field server:Lorg/apache/dubbo/rpc/protocol/rest/netty/NettyServer;
+      83: aload_0
+      84: invokespecial #34                 // Method getUnSharedHttpChannelHandlers:()Lorg/apache/dubbo/rpc/protocol/rest/netty/UnSharedHandlerCreator;
+      87: invokevirtual #35                 // Method org/apache/dubbo/rpc/protocol/rest/netty/NettyServer.setUnSharedHandlerCallBack:(Lorg/apache/dubbo/rpc/protocol/rest/netty/UnSharedHandlerCreator;)V
+      90: aload_0
+      91: getfield      #11                 // Field server:Lorg/apache/dubbo/rpc/protocol/rest/netty/NettyServer;
+      94: aload_0
+      95: aload_1
+      96: invokevirtual #36                 // Method getChannelHandlers:(Lorg/apache/dubbo/common/URL;)Ljava/util/List;
+      99: invokevirtual #37                 // Method org/apache/dubbo/rpc/protocol/rest/netty/NettyServer.setChannelHandlers:(Ljava/util/List;)V
+     102: aload_0
+     103: getfield      #11                 // Field server:Lorg/apache/dubbo/rpc/protocol/rest/netty/NettyServer;
+     106: aload_1
+     107: ldc           #38                 // String iothreads
+     109: getstatic     #39                 // Field org/apache/dubbo/remoting/Constants.DEFAULT_IO_THREADS:I
+     112: invokevirtual #28                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;I)I
+     115: invokevirtual #40                 // Method org/apache/dubbo/rpc/protocol/rest/netty/NettyServer.setIoWorkerCount:(I)V
+     118: aload_0
+     119: getfield      #11                 // Field server:Lorg/apache/dubbo/rpc/protocol/rest/netty/NettyServer;
+     122: aload_1
+     123: invokevirtual #41                 // Method org/apache/dubbo/rpc/protocol/rest/netty/NettyServer.start:(Lorg/apache/dubbo/common/URL;)V
+     126: return
+
+  private org.apache.dubbo.rpc.protocol.rest.netty.UnSharedHandlerCreator getUnSharedHttpChannelHandlers();
+    Code:
+       0: new           #42                 // class org/apache/dubbo/rpc/protocol/rest/NettyHttpRestServer$1
+       3: dup
+       4: aload_0
+       5: invokespecial #43                 // Method org/apache/dubbo/rpc/protocol/rest/NettyHttpRestServer$1."<init>":(Lorg/apache/dubbo/rpc/protocol/rest/NettyHttpRestServer;)V
+       8: areturn
+
+  protected java.util.Map<io.netty.channel.ChannelOption, java.lang.Object> getChildChannelOptionMap(org.apache.dubbo.common.URL);
+    Code:
+       0: new           #44                 // class java/util/HashMap
+       3: dup
+       4: invokespecial #45                 // Method java/util/HashMap."<init>":()V
+       7: astore_2
+       8: aload_2
+       9: getstatic     #46                 // Field io/netty/channel/ChannelOption.SO_KEEPALIVE:Lio/netty/channel/ChannelOption;
+      12: aload_1
+      13: ldc           #48                 // String keepalive
+      15: iconst_1
+      16: invokevirtual #49                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+      19: invokestatic  #50                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      22: invokeinterface #51,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      27: pop
+      28: aload_2
+      29: areturn
+
+  protected java.util.Map<io.netty.channel.ChannelOption, java.lang.Object> getChannelOptionMap(org.apache.dubbo.common.URL);
+    Code:
+       0: new           #44                 // class java/util/HashMap
+       3: dup
+       4: invokespecial #45                 // Method java/util/HashMap."<init>":()V
+       7: astore_2
+       8: aload_2
+       9: getstatic     #52                 // Field io/netty/channel/ChannelOption.SO_REUSEADDR:Lio/netty/channel/ChannelOption;
+      12: getstatic     #53                 // Field java/lang/Boolean.TRUE:Ljava/lang/Boolean;
+      15: invokeinterface #51,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      20: pop
+      21: aload_2
+      22: getstatic     #54                 // Field io/netty/channel/ChannelOption.TCP_NODELAY:Lio/netty/channel/ChannelOption;
+      25: getstatic     #53                 // Field java/lang/Boolean.TRUE:Ljava/lang/Boolean;
+      28: invokeinterface #51,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      33: pop
+      34: aload_2
+      35: getstatic     #55                 // Field io/netty/channel/ChannelOption.SO_BACKLOG:Lio/netty/channel/ChannelOption;
+      38: aload_1
+      39: ldc           #56                 // String backlog
+      41: sipush        1024
+      44: invokevirtual #57                 // Method org/apache/dubbo/common/URL.getPositiveParameter:(Ljava/lang/String;I)I
+      47: invokestatic  #58                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      50: invokeinterface #51,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      55: pop
+      56: aload_2
+      57: getstatic     #59                 // Field io/netty/channel/ChannelOption.ALLOCATOR:Lio/netty/channel/ChannelOption;
+      60: getstatic     #60                 // Field io/netty/buffer/PooledByteBufAllocator.DEFAULT:Lio/netty/buffer/PooledByteBufAllocator;
+      63: invokeinterface #51,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      68: pop
+      69: aload_2
+      70: areturn
+
+  protected java.util.List<io.netty.channel.ChannelHandler> getChannelHandlers(org.apache.dubbo.common.URL);
+    Code:
+       0: new           #61                 // class java/util/ArrayList
+       3: dup
+       4: invokespecial #62                 // Method java/util/ArrayList."<init>":()V
+       7: astore_2
+       8: aload_2
+       9: areturn
+
+  public void deploy(org.apache.dubbo.metadata.rest.ServiceRestMetadata, org.apache.dubbo.rpc.Invoker);
+    Code:
+       0: aload_1
+       1: invokevirtual #63                 // Method org/apache/dubbo/metadata/rest/ServiceRestMetadata.getPathContainPathVariableToServiceMap:()Ljava/util/Map;
+       4: astore_3
+       5: aload_0
+       6: getfield      #4                  // Field pathAndInvokerMapper:Lorg/apache/dubbo/rpc/protocol/rest/PathAndInvokerMapper;
+       9: aload_3
+      10: aload_2
+      11: invokevirtual #64                 // Method org/apache/dubbo/rpc/protocol/rest/PathAndInvokerMapper.addPathAndInvoker:(Ljava/util/Map;Lorg/apache/dubbo/rpc/Invoker;)V
+      14: aload_1
+      15: invokevirtual #65                 // Method org/apache/dubbo/metadata/rest/ServiceRestMetadata.getPathUnContainPathVariableToServiceMap:()Ljava/util/Map;
+      18: astore        4
+      20: aload_0
+      21: getfield      #4                  // Field pathAndInvokerMapper:Lorg/apache/dubbo/rpc/protocol/rest/PathAndInvokerMapper;
+      24: aload         4
+      26: aload_2
+      27: invokevirtual #64                 // Method org/apache/dubbo/rpc/protocol/rest/PathAndInvokerMapper.addPathAndInvoker:(Ljava/util/Map;Lorg/apache/dubbo/rpc/Invoker;)V
+      30: return
+
+  public void undeploy(org.apache.dubbo.metadata.rest.ServiceRestMetadata);
+    Code:
+       0: aload_1
+       1: invokevirtual #63                 // Method org/apache/dubbo/metadata/rest/ServiceRestMetadata.getPathContainPathVariableToServiceMap:()Ljava/util/Map;
+       4: astore_2
+       5: aload_2
+       6: invokeinterface #66,  1           // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+      11: invokeinterface #67,  1           // InterfaceMethod java/util/Set.stream:()Ljava/util/stream/Stream;
+      16: aload_0
+      17: getfield      #4                  // Field pathAndInvokerMapper:Lorg/apache/dubbo/rpc/protocol/rest/PathAndInvokerMapper;
+      20: dup
+      21: invokevirtual #68                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      24: pop
+      25: invokedynamic #69,  0             // InvokeDynamic #0:accept:(Lorg/apache/dubbo/rpc/protocol/rest/PathAndInvokerMapper;)Ljava/util/function/Consumer;
+      30: invokeinterface #70,  2           // InterfaceMethod java/util/stream/Stream.forEach:(Ljava/util/function/Consumer;)V
+      35: aload_1
+      36: invokevirtual #65                 // Method org/apache/dubbo/metadata/rest/ServiceRestMetadata.getPathUnContainPathVariableToServiceMap:()Ljava/util/Map;
+      39: astore_3
+      40: aload_3
+      41: invokeinterface #66,  1           // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+      46: invokeinterface #67,  1           // InterfaceMethod java/util/Set.stream:()Ljava/util/stream/Stream;
+      51: aload_0
+      52: getfield      #4                  // Field pathAndInvokerMapper:Lorg/apache/dubbo/rpc/protocol/rest/PathAndInvokerMapper;
+      55: dup
+      56: invokevirtual #68                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      59: pop
+      60: invokedynamic #69,  0             // InvokeDynamic #0:accept:(Lorg/apache/dubbo/rpc/protocol/rest/PathAndInvokerMapper;)Ljava/util/function/Consumer;
+      65: invokeinterface #70,  2           // InterfaceMethod java/util/stream/Stream.forEach:(Ljava/util/function/Consumer;)V
+      70: return
+
+  private void registerExceptionMapper(org.apache.dubbo.common.URL);
+    Code:
+       0: getstatic     #71                 // Field org/apache/dubbo/common/constants/CommonConstants.COMMA_SPLIT_PATTERN:Ljava/util/regex/Pattern;
+       3: aload_1
+       4: ldc           #72                 // String extension
+       6: ldc           #73                 // class org/apache/dubbo/rpc/protocol/rest/RpcExceptionMapper
+       8: invokevirtual #74                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      11: invokevirtual #22                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      14: invokevirtual #75                 // Method java/util/regex/Pattern.split:(Ljava/lang/CharSequence;)[Ljava/lang/String;
+      17: astore_2
+      18: aload_2
+      19: arraylength
+      20: istore_3
+      21: iconst_0
+      22: istore        4
+      24: iload         4
+      26: iload_3
+      27: if_icmpge     59
+      30: aload_2
+      31: iload         4
+      33: aaload
+      34: astore        5
+      36: aload         5
+      38: invokestatic  #76                 // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+      41: ifne          53
+      44: aload_0
+      45: getfield      #3                  // Field exceptionMapper:Lorg/apache/dubbo/rpc/protocol/rest/exception/mapper/ExceptionMapper;
+      48: aload         5
+      50: invokevirtual #77                 // Method org/apache/dubbo/rpc/protocol/rest/exception/mapper/ExceptionMapper.registerMapper:(Ljava/lang/String;)V
+      53: iinc          4, 1
+      56: goto          24
+      59: return
+
+  static org.apache.dubbo.rpc.protocol.rest.PathAndInvokerMapper access$000(org.apache.dubbo.rpc.protocol.rest.NettyHttpRestServer);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field pathAndInvokerMapper:Lorg/apache/dubbo/rpc/protocol/rest/PathAndInvokerMapper;
+       4: areturn
+
+  static org.apache.dubbo.rpc.protocol.rest.exception.mapper.ExceptionMapper access$100(org.apache.dubbo.rpc.protocol.rest.NettyHttpRestServer);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field exceptionMapper:Lorg/apache/dubbo/rpc/protocol/rest/exception/mapper/ExceptionMapper;
+       4: areturn
+}

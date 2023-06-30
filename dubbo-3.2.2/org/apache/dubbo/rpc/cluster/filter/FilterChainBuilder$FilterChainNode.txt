@@ -1,0 +1,235 @@
+Compiled from "FilterChainBuilder.java"
+public class org.apache.dubbo.rpc.cluster.filter.FilterChainBuilder$FilterChainNode<T, TYPE extends org.apache.dubbo.rpc.Invoker<T>, FILTER extends org.apache.dubbo.rpc.BaseFilter> implements org.apache.dubbo.rpc.Invoker<T> {
+  TYPE originalInvoker;
+
+  org.apache.dubbo.rpc.Invoker<T> nextNode;
+
+  FILTER filter;
+
+  public org.apache.dubbo.rpc.cluster.filter.FilterChainBuilder$FilterChainNode(TYPE, org.apache.dubbo.rpc.Invoker<T>, FILTER);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field originalInvoker:Lorg/apache/dubbo/rpc/Invoker;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field nextNode:Lorg/apache/dubbo/rpc/Invoker;
+      14: aload_0
+      15: aload_3
+      16: putfield      #4                  // Field filter:Lorg/apache/dubbo/rpc/BaseFilter;
+      19: return
+
+  public TYPE getOriginalInvoker();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field originalInvoker:Lorg/apache/dubbo/rpc/Invoker;
+       4: areturn
+
+  public java.lang.Class<T> getInterface();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field originalInvoker:Lorg/apache/dubbo/rpc/Invoker;
+       4: invokeinterface #5,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getInterface:()Ljava/lang/Class;
+       9: areturn
+
+  public org.apache.dubbo.common.URL getUrl();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field originalInvoker:Lorg/apache/dubbo/rpc/Invoker;
+       4: invokeinterface #6,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+       9: areturn
+
+  public boolean isAvailable();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field originalInvoker:Lorg/apache/dubbo/rpc/Invoker;
+       4: invokeinterface #7,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.isAvailable:()Z
+       9: ireturn
+
+  public org.apache.dubbo.rpc.Result invoke(org.apache.dubbo.rpc.Invocation) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aload_1
+       1: aload_0
+       2: invokedynamic #8,  0              // InvokeDynamic #0:call:(Lorg/apache/dubbo/rpc/cluster/filter/FilterChainBuilder$FilterChainNode;)Ljava/util/concurrent/Callable;
+       7: invokestatic  #9                  // Method org/apache/dubbo/rpc/InvocationProfilerUtils.enterDetailProfiler:(Lorg/apache/dubbo/rpc/Invocation;Ljava/util/concurrent/Callable;)V
+      10: aload_0
+      11: getfield      #4                  // Field filter:Lorg/apache/dubbo/rpc/BaseFilter;
+      14: aload_0
+      15: getfield      #3                  // Field nextNode:Lorg/apache/dubbo/rpc/Invoker;
+      18: aload_1
+      19: invokeinterface #10,  3           // InterfaceMethod org/apache/dubbo/rpc/BaseFilter.invoke:(Lorg/apache/dubbo/rpc/Invoker;Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+      24: astore_2
+      25: goto          140
+      28: astore_3
+      29: aload_1
+      30: invokestatic  #12                 // Method org/apache/dubbo/rpc/InvocationProfilerUtils.releaseDetailProfiler:(Lorg/apache/dubbo/rpc/Invocation;)V
+      33: aload_0
+      34: getfield      #4                  // Field filter:Lorg/apache/dubbo/rpc/BaseFilter;
+      37: instanceof    #13                 // class org/apache/dubbo/rpc/ListenableFilter
+      40: ifeq          101
+      43: aload_0
+      44: getfield      #4                  // Field filter:Lorg/apache/dubbo/rpc/BaseFilter;
+      47: checkcast     #13                 // class org/apache/dubbo/rpc/ListenableFilter
+      50: astore        4
+      52: aload         4
+      54: aload_1
+      55: invokevirtual #14                 // Method org/apache/dubbo/rpc/ListenableFilter.listener:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/BaseFilter$Listener;
+      58: astore        5
+      60: aload         5
+      62: ifnull        78
+      65: aload         5
+      67: aload_3
+      68: aload_0
+      69: getfield      #2                  // Field originalInvoker:Lorg/apache/dubbo/rpc/Invoker;
+      72: aload_1
+      73: invokeinterface #15,  4           // InterfaceMethod org/apache/dubbo/rpc/BaseFilter$Listener.onError:(Ljava/lang/Throwable;Lorg/apache/dubbo/rpc/Invoker;Lorg/apache/dubbo/rpc/Invocation;)V
+      78: aload         4
+      80: aload_1
+      81: invokevirtual #16                 // Method org/apache/dubbo/rpc/ListenableFilter.removeListener:(Lorg/apache/dubbo/rpc/Invocation;)V
+      84: goto          98
+      87: astore        6
+      89: aload         4
+      91: aload_1
+      92: invokevirtual #16                 // Method org/apache/dubbo/rpc/ListenableFilter.removeListener:(Lorg/apache/dubbo/rpc/Invocation;)V
+      95: aload         6
+      97: athrow
+      98: goto          133
+     101: aload_0
+     102: getfield      #4                  // Field filter:Lorg/apache/dubbo/rpc/BaseFilter;
+     105: instanceof    #17                 // class org/apache/dubbo/rpc/BaseFilter$Listener
+     108: ifeq          133
+     111: aload_0
+     112: getfield      #4                  // Field filter:Lorg/apache/dubbo/rpc/BaseFilter;
+     115: checkcast     #17                 // class org/apache/dubbo/rpc/BaseFilter$Listener
+     118: astore        4
+     120: aload         4
+     122: aload_3
+     123: aload_0
+     124: getfield      #2                  // Field originalInvoker:Lorg/apache/dubbo/rpc/Invoker;
+     127: aload_1
+     128: invokeinterface #15,  4           // InterfaceMethod org/apache/dubbo/rpc/BaseFilter$Listener.onError:(Ljava/lang/Throwable;Lorg/apache/dubbo/rpc/Invoker;Lorg/apache/dubbo/rpc/Invocation;)V
+     133: aload_3
+     134: athrow
+     135: astore        7
+     137: aload         7
+     139: athrow
+     140: aload_2
+     141: aload_0
+     142: aload_1
+     143: invokedynamic #18,  0             // InvokeDynamic #1:accept:(Lorg/apache/dubbo/rpc/cluster/filter/FilterChainBuilder$FilterChainNode;Lorg/apache/dubbo/rpc/Invocation;)Ljava/util/function/BiConsumer;
+     148: invokeinterface #19,  2           // InterfaceMethod org/apache/dubbo/rpc/Result.whenCompleteWithContext:(Ljava/util/function/BiConsumer;)Lorg/apache/dubbo/rpc/Result;
+     153: areturn
+    Exception table:
+       from    to  target type
+           0    25    28   Class java/lang/Exception
+          52    78    87   any
+          87    89    87   any
+           0    25   135   any
+          28   137   135   any
+
+  public void destroy();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field originalInvoker:Lorg/apache/dubbo/rpc/Invoker;
+       4: invokeinterface #20,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.destroy:()V
+       9: return
+
+  public java.lang.String toString();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field originalInvoker:Lorg/apache/dubbo/rpc/Invoker;
+       4: invokevirtual #21                 // Method java/lang/Object.toString:()Ljava/lang/String;
+       7: areturn
+
+  private void lambda$invoke$1(org.apache.dubbo.rpc.Invocation, org.apache.dubbo.rpc.Result, java.lang.Throwable);
+    Code:
+       0: aload_1
+       1: invokestatic  #12                 // Method org/apache/dubbo/rpc/InvocationProfilerUtils.releaseDetailProfiler:(Lorg/apache/dubbo/rpc/Invocation;)V
+       4: aload_0
+       5: getfield      #4                  // Field filter:Lorg/apache/dubbo/rpc/BaseFilter;
+       8: instanceof    #13                 // class org/apache/dubbo/rpc/ListenableFilter
+      11: ifeq          92
+      14: aload_0
+      15: getfield      #4                  // Field filter:Lorg/apache/dubbo/rpc/BaseFilter;
+      18: checkcast     #13                 // class org/apache/dubbo/rpc/ListenableFilter
+      21: astore        4
+      23: aload         4
+      25: aload_1
+      26: invokevirtual #14                 // Method org/apache/dubbo/rpc/ListenableFilter.listener:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/BaseFilter$Listener;
+      29: astore        5
+      31: aload         5
+      33: ifnull        69
+      36: aload_3
+      37: ifnonnull     56
+      40: aload         5
+      42: aload_2
+      43: aload_0
+      44: getfield      #2                  // Field originalInvoker:Lorg/apache/dubbo/rpc/Invoker;
+      47: aload_1
+      48: invokeinterface #22,  4           // InterfaceMethod org/apache/dubbo/rpc/BaseFilter$Listener.onResponse:(Lorg/apache/dubbo/rpc/Result;Lorg/apache/dubbo/rpc/Invoker;Lorg/apache/dubbo/rpc/Invocation;)V
+      53: goto          69
+      56: aload         5
+      58: aload_3
+      59: aload_0
+      60: getfield      #2                  // Field originalInvoker:Lorg/apache/dubbo/rpc/Invoker;
+      63: aload_1
+      64: invokeinterface #15,  4           // InterfaceMethod org/apache/dubbo/rpc/BaseFilter$Listener.onError:(Ljava/lang/Throwable;Lorg/apache/dubbo/rpc/Invoker;Lorg/apache/dubbo/rpc/Invocation;)V
+      69: aload         4
+      71: aload_1
+      72: invokevirtual #16                 // Method org/apache/dubbo/rpc/ListenableFilter.removeListener:(Lorg/apache/dubbo/rpc/Invocation;)V
+      75: goto          89
+      78: astore        6
+      80: aload         4
+      82: aload_1
+      83: invokevirtual #16                 // Method org/apache/dubbo/rpc/ListenableFilter.removeListener:(Lorg/apache/dubbo/rpc/Invocation;)V
+      86: aload         6
+      88: athrow
+      89: goto          144
+      92: aload_0
+      93: getfield      #4                  // Field filter:Lorg/apache/dubbo/rpc/BaseFilter;
+      96: instanceof    #17                 // class org/apache/dubbo/rpc/BaseFilter$Listener
+      99: ifeq          144
+     102: aload_0
+     103: getfield      #4                  // Field filter:Lorg/apache/dubbo/rpc/BaseFilter;
+     106: checkcast     #17                 // class org/apache/dubbo/rpc/BaseFilter$Listener
+     109: astore        4
+     111: aload_3
+     112: ifnonnull     131
+     115: aload         4
+     117: aload_2
+     118: aload_0
+     119: getfield      #2                  // Field originalInvoker:Lorg/apache/dubbo/rpc/Invoker;
+     122: aload_1
+     123: invokeinterface #22,  4           // InterfaceMethod org/apache/dubbo/rpc/BaseFilter$Listener.onResponse:(Lorg/apache/dubbo/rpc/Result;Lorg/apache/dubbo/rpc/Invoker;Lorg/apache/dubbo/rpc/Invocation;)V
+     128: goto          144
+     131: aload         4
+     133: aload_3
+     134: aload_0
+     135: getfield      #2                  // Field originalInvoker:Lorg/apache/dubbo/rpc/Invoker;
+     138: aload_1
+     139: invokeinterface #15,  4           // InterfaceMethod org/apache/dubbo/rpc/BaseFilter$Listener.onError:(Ljava/lang/Throwable;Lorg/apache/dubbo/rpc/Invoker;Lorg/apache/dubbo/rpc/Invocation;)V
+     144: return
+    Exception table:
+       from    to  target type
+          31    69    78   any
+          78    80    78   any
+
+  private java.lang.String lambda$invoke$0() throws java.lang.Exception;
+    Code:
+       0: new           #23                 // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #24                 // Method java/lang/StringBuilder."<init>":()V
+       7: ldc           #25                 // String Filter
+       9: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      12: aload_0
+      13: getfield      #4                  // Field filter:Lorg/apache/dubbo/rpc/BaseFilter;
+      16: invokevirtual #27                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      19: invokevirtual #28                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      22: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      25: ldc           #29                 // String  invoke.
+      27: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      30: invokevirtual #30                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      33: areturn
+}

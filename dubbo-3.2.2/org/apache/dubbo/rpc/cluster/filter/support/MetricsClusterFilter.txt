@@ -1,0 +1,76 @@
+Compiled from "MetricsClusterFilter.java"
+public class org.apache.dubbo.rpc.cluster.filter.support.MetricsClusterFilter implements org.apache.dubbo.rpc.cluster.filter.ClusterFilter,org.apache.dubbo.rpc.BaseFilter$Listener,org.apache.dubbo.rpc.model.ScopeModelAware {
+  private org.apache.dubbo.rpc.model.ApplicationModel applicationModel;
+
+  private org.apache.dubbo.metrics.collector.DefaultMetricsCollector collector;
+
+  public org.apache.dubbo.rpc.cluster.filter.support.MetricsClusterFilter();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public void setApplicationModel(org.apache.dubbo.rpc.model.ApplicationModel);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #2                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       5: aload_0
+       6: aload_1
+       7: invokevirtual #3                  // Method org/apache/dubbo/rpc/model/ApplicationModel.getBeanFactory:()Lorg/apache/dubbo/common/beans/factory/ScopeBeanFactory;
+      10: ldc           #4                  // class org/apache/dubbo/metrics/collector/DefaultMetricsCollector
+      12: invokevirtual #5                  // Method org/apache/dubbo/common/beans/factory/ScopeBeanFactory.getBean:(Ljava/lang/Class;)Ljava/lang/Object;
+      15: checkcast     #4                  // class org/apache/dubbo/metrics/collector/DefaultMetricsCollector
+      18: putfield      #6                  // Field collector:Lorg/apache/dubbo/metrics/collector/DefaultMetricsCollector;
+      21: return
+
+  public org.apache.dubbo.rpc.Result invoke(org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aload_1
+       1: aload_2
+       2: invokeinterface #7,  2            // InterfaceMethod org/apache/dubbo/rpc/Invoker.invoke:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+       7: areturn
+
+  public void onResponse(org.apache.dubbo.rpc.Result, org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokeinterface #8,  1            // InterfaceMethod org/apache/dubbo/rpc/Result.getException:()Ljava/lang/Throwable;
+       7: aload_3
+       8: invokespecial #9                  // Method handleMethodException:(Ljava/lang/Throwable;Lorg/apache/dubbo/rpc/Invocation;)V
+      11: return
+
+  public void onError(java.lang.Throwable, org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_3
+       3: invokespecial #9                  // Method handleMethodException:(Ljava/lang/Throwable;Lorg/apache/dubbo/rpc/Invocation;)V
+       6: return
+
+  private void handleMethodException(java.lang.Throwable, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field collector:Lorg/apache/dubbo/metrics/collector/DefaultMetricsCollector;
+       4: ifnull        17
+       7: aload_0
+       8: getfield      #6                  // Field collector:Lorg/apache/dubbo/metrics/collector/DefaultMetricsCollector;
+      11: invokevirtual #10                 // Method org/apache/dubbo/metrics/collector/DefaultMetricsCollector.isCollectEnabled:()Z
+      14: ifne          18
+      17: return
+      18: aload_1
+      19: instanceof    #11                 // class org/apache/dubbo/rpc/RpcException
+      22: ifeq          48
+      25: aload_1
+      26: checkcast     #11                 // class org/apache/dubbo/rpc/RpcException
+      29: astore_3
+      30: aload_3
+      31: invokevirtual #12                 // Method org/apache/dubbo/rpc/RpcException.isForbidden:()Z
+      34: ifeq          48
+      37: aload_0
+      38: getfield      #2                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      41: aload_2
+      42: invokestatic  #13                 // Method org/apache/dubbo/metrics/event/RequestBeforeEvent.toEvent:(Lorg/apache/dubbo/rpc/model/ApplicationModel;Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/metrics/event/RequestBeforeEvent;
+      45: invokestatic  #14                 // Method org/apache/dubbo/metrics/event/MetricsEventBus.publish:(Lorg/apache/dubbo/metrics/event/MetricsEvent;)V
+      48: return
+}

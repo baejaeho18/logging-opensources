@@ -1,0 +1,281 @@
+Compiled from "NettyServerHandler.java"
+public class org.apache.dubbo.remoting.transport.netty4.NettyServerHandler extends io.netty.channel.ChannelDuplexHandler {
+  private static final org.apache.dubbo.common.logger.Logger logger;
+
+  private final java.util.Map<java.lang.String, org.apache.dubbo.remoting.Channel> channels;
+
+  private final org.apache.dubbo.common.URL url;
+
+  private final org.apache.dubbo.remoting.ChannelHandler handler;
+
+  public org.apache.dubbo.remoting.transport.netty4.NettyServerHandler(org.apache.dubbo.common.URL, org.apache.dubbo.remoting.ChannelHandler);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method io/netty/channel/ChannelDuplexHandler."<init>":()V
+       4: aload_0
+       5: new           #2                  // class java/util/concurrent/ConcurrentHashMap
+       8: dup
+       9: invokespecial #3                  // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      12: putfield      #4                  // Field channels:Ljava/util/Map;
+      15: aload_1
+      16: ifnonnull     29
+      19: new           #5                  // class java/lang/IllegalArgumentException
+      22: dup
+      23: ldc           #6                  // String url == null
+      25: invokespecial #7                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      28: athrow
+      29: aload_2
+      30: ifnonnull     43
+      33: new           #5                  // class java/lang/IllegalArgumentException
+      36: dup
+      37: ldc           #8                  // String handler == null
+      39: invokespecial #7                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      42: athrow
+      43: aload_0
+      44: aload_1
+      45: putfield      #9                  // Field url:Lorg/apache/dubbo/common/URL;
+      48: aload_0
+      49: aload_2
+      50: putfield      #10                 // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+      53: return
+
+  public java.util.Map<java.lang.String, org.apache.dubbo.remoting.Channel> getChannels();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field channels:Ljava/util/Map;
+       4: areturn
+
+  public void channelActive(io.netty.channel.ChannelHandlerContext) throws java.lang.Exception;
+    Code:
+       0: aload_1
+       1: invokeinterface #11,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.channel:()Lio/netty/channel/Channel;
+       6: aload_0
+       7: getfield      #9                  // Field url:Lorg/apache/dubbo/common/URL;
+      10: aload_0
+      11: getfield      #10                 // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+      14: invokestatic  #12                 // Method org/apache/dubbo/remoting/transport/netty4/NettyChannel.getOrAddChannel:(Lio/netty/channel/Channel;Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/remoting/ChannelHandler;)Lorg/apache/dubbo/remoting/transport/netty4/NettyChannel;
+      17: astore_2
+      18: aload_2
+      19: ifnull        50
+      22: aload_0
+      23: getfield      #4                  // Field channels:Ljava/util/Map;
+      26: aload_1
+      27: invokeinterface #11,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.channel:()Lio/netty/channel/Channel;
+      32: invokeinterface #13,  1           // InterfaceMethod io/netty/channel/Channel.remoteAddress:()Ljava/net/SocketAddress;
+      37: checkcast     #14                 // class java/net/InetSocketAddress
+      40: invokestatic  #15                 // Method org/apache/dubbo/common/utils/NetUtils.toAddressString:(Ljava/net/InetSocketAddress;)Ljava/lang/String;
+      43: aload_2
+      44: invokeinterface #16,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      49: pop
+      50: aload_0
+      51: getfield      #10                 // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+      54: aload_2
+      55: invokeinterface #17,  2           // InterfaceMethod org/apache/dubbo/remoting/ChannelHandler.connected:(Lorg/apache/dubbo/remoting/Channel;)V
+      60: getstatic     #18                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+      63: invokeinterface #19,  1           // InterfaceMethod org/apache/dubbo/common/logger/Logger.isInfoEnabled:()Z
+      68: ifeq          118
+      71: getstatic     #18                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+      74: new           #20                 // class java/lang/StringBuilder
+      77: dup
+      78: invokespecial #21                 // Method java/lang/StringBuilder."<init>":()V
+      81: ldc           #22                 // String The connection of
+      83: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      86: aload_2
+      87: invokevirtual #24                 // Method org/apache/dubbo/remoting/transport/netty4/NettyChannel.getRemoteAddress:()Ljava/net/InetSocketAddress;
+      90: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      93: ldc           #26                 // String  ->
+      95: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      98: aload_2
+      99: invokevirtual #27                 // Method org/apache/dubbo/remoting/transport/netty4/NettyChannel.getLocalAddress:()Ljava/net/InetSocketAddress;
+     102: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     105: ldc           #28                 // String  is established.
+     107: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     110: invokevirtual #29                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     113: invokeinterface #30,  2           // InterfaceMethod org/apache/dubbo/common/logger/Logger.info:(Ljava/lang/String;)V
+     118: return
+
+  public void channelInactive(io.netty.channel.ChannelHandlerContext) throws java.lang.Exception;
+    Code:
+       0: aload_1
+       1: invokeinterface #11,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.channel:()Lio/netty/channel/Channel;
+       6: aload_0
+       7: getfield      #9                  // Field url:Lorg/apache/dubbo/common/URL;
+      10: aload_0
+      11: getfield      #10                 // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+      14: invokestatic  #12                 // Method org/apache/dubbo/remoting/transport/netty4/NettyChannel.getOrAddChannel:(Lio/netty/channel/Channel;Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/remoting/ChannelHandler;)Lorg/apache/dubbo/remoting/transport/netty4/NettyChannel;
+      17: astore_2
+      18: aload_0
+      19: getfield      #4                  // Field channels:Ljava/util/Map;
+      22: aload_1
+      23: invokeinterface #11,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.channel:()Lio/netty/channel/Channel;
+      28: invokeinterface #13,  1           // InterfaceMethod io/netty/channel/Channel.remoteAddress:()Ljava/net/SocketAddress;
+      33: checkcast     #14                 // class java/net/InetSocketAddress
+      36: invokestatic  #15                 // Method org/apache/dubbo/common/utils/NetUtils.toAddressString:(Ljava/net/InetSocketAddress;)Ljava/lang/String;
+      39: invokeinterface #31,  2           // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      44: pop
+      45: aload_0
+      46: getfield      #10                 // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+      49: aload_2
+      50: invokeinterface #32,  2           // InterfaceMethod org/apache/dubbo/remoting/ChannelHandler.disconnected:(Lorg/apache/dubbo/remoting/Channel;)V
+      55: aload_1
+      56: invokeinterface #11,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.channel:()Lio/netty/channel/Channel;
+      61: invokestatic  #33                 // Method org/apache/dubbo/remoting/transport/netty4/NettyChannel.removeChannel:(Lio/netty/channel/Channel;)V
+      64: goto          79
+      67: astore_3
+      68: aload_1
+      69: invokeinterface #11,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.channel:()Lio/netty/channel/Channel;
+      74: invokestatic  #33                 // Method org/apache/dubbo/remoting/transport/netty4/NettyChannel.removeChannel:(Lio/netty/channel/Channel;)V
+      77: aload_3
+      78: athrow
+      79: getstatic     #18                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+      82: invokeinterface #19,  1           // InterfaceMethod org/apache/dubbo/common/logger/Logger.isInfoEnabled:()Z
+      87: ifeq          137
+      90: getstatic     #18                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+      93: new           #20                 // class java/lang/StringBuilder
+      96: dup
+      97: invokespecial #21                 // Method java/lang/StringBuilder."<init>":()V
+     100: ldc           #22                 // String The connection of
+     102: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     105: aload_2
+     106: invokevirtual #24                 // Method org/apache/dubbo/remoting/transport/netty4/NettyChannel.getRemoteAddress:()Ljava/net/InetSocketAddress;
+     109: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     112: ldc           #26                 // String  ->
+     114: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     117: aload_2
+     118: invokevirtual #27                 // Method org/apache/dubbo/remoting/transport/netty4/NettyChannel.getLocalAddress:()Ljava/net/InetSocketAddress;
+     121: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     124: ldc           #34                 // String  is disconnected.
+     126: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     129: invokevirtual #29                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     132: invokeinterface #30,  2           // InterfaceMethod org/apache/dubbo/common/logger/Logger.info:(Ljava/lang/String;)V
+     137: return
+    Exception table:
+       from    to  target type
+          18    55    67   any
+
+  public void channelRead(io.netty.channel.ChannelHandlerContext, java.lang.Object) throws java.lang.Exception;
+    Code:
+       0: aload_1
+       1: invokeinterface #11,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.channel:()Lio/netty/channel/Channel;
+       6: aload_0
+       7: getfield      #9                  // Field url:Lorg/apache/dubbo/common/URL;
+      10: aload_0
+      11: getfield      #10                 // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+      14: invokestatic  #12                 // Method org/apache/dubbo/remoting/transport/netty4/NettyChannel.getOrAddChannel:(Lio/netty/channel/Channel;Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/remoting/ChannelHandler;)Lorg/apache/dubbo/remoting/transport/netty4/NettyChannel;
+      17: astore_3
+      18: aload_0
+      19: getfield      #10                 // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+      22: aload_3
+      23: aload_2
+      24: invokeinterface #35,  3           // InterfaceMethod org/apache/dubbo/remoting/ChannelHandler.received:(Lorg/apache/dubbo/remoting/Channel;Ljava/lang/Object;)V
+      29: aload_1
+      30: aload_2
+      31: invokeinterface #36,  2           // InterfaceMethod io/netty/channel/ChannelHandlerContext.fireChannelRead:(Ljava/lang/Object;)Lio/netty/channel/ChannelHandlerContext;
+      36: pop
+      37: return
+
+  public void write(io.netty.channel.ChannelHandlerContext, java.lang.Object, io.netty.channel.ChannelPromise) throws java.lang.Exception;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: aload_3
+       4: invokespecial #37                 // Method io/netty/channel/ChannelDuplexHandler.write:(Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Object;Lio/netty/channel/ChannelPromise;)V
+       7: aload_1
+       8: invokeinterface #11,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.channel:()Lio/netty/channel/Channel;
+      13: aload_0
+      14: getfield      #9                  // Field url:Lorg/apache/dubbo/common/URL;
+      17: aload_0
+      18: getfield      #10                 // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+      21: invokestatic  #12                 // Method org/apache/dubbo/remoting/transport/netty4/NettyChannel.getOrAddChannel:(Lio/netty/channel/Channel;Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/remoting/ChannelHandler;)Lorg/apache/dubbo/remoting/transport/netty4/NettyChannel;
+      24: astore        4
+      26: aload_0
+      27: getfield      #10                 // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+      30: aload         4
+      32: aload_2
+      33: invokeinterface #38,  3           // InterfaceMethod org/apache/dubbo/remoting/ChannelHandler.sent:(Lorg/apache/dubbo/remoting/Channel;Ljava/lang/Object;)V
+      38: return
+
+  public void userEventTriggered(io.netty.channel.ChannelHandlerContext, java.lang.Object) throws java.lang.Exception;
+    Code:
+       0: aload_2
+       1: instanceof    #39                 // class io/netty/handler/timeout/IdleStateEvent
+       4: ifeq          82
+       7: aload_1
+       8: invokeinterface #11,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.channel:()Lio/netty/channel/Channel;
+      13: aload_0
+      14: getfield      #9                  // Field url:Lorg/apache/dubbo/common/URL;
+      17: aload_0
+      18: getfield      #10                 // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+      21: invokestatic  #12                 // Method org/apache/dubbo/remoting/transport/netty4/NettyChannel.getOrAddChannel:(Lio/netty/channel/Channel;Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/remoting/ChannelHandler;)Lorg/apache/dubbo/remoting/transport/netty4/NettyChannel;
+      24: astore_3
+      25: getstatic     #18                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+      28: new           #20                 // class java/lang/StringBuilder
+      31: dup
+      32: invokespecial #21                 // Method java/lang/StringBuilder."<init>":()V
+      35: ldc           #40                 // String IdleStateEvent triggered, close channel
+      37: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      40: aload_3
+      41: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      44: invokevirtual #29                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      47: invokeinterface #30,  2           // InterfaceMethod org/apache/dubbo/common/logger/Logger.info:(Ljava/lang/String;)V
+      52: aload_3
+      53: invokevirtual #41                 // Method org/apache/dubbo/remoting/transport/netty4/NettyChannel.close:()V
+      56: aload_1
+      57: invokeinterface #11,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.channel:()Lio/netty/channel/Channel;
+      62: invokestatic  #42                 // Method org/apache/dubbo/remoting/transport/netty4/NettyChannel.removeChannelIfDisconnected:(Lio/netty/channel/Channel;)V
+      65: goto          82
+      68: astore        4
+      70: aload_1
+      71: invokeinterface #11,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.channel:()Lio/netty/channel/Channel;
+      76: invokestatic  #42                 // Method org/apache/dubbo/remoting/transport/netty4/NettyChannel.removeChannelIfDisconnected:(Lio/netty/channel/Channel;)V
+      79: aload         4
+      81: athrow
+      82: aload_0
+      83: aload_1
+      84: aload_2
+      85: invokespecial #43                 // Method io/netty/channel/ChannelDuplexHandler.userEventTriggered:(Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Object;)V
+      88: return
+    Exception table:
+       from    to  target type
+          25    56    68   any
+          68    70    68   any
+
+  public void exceptionCaught(io.netty.channel.ChannelHandlerContext, java.lang.Throwable) throws java.lang.Exception;
+    Code:
+       0: aload_1
+       1: invokeinterface #11,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.channel:()Lio/netty/channel/Channel;
+       6: aload_0
+       7: getfield      #9                  // Field url:Lorg/apache/dubbo/common/URL;
+      10: aload_0
+      11: getfield      #10                 // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+      14: invokestatic  #12                 // Method org/apache/dubbo/remoting/transport/netty4/NettyChannel.getOrAddChannel:(Lio/netty/channel/Channel;Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/remoting/ChannelHandler;)Lorg/apache/dubbo/remoting/transport/netty4/NettyChannel;
+      17: astore_3
+      18: aload_0
+      19: getfield      #10                 // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+      22: aload_3
+      23: aload_2
+      24: invokeinterface #44,  3           // InterfaceMethod org/apache/dubbo/remoting/ChannelHandler.caught:(Lorg/apache/dubbo/remoting/Channel;Ljava/lang/Throwable;)V
+      29: aload_1
+      30: invokeinterface #11,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.channel:()Lio/netty/channel/Channel;
+      35: invokestatic  #42                 // Method org/apache/dubbo/remoting/transport/netty4/NettyChannel.removeChannelIfDisconnected:(Lio/netty/channel/Channel;)V
+      38: goto          55
+      41: astore        4
+      43: aload_1
+      44: invokeinterface #11,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.channel:()Lio/netty/channel/Channel;
+      49: invokestatic  #42                 // Method org/apache/dubbo/remoting/transport/netty4/NettyChannel.removeChannelIfDisconnected:(Lio/netty/channel/Channel;)V
+      52: aload         4
+      54: athrow
+      55: return
+    Exception table:
+       from    to  target type
+          18    29    41   any
+          41    43    41   any
+
+  static {};
+    Code:
+       0: ldc           #45                 // class org/apache/dubbo/remoting/transport/netty4/NettyServerHandler
+       2: invokestatic  #46                 // Method org/apache/dubbo/common/logger/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/Logger;
+       5: putstatic     #18                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+       8: return
+}

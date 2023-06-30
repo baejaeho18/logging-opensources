@@ -1,0 +1,143 @@
+Compiled from "ReferenceCountInvokerWrapper.java"
+public class org.apache.dubbo.rpc.protocol.ReferenceCountInvokerWrapper<T> implements org.apache.dubbo.rpc.Invoker<T> {
+  private final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final org.apache.dubbo.rpc.Invoker<T> invoker;
+
+  private final java.util.concurrent.locks.ReadWriteLock lock;
+
+  private final java.util.concurrent.atomic.AtomicBoolean destroyed;
+
+  public org.apache.dubbo.rpc.protocol.ReferenceCountInvokerWrapper(org.apache.dubbo.rpc.Invoker<T>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: ldc           #2                  // class org/apache/dubbo/rpc/protocol/ReferenceCountInvokerWrapper
+       7: invokestatic  #3                  // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      10: putfield      #4                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      13: aload_0
+      14: new           #5                  // class java/util/concurrent/locks/ReentrantReadWriteLock
+      17: dup
+      18: invokespecial #6                  // Method java/util/concurrent/locks/ReentrantReadWriteLock."<init>":()V
+      21: putfield      #7                  // Field lock:Ljava/util/concurrent/locks/ReadWriteLock;
+      24: aload_0
+      25: new           #8                  // class java/util/concurrent/atomic/AtomicBoolean
+      28: dup
+      29: iconst_0
+      30: invokespecial #9                  // Method java/util/concurrent/atomic/AtomicBoolean."<init>":(Z)V
+      33: putfield      #10                 // Field destroyed:Ljava/util/concurrent/atomic/AtomicBoolean;
+      36: aload_0
+      37: aload_1
+      38: putfield      #11                 // Field invoker:Lorg/apache/dubbo/rpc/Invoker;
+      41: return
+
+  public org.apache.dubbo.common.URL getUrl();
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field invoker:Lorg/apache/dubbo/rpc/Invoker;
+       4: invokeinterface #12,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+       9: areturn
+
+  public boolean isAvailable();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field destroyed:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: invokevirtual #13                 // Method java/util/concurrent/atomic/AtomicBoolean.get:()Z
+       7: ifne          26
+      10: aload_0
+      11: getfield      #11                 // Field invoker:Lorg/apache/dubbo/rpc/Invoker;
+      14: invokeinterface #14,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.isAvailable:()Z
+      19: ifeq          26
+      22: iconst_1
+      23: goto          27
+      26: iconst_0
+      27: ireturn
+
+  public void destroy();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field lock:Ljava/util/concurrent/locks/ReadWriteLock;
+       4: invokeinterface #15,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.writeLock:()Ljava/util/concurrent/locks/Lock;
+       9: invokeinterface #16,  1           // InterfaceMethod java/util/concurrent/locks/Lock.lock:()V
+      14: aload_0
+      15: getfield      #10                 // Field destroyed:Ljava/util/concurrent/atomic/AtomicBoolean;
+      18: iconst_1
+      19: invokevirtual #17                 // Method java/util/concurrent/atomic/AtomicBoolean.set:(Z)V
+      22: aload_0
+      23: getfield      #7                  // Field lock:Ljava/util/concurrent/locks/ReadWriteLock;
+      26: invokeinterface #15,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.writeLock:()Ljava/util/concurrent/locks/Lock;
+      31: invokeinterface #18,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+      36: goto          56
+      39: astore_1
+      40: aload_0
+      41: getfield      #7                  // Field lock:Ljava/util/concurrent/locks/ReadWriteLock;
+      44: invokeinterface #15,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.writeLock:()Ljava/util/concurrent/locks/Lock;
+      49: invokeinterface #18,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+      54: aload_1
+      55: athrow
+      56: aload_0
+      57: getfield      #11                 // Field invoker:Lorg/apache/dubbo/rpc/Invoker;
+      60: invokeinterface #19,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.destroy:()V
+      65: return
+    Exception table:
+       from    to  target type
+           0    22    39   any
+
+  public java.lang.Class<T> getInterface();
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field invoker:Lorg/apache/dubbo/rpc/Invoker;
+       4: invokeinterface #20,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.getInterface:()Ljava/lang/Class;
+       9: areturn
+
+  public org.apache.dubbo.rpc.Result invoke(org.apache.dubbo.rpc.Invocation) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field lock:Ljava/util/concurrent/locks/ReadWriteLock;
+       4: invokeinterface #21,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.readLock:()Ljava/util/concurrent/locks/Lock;
+       9: invokeinterface #16,  1           // InterfaceMethod java/util/concurrent/locks/Lock.lock:()V
+      14: aload_0
+      15: getfield      #10                 // Field destroyed:Ljava/util/concurrent/atomic/AtomicBoolean;
+      18: invokevirtual #13                 // Method java/util/concurrent/atomic/AtomicBoolean.get:()Z
+      21: ifeq          51
+      24: aload_0
+      25: getfield      #4                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      28: ldc           #23                 // String 4-16
+      30: ldc           #24                 // String
+      32: ldc           #24                 // String
+      34: ldc           #25                 // String Remote invoker has been destroyed, and unable to invoke anymore.
+      36: invokeinterface #26,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      41: new           #27                 // class org/apache/dubbo/rpc/RpcException
+      44: dup
+      45: ldc           #28                 // String This invoker has been destroyed!
+      47: invokespecial #29                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;)V
+      50: athrow
+      51: aload_0
+      52: getfield      #11                 // Field invoker:Lorg/apache/dubbo/rpc/Invoker;
+      55: aload_1
+      56: invokeinterface #30,  2           // InterfaceMethod org/apache/dubbo/rpc/Invoker.invoke:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+      61: astore_2
+      62: aload_0
+      63: getfield      #7                  // Field lock:Ljava/util/concurrent/locks/ReadWriteLock;
+      66: invokeinterface #21,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.readLock:()Ljava/util/concurrent/locks/Lock;
+      71: invokeinterface #18,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+      76: aload_2
+      77: areturn
+      78: astore_3
+      79: aload_0
+      80: getfield      #7                  // Field lock:Ljava/util/concurrent/locks/ReadWriteLock;
+      83: invokeinterface #21,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.readLock:()Ljava/util/concurrent/locks/Lock;
+      88: invokeinterface #18,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+      93: aload_3
+      94: athrow
+    Exception table:
+       from    to  target type
+           0    62    78   any
+
+  public org.apache.dubbo.rpc.Invoker<T> getInvoker();
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field invoker:Lorg/apache/dubbo/rpc/Invoker;
+       4: areturn
+}

@@ -1,0 +1,114 @@
+Compiled from "CompatibleFilter.java"
+public class org.apache.dubbo.rpc.filter.CompatibleFilter implements org.apache.dubbo.rpc.Filter,org.apache.dubbo.rpc.BaseFilter$Listener {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  public org.apache.dubbo.rpc.filter.CompatibleFilter();
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public org.apache.dubbo.rpc.Result invoke(org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aload_1
+       1: aload_2
+       2: invokeinterface #3,  2            // InterfaceMethod org/apache/dubbo/rpc/Invoker.invoke:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+       7: areturn
+
+  public void onResponse(org.apache.dubbo.rpc.Result, org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_3
+       1: invokeinterface #4,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+       6: ldc           #5                  // String $
+       8: invokevirtual #6                  // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+      11: ifne          203
+      14: aload_1
+      15: invokeinterface #7,  1            // InterfaceMethod org/apache/dubbo/rpc/Result.hasException:()Z
+      20: ifne          203
+      23: aload_1
+      24: invokeinterface #8,  1            // InterfaceMethod org/apache/dubbo/rpc/Result.getValue:()Ljava/lang/Object;
+      29: astore        4
+      31: aload         4
+      33: ifnull        203
+      36: aload_2
+      37: invokeinterface #9,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getInterface:()Ljava/lang/Class;
+      42: aload_3
+      43: invokeinterface #4,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+      48: aload_3
+      49: invokeinterface #10,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getParameterTypes:()[Ljava/lang/Class;
+      54: invokevirtual #11                 // Method java/lang/Class.getMethod:(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+      57: astore        5
+      59: aload         5
+      61: invokevirtual #12                 // Method java/lang/reflect/Method.getReturnType:()Ljava/lang/Class;
+      64: astore        6
+      66: aload_2
+      67: invokeinterface #13,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+      72: invokestatic  #14                 // Method org/apache/dubbo/remoting/utils/UrlUtils.serializationOrDefault:(Lorg/apache/dubbo/common/URL;)Ljava/lang/String;
+      75: astore        8
+      77: ldc           #15                 // String json
+      79: aload         8
+      81: invokevirtual #16                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      84: ifne          97
+      87: ldc           #17                 // String fastjson
+      89: aload         8
+      91: invokevirtual #16                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      94: ifeq          118
+      97: aload         5
+      99: invokevirtual #18                 // Method java/lang/reflect/Method.getGenericReturnType:()Ljava/lang/reflect/Type;
+     102: astore        9
+     104: aload         4
+     106: aload         6
+     108: aload         9
+     110: invokestatic  #19                 // Method org/apache/dubbo/common/utils/PojoUtils.realize:(Ljava/lang/Object;Ljava/lang/Class;Ljava/lang/reflect/Type;)Ljava/lang/Object;
+     113: astore        7
+     115: goto          162
+     118: aload         6
+     120: aload         4
+     122: invokevirtual #20                 // Method java/lang/Class.isInstance:(Ljava/lang/Object;)Z
+     125: ifne          158
+     128: aload         6
+     130: invokestatic  #21                 // Method org/apache/dubbo/common/utils/PojoUtils.isPojo:(Ljava/lang/Class;)Z
+     133: ifeq          146
+     136: aload         4
+     138: aload         6
+     140: invokestatic  #22                 // Method org/apache/dubbo/common/utils/PojoUtils.realize:(Ljava/lang/Object;Ljava/lang/Class;)Ljava/lang/Object;
+     143: goto          153
+     146: aload         4
+     148: aload         6
+     150: invokestatic  #23                 // Method org/apache/dubbo/common/utils/CompatibleTypeUtils.compatibleTypeConvert:(Ljava/lang/Object;Ljava/lang/Class;)Ljava/lang/Object;
+     153: astore        7
+     155: goto          162
+     158: aload         4
+     160: astore        7
+     162: aload         7
+     164: aload         4
+     166: if_acmpeq     177
+     169: aload_1
+     170: aload         7
+     172: invokeinterface #24,  2           // InterfaceMethod org/apache/dubbo/rpc/Result.setValue:(Ljava/lang/Object;)V
+     177: goto          203
+     180: astore        5
+     182: getstatic     #26                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     185: ldc           #27                 // String 5-36
+     187: ldc           #28                 // String
+     189: ldc           #28                 // String
+     191: aload         5
+     193: invokevirtual #29                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     196: aload         5
+     198: invokeinterface #30,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     203: return
+    Exception table:
+       from    to  target type
+          36   177   180   Class java/lang/Throwable
+
+  public void onError(java.lang.Throwable, org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: return
+
+  static {};
+    Code:
+       0: ldc           #31                 // class org/apache/dubbo/rpc/filter/CompatibleFilter
+       2: invokestatic  #32                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #26                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

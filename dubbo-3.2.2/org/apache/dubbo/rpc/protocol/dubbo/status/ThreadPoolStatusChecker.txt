@@ -1,0 +1,135 @@
+Compiled from "ThreadPoolStatusChecker.java"
+public class org.apache.dubbo.rpc.protocol.dubbo.status.ThreadPoolStatusChecker implements org.apache.dubbo.common.status.StatusChecker {
+  private final org.apache.dubbo.rpc.model.ApplicationModel applicationModel;
+
+  public org.apache.dubbo.rpc.protocol.dubbo.status.ThreadPoolStatusChecker(org.apache.dubbo.rpc.model.ApplicationModel);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       9: return
+
+  public org.apache.dubbo.common.status.Status check();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       4: ldc           #3                  // class org/apache/dubbo/common/store/DataStore
+       6: invokevirtual #4                  // Method org/apache/dubbo/rpc/model/ApplicationModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+       9: invokevirtual #5                  // Method org/apache/dubbo/common/extension/ExtensionLoader.getDefaultExtension:()Ljava/lang/Object;
+      12: checkcast     #3                  // class org/apache/dubbo/common/store/DataStore
+      15: astore_1
+      16: aload_1
+      17: getstatic     #6                  // Field org/apache/dubbo/common/constants/CommonConstants.EXECUTOR_SERVICE_COMPONENT_KEY:Ljava/lang/String;
+      20: invokeinterface #7,  2            // InterfaceMethod org/apache/dubbo/common/store/DataStore.get:(Ljava/lang/String;)Ljava/util/Map;
+      25: astore_2
+      26: new           #8                  // class java/lang/StringBuilder
+      29: dup
+      30: invokespecial #9                  // Method java/lang/StringBuilder."<init>":()V
+      33: astore_3
+      34: getstatic     #10                 // Field org/apache/dubbo/common/status/Status$Level.OK:Lorg/apache/dubbo/common/status/Status$Level;
+      37: astore        4
+      39: aload_2
+      40: invokeinterface #11,  1           // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+      45: invokeinterface #12,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      50: astore        5
+      52: aload         5
+      54: invokeinterface #13,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      59: ifeq          259
+      62: aload         5
+      64: invokeinterface #14,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      69: checkcast     #15                 // class java/util/Map$Entry
+      72: astore        6
+      74: aload         6
+      76: invokeinterface #16,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+      81: checkcast     #17                 // class java/lang/String
+      84: astore        7
+      86: aload         6
+      88: invokeinterface #18,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+      93: checkcast     #19                 // class java/util/concurrent/ExecutorService
+      96: astore        8
+      98: aload         8
+     100: instanceof    #20                 // class java/util/concurrent/ThreadPoolExecutor
+     103: ifeq          256
+     106: aload         8
+     108: checkcast     #20                 // class java/util/concurrent/ThreadPoolExecutor
+     111: astore        9
+     113: aload         9
+     115: invokevirtual #21                 // Method java/util/concurrent/ThreadPoolExecutor.getActiveCount:()I
+     118: aload         9
+     120: invokevirtual #22                 // Method java/util/concurrent/ThreadPoolExecutor.getMaximumPoolSize:()I
+     123: iconst_1
+     124: isub
+     125: if_icmpge     132
+     128: iconst_1
+     129: goto          133
+     132: iconst_0
+     133: istore        10
+     135: getstatic     #10                 // Field org/apache/dubbo/common/status/Status$Level.OK:Lorg/apache/dubbo/common/status/Status$Level;
+     138: astore        11
+     140: iload         10
+     142: ifne          155
+     145: getstatic     #23                 // Field org/apache/dubbo/common/status/Status$Level.WARN:Lorg/apache/dubbo/common/status/Status$Level;
+     148: astore        4
+     150: getstatic     #23                 // Field org/apache/dubbo/common/status/Status$Level.WARN:Lorg/apache/dubbo/common/status/Status$Level;
+     153: astore        11
+     155: aload_3
+     156: invokevirtual #24                 // Method java/lang/StringBuilder.length:()I
+     159: ifle          169
+     162: aload_3
+     163: bipush        59
+     165: invokevirtual #25                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     168: pop
+     169: aload_3
+     170: ldc           #26                 // String Pool status:
+     172: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     175: aload         11
+     177: invokevirtual #28                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     180: ldc           #29                 // String , max:
+     182: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     185: aload         9
+     187: invokevirtual #22                 // Method java/util/concurrent/ThreadPoolExecutor.getMaximumPoolSize:()I
+     190: invokevirtual #30                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     193: ldc           #31                 // String , core:
+     195: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     198: aload         9
+     200: invokevirtual #32                 // Method java/util/concurrent/ThreadPoolExecutor.getCorePoolSize:()I
+     203: invokevirtual #30                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     206: ldc           #33                 // String , largest:
+     208: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     211: aload         9
+     213: invokevirtual #34                 // Method java/util/concurrent/ThreadPoolExecutor.getLargestPoolSize:()I
+     216: invokevirtual #30                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     219: ldc           #35                 // String , active:
+     221: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     224: aload         9
+     226: invokevirtual #21                 // Method java/util/concurrent/ThreadPoolExecutor.getActiveCount:()I
+     229: invokevirtual #30                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     232: ldc           #36                 // String , task:
+     234: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     237: aload         9
+     239: invokevirtual #37                 // Method java/util/concurrent/ThreadPoolExecutor.getTaskCount:()J
+     242: invokevirtual #38                 // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+     245: ldc           #39                 // String , service port:
+     247: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     250: aload         7
+     252: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     255: pop
+     256: goto          52
+     259: aload_3
+     260: invokevirtual #24                 // Method java/lang/StringBuilder.length:()I
+     263: ifne          279
+     266: new           #40                 // class org/apache/dubbo/common/status/Status
+     269: dup
+     270: getstatic     #41                 // Field org/apache/dubbo/common/status/Status$Level.UNKNOWN:Lorg/apache/dubbo/common/status/Status$Level;
+     273: invokespecial #42                 // Method org/apache/dubbo/common/status/Status."<init>":(Lorg/apache/dubbo/common/status/Status$Level;)V
+     276: goto          292
+     279: new           #40                 // class org/apache/dubbo/common/status/Status
+     282: dup
+     283: aload         4
+     285: aload_3
+     286: invokevirtual #43                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     289: invokespecial #44                 // Method org/apache/dubbo/common/status/Status."<init>":(Lorg/apache/dubbo/common/status/Status$Level;Ljava/lang/String;)V
+     292: areturn
+}

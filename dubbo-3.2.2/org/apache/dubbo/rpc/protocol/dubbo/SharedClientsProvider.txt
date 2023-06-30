@@ -1,0 +1,201 @@
+Compiled from "SharedClientsProvider.java"
+public class org.apache.dubbo.rpc.protocol.dubbo.SharedClientsProvider implements org.apache.dubbo.rpc.protocol.dubbo.ClientsProvider {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final org.apache.dubbo.rpc.protocol.dubbo.DubboProtocol dubboProtocol;
+
+  private final java.lang.String addressKey;
+
+  private final java.util.List<org.apache.dubbo.rpc.protocol.dubbo.ReferenceCountExchangeClient> clients;
+
+  public org.apache.dubbo.rpc.protocol.dubbo.SharedClientsProvider(org.apache.dubbo.rpc.protocol.dubbo.DubboProtocol, java.lang.String, java.util.List<org.apache.dubbo.rpc.protocol.dubbo.ReferenceCountExchangeClient>);
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #3                  // Field dubboProtocol:Lorg/apache/dubbo/rpc/protocol/dubbo/DubboProtocol;
+       9: aload_0
+      10: aload_2
+      11: putfield      #4                  // Field addressKey:Ljava/lang/String;
+      14: aload_0
+      15: aload_3
+      16: putfield      #5                  // Field clients:Ljava/util/List;
+      19: return
+
+  public java.util.List<org.apache.dubbo.rpc.protocol.dubbo.ReferenceCountExchangeClient> getClients();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field clients:Ljava/util/List;
+       4: areturn
+
+  public synchronized boolean increaseCount();
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #5                  // Field clients:Ljava/util/List;
+       5: invokespecial #6                  // Method checkClientCanUse:(Ljava/util/List;)Z
+       8: ifeq          21
+      11: aload_0
+      12: aload_0
+      13: getfield      #5                  // Field clients:Ljava/util/List;
+      16: invokespecial #7                  // Method batchClientRefIncr:(Ljava/util/List;)V
+      19: iconst_1
+      20: ireturn
+      21: iconst_0
+      22: ireturn
+
+  public synchronized void close(int);
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field clients:Ljava/util/List;
+       4: invokeinterface #8,  1            // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       9: astore_2
+      10: aload_2
+      11: invokeinterface #9,  1            // InterfaceMethod java/util/Iterator.hasNext:()Z
+      16: ifeq          63
+      19: aload_2
+      20: invokeinterface #10,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      25: checkcast     #11                 // class org/apache/dubbo/rpc/protocol/dubbo/ReferenceCountExchangeClient
+      28: astore_3
+      29: aload_3
+      30: iload_1
+      31: invokevirtual #12                 // Method org/apache/dubbo/rpc/protocol/dubbo/ReferenceCountExchangeClient.close:(I)V
+      34: goto          60
+      37: astore        4
+      39: getstatic     #14                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      42: ldc           #15                 // String 4-7
+      44: ldc           #16                 // String
+      46: ldc           #16                 // String
+      48: aload         4
+      50: invokevirtual #17                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+      53: aload         4
+      55: invokeinterface #18,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      60: goto          10
+      63: aload_0
+      64: aload_0
+      65: getfield      #5                  // Field clients:Ljava/util/List;
+      68: invokespecial #6                  // Method checkClientCanUse:(Ljava/util/List;)Z
+      71: ifne          86
+      74: aload_0
+      75: getfield      #3                  // Field dubboProtocol:Lorg/apache/dubbo/rpc/protocol/dubbo/DubboProtocol;
+      78: aload_0
+      79: getfield      #4                  // Field addressKey:Ljava/lang/String;
+      82: aload_0
+      83: invokevirtual #19                 // Method org/apache/dubbo/rpc/protocol/dubbo/DubboProtocol.scheduleRemoveSharedClient:(Ljava/lang/String;Lorg/apache/dubbo/rpc/protocol/dubbo/SharedClientsProvider;)V
+      86: return
+    Exception table:
+       from    to  target type
+          29    34    37   Class java/lang/Throwable
+
+  public synchronized void forceClose();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field clients:Ljava/util/List;
+       4: invokeinterface #8,  1            // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       9: astore_1
+      10: aload_1
+      11: invokeinterface #9,  1            // InterfaceMethod java/util/Iterator.hasNext:()Z
+      16: ifeq          37
+      19: aload_1
+      20: invokeinterface #10,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      25: checkcast     #11                 // class org/apache/dubbo/rpc/protocol/dubbo/ReferenceCountExchangeClient
+      28: astore_2
+      29: aload_0
+      30: aload_2
+      31: invokespecial #20                 // Method closeReferenceCountExchangeClient:(Lorg/apache/dubbo/rpc/protocol/dubbo/ReferenceCountExchangeClient;)V
+      34: goto          10
+      37: return
+
+  private boolean checkClientCanUse(java.util.List<org.apache.dubbo.rpc.protocol.dubbo.ReferenceCountExchangeClient>);
+    Code:
+       0: aload_1
+       1: invokestatic  #21                 // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+       4: ifeq          9
+       7: iconst_0
+       8: ireturn
+       9: aload_1
+      10: invokeinterface #22,  1           // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+      15: invokedynamic #23,  0             // InvokeDynamic #0:test:()Ljava/util/function/Predicate;
+      20: invokeinterface #24,  2           // InterfaceMethod java/util/stream/Stream.noneMatch:(Ljava/util/function/Predicate;)Z
+      25: ireturn
+
+  private void batchClientRefIncr(java.util.List<org.apache.dubbo.rpc.protocol.dubbo.ReferenceCountExchangeClient>);
+    Code:
+       0: aload_1
+       1: invokestatic  #21                 // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+       4: ifeq          8
+       7: return
+       8: aload_1
+       9: invokeinterface #22,  1           // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+      14: invokedynamic #25,  0             // InvokeDynamic #1:test:()Ljava/util/function/Predicate;
+      19: invokeinterface #26,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+      24: invokedynamic #27,  0             // InvokeDynamic #2:accept:()Ljava/util/function/Consumer;
+      29: invokeinterface #28,  2           // InterfaceMethod java/util/stream/Stream.forEach:(Ljava/util/function/Consumer;)V
+      34: return
+
+  private void closeReferenceCountExchangeClient(org.apache.dubbo.rpc.protocol.dubbo.ReferenceCountExchangeClient);
+    Code:
+       0: aload_1
+       1: ifnonnull     5
+       4: return
+       5: getstatic     #14                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: invokeinterface #29,  1           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isInfoEnabled:()Z
+      13: ifeq          58
+      16: getstatic     #14                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      19: new           #30                 // class java/lang/StringBuilder
+      22: dup
+      23: invokespecial #31                 // Method java/lang/StringBuilder."<init>":()V
+      26: ldc           #32                 // String Close dubbo connect:
+      28: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      31: aload_1
+      32: invokevirtual #34                 // Method org/apache/dubbo/rpc/protocol/dubbo/ReferenceCountExchangeClient.getLocalAddress:()Ljava/net/InetSocketAddress;
+      35: invokevirtual #35                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      38: ldc           #36                 // String -->
+      40: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      43: aload_1
+      44: invokevirtual #37                 // Method org/apache/dubbo/rpc/protocol/dubbo/ReferenceCountExchangeClient.getRemoteAddress:()Ljava/net/InetSocketAddress;
+      47: invokevirtual #35                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      50: invokevirtual #38                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      53: invokeinterface #39,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      58: aload_1
+      59: aload_1
+      60: invokevirtual #40                 // Method org/apache/dubbo/rpc/protocol/dubbo/ReferenceCountExchangeClient.getShutdownWaitTime:()I
+      63: invokevirtual #12                 // Method org/apache/dubbo/rpc/protocol/dubbo/ReferenceCountExchangeClient.close:(I)V
+      66: goto          89
+      69: astore_2
+      70: getstatic     #14                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      73: ldc           #15                 // String 4-7
+      75: ldc           #16                 // String
+      77: ldc           #16                 // String
+      79: aload_2
+      80: invokevirtual #17                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+      83: aload_2
+      84: invokeinterface #18,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      89: return
+    Exception table:
+       from    to  target type
+           5    66    69   Class java/lang/Throwable
+
+  private static boolean lambda$checkClientCanUse$0(org.apache.dubbo.rpc.protocol.dubbo.ReferenceCountExchangeClient);
+    Code:
+       0: aload_0
+       1: ifnull        18
+       4: aload_0
+       5: invokevirtual #41                 // Method org/apache/dubbo/rpc/protocol/dubbo/ReferenceCountExchangeClient.getCount:()I
+       8: ifle          18
+      11: aload_0
+      12: invokevirtual #42                 // Method org/apache/dubbo/rpc/protocol/dubbo/ReferenceCountExchangeClient.isClosed:()Z
+      15: ifeq          22
+      18: iconst_1
+      19: goto          23
+      22: iconst_0
+      23: ireturn
+
+  static {};
+    Code:
+       0: ldc           #43                 // class org/apache/dubbo/rpc/protocol/dubbo/SharedClientsProvider
+       2: invokestatic  #44                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #14                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

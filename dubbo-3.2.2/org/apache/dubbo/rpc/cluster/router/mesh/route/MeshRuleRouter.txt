@@ -1,0 +1,724 @@
+Compiled from "MeshRuleRouter.java"
+public abstract class org.apache.dubbo.rpc.cluster.router.mesh.route.MeshRuleRouter<T> extends org.apache.dubbo.rpc.cluster.router.state.AbstractStateRouter<T> implements org.apache.dubbo.rpc.cluster.router.mesh.util.MeshRuleListener {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final java.util.Map<java.lang.String, java.lang.String> sourcesLabels;
+
+  private volatile org.apache.dubbo.rpc.cluster.router.state.BitList<org.apache.dubbo.rpc.Invoker<T>> invokerList;
+
+  private volatile java.util.Set<java.lang.String> remoteAppName;
+
+  protected org.apache.dubbo.rpc.cluster.router.mesh.route.MeshRuleManager meshRuleManager;
+
+  protected java.util.Set<org.apache.dubbo.rpc.cluster.router.mesh.util.TracingContextProvider> tracingContextProviders;
+
+  protected volatile org.apache.dubbo.rpc.cluster.router.mesh.route.MeshRuleCache<T> meshRuleCache;
+
+  public org.apache.dubbo.rpc.cluster.router.mesh.route.MeshRuleRouter(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #3                  // Method org/apache/dubbo/rpc/cluster/router/state/AbstractStateRouter."<init>":(Lorg/apache/dubbo/common/URL;)V
+       5: aload_0
+       6: invokestatic  #4                  // Method org/apache/dubbo/rpc/cluster/router/state/BitList.emptyList:()Lorg/apache/dubbo/rpc/cluster/router/state/BitList;
+       9: putfield      #5                  // Field invokerList:Lorg/apache/dubbo/rpc/cluster/router/state/BitList;
+      12: aload_0
+      13: invokestatic  #6                  // Method java/util/Collections.emptySet:()Ljava/util/Set;
+      16: putfield      #7                  // Field remoteAppName:Ljava/util/Set;
+      19: aload_0
+      20: invokestatic  #8                  // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache.emptyCache:()Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache;
+      23: putfield      #9                  // Field meshRuleCache:Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache;
+      26: aload_0
+      27: new           #10                 // class java/util/HashMap
+      30: dup
+      31: aload_1
+      32: invokevirtual #11                 // Method org/apache/dubbo/common/URL.getParameters:()Ljava/util/Map;
+      35: invokespecial #12                 // Method java/util/HashMap."<init>":(Ljava/util/Map;)V
+      38: invokestatic  #13                 // Method java/util/Collections.unmodifiableMap:(Ljava/util/Map;)Ljava/util/Map;
+      41: putfield      #14                 // Field sourcesLabels:Ljava/util/Map;
+      44: aload_0
+      45: aload_1
+      46: invokevirtual #15                 // Method org/apache/dubbo/common/URL.getOrDefaultModuleModel:()Lorg/apache/dubbo/rpc/model/ModuleModel;
+      49: invokevirtual #16                 // Method org/apache/dubbo/rpc/model/ModuleModel.getBeanFactory:()Lorg/apache/dubbo/common/beans/factory/ScopeBeanFactory;
+      52: ldc           #17                 // class org/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleManager
+      54: invokevirtual #18                 // Method org/apache/dubbo/common/beans/factory/ScopeBeanFactory.getBean:(Ljava/lang/Class;)Ljava/lang/Object;
+      57: checkcast     #17                 // class org/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleManager
+      60: putfield      #19                 // Field meshRuleManager:Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleManager;
+      63: aload_0
+      64: aload_1
+      65: invokevirtual #15                 // Method org/apache/dubbo/common/URL.getOrDefaultModuleModel:()Lorg/apache/dubbo/rpc/model/ModuleModel;
+      68: ldc           #20                 // class org/apache/dubbo/rpc/cluster/router/mesh/util/TracingContextProvider
+      70: invokevirtual #21                 // Method org/apache/dubbo/rpc/model/ModuleModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      73: invokevirtual #22                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getSupportedExtensionInstances:()Ljava/util/Set;
+      76: putfield      #23                 // Field tracingContextProviders:Ljava/util/Set;
+      79: return
+
+  protected org.apache.dubbo.rpc.cluster.router.state.BitList<org.apache.dubbo.rpc.Invoker<T>> doRoute(org.apache.dubbo.rpc.cluster.router.state.BitList<org.apache.dubbo.rpc.Invoker<T>>, org.apache.dubbo.common.URL, org.apache.dubbo.rpc.Invocation, boolean, org.apache.dubbo.common.utils.Holder<org.apache.dubbo.rpc.cluster.router.RouterSnapshotNode<T>>, org.apache.dubbo.common.utils.Holder<java.lang.String>) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field meshRuleCache:Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache;
+       4: astore        7
+       6: aload         7
+       8: invokevirtual #24                 // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache.containsRule:()Z
+      11: ifne          28
+      14: iload         4
+      16: ifeq          26
+      19: aload         6
+      21: ldc           #25                 // String MeshRuleCache has not been built. Skip route.
+      23: invokevirtual #26                 // Method org/apache/dubbo/common/utils/Holder.set:(Ljava/lang/Object;)V
+      26: aload_1
+      27: areturn
+      28: new           #27                 // class org/apache/dubbo/rpc/cluster/router/state/BitList
+      31: dup
+      32: aload_1
+      33: invokevirtual #28                 // Method org/apache/dubbo/rpc/cluster/router/state/BitList.getOriginList:()Ljava/util/List;
+      36: iconst_1
+      37: aload_1
+      38: invokevirtual #29                 // Method org/apache/dubbo/rpc/cluster/router/state/BitList.getTailList:()Ljava/util/List;
+      41: invokespecial #30                 // Method org/apache/dubbo/rpc/cluster/router/state/BitList."<init>":(Ljava/util/List;ZLjava/util/List;)V
+      44: astore        8
+      46: iload         4
+      48: ifeq          61
+      51: new           #31                 // class java/lang/StringBuilder
+      54: dup
+      55: invokespecial #32                 // Method java/lang/StringBuilder."<init>":()V
+      58: goto          62
+      61: aconst_null
+      62: astore        9
+      64: aload         7
+      66: invokevirtual #33                 // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache.getAppList:()Ljava/util/List;
+      69: invokeinterface #34,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      74: astore        10
+      76: aload         10
+      78: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      83: ifeq          193
+      86: aload         10
+      88: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      93: checkcast     #37                 // class java/lang/String
+      96: astore        11
+      98: aload_0
+      99: aload         7
+     101: aload         11
+     103: invokevirtual #38                 // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache.getVsDestinationGroup:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/cluster/router/mesh/rule/VsDestinationGroup;
+     106: aload_3
+     107: invokevirtual #39                 // Method getDubboRouteDestination:(Lorg/apache/dubbo/rpc/cluster/router/mesh/rule/VsDestinationGroup;Lorg/apache/dubbo/rpc/Invocation;)Ljava/util/List;
+     110: astore        12
+     112: aload         12
+     114: ifnull        190
+     117: aload_0
+     118: aload         7
+     120: aload         11
+     122: aload         12
+     124: aload_1
+     125: invokevirtual #40                 // Method randomSelectDestination:(Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache;Ljava/lang/String;Ljava/util/List;Lorg/apache/dubbo/rpc/cluster/router/state/BitList;)Ljava/lang/String;
+     128: astore        13
+     130: aload         13
+     132: ifnull        190
+     135: aload_0
+     136: getfield      #9                  // Field meshRuleCache:Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache;
+     139: aload         11
+     141: aload         13
+     143: invokevirtual #41                 // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache.getSubsetInvokers:(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/dubbo/rpc/cluster/router/state/BitList;
+     146: astore        14
+     148: aload         8
+     150: aload         14
+     152: invokevirtual #42                 // Method org/apache/dubbo/rpc/cluster/router/state/BitList.or:(Lorg/apache/dubbo/rpc/cluster/router/state/BitList;)Lorg/apache/dubbo/rpc/cluster/router/state/BitList;
+     155: astore        8
+     157: aload         9
+     159: ifnull        190
+     162: aload         9
+     164: ldc           #43                 // String Match App:
+     166: invokevirtual #44                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     169: aload         11
+     171: invokevirtual #44                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     174: ldc           #45                 // String  Subset:
+     176: invokevirtual #44                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     179: aload         13
+     181: invokevirtual #44                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     184: bipush        32
+     186: invokevirtual #46                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     189: pop
+     190: goto          76
+     193: aload         8
+     195: invokevirtual #47                 // Method org/apache/dubbo/rpc/cluster/router/state/BitList.isEmpty:()Z
+     198: ifeq          215
+     201: iload         4
+     203: ifeq          213
+     206: aload         6
+     208: ldc           #48                 // String Empty protection after routed.
+     210: invokevirtual #26                 // Method org/apache/dubbo/common/utils/Holder.set:(Ljava/lang/Object;)V
+     213: aload_1
+     214: areturn
+     215: iload         4
+     217: ifeq          230
+     220: aload         6
+     222: aload         9
+     224: invokevirtual #49                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     227: invokevirtual #26                 // Method org/apache/dubbo/common/utils/Holder.set:(Ljava/lang/Object;)V
+     230: aload_1
+     231: aload         8
+     233: invokevirtual #50                 // Method org/apache/dubbo/rpc/cluster/router/state/BitList.and:(Lorg/apache/dubbo/rpc/cluster/router/state/BitList;)Lorg/apache/dubbo/rpc/cluster/router/state/BitList;
+     236: areturn
+
+  protected java.util.List<org.apache.dubbo.rpc.cluster.router.mesh.rule.virtualservice.destination.DubboRouteDestination> getDubboRouteDestination(org.apache.dubbo.rpc.cluster.router.mesh.rule.VsDestinationGroup, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_1
+       1: ifnull        71
+       4: aload_1
+       5: invokevirtual #51                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/VsDestinationGroup.getVirtualServiceRuleList:()Ljava/util/List;
+       8: astore_3
+       9: aload_3
+      10: invokestatic  #52                 // Method org/apache/dubbo/common/utils/CollectionUtils.isNotEmpty:(Ljava/util/Collection;)Z
+      13: ifeq          71
+      16: aload_3
+      17: invokeinterface #34,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      22: astore        4
+      24: aload         4
+      26: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      31: ifeq          71
+      34: aload         4
+      36: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      41: checkcast     #53                 // class org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/VirtualServiceRule
+      44: astore        5
+      46: aload_0
+      47: aload         5
+      49: aload_2
+      50: invokevirtual #54                 // Method getDubboRoute:(Lorg/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/VirtualServiceRule;Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/DubboRoute;
+      53: astore        6
+      55: aload         6
+      57: ifnull        68
+      60: aload_0
+      61: aload         6
+      63: aload_2
+      64: invokevirtual #55                 // Method getDubboRouteDestination:(Lorg/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/DubboRoute;Lorg/apache/dubbo/rpc/Invocation;)Ljava/util/List;
+      67: areturn
+      68: goto          24
+      71: aconst_null
+      72: areturn
+
+  protected org.apache.dubbo.rpc.cluster.router.mesh.rule.virtualservice.DubboRoute getDubboRoute(org.apache.dubbo.rpc.cluster.router.mesh.rule.virtualservice.VirtualServiceRule, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_2
+       1: invokeinterface #56,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getServiceName:()Ljava/lang/String;
+       6: astore_3
+       7: aload_1
+       8: invokevirtual #57                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/VirtualServiceRule.getSpec:()Lorg/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/VirtualServiceSpec;
+      11: astore        4
+      13: aload         4
+      15: invokevirtual #58                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/VirtualServiceSpec.getDubbo:()Ljava/util/List;
+      18: astore        5
+      20: aload         5
+      22: invokestatic  #52                 // Method org/apache/dubbo/common/utils/CollectionUtils.isNotEmpty:(Ljava/util/Collection;)Z
+      25: ifeq          126
+      28: aload         5
+      30: invokeinterface #34,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      35: astore        6
+      37: aload         6
+      39: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      44: ifeq          126
+      47: aload         6
+      49: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      54: checkcast     #59                 // class org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/DubboRoute
+      57: astore        7
+      59: aload         7
+      61: invokevirtual #60                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/DubboRoute.getServices:()Ljava/util/List;
+      64: astore        8
+      66: aload         8
+      68: invokestatic  #61                 // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+      71: ifeq          77
+      74: aload         7
+      76: areturn
+      77: aload         8
+      79: invokeinterface #34,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      84: astore        9
+      86: aload         9
+      88: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      93: ifeq          123
+      96: aload         9
+      98: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     103: checkcast     #62                 // class org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/match/StringMatch
+     106: astore        10
+     108: aload         10
+     110: aload_3
+     111: invokevirtual #63                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/match/StringMatch.isMatch:(Ljava/lang/String;)Z
+     114: ifeq          120
+     117: aload         7
+     119: areturn
+     120: goto          86
+     123: goto          37
+     126: aconst_null
+     127: areturn
+
+  protected java.util.List<org.apache.dubbo.rpc.cluster.router.mesh.rule.virtualservice.destination.DubboRouteDestination> getDubboRouteDestination(org.apache.dubbo.rpc.cluster.router.mesh.rule.virtualservice.DubboRoute, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_1
+       1: invokevirtual #64                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/DubboRoute.getRoutedetail:()Ljava/util/List;
+       4: astore_3
+       5: aload_3
+       6: invokestatic  #52                 // Method org/apache/dubbo/common/utils/CollectionUtils.isNotEmpty:(Ljava/util/Collection;)Z
+       9: ifeq          94
+      12: aload_3
+      13: invokeinterface #34,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      18: astore        4
+      20: aload         4
+      22: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      27: ifeq          94
+      30: aload         4
+      32: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      37: checkcast     #65                 // class org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/DubboRouteDetail
+      40: astore        5
+      42: aload         5
+      44: invokevirtual #66                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/DubboRouteDetail.getMatch:()Ljava/util/List;
+      47: astore        6
+      49: aload         6
+      51: invokestatic  #61                 // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+      54: ifeq          63
+      57: aload         5
+      59: invokevirtual #67                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/DubboRouteDetail.getRoute:()Ljava/util/List;
+      62: areturn
+      63: aload         6
+      65: invokeinterface #68,  1           // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+      70: aload_0
+      71: aload_2
+      72: invokedynamic #69,  0             // InvokeDynamic #0:test:(Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleRouter;Lorg/apache/dubbo/rpc/Invocation;)Ljava/util/function/Predicate;
+      77: invokeinterface #70,  2           // InterfaceMethod java/util/stream/Stream.allMatch:(Ljava/util/function/Predicate;)Z
+      82: ifeq          91
+      85: aload         5
+      87: invokevirtual #67                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/DubboRouteDetail.getRoute:()Ljava/util/List;
+      90: areturn
+      91: goto          20
+      94: aconst_null
+      95: areturn
+
+  protected java.lang.String randomSelectDestination(org.apache.dubbo.rpc.cluster.router.mesh.route.MeshRuleCache<T>, java.lang.String, java.util.List<org.apache.dubbo.rpc.cluster.router.mesh.rule.virtualservice.destination.DubboRouteDestination>, org.apache.dubbo.rpc.cluster.router.state.BitList<org.apache.dubbo.rpc.Invoker<T>>) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: iconst_0
+       1: istore        5
+       3: aload_3
+       4: invokeinterface #34,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       9: astore        6
+      11: aload         6
+      13: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      18: ifeq          50
+      21: aload         6
+      23: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      28: checkcast     #71                 // class org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/destination/DubboRouteDestination
+      31: astore        7
+      33: iload         5
+      35: aload         7
+      37: invokevirtual #72                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/destination/DubboRouteDestination.getWeight:()I
+      40: iconst_1
+      41: invokestatic  #73                 // Method java/lang/Math.max:(II)I
+      44: iadd
+      45: istore        5
+      47: goto          11
+      50: invokestatic  #74                 // Method java/util/concurrent/ThreadLocalRandom.current:()Ljava/util/concurrent/ThreadLocalRandom;
+      53: iload         5
+      55: invokevirtual #75                 // Method java/util/concurrent/ThreadLocalRandom.nextInt:(I)I
+      58: istore        6
+      60: aload_3
+      61: invokeinterface #34,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      66: astore        7
+      68: aload         7
+      70: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      75: ifeq          135
+      78: aload         7
+      80: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      85: checkcast     #71                 // class org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/destination/DubboRouteDestination
+      88: astore        8
+      90: iload         6
+      92: aload         8
+      94: invokevirtual #72                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/destination/DubboRouteDestination.getWeight:()I
+      97: iconst_1
+      98: invokestatic  #73                 // Method java/lang/Math.max:(II)I
+     101: isub
+     102: istore        6
+     104: iload         6
+     106: ifgt          132
+     109: aload_0
+     110: aload_1
+     111: aload_2
+     112: aload         8
+     114: invokevirtual #76                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/destination/DubboRouteDestination.getDestination:()Lorg/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/destination/DubboDestination;
+     117: aload         4
+     119: invokevirtual #77                 // Method computeDestination:(Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache;Ljava/lang/String;Lorg/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/destination/DubboDestination;Lorg/apache/dubbo/rpc/cluster/router/state/BitList;)Ljava/lang/String;
+     122: astore        9
+     124: aload         9
+     126: ifnull        132
+     129: aload         9
+     131: areturn
+     132: goto          68
+     135: aload_3
+     136: invokeinterface #34,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     141: astore        7
+     143: aload         7
+     145: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     150: ifeq          191
+     153: aload         7
+     155: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     160: checkcast     #71                 // class org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/destination/DubboRouteDestination
+     163: astore        8
+     165: aload_0
+     166: aload_1
+     167: aload_2
+     168: aload         8
+     170: invokevirtual #76                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/destination/DubboRouteDestination.getDestination:()Lorg/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/destination/DubboDestination;
+     173: aload         4
+     175: invokevirtual #77                 // Method computeDestination:(Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache;Ljava/lang/String;Lorg/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/destination/DubboDestination;Lorg/apache/dubbo/rpc/cluster/router/state/BitList;)Ljava/lang/String;
+     178: astore        9
+     180: aload         9
+     182: ifnull        188
+     185: aload         9
+     187: areturn
+     188: goto          143
+     191: aconst_null
+     192: areturn
+
+  protected java.lang.String computeDestination(org.apache.dubbo.rpc.cluster.router.mesh.route.MeshRuleCache<T>, java.lang.String, org.apache.dubbo.rpc.cluster.router.mesh.rule.virtualservice.destination.DubboDestination, org.apache.dubbo.rpc.cluster.router.state.BitList<org.apache.dubbo.rpc.Invoker<T>>) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aload_3
+       1: invokevirtual #78                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/destination/DubboDestination.getSubset:()Ljava/lang/String;
+       4: astore        5
+       6: aload_1
+       7: aload_2
+       8: aload         5
+      10: invokevirtual #41                 // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache.getSubsetInvokers:(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/dubbo/rpc/cluster/router/state/BitList;
+      13: astore        6
+      15: aload         6
+      17: invokestatic  #52                 // Method org/apache/dubbo/common/utils/CollectionUtils.isNotEmpty:(Ljava/util/Collection;)Z
+      20: ifeq          42
+      23: aload         4
+      25: invokevirtual #79                 // Method org/apache/dubbo/rpc/cluster/router/state/BitList.clone:()Lorg/apache/dubbo/rpc/cluster/router/state/BitList;
+      28: aload         6
+      30: invokevirtual #50                 // Method org/apache/dubbo/rpc/cluster/router/state/BitList.and:(Lorg/apache/dubbo/rpc/cluster/router/state/BitList;)Lorg/apache/dubbo/rpc/cluster/router/state/BitList;
+      33: invokevirtual #47                 // Method org/apache/dubbo/rpc/cluster/router/state/BitList.isEmpty:()Z
+      36: ifne          42
+      39: aload         5
+      41: areturn
+      42: aload_3
+      43: invokevirtual #80                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/destination/DubboDestination.getFallback:()Lorg/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/destination/DubboRouteDestination;
+      46: astore        7
+      48: aload         7
+      50: ifnonnull     56
+      53: goto          78
+      56: aload         7
+      58: invokevirtual #76                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/destination/DubboRouteDestination.getDestination:()Lorg/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/destination/DubboDestination;
+      61: astore_3
+      62: aload_3
+      63: ifnonnull     69
+      66: goto          78
+      69: aload_3
+      70: invokevirtual #78                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/destination/DubboDestination.getSubset:()Ljava/lang/String;
+      73: astore        5
+      75: goto          6
+      78: aconst_null
+      79: areturn
+
+  public void notify(org.apache.dubbo.rpc.cluster.router.state.BitList<org.apache.dubbo.rpc.Invoker<T>>);
+    Code:
+       0: aload_1
+       1: ifnonnull     10
+       4: invokestatic  #4                  // Method org/apache/dubbo/rpc/cluster/router/state/BitList.emptyList:()Lorg/apache/dubbo/rpc/cluster/router/state/BitList;
+       7: goto          11
+      10: aload_1
+      11: astore_2
+      12: aload_0
+      13: aload_2
+      14: invokevirtual #79                 // Method org/apache/dubbo/rpc/cluster/router/state/BitList.clone:()Lorg/apache/dubbo/rpc/cluster/router/state/BitList;
+      17: putfield      #5                  // Field invokerList:Lorg/apache/dubbo/rpc/cluster/router/state/BitList;
+      20: aload_0
+      21: aload_2
+      22: invokespecial #81                 // Method registerAppRule:(Lorg/apache/dubbo/rpc/cluster/router/state/BitList;)V
+      25: aload_0
+      26: aload_0
+      27: getfield      #9                  // Field meshRuleCache:Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache;
+      30: invokevirtual #82                 // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache.getAppToVDGroup:()Ljava/util/Map;
+      33: invokevirtual #83                 // Method computeSubset:(Ljava/util/Map;)V
+      36: return
+
+  private void registerAppRule(org.apache.dubbo.rpc.cluster.router.state.BitList<org.apache.dubbo.rpc.Invoker<T>>);
+    Code:
+       0: new           #84                 // class java/util/HashSet
+       3: dup
+       4: invokespecial #85                 // Method java/util/HashSet."<init>":()V
+       7: astore_2
+       8: aload_1
+       9: invokestatic  #52                 // Method org/apache/dubbo/common/utils/CollectionUtils.isNotEmpty:(Ljava/util/Collection;)Z
+      12: ifeq          82
+      15: aload_1
+      16: invokevirtual #86                 // Method org/apache/dubbo/rpc/cluster/router/state/BitList.iterator:()Ljava/util/Iterator;
+      19: astore_3
+      20: aload_3
+      21: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      26: ifeq          82
+      29: aload_3
+      30: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      35: checkcast     #87                 // class org/apache/dubbo/rpc/Invoker
+      38: astore        4
+      40: aload         4
+      42: invokeinterface #88,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+      47: invokevirtual #89                 // Method org/apache/dubbo/common/URL.getRemoteApplication:()Ljava/lang/String;
+      50: astore        5
+      52: aload         5
+      54: invokestatic  #90                 // Method org/apache/dubbo/common/utils/StringUtils.isNotEmpty:(Ljava/lang/String;)Z
+      57: ifeq          79
+      60: ldc           #91                 // String unknown
+      62: aload         5
+      64: invokevirtual #92                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      67: ifne          79
+      70: aload_2
+      71: aload         5
+      73: invokeinterface #93,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      78: pop
+      79: goto          20
+      82: aload_0
+      83: getfield      #7                  // Field remoteAppName:Ljava/util/Set;
+      86: aload_2
+      87: invokeinterface #94,  2           // InterfaceMethod java/util/Set.equals:(Ljava/lang/Object;)Z
+      92: ifne          248
+      95: aload_0
+      96: dup
+      97: astore_3
+      98: monitorenter
+      99: new           #84                 // class java/util/HashSet
+     102: dup
+     103: aload_2
+     104: invokespecial #95                 // Method java/util/HashSet."<init>":(Ljava/util/Collection;)V
+     107: astore        4
+     109: new           #84                 // class java/util/HashSet
+     112: dup
+     113: aload_0
+     114: getfield      #7                  // Field remoteAppName:Ljava/util/Set;
+     117: invokespecial #95                 // Method java/util/HashSet."<init>":(Ljava/util/Collection;)V
+     120: astore        5
+     122: aload         5
+     124: aload_2
+     125: invokeinterface #96,  2           // InterfaceMethod java/util/Set.removeAll:(Ljava/util/Collection;)Z
+     130: pop
+     131: aload         4
+     133: aload_0
+     134: getfield      #7                  // Field remoteAppName:Ljava/util/Set;
+     137: invokeinterface #96,  2           // InterfaceMethod java/util/Set.removeAll:(Ljava/util/Collection;)Z
+     142: pop
+     143: aload         4
+     145: invokeinterface #97,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     150: astore        6
+     152: aload         6
+     154: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     159: ifeq          187
+     162: aload         6
+     164: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     169: checkcast     #37                 // class java/lang/String
+     172: astore        7
+     174: aload_0
+     175: getfield      #19                 // Field meshRuleManager:Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleManager;
+     178: aload         7
+     180: aload_0
+     181: invokevirtual #98                 // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleManager.register:(Ljava/lang/String;Lorg/apache/dubbo/rpc/cluster/router/mesh/util/MeshRuleListener;)V
+     184: goto          152
+     187: aload         5
+     189: invokeinterface #97,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     194: astore        6
+     196: aload         6
+     198: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     203: ifeq          231
+     206: aload         6
+     208: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     213: checkcast     #37                 // class java/lang/String
+     216: astore        7
+     218: aload_0
+     219: getfield      #19                 // Field meshRuleManager:Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleManager;
+     222: aload         7
+     224: aload_0
+     225: invokevirtual #99                 // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleManager.unregister:(Ljava/lang/String;Lorg/apache/dubbo/rpc/cluster/router/mesh/util/MeshRuleListener;)V
+     228: goto          196
+     231: aload_0
+     232: aload_2
+     233: putfield      #7                  // Field remoteAppName:Ljava/util/Set;
+     236: aload_3
+     237: monitorexit
+     238: goto          248
+     241: astore        8
+     243: aload_3
+     244: monitorexit
+     245: aload         8
+     247: athrow
+     248: return
+    Exception table:
+       from    to  target type
+          99   238   241   any
+         241   245   241   any
+
+  public synchronized void onRuleChange(java.lang.String, java.util.List<java.util.Map<java.lang.String, java.lang.Object>>);
+    Code:
+       0: new           #100                // class java/util/concurrent/ConcurrentHashMap
+       3: dup
+       4: aload_0
+       5: getfield      #9                  // Field meshRuleCache:Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache;
+       8: invokevirtual #82                 // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache.getAppToVDGroup:()Ljava/util/Map;
+      11: invokespecial #101                // Method java/util/concurrent/ConcurrentHashMap."<init>":(Ljava/util/Map;)V
+      14: astore_3
+      15: new           #102                // class org/apache/dubbo/rpc/cluster/router/mesh/rule/VsDestinationGroup
+      18: dup
+      19: invokespecial #103                // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/VsDestinationGroup."<init>":()V
+      22: astore        4
+      24: aload         4
+      26: aload_1
+      27: invokevirtual #104                // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/VsDestinationGroup.setAppName:(Ljava/lang/String;)V
+      30: aload_2
+      31: invokeinterface #34,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      36: astore        5
+      38: aload         5
+      40: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      45: ifeq          150
+      48: aload         5
+      50: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      55: checkcast     #105                // class java/util/Map
+      58: astore        6
+      60: ldc           #106                // String DestinationRule
+      62: aload         6
+      64: ldc           #107                // String kind
+      66: invokeinterface #108,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      71: invokevirtual #92                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      74: ifeq          105
+      77: aload         6
+      79: ldc           #109                // class org/apache/dubbo/rpc/cluster/router/mesh/rule/destination/DestinationRule
+      81: invokestatic  #110                // Method org/apache/dubbo/common/utils/PojoUtils.mapToPojo:(Ljava/util/Map;Ljava/lang/Class;)Ljava/lang/Object;
+      84: checkcast     #109                // class org/apache/dubbo/rpc/cluster/router/mesh/rule/destination/DestinationRule
+      87: astore        7
+      89: aload         4
+      91: invokevirtual #111                // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/VsDestinationGroup.getDestinationRuleList:()Ljava/util/List;
+      94: aload         7
+      96: invokeinterface #112,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     101: pop
+     102: goto          147
+     105: ldc           #113                // String VirtualService
+     107: aload         6
+     109: ldc           #107                // String kind
+     111: invokeinterface #108,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     116: invokevirtual #92                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     119: ifeq          147
+     122: aload         6
+     124: ldc           #53                 // class org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/VirtualServiceRule
+     126: invokestatic  #110                // Method org/apache/dubbo/common/utils/PojoUtils.mapToPojo:(Ljava/util/Map;Ljava/lang/Class;)Ljava/lang/Object;
+     129: checkcast     #53                 // class org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/VirtualServiceRule
+     132: astore        7
+     134: aload         4
+     136: invokevirtual #51                 // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/VsDestinationGroup.getVirtualServiceRuleList:()Ljava/util/List;
+     139: aload         7
+     141: invokeinterface #112,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     146: pop
+     147: goto          38
+     150: aload         4
+     152: invokevirtual #114                // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/VsDestinationGroup.isValid:()Z
+     155: ifeq          168
+     158: aload_3
+     159: aload_1
+     160: aload         4
+     162: invokeinterface #115,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     167: pop
+     168: goto          191
+     171: astore        4
+     173: getstatic     #117                // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     176: ldc           #118                // String 2-13
+     178: ldc           #119                // String failed to parse mesh route rule
+     180: ldc           #120                // String
+     182: ldc           #121                // String Error occurred when parsing rule component.
+     184: aload         4
+     186: invokeinterface #122,  6          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     191: aload_0
+     192: aload_3
+     193: invokevirtual #83                 // Method computeSubset:(Ljava/util/Map;)V
+     196: return
+    Exception table:
+       from    to  target type
+          15   168   171   Class java/lang/Throwable
+
+  public synchronized void clearRule(java.lang.String);
+    Code:
+       0: new           #100                // class java/util/concurrent/ConcurrentHashMap
+       3: dup
+       4: aload_0
+       5: getfield      #9                  // Field meshRuleCache:Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache;
+       8: invokevirtual #82                 // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache.getAppToVDGroup:()Ljava/util/Map;
+      11: invokespecial #101                // Method java/util/concurrent/ConcurrentHashMap."<init>":(Ljava/util/Map;)V
+      14: astore_2
+      15: aload_2
+      16: aload_1
+      17: invokeinterface #123,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      22: pop
+      23: aload_0
+      24: aload_2
+      25: invokevirtual #83                 // Method computeSubset:(Ljava/util/Map;)V
+      28: return
+
+  protected void computeSubset(java.util.Map<java.lang.String, org.apache.dubbo.rpc.cluster.router.mesh.rule.VsDestinationGroup>);
+    Code:
+       0: aload_0
+       1: aload_0
+       2: invokevirtual #124                // Method getUrl:()Lorg/apache/dubbo/common/URL;
+       5: invokevirtual #125                // Method org/apache/dubbo/common/URL.getProtocolServiceKey:()Ljava/lang/String;
+       8: aload_0
+       9: getfield      #5                  // Field invokerList:Lorg/apache/dubbo/rpc/cluster/router/state/BitList;
+      12: aload_1
+      13: invokestatic  #126                // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache.build:(Ljava/lang/String;Lorg/apache/dubbo/rpc/cluster/router/state/BitList;Ljava/util/Map;)Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache;
+      16: putfield      #9                  // Field meshRuleCache:Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache;
+      19: return
+
+  public void stop();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field remoteAppName:Ljava/util/Set;
+       4: invokeinterface #97,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+       9: astore_1
+      10: aload_1
+      11: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      16: ifeq          41
+      19: aload_1
+      20: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      25: checkcast     #37                 // class java/lang/String
+      28: astore_2
+      29: aload_0
+      30: getfield      #19                 // Field meshRuleManager:Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleManager;
+      33: aload_2
+      34: aload_0
+      35: invokevirtual #99                 // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleManager.unregister:(Ljava/lang/String;Lorg/apache/dubbo/rpc/cluster/router/mesh/util/MeshRuleListener;)V
+      38: goto          10
+      41: return
+
+  public java.util.Set<java.lang.String> getRemoteAppName();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field remoteAppName:Ljava/util/Set;
+       4: areturn
+
+  public org.apache.dubbo.rpc.cluster.router.state.BitList<org.apache.dubbo.rpc.Invoker<T>> getInvokerList();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field invokerList:Lorg/apache/dubbo/rpc/cluster/router/state/BitList;
+       4: areturn
+
+  public org.apache.dubbo.rpc.cluster.router.mesh.route.MeshRuleCache<T> getMeshRuleCache();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field meshRuleCache:Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleCache;
+       4: areturn
+
+  private boolean lambda$getDubboRouteDestination$0(org.apache.dubbo.rpc.Invocation, org.apache.dubbo.rpc.cluster.router.mesh.rule.virtualservice.DubboMatchRequest);
+    Code:
+       0: aload_2
+       1: aload_1
+       2: aload_0
+       3: getfield      #14                 // Field sourcesLabels:Ljava/util/Map;
+       6: aload_0
+       7: getfield      #23                 // Field tracingContextProviders:Ljava/util/Set;
+      10: invokevirtual #127                // Method org/apache/dubbo/rpc/cluster/router/mesh/rule/virtualservice/DubboMatchRequest.isMatch:(Lorg/apache/dubbo/rpc/Invocation;Ljava/util/Map;Ljava/util/Set;)Z
+      13: ireturn
+
+  static {};
+    Code:
+       0: ldc           #128                // class org/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleRouter
+       2: invokestatic  #129                // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #117                // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

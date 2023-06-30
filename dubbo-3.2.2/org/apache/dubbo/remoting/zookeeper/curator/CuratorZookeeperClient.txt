@@ -1,0 +1,1071 @@
+Compiled from "CuratorZookeeperClient.java"
+public class org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient extends org.apache.dubbo.remoting.zookeeper.AbstractZookeeperClient<org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient$NodeCacheListenerImpl, org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient$CuratorWatcherImpl> {
+  protected static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private static final java.nio.charset.Charset CHARSET;
+
+  private final org.apache.curator.framework.CuratorFramework client;
+
+  private static final java.util.Map<java.lang.String, org.apache.curator.framework.recipes.cache.NodeCache> nodeCacheMap;
+
+  public org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #8                  // Method org/apache/dubbo/remoting/zookeeper/AbstractZookeeperClient."<init>":(Lorg/apache/dubbo/common/URL;)V
+       5: aload_1
+       6: ldc           #9                  // String timeout
+       8: aload_0
+       9: getfield      #5                  // Field DEFAULT_CONNECTION_TIMEOUT_MS:I
+      12: invokevirtual #10                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;I)I
+      15: istore_2
+      16: aload_1
+      17: ldc           #11                 // String session
+      19: aload_0
+      20: getfield      #4                  // Field DEFAULT_SESSION_TIMEOUT_MS:I
+      23: invokevirtual #10                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;I)I
+      26: istore_3
+      27: invokestatic  #12                 // Method org/apache/curator/framework/CuratorFrameworkFactory.builder:()Lorg/apache/curator/framework/CuratorFrameworkFactory$Builder;
+      30: aload_1
+      31: invokevirtual #13                 // Method org/apache/dubbo/common/URL.getBackupAddress:()Ljava/lang/String;
+      34: invokevirtual #14                 // Method org/apache/curator/framework/CuratorFrameworkFactory$Builder.connectString:(Ljava/lang/String;)Lorg/apache/curator/framework/CuratorFrameworkFactory$Builder;
+      37: new           #15                 // class org/apache/curator/retry/RetryNTimes
+      40: dup
+      41: iconst_1
+      42: sipush        1000
+      45: invokespecial #16                 // Method org/apache/curator/retry/RetryNTimes."<init>":(II)V
+      48: invokevirtual #17                 // Method org/apache/curator/framework/CuratorFrameworkFactory$Builder.retryPolicy:(Lorg/apache/curator/RetryPolicy;)Lorg/apache/curator/framework/CuratorFrameworkFactory$Builder;
+      51: iload_2
+      52: invokevirtual #18                 // Method org/apache/curator/framework/CuratorFrameworkFactory$Builder.connectionTimeoutMs:(I)Lorg/apache/curator/framework/CuratorFrameworkFactory$Builder;
+      55: iload_3
+      56: invokevirtual #19                 // Method org/apache/curator/framework/CuratorFrameworkFactory$Builder.sessionTimeoutMs:(I)Lorg/apache/curator/framework/CuratorFrameworkFactory$Builder;
+      59: astore        4
+      61: aload_1
+      62: invokevirtual #20                 // Method org/apache/dubbo/common/URL.getUserInformation:()Ljava/lang/String;
+      65: astore        5
+      67: aload         5
+      69: invokestatic  #21                 // Method org/apache/dubbo/common/utils/StringUtils.isNotEmpty:(Ljava/lang/String;)Z
+      72: ifeq          103
+      75: aload         4
+      77: ldc           #22                 // String digest
+      79: aload         5
+      81: invokevirtual #23                 // Method java/lang/String.getBytes:()[B
+      84: invokevirtual #24                 // Method org/apache/curator/framework/CuratorFrameworkFactory$Builder.authorization:(Ljava/lang/String;[B)Lorg/apache/curator/framework/CuratorFrameworkFactory$Builder;
+      87: astore        4
+      89: aload         4
+      91: new           #25                 // class org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$1
+      94: dup
+      95: aload_0
+      96: invokespecial #26                 // Method org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$1."<init>":(Lorg/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient;)V
+      99: invokevirtual #27                 // Method org/apache/curator/framework/CuratorFrameworkFactory$Builder.aclProvider:(Lorg/apache/curator/framework/api/ACLProvider;)Lorg/apache/curator/framework/CuratorFrameworkFactory$Builder;
+     102: pop
+     103: aload_0
+     104: aload         4
+     106: invokevirtual #28                 // Method org/apache/curator/framework/CuratorFrameworkFactory$Builder.build:()Lorg/apache/curator/framework/CuratorFramework;
+     109: putfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+     112: aload_0
+     113: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+     116: invokeinterface #30,  1           // InterfaceMethod org/apache/curator/framework/CuratorFramework.getConnectionStateListenable:()Lorg/apache/curator/framework/listen/Listenable;
+     121: new           #31                 // class org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorConnectionStateListener
+     124: dup
+     125: aload_0
+     126: aload_1
+     127: invokespecial #32                 // Method org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorConnectionStateListener."<init>":(Lorg/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient;Lorg/apache/dubbo/common/URL;)V
+     130: invokeinterface #33,  2           // InterfaceMethod org/apache/curator/framework/listen/Listenable.addListener:(Ljava/lang/Object;)V
+     135: aload_0
+     136: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+     139: invokeinterface #34,  1           // InterfaceMethod org/apache/curator/framework/CuratorFramework.start:()V
+     144: aload_0
+     145: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+     148: iload_2
+     149: getstatic     #35                 // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+     152: invokeinterface #36,  3           // InterfaceMethod org/apache/curator/framework/CuratorFramework.blockUntilConnected:(ILjava/util/concurrent/TimeUnit;)Z
+     157: istore        6
+     159: iload         6
+     161: ifne          213
+     164: new           #37                 // class java/lang/IllegalStateException
+     167: dup
+     168: new           #38                 // class java/lang/StringBuilder
+     171: dup
+     172: invokespecial #39                 // Method java/lang/StringBuilder."<init>":()V
+     175: ldc           #40                 // String zookeeper not connected, the address is:
+     177: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     180: aload_1
+     181: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     184: invokevirtual #43                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     187: invokespecial #44                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     190: astore        7
+     192: getstatic     #45                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     195: ldc           #46                 // String 5-1
+     197: ldc           #47                 // String Zookeeper server offline
+     199: ldc           #48                 // String
+     201: ldc           #49                 // String Failed to connect with zookeeper
+     203: aload         7
+     205: invokeinterface #50,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     210: aload         7
+     212: athrow
+     213: iconst_0
+     214: invokestatic  #51                 // Method org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorWatcherImpl.access$002:(Z)Z
+     217: pop
+     218: goto          239
+     221: astore_2
+     222: aload_0
+     223: invokevirtual #53                 // Method close:()V
+     226: new           #37                 // class java/lang/IllegalStateException
+     229: dup
+     230: aload_2
+     231: invokevirtual #54                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+     234: aload_2
+     235: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     238: athrow
+     239: return
+    Exception table:
+       from    to  target type
+           5   218   221   Class java/lang/Exception
+
+  public void createPersistent(java.lang.String, boolean);
+    Code:
+       0: aload_0
+       1: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+       4: invokeinterface #56,  1           // InterfaceMethod org/apache/curator/framework/CuratorFramework.create:()Lorg/apache/curator/framework/api/CreateBuilder;
+       9: aload_1
+      10: invokeinterface #57,  2           // InterfaceMethod org/apache/curator/framework/api/CreateBuilder.forPath:(Ljava/lang/String;)Ljava/lang/Object;
+      15: pop
+      16: goto          93
+      19: astore_3
+      20: iload_2
+      21: ifne          76
+      24: getstatic     #45                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      27: ldc           #59                 // String 1-35
+      29: ldc           #48                 // String
+      31: ldc           #48                 // String
+      33: new           #38                 // class java/lang/StringBuilder
+      36: dup
+      37: invokespecial #39                 // Method java/lang/StringBuilder."<init>":()V
+      40: ldc           #60                 // String ZNode
+      42: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      45: aload_1
+      46: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      49: ldc           #61                 // String  already exists.
+      51: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      54: invokevirtual #43                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      57: aload_3
+      58: invokeinterface #62,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      63: new           #37                 // class java/lang/IllegalStateException
+      66: dup
+      67: aload_3
+      68: invokevirtual #63                 // Method org/apache/zookeeper/KeeperException$NodeExistsException.getMessage:()Ljava/lang/String;
+      71: aload_3
+      72: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      75: athrow
+      76: goto          93
+      79: astore_3
+      80: new           #37                 // class java/lang/IllegalStateException
+      83: dup
+      84: aload_3
+      85: invokevirtual #54                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      88: aload_3
+      89: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      92: athrow
+      93: return
+    Exception table:
+       from    to  target type
+           0    16    19   Class org/apache/zookeeper/KeeperException$NodeExistsException
+           0    16    79   Class java/lang/Exception
+
+  public void createEphemeral(java.lang.String, boolean);
+    Code:
+       0: aload_0
+       1: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+       4: invokeinterface #56,  1           // InterfaceMethod org/apache/curator/framework/CuratorFramework.create:()Lorg/apache/curator/framework/api/CreateBuilder;
+       9: getstatic     #64                 // Field org/apache/zookeeper/CreateMode.EPHEMERAL:Lorg/apache/zookeeper/CreateMode;
+      12: invokeinterface #65,  2           // InterfaceMethod org/apache/curator/framework/api/CreateBuilder.withMode:(Lorg/apache/zookeeper/CreateMode;)Ljava/lang/Object;
+      17: checkcast     #66                 // class org/apache/curator/framework/api/ACLBackgroundPathAndBytesable
+      20: aload_1
+      21: invokeinterface #67,  2           // InterfaceMethod org/apache/curator/framework/api/ACLBackgroundPathAndBytesable.forPath:(Ljava/lang/String;)Ljava/lang/Object;
+      26: pop
+      27: goto          150
+      30: astore_3
+      31: iload_2
+      32: ifeq          81
+      35: getstatic     #45                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      38: new           #38                 // class java/lang/StringBuilder
+      41: dup
+      42: invokespecial #39                 // Method java/lang/StringBuilder."<init>":()V
+      45: ldc           #60                 // String ZNode
+      47: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      50: aload_1
+      51: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      54: ldc           #68                 // String  already exists, since we will only try to recreate a node on a session expiration, this duplication might be caused by a delete delay from the zk server, which means the old expired session may still holds this ZNode and the server just hasn\'t got time to do the deletion. In this case, we can just try to delete and create again.
+      56: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      59: invokevirtual #43                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      62: invokeinterface #69,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      67: aload_0
+      68: aload_1
+      69: invokevirtual #70                 // Method deletePath:(Ljava/lang/String;)V
+      72: aload_0
+      73: aload_1
+      74: iconst_1
+      75: invokevirtual #71                 // Method createEphemeral:(Ljava/lang/String;Z)V
+      78: goto          133
+      81: getstatic     #45                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      84: ldc           #59                 // String 1-35
+      86: ldc           #48                 // String
+      88: ldc           #48                 // String
+      90: new           #38                 // class java/lang/StringBuilder
+      93: dup
+      94: invokespecial #39                 // Method java/lang/StringBuilder."<init>":()V
+      97: ldc           #60                 // String ZNode
+      99: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     102: aload_1
+     103: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     106: ldc           #61                 // String  already exists.
+     108: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     111: invokevirtual #43                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     114: aload_3
+     115: invokeinterface #62,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     120: new           #37                 // class java/lang/IllegalStateException
+     123: dup
+     124: aload_3
+     125: invokevirtual #63                 // Method org/apache/zookeeper/KeeperException$NodeExistsException.getMessage:()Ljava/lang/String;
+     128: aload_3
+     129: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     132: athrow
+     133: goto          150
+     136: astore_3
+     137: new           #37                 // class java/lang/IllegalStateException
+     140: dup
+     141: aload_3
+     142: invokevirtual #54                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+     145: aload_3
+     146: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     149: athrow
+     150: return
+    Exception table:
+       from    to  target type
+           0    27    30   Class org/apache/zookeeper/KeeperException$NodeExistsException
+           0    27   136   Class java/lang/Exception
+
+  protected void createPersistent(java.lang.String, java.lang.String, boolean);
+    Code:
+       0: aload_2
+       1: getstatic     #6                  // Field CHARSET:Ljava/nio/charset/Charset;
+       4: invokevirtual #72                 // Method java/lang/String.getBytes:(Ljava/nio/charset/Charset;)[B
+       7: astore        4
+       9: aload_0
+      10: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+      13: invokeinterface #56,  1           // InterfaceMethod org/apache/curator/framework/CuratorFramework.create:()Lorg/apache/curator/framework/api/CreateBuilder;
+      18: aload_1
+      19: aload         4
+      21: invokeinterface #73,  3           // InterfaceMethod org/apache/curator/framework/api/CreateBuilder.forPath:(Ljava/lang/String;[B)Ljava/lang/Object;
+      26: pop
+      27: goto          181
+      30: astore        5
+      32: iload_3
+      33: ifeq          106
+      36: getstatic     #45                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      39: new           #38                 // class java/lang/StringBuilder
+      42: dup
+      43: invokespecial #39                 // Method java/lang/StringBuilder."<init>":()V
+      46: ldc           #60                 // String ZNode
+      48: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      51: aload_1
+      52: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      55: ldc           #74                 // String  already exists. Will be override with new data.
+      57: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      60: invokevirtual #43                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      63: invokeinterface #69,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      68: aload_0
+      69: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+      72: invokeinterface #75,  1           // InterfaceMethod org/apache/curator/framework/CuratorFramework.setData:()Lorg/apache/curator/framework/api/SetDataBuilder;
+      77: aload_1
+      78: aload         4
+      80: invokeinterface #76,  3           // InterfaceMethod org/apache/curator/framework/api/SetDataBuilder.forPath:(Ljava/lang/String;[B)Ljava/lang/Object;
+      85: pop
+      86: goto          161
+      89: astore        6
+      91: new           #37                 // class java/lang/IllegalStateException
+      94: dup
+      95: aload         5
+      97: invokevirtual #63                 // Method org/apache/zookeeper/KeeperException$NodeExistsException.getMessage:()Ljava/lang/String;
+     100: aload         6
+     102: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     105: athrow
+     106: getstatic     #45                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     109: ldc           #59                 // String 1-35
+     111: ldc           #48                 // String
+     113: ldc           #48                 // String
+     115: new           #38                 // class java/lang/StringBuilder
+     118: dup
+     119: invokespecial #39                 // Method java/lang/StringBuilder."<init>":()V
+     122: ldc           #60                 // String ZNode
+     124: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     127: aload_1
+     128: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     131: ldc           #61                 // String  already exists.
+     133: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     136: invokevirtual #43                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     139: aload         5
+     141: invokeinterface #62,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     146: new           #37                 // class java/lang/IllegalStateException
+     149: dup
+     150: aload         5
+     152: invokevirtual #63                 // Method org/apache/zookeeper/KeeperException$NodeExistsException.getMessage:()Ljava/lang/String;
+     155: aload         5
+     157: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     160: athrow
+     161: goto          181
+     164: astore        5
+     166: new           #37                 // class java/lang/IllegalStateException
+     169: dup
+     170: aload         5
+     172: invokevirtual #54                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+     175: aload         5
+     177: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     180: athrow
+     181: return
+    Exception table:
+       from    to  target type
+           9    27    30   Class org/apache/zookeeper/KeeperException$NodeExistsException
+          68    86    89   Class java/lang/Exception
+           9    27   164   Class java/lang/Exception
+
+  protected void createEphemeral(java.lang.String, java.lang.String, boolean);
+    Code:
+       0: aload_2
+       1: getstatic     #6                  // Field CHARSET:Ljava/nio/charset/Charset;
+       4: invokevirtual #72                 // Method java/lang/String.getBytes:(Ljava/nio/charset/Charset;)[B
+       7: astore        4
+       9: aload_0
+      10: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+      13: invokeinterface #56,  1           // InterfaceMethod org/apache/curator/framework/CuratorFramework.create:()Lorg/apache/curator/framework/api/CreateBuilder;
+      18: getstatic     #64                 // Field org/apache/zookeeper/CreateMode.EPHEMERAL:Lorg/apache/zookeeper/CreateMode;
+      21: invokeinterface #65,  2           // InterfaceMethod org/apache/curator/framework/api/CreateBuilder.withMode:(Lorg/apache/zookeeper/CreateMode;)Ljava/lang/Object;
+      26: checkcast     #66                 // class org/apache/curator/framework/api/ACLBackgroundPathAndBytesable
+      29: aload_1
+      30: aload         4
+      32: invokeinterface #77,  3           // InterfaceMethod org/apache/curator/framework/api/ACLBackgroundPathAndBytesable.forPath:(Ljava/lang/String;[B)Ljava/lang/Object;
+      37: pop
+      38: goto          169
+      41: astore        5
+      43: iload_3
+      44: ifeq          94
+      47: getstatic     #45                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      50: new           #38                 // class java/lang/StringBuilder
+      53: dup
+      54: invokespecial #39                 // Method java/lang/StringBuilder."<init>":()V
+      57: ldc           #60                 // String ZNode
+      59: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      62: aload_1
+      63: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      66: ldc           #68                 // String  already exists, since we will only try to recreate a node on a session expiration, this duplication might be caused by a delete delay from the zk server, which means the old expired session may still holds this ZNode and the server just hasn\'t got time to do the deletion. In this case, we can just try to delete and create again.
+      68: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      71: invokevirtual #43                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      74: invokeinterface #69,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      79: aload_0
+      80: aload_1
+      81: invokevirtual #70                 // Method deletePath:(Ljava/lang/String;)V
+      84: aload_0
+      85: aload_1
+      86: aload_2
+      87: iconst_1
+      88: invokevirtual #78                 // Method createEphemeral:(Ljava/lang/String;Ljava/lang/String;Z)V
+      91: goto          149
+      94: getstatic     #45                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      97: ldc           #59                 // String 1-35
+      99: ldc           #48                 // String
+     101: ldc           #48                 // String
+     103: new           #38                 // class java/lang/StringBuilder
+     106: dup
+     107: invokespecial #39                 // Method java/lang/StringBuilder."<init>":()V
+     110: ldc           #60                 // String ZNode
+     112: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     115: aload_1
+     116: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     119: ldc           #61                 // String  already exists.
+     121: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     124: invokevirtual #43                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     127: aload         5
+     129: invokeinterface #62,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     134: new           #37                 // class java/lang/IllegalStateException
+     137: dup
+     138: aload         5
+     140: invokevirtual #63                 // Method org/apache/zookeeper/KeeperException$NodeExistsException.getMessage:()Ljava/lang/String;
+     143: aload         5
+     145: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     148: athrow
+     149: goto          169
+     152: astore        5
+     154: new           #37                 // class java/lang/IllegalStateException
+     157: dup
+     158: aload         5
+     160: invokevirtual #54                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+     163: aload         5
+     165: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     168: athrow
+     169: return
+    Exception table:
+       from    to  target type
+           9    38    41   Class org/apache/zookeeper/KeeperException$NodeExistsException
+           9    38   152   Class java/lang/Exception
+
+  protected void update(java.lang.String, java.lang.String, int);
+    Code:
+       0: aload_2
+       1: getstatic     #6                  // Field CHARSET:Ljava/nio/charset/Charset;
+       4: invokevirtual #72                 // Method java/lang/String.getBytes:(Ljava/nio/charset/Charset;)[B
+       7: astore        4
+       9: aload_0
+      10: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+      13: invokeinterface #75,  1           // InterfaceMethod org/apache/curator/framework/CuratorFramework.setData:()Lorg/apache/curator/framework/api/SetDataBuilder;
+      18: iload_3
+      19: invokeinterface #79,  2           // InterfaceMethod org/apache/curator/framework/api/SetDataBuilder.withVersion:(I)Ljava/lang/Object;
+      24: checkcast     #80                 // class org/apache/curator/framework/api/BackgroundPathAndBytesable
+      27: aload_1
+      28: aload         4
+      30: invokeinterface #81,  3           // InterfaceMethod org/apache/curator/framework/api/BackgroundPathAndBytesable.forPath:(Ljava/lang/String;[B)Ljava/lang/Object;
+      35: pop
+      36: goto          56
+      39: astore        5
+      41: new           #37                 // class java/lang/IllegalStateException
+      44: dup
+      45: aload         5
+      47: invokevirtual #54                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      50: aload         5
+      52: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      55: athrow
+      56: return
+    Exception table:
+       from    to  target type
+           9    36    39   Class java/lang/Exception
+
+  protected void update(java.lang.String, java.lang.String);
+    Code:
+       0: aload_2
+       1: getstatic     #6                  // Field CHARSET:Ljava/nio/charset/Charset;
+       4: invokevirtual #72                 // Method java/lang/String.getBytes:(Ljava/nio/charset/Charset;)[B
+       7: astore_3
+       8: aload_0
+       9: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+      12: invokeinterface #75,  1           // InterfaceMethod org/apache/curator/framework/CuratorFramework.setData:()Lorg/apache/curator/framework/api/SetDataBuilder;
+      17: aload_1
+      18: aload_3
+      19: invokeinterface #76,  3           // InterfaceMethod org/apache/curator/framework/api/SetDataBuilder.forPath:(Ljava/lang/String;[B)Ljava/lang/Object;
+      24: pop
+      25: goto          45
+      28: astore        4
+      30: new           #37                 // class java/lang/IllegalStateException
+      33: dup
+      34: aload         4
+      36: invokevirtual #54                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      39: aload         4
+      41: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      44: athrow
+      45: return
+    Exception table:
+       from    to  target type
+           8    25    28   Class java/lang/Exception
+
+  protected void createOrUpdatePersistent(java.lang.String, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #82                 // Method checkExists:(Ljava/lang/String;)Z
+       5: ifeq          17
+       8: aload_0
+       9: aload_1
+      10: aload_2
+      11: invokevirtual #83                 // Method update:(Ljava/lang/String;Ljava/lang/String;)V
+      14: goto          24
+      17: aload_0
+      18: aload_1
+      19: aload_2
+      20: iconst_1
+      21: invokevirtual #84                 // Method createPersistent:(Ljava/lang/String;Ljava/lang/String;Z)V
+      24: goto          41
+      27: astore_3
+      28: new           #37                 // class java/lang/IllegalStateException
+      31: dup
+      32: aload_3
+      33: invokevirtual #54                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      36: aload_3
+      37: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      40: athrow
+      41: return
+    Exception table:
+       from    to  target type
+           0    24    27   Class java/lang/Exception
+
+  protected void createOrUpdateEphemeral(java.lang.String, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #82                 // Method checkExists:(Ljava/lang/String;)Z
+       5: ifeq          17
+       8: aload_0
+       9: aload_1
+      10: aload_2
+      11: invokevirtual #83                 // Method update:(Ljava/lang/String;Ljava/lang/String;)V
+      14: goto          24
+      17: aload_0
+      18: aload_1
+      19: aload_2
+      20: iconst_1
+      21: invokevirtual #78                 // Method createEphemeral:(Ljava/lang/String;Ljava/lang/String;Z)V
+      24: goto          41
+      27: astore_3
+      28: new           #37                 // class java/lang/IllegalStateException
+      31: dup
+      32: aload_3
+      33: invokevirtual #54                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      36: aload_3
+      37: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      40: athrow
+      41: return
+    Exception table:
+       from    to  target type
+           0    24    27   Class java/lang/Exception
+
+  protected void createOrUpdatePersistent(java.lang.String, java.lang.String, java.lang.Integer);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #82                 // Method checkExists:(Ljava/lang/String;)Z
+       5: ifeq          25
+       8: aload_3
+       9: ifnull        25
+      12: aload_0
+      13: aload_1
+      14: aload_2
+      15: aload_3
+      16: invokevirtual #85                 // Method java/lang/Integer.intValue:()I
+      19: invokevirtual #86                 // Method update:(Ljava/lang/String;Ljava/lang/String;I)V
+      22: goto          32
+      25: aload_0
+      26: aload_1
+      27: aload_2
+      28: iconst_0
+      29: invokevirtual #84                 // Method createPersistent:(Ljava/lang/String;Ljava/lang/String;Z)V
+      32: goto          52
+      35: astore        4
+      37: new           #37                 // class java/lang/IllegalStateException
+      40: dup
+      41: aload         4
+      43: invokevirtual #54                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      46: aload         4
+      48: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      51: athrow
+      52: return
+    Exception table:
+       from    to  target type
+           0    32    35   Class java/lang/Exception
+
+  protected void createOrUpdateEphemeral(java.lang.String, java.lang.String, java.lang.Integer);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #82                 // Method checkExists:(Ljava/lang/String;)Z
+       5: ifeq          25
+       8: aload_3
+       9: ifnull        25
+      12: aload_0
+      13: aload_1
+      14: aload_2
+      15: aload_3
+      16: invokevirtual #85                 // Method java/lang/Integer.intValue:()I
+      19: invokevirtual #86                 // Method update:(Ljava/lang/String;Ljava/lang/String;I)V
+      22: goto          32
+      25: aload_0
+      26: aload_1
+      27: aload_2
+      28: iconst_0
+      29: invokevirtual #78                 // Method createEphemeral:(Ljava/lang/String;Ljava/lang/String;Z)V
+      32: goto          52
+      35: astore        4
+      37: new           #37                 // class java/lang/IllegalStateException
+      40: dup
+      41: aload         4
+      43: invokevirtual #54                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      46: aload         4
+      48: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      51: athrow
+      52: return
+    Exception table:
+       from    to  target type
+           0    32    35   Class java/lang/Exception
+
+  protected void deletePath(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+       4: invokeinterface #87,  1           // InterfaceMethod org/apache/curator/framework/CuratorFramework.delete:()Lorg/apache/curator/framework/api/DeleteBuilder;
+       9: invokeinterface #88,  1           // InterfaceMethod org/apache/curator/framework/api/DeleteBuilder.deletingChildrenIfNeeded:()Lorg/apache/curator/framework/api/BackgroundVersionable;
+      14: aload_1
+      15: invokeinterface #89,  2           // InterfaceMethod org/apache/curator/framework/api/BackgroundVersionable.forPath:(Ljava/lang/String;)Ljava/lang/Object;
+      20: pop
+      21: goto          42
+      24: astore_2
+      25: goto          42
+      28: astore_2
+      29: new           #37                 // class java/lang/IllegalStateException
+      32: dup
+      33: aload_2
+      34: invokevirtual #54                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      37: aload_2
+      38: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      41: athrow
+      42: return
+    Exception table:
+       from    to  target type
+           0    21    24   Class org/apache/zookeeper/KeeperException$NoNodeException
+           0    21    28   Class java/lang/Exception
+
+  public java.util.List<java.lang.String> getChildren(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+       4: invokeinterface #91,  1           // InterfaceMethod org/apache/curator/framework/CuratorFramework.getChildren:()Lorg/apache/curator/framework/api/GetChildrenBuilder;
+       9: aload_1
+      10: invokeinterface #92,  2           // InterfaceMethod org/apache/curator/framework/api/GetChildrenBuilder.forPath:(Ljava/lang/String;)Ljava/lang/Object;
+      15: checkcast     #93                 // class java/util/List
+      18: areturn
+      19: astore_2
+      20: aconst_null
+      21: areturn
+      22: astore_2
+      23: new           #37                 // class java/lang/IllegalStateException
+      26: dup
+      27: aload_2
+      28: invokevirtual #54                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      31: aload_2
+      32: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      35: athrow
+    Exception table:
+       from    to  target type
+           0    18    19   Class org/apache/zookeeper/KeeperException$NoNodeException
+           0    18    22   Class java/lang/Exception
+
+  public boolean checkExists(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+       4: invokeinterface #94,  1           // InterfaceMethod org/apache/curator/framework/CuratorFramework.checkExists:()Lorg/apache/curator/framework/api/ExistsBuilder;
+       9: aload_1
+      10: invokeinterface #95,  2           // InterfaceMethod org/apache/curator/framework/api/ExistsBuilder.forPath:(Ljava/lang/String;)Ljava/lang/Object;
+      15: ifnull        20
+      18: iconst_1
+      19: ireturn
+      20: goto          24
+      23: astore_2
+      24: iconst_0
+      25: ireturn
+    Exception table:
+       from    to  target type
+           0    19    23   Class java/lang/Exception
+
+  public boolean isConnected();
+    Code:
+       0: aload_0
+       1: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+       4: invokeinterface #96,  1           // InterfaceMethod org/apache/curator/framework/CuratorFramework.getZookeeperClient:()Lorg/apache/curator/CuratorZookeeperClient;
+       9: invokevirtual #97                 // Method org/apache/curator/CuratorZookeeperClient.isConnected:()Z
+      12: ireturn
+
+  public java.lang.String doGetContent(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+       4: invokeinterface #98,  1           // InterfaceMethod org/apache/curator/framework/CuratorFramework.getData:()Lorg/apache/curator/framework/api/GetDataBuilder;
+       9: aload_1
+      10: invokeinterface #99,  2           // InterfaceMethod org/apache/curator/framework/api/GetDataBuilder.forPath:(Ljava/lang/String;)Ljava/lang/Object;
+      15: checkcast     #100                // class "[B"
+      18: astore_2
+      19: aload_2
+      20: ifnull        28
+      23: aload_2
+      24: arraylength
+      25: ifne          32
+      28: aconst_null
+      29: goto          43
+      32: new           #101                // class java/lang/String
+      35: dup
+      36: aload_2
+      37: getstatic     #6                  // Field CHARSET:Ljava/nio/charset/Charset;
+      40: invokespecial #102                // Method java/lang/String."<init>":([BLjava/nio/charset/Charset;)V
+      43: areturn
+      44: astore_2
+      45: goto          62
+      48: astore_2
+      49: new           #37                 // class java/lang/IllegalStateException
+      52: dup
+      53: aload_2
+      54: invokevirtual #54                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      57: aload_2
+      58: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      61: athrow
+      62: aconst_null
+      63: areturn
+    Exception table:
+       from    to  target type
+           0    43    44   Class org/apache/zookeeper/KeeperException$NoNodeException
+           0    43    48   Class java/lang/Exception
+
+  public org.apache.dubbo.common.config.configcenter.ConfigItem doGetConfigItem(java.lang.String);
+    Code:
+       0: new           #103                // class org/apache/zookeeper/data/Stat
+       3: dup
+       4: invokespecial #104                // Method org/apache/zookeeper/data/Stat."<init>":()V
+       7: astore_3
+       8: aload_0
+       9: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+      12: invokeinterface #98,  1           // InterfaceMethod org/apache/curator/framework/CuratorFramework.getData:()Lorg/apache/curator/framework/api/GetDataBuilder;
+      17: aload_3
+      18: invokeinterface #105,  2          // InterfaceMethod org/apache/curator/framework/api/GetDataBuilder.storingStatIn:(Lorg/apache/zookeeper/data/Stat;)Ljava/lang/Object;
+      23: checkcast     #106                // class org/apache/curator/framework/api/WatchPathable
+      26: aload_1
+      27: invokeinterface #107,  2          // InterfaceMethod org/apache/curator/framework/api/WatchPathable.forPath:(Ljava/lang/String;)Ljava/lang/Object;
+      32: checkcast     #100                // class "[B"
+      35: astore        4
+      37: aload         4
+      39: ifnull        48
+      42: aload         4
+      44: arraylength
+      45: ifne          52
+      48: aconst_null
+      49: goto          64
+      52: new           #101                // class java/lang/String
+      55: dup
+      56: aload         4
+      58: getstatic     #6                  // Field CHARSET:Ljava/nio/charset/Charset;
+      61: invokespecial #102                // Method java/lang/String."<init>":([BLjava/nio/charset/Charset;)V
+      64: astore_2
+      65: goto          95
+      68: astore        4
+      70: new           #108                // class org/apache/dubbo/common/config/configcenter/ConfigItem
+      73: dup
+      74: invokespecial #109                // Method org/apache/dubbo/common/config/configcenter/ConfigItem."<init>":()V
+      77: areturn
+      78: astore        4
+      80: new           #37                 // class java/lang/IllegalStateException
+      83: dup
+      84: aload         4
+      86: invokevirtual #54                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      89: aload         4
+      91: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      94: athrow
+      95: new           #108                // class org/apache/dubbo/common/config/configcenter/ConfigItem
+      98: dup
+      99: aload_2
+     100: aload_3
+     101: invokespecial #110                // Method org/apache/dubbo/common/config/configcenter/ConfigItem."<init>":(Ljava/lang/String;Ljava/lang/Object;)V
+     104: areturn
+    Exception table:
+       from    to  target type
+           0    65    68   Class org/apache/zookeeper/KeeperException$NoNodeException
+           0    65    78   Class java/lang/Exception
+
+  public void doClose();
+    Code:
+       0: aload_0
+       1: invokespecial #111                // Method org/apache/dubbo/remoting/zookeeper/AbstractZookeeperClient.close:()V
+       4: aload_0
+       5: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+       8: invokeinterface #112,  1          // InterfaceMethod org/apache/curator/framework/CuratorFramework.close:()V
+      13: iconst_1
+      14: invokestatic  #51                 // Method org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorWatcherImpl.access$002:(Z)Z
+      17: pop
+      18: ldc           #113                // class org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorWatcherImpl
+      20: dup
+      21: astore_1
+      22: monitorenter
+      23: invokestatic  #114                // Method org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorWatcherImpl.access$100:()Ljava/util/concurrent/ExecutorService;
+      26: ifnull        42
+      29: invokestatic  #114                // Method org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorWatcherImpl.access$100:()Ljava/util/concurrent/ExecutorService;
+      32: invokeinterface #115,  1          // InterfaceMethod java/util/concurrent/ExecutorService.shutdown:()V
+      37: aconst_null
+      38: invokestatic  #116                // Method org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorWatcherImpl.access$102:(Ljava/util/concurrent/ExecutorService;)Ljava/util/concurrent/ExecutorService;
+      41: pop
+      42: aload_1
+      43: monitorexit
+      44: goto          52
+      47: astore_2
+      48: aload_1
+      49: monitorexit
+      50: aload_2
+      51: athrow
+      52: return
+    Exception table:
+       from    to  target type
+          23    44    47   any
+          47    50    47   any
+
+  public org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient$CuratorWatcherImpl createTargetChildListener(java.lang.String, org.apache.dubbo.remoting.zookeeper.ChildListener);
+    Code:
+       0: new           #113                // class org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorWatcherImpl
+       3: dup
+       4: aload_0
+       5: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+       8: aload_2
+       9: aload_1
+      10: invokespecial #117                // Method org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorWatcherImpl."<init>":(Lorg/apache/curator/framework/CuratorFramework;Lorg/apache/dubbo/remoting/zookeeper/ChildListener;Ljava/lang/String;)V
+      13: areturn
+
+  public java.util.List<java.lang.String> addTargetChildListener(java.lang.String, org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient$CuratorWatcherImpl);
+    Code:
+       0: aload_0
+       1: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+       4: invokeinterface #91,  1           // InterfaceMethod org/apache/curator/framework/CuratorFramework.getChildren:()Lorg/apache/curator/framework/api/GetChildrenBuilder;
+       9: aload_2
+      10: invokeinterface #118,  2          // InterfaceMethod org/apache/curator/framework/api/GetChildrenBuilder.usingWatcher:(Lorg/apache/curator/framework/api/CuratorWatcher;)Ljava/lang/Object;
+      15: checkcast     #119                // class org/apache/curator/framework/api/BackgroundPathable
+      18: aload_1
+      19: invokeinterface #120,  2          // InterfaceMethod org/apache/curator/framework/api/BackgroundPathable.forPath:(Ljava/lang/String;)Ljava/lang/Object;
+      24: checkcast     #93                 // class java/util/List
+      27: areturn
+      28: astore_3
+      29: aconst_null
+      30: areturn
+      31: astore_3
+      32: new           #37                 // class java/lang/IllegalStateException
+      35: dup
+      36: aload_3
+      37: invokevirtual #54                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      40: aload_3
+      41: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      44: athrow
+    Exception table:
+       from    to  target type
+           0    27    28   Class org/apache/zookeeper/KeeperException$NoNodeException
+           0    27    31   Class java/lang/Exception
+
+  protected org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient$NodeCacheListenerImpl createTargetDataListener(java.lang.String, org.apache.dubbo.remoting.zookeeper.DataListener);
+    Code:
+       0: new           #121                // class org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$NodeCacheListenerImpl
+       3: dup
+       4: aload_2
+       5: aload_1
+       6: invokespecial #122                // Method org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$NodeCacheListenerImpl."<init>":(Lorg/apache/dubbo/remoting/zookeeper/DataListener;Ljava/lang/String;)V
+       9: areturn
+
+  protected void addTargetDataListener(java.lang.String, org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient$NodeCacheListenerImpl);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: aconst_null
+       4: invokevirtual #123                // Method addTargetDataListener:(Ljava/lang/String;Lorg/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$NodeCacheListenerImpl;Ljava/util/concurrent/Executor;)V
+       7: return
+
+  protected void addTargetDataListener(java.lang.String, org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient$NodeCacheListenerImpl, java.util.concurrent.Executor);
+    Code:
+       0: new           #124                // class org/apache/curator/framework/recipes/cache/NodeCache
+       3: dup
+       4: aload_0
+       5: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+       8: aload_1
+       9: invokespecial #125                // Method org/apache/curator/framework/recipes/cache/NodeCache."<init>":(Lorg/apache/curator/framework/CuratorFramework;Ljava/lang/String;)V
+      12: astore        4
+      14: getstatic     #7                  // Field nodeCacheMap:Ljava/util/Map;
+      17: aload_1
+      18: aload         4
+      20: invokeinterface #126,  3          // InterfaceMethod java/util/Map.putIfAbsent:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      25: ifnull        29
+      28: return
+      29: aload_3
+      30: ifnonnull     45
+      33: aload         4
+      35: invokevirtual #127                // Method org/apache/curator/framework/recipes/cache/NodeCache.getListenable:()Lorg/apache/curator/framework/listen/ListenerContainer;
+      38: aload_2
+      39: invokevirtual #128                // Method org/apache/curator/framework/listen/ListenerContainer.addListener:(Ljava/lang/Object;)V
+      42: goto          55
+      45: aload         4
+      47: invokevirtual #127                // Method org/apache/curator/framework/recipes/cache/NodeCache.getListenable:()Lorg/apache/curator/framework/listen/ListenerContainer;
+      50: aload_2
+      51: aload_3
+      52: invokevirtual #129                // Method org/apache/curator/framework/listen/ListenerContainer.addListener:(Ljava/lang/Object;Ljava/util/concurrent/Executor;)V
+      55: aload         4
+      57: invokevirtual #130                // Method org/apache/curator/framework/recipes/cache/NodeCache.start:()V
+      60: goto          94
+      63: astore        4
+      65: new           #37                 // class java/lang/IllegalStateException
+      68: dup
+      69: new           #38                 // class java/lang/StringBuilder
+      72: dup
+      73: invokespecial #39                 // Method java/lang/StringBuilder."<init>":()V
+      76: ldc           #131                // String Add nodeCache listener for path:
+      78: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      81: aload_1
+      82: invokevirtual #41                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      85: invokevirtual #43                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      88: aload         4
+      90: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      93: athrow
+      94: return
+    Exception table:
+       from    to  target type
+           0    28    63   Class java/lang/Exception
+          29    60    63   Class java/lang/Exception
+
+  protected void removeTargetDataListener(java.lang.String, org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient$NodeCacheListenerImpl);
+    Code:
+       0: getstatic     #7                  // Field nodeCacheMap:Ljava/util/Map;
+       3: aload_1
+       4: invokeinterface #132,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       9: checkcast     #124                // class org/apache/curator/framework/recipes/cache/NodeCache
+      12: astore_3
+      13: aload_3
+      14: ifnull        25
+      17: aload_3
+      18: invokevirtual #127                // Method org/apache/curator/framework/recipes/cache/NodeCache.getListenable:()Lorg/apache/curator/framework/listen/ListenerContainer;
+      21: aload_2
+      22: invokevirtual #133                // Method org/apache/curator/framework/listen/ListenerContainer.removeListener:(Ljava/lang/Object;)V
+      25: aload_2
+      26: aconst_null
+      27: invokestatic  #134                // Method org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$NodeCacheListenerImpl.access$202:(Lorg/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$NodeCacheListenerImpl;Lorg/apache/dubbo/remoting/zookeeper/DataListener;)Lorg/apache/dubbo/remoting/zookeeper/DataListener;
+      30: pop
+      31: return
+
+  public void removeTargetChildListener(java.lang.String, org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient$CuratorWatcherImpl);
+    Code:
+       0: aload_2
+       1: invokevirtual #135                // Method org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorWatcherImpl.unwatch:()V
+       4: return
+
+  org.apache.curator.framework.CuratorFramework getClient();
+    Code:
+       0: aload_0
+       1: getfield      #29                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+       4: areturn
+
+  public void removeTargetChildListener(java.lang.String, java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: checkcast     #113                // class org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorWatcherImpl
+       6: invokevirtual #136                // Method removeTargetChildListener:(Ljava/lang/String;Lorg/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorWatcherImpl;)V
+       9: return
+
+  protected void removeTargetDataListener(java.lang.String, java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: checkcast     #121                // class org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$NodeCacheListenerImpl
+       6: invokevirtual #137                // Method removeTargetDataListener:(Ljava/lang/String;Lorg/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$NodeCacheListenerImpl;)V
+       9: return
+
+  protected void addTargetDataListener(java.lang.String, java.lang.Object, java.util.concurrent.Executor);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: checkcast     #121                // class org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$NodeCacheListenerImpl
+       6: aload_3
+       7: invokevirtual #123                // Method addTargetDataListener:(Ljava/lang/String;Lorg/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$NodeCacheListenerImpl;Ljava/util/concurrent/Executor;)V
+      10: return
+
+  protected void addTargetDataListener(java.lang.String, java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: checkcast     #121                // class org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$NodeCacheListenerImpl
+       6: invokevirtual #138                // Method addTargetDataListener:(Ljava/lang/String;Lorg/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$NodeCacheListenerImpl;)V
+       9: return
+
+  protected java.lang.Object createTargetDataListener(java.lang.String, org.apache.dubbo.remoting.zookeeper.DataListener);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokevirtual #139                // Method createTargetDataListener:(Ljava/lang/String;Lorg/apache/dubbo/remoting/zookeeper/DataListener;)Lorg/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$NodeCacheListenerImpl;
+       6: areturn
+
+  public java.util.List addTargetChildListener(java.lang.String, java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: checkcast     #113                // class org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorWatcherImpl
+       6: invokevirtual #140                // Method addTargetChildListener:(Ljava/lang/String;Lorg/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorWatcherImpl;)Ljava/util/List;
+       9: areturn
+
+  public java.lang.Object createTargetChildListener(java.lang.String, org.apache.dubbo.remoting.zookeeper.ChildListener);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokevirtual #141                // Method createTargetChildListener:(Ljava/lang/String;Lorg/apache/dubbo/remoting/zookeeper/ChildListener;)Lorg/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorWatcherImpl;
+       6: areturn
+
+  static java.util.Map access$300();
+    Code:
+       0: getstatic     #7                  // Field nodeCacheMap:Ljava/util/Map;
+       3: areturn
+
+  static java.nio.charset.Charset access$400();
+    Code:
+       0: getstatic     #6                  // Field CHARSET:Ljava/nio/charset/Charset;
+       3: areturn
+
+  static int access$500(org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient);
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field DEFAULT_CONNECTION_TIMEOUT_MS:I
+       4: ireturn
+
+  static int access$600(org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field DEFAULT_SESSION_TIMEOUT_MS:I
+       4: ireturn
+
+  static void access$700(org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient, int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: invokevirtual #3                  // Method stateChanged:(I)V
+       5: return
+
+  static void access$800(org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient, int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: invokevirtual #3                  // Method stateChanged:(I)V
+       5: return
+
+  static void access$900(org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient, int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: invokevirtual #3                  // Method stateChanged:(I)V
+       5: return
+
+  static void access$1000(org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient, int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: invokevirtual #3                  // Method stateChanged:(I)V
+       5: return
+
+  static void access$1100(org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient, int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: invokevirtual #3                  // Method stateChanged:(I)V
+       5: return
+
+  static {};
+    Code:
+       0: ldc           #142                // class org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient
+       2: invokestatic  #143                // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #45                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: getstatic     #144                // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+      11: putstatic     #6                  // Field CHARSET:Ljava/nio/charset/Charset;
+      14: new           #145                // class java/util/concurrent/ConcurrentHashMap
+      17: dup
+      18: invokespecial #146                // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      21: putstatic     #7                  // Field nodeCacheMap:Ljava/util/Map;
+      24: return
+}

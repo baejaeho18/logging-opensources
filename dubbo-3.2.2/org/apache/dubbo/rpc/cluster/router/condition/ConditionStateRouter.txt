@@ -1,0 +1,695 @@
+Compiled from "ConditionStateRouter.java"
+public class org.apache.dubbo.rpc.cluster.router.condition.ConditionStateRouter<T> extends org.apache.dubbo.rpc.cluster.router.state.AbstractStateRouter<T> {
+  public static final java.lang.String NAME;
+
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  protected static final java.util.regex.Pattern ROUTE_PATTERN;
+
+  protected java.util.Map<java.lang.String, org.apache.dubbo.rpc.cluster.router.condition.matcher.ConditionMatcher> whenCondition;
+
+  protected java.util.Map<java.lang.String, org.apache.dubbo.rpc.cluster.router.condition.matcher.ConditionMatcher> thenCondition;
+
+  protected java.util.List<org.apache.dubbo.rpc.cluster.router.condition.matcher.ConditionMatcherFactory> matcherFactories;
+
+  private final boolean enabled;
+
+  public org.apache.dubbo.rpc.cluster.router.condition.ConditionStateRouter(org.apache.dubbo.common.URL, java.lang.String, boolean, boolean);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #4                  // Method org/apache/dubbo/rpc/cluster/router/state/AbstractStateRouter."<init>":(Lorg/apache/dubbo/common/URL;)V
+       5: aload_0
+       6: iload_3
+       7: invokevirtual #5                  // Method setForce:(Z)V
+      10: aload_0
+      11: iload         4
+      13: putfield      #6                  // Field enabled:Z
+      16: aload_0
+      17: aload_0
+      18: getfield      #7                  // Field moduleModel:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      21: ldc           #8                  // class org/apache/dubbo/rpc/cluster/router/condition/matcher/ConditionMatcherFactory
+      23: invokevirtual #9                  // Method org/apache/dubbo/rpc/model/ModuleModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      26: invokevirtual #10                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getActivateExtensions:()Ljava/util/List;
+      29: putfield      #11                 // Field matcherFactories:Ljava/util/List;
+      32: iload         4
+      34: ifeq          42
+      37: aload_0
+      38: aload_2
+      39: invokevirtual #12                 // Method init:(Ljava/lang/String;)V
+      42: return
+
+  public org.apache.dubbo.rpc.cluster.router.condition.ConditionStateRouter(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #4                  // Method org/apache/dubbo/rpc/cluster/router/state/AbstractStateRouter."<init>":(Lorg/apache/dubbo/common/URL;)V
+       5: aload_0
+       6: aload_1
+       7: invokevirtual #13                 // Method setUrl:(Lorg/apache/dubbo/common/URL;)V
+      10: aload_0
+      11: aload_1
+      12: ldc           #14                 // String force
+      14: iconst_0
+      15: invokevirtual #15                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+      18: invokevirtual #5                  // Method setForce:(Z)V
+      21: aload_0
+      22: aload_0
+      23: getfield      #7                  // Field moduleModel:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      26: ldc           #8                  // class org/apache/dubbo/rpc/cluster/router/condition/matcher/ConditionMatcherFactory
+      28: invokevirtual #9                  // Method org/apache/dubbo/rpc/model/ModuleModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      31: invokevirtual #10                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getActivateExtensions:()Ljava/util/List;
+      34: putfield      #11                 // Field matcherFactories:Ljava/util/List;
+      37: aload_0
+      38: aload_1
+      39: ldc           #16                 // String enabled
+      41: iconst_1
+      42: invokevirtual #15                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+      45: putfield      #6                  // Field enabled:Z
+      48: aload_0
+      49: getfield      #6                  // Field enabled:Z
+      52: ifeq          65
+      55: aload_0
+      56: aload_1
+      57: ldc           #17                 // String rule
+      59: invokevirtual #18                 // Method org/apache/dubbo/common/URL.getParameterAndDecoded:(Ljava/lang/String;)Ljava/lang/String;
+      62: invokevirtual #12                 // Method init:(Ljava/lang/String;)V
+      65: return
+
+  public void init(java.lang.String);
+    Code:
+       0: aload_1
+       1: ifnull        14
+       4: aload_1
+       5: invokevirtual #19                 // Method java/lang/String.trim:()Ljava/lang/String;
+       8: invokevirtual #20                 // Method java/lang/String.length:()I
+      11: ifne          24
+      14: new           #21                 // class java/lang/IllegalArgumentException
+      17: dup
+      18: ldc           #22                 // String Illegal route rule!
+      20: invokespecial #23                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      23: athrow
+      24: aload_1
+      25: ldc           #24                 // String consumer.
+      27: ldc           #25                 // String
+      29: invokevirtual #26                 // Method java/lang/String.replace:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+      32: ldc           #27                 // String provider.
+      34: ldc           #25                 // String
+      36: invokevirtual #26                 // Method java/lang/String.replace:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+      39: astore_1
+      40: aload_1
+      41: ldc           #28                 // String =>
+      43: invokevirtual #29                 // Method java/lang/String.indexOf:(Ljava/lang/String;)I
+      46: istore_2
+      47: iload_2
+      48: ifge          55
+      51: aconst_null
+      52: goto          64
+      55: aload_1
+      56: iconst_0
+      57: iload_2
+      58: invokevirtual #30                 // Method java/lang/String.substring:(II)Ljava/lang/String;
+      61: invokevirtual #19                 // Method java/lang/String.trim:()Ljava/lang/String;
+      64: astore_3
+      65: iload_2
+      66: ifge          76
+      69: aload_1
+      70: invokevirtual #19                 // Method java/lang/String.trim:()Ljava/lang/String;
+      73: goto          86
+      76: aload_1
+      77: iload_2
+      78: iconst_2
+      79: iadd
+      80: invokevirtual #31                 // Method java/lang/String.substring:(I)Ljava/lang/String;
+      83: invokevirtual #19                 // Method java/lang/String.trim:()Ljava/lang/String;
+      86: astore        4
+      88: aload_3
+      89: invokestatic  #32                 // Method org/apache/dubbo/common/utils/StringUtils.isBlank:(Ljava/lang/CharSequence;)Z
+      92: ifne          104
+      95: ldc           #33                 // String true
+      97: aload_3
+      98: invokevirtual #34                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     101: ifeq          114
+     104: new           #35                 // class java/util/HashMap
+     107: dup
+     108: invokespecial #36                 // Method java/util/HashMap."<init>":()V
+     111: goto          119
+     114: aload_0
+     115: aload_3
+     116: invokespecial #37                 // Method parseRule:(Ljava/lang/String;)Ljava/util/Map;
+     119: astore        5
+     121: aload         4
+     123: invokestatic  #32                 // Method org/apache/dubbo/common/utils/StringUtils.isBlank:(Ljava/lang/CharSequence;)Z
+     126: ifne          139
+     129: ldc           #38                 // String false
+     131: aload         4
+     133: invokevirtual #34                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     136: ifeq          143
+     139: aconst_null
+     140: goto          149
+     143: aload_0
+     144: aload         4
+     146: invokespecial #37                 // Method parseRule:(Ljava/lang/String;)Ljava/util/Map;
+     149: astore        6
+     151: aload_0
+     152: aload         5
+     154: putfield      #39                 // Field whenCondition:Ljava/util/Map;
+     157: aload_0
+     158: aload         6
+     160: putfield      #40                 // Field thenCondition:Ljava/util/Map;
+     163: goto          180
+     166: astore_2
+     167: new           #42                 // class java/lang/IllegalStateException
+     170: dup
+     171: aload_2
+     172: invokevirtual #43                 // Method java/text/ParseException.getMessage:()Ljava/lang/String;
+     175: aload_2
+     176: invokespecial #44                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     179: athrow
+     180: return
+    Exception table:
+       from    to  target type
+           0   163   166   Class java/text/ParseException
+
+  private java.util.Map<java.lang.String, org.apache.dubbo.rpc.cluster.router.condition.matcher.ConditionMatcher> parseRule(java.lang.String) throws java.text.ParseException;
+    Code:
+       0: new           #35                 // class java/util/HashMap
+       3: dup
+       4: invokespecial #36                 // Method java/util/HashMap."<init>":()V
+       7: astore_2
+       8: aload_1
+       9: invokestatic  #32                 // Method org/apache/dubbo/common/utils/StringUtils.isBlank:(Ljava/lang/CharSequence;)Z
+      12: ifeq          17
+      15: aload_2
+      16: areturn
+      17: aconst_null
+      18: astore_3
+      19: aconst_null
+      20: astore        4
+      22: getstatic     #45                 // Field ROUTE_PATTERN:Ljava/util/regex/Pattern;
+      25: aload_1
+      26: invokevirtual #46                 // Method java/util/regex/Pattern.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+      29: astore        5
+      31: aload         5
+      33: invokevirtual #47                 // Method java/util/regex/Matcher.find:()Z
+      36: ifeq          530
+      39: aload         5
+      41: iconst_1
+      42: invokevirtual #48                 // Method java/util/regex/Matcher.group:(I)Ljava/lang/String;
+      45: astore        6
+      47: aload         5
+      49: iconst_2
+      50: invokevirtual #48                 // Method java/util/regex/Matcher.group:(I)Ljava/lang/String;
+      53: astore        7
+      55: aload         6
+      57: invokestatic  #49                 // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+      60: ifeq          83
+      63: aload_0
+      64: aload         7
+      66: invokespecial #50                 // Method getMatcher:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/cluster/router/condition/matcher/ConditionMatcher;
+      69: astore_3
+      70: aload_2
+      71: aload         7
+      73: aload_3
+      74: invokeinterface #51,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      79: pop
+      80: goto          527
+      83: ldc           #52                 // String &
+      85: aload         6
+      87: invokevirtual #34                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      90: ifeq          139
+      93: aload_2
+      94: aload         7
+      96: invokeinterface #53,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     101: ifnonnull     124
+     104: aload_0
+     105: aload         7
+     107: invokespecial #50                 // Method getMatcher:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/cluster/router/condition/matcher/ConditionMatcher;
+     110: astore_3
+     111: aload_2
+     112: aload         7
+     114: aload_3
+     115: invokeinterface #51,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     120: pop
+     121: goto          527
+     124: aload_2
+     125: aload         7
+     127: invokeinterface #53,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     132: checkcast     #54                 // class org/apache/dubbo/rpc/cluster/router/condition/matcher/ConditionMatcher
+     135: astore_3
+     136: goto          527
+     139: ldc           #55                 // String =
+     141: aload         6
+     143: invokevirtual #34                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     146: ifeq          244
+     149: aload_3
+     150: ifnonnull     223
+     153: new           #41                 // class java/text/ParseException
+     156: dup
+     157: new           #56                 // class java/lang/StringBuilder
+     160: dup
+     161: invokespecial #57                 // Method java/lang/StringBuilder."<init>":()V
+     164: ldc           #58                 // String Illegal route rule \"
+     166: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     169: aload_1
+     170: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     173: ldc           #60                 // String \", The error char \'
+     175: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     178: aload         6
+     180: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     183: ldc           #61                 // String \' at index
+     185: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     188: aload         5
+     190: invokevirtual #62                 // Method java/util/regex/Matcher.start:()I
+     193: invokevirtual #63                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     196: ldc           #64                 // String  before \"
+     198: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     201: aload         7
+     203: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     206: ldc           #65                 // String \".
+     208: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     211: invokevirtual #66                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     214: aload         5
+     216: invokevirtual #62                 // Method java/util/regex/Matcher.start:()I
+     219: invokespecial #67                 // Method java/text/ParseException."<init>":(Ljava/lang/String;I)V
+     222: athrow
+     223: aload_3
+     224: invokeinterface #68,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/router/condition/matcher/ConditionMatcher.getMatches:()Ljava/util/Set;
+     229: astore        4
+     231: aload         4
+     233: aload         7
+     235: invokeinterface #69,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+     240: pop
+     241: goto          527
+     244: ldc           #70                 // String !=
+     246: aload         6
+     248: invokevirtual #34                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     251: ifeq          349
+     254: aload_3
+     255: ifnonnull     328
+     258: new           #41                 // class java/text/ParseException
+     261: dup
+     262: new           #56                 // class java/lang/StringBuilder
+     265: dup
+     266: invokespecial #57                 // Method java/lang/StringBuilder."<init>":()V
+     269: ldc           #58                 // String Illegal route rule \"
+     271: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     274: aload_1
+     275: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     278: ldc           #60                 // String \", The error char \'
+     280: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     283: aload         6
+     285: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     288: ldc           #61                 // String \' at index
+     290: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     293: aload         5
+     295: invokevirtual #62                 // Method java/util/regex/Matcher.start:()I
+     298: invokevirtual #63                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     301: ldc           #64                 // String  before \"
+     303: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     306: aload         7
+     308: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     311: ldc           #65                 // String \".
+     313: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     316: invokevirtual #66                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     319: aload         5
+     321: invokevirtual #62                 // Method java/util/regex/Matcher.start:()I
+     324: invokespecial #67                 // Method java/text/ParseException."<init>":(Ljava/lang/String;I)V
+     327: athrow
+     328: aload_3
+     329: invokeinterface #71,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/router/condition/matcher/ConditionMatcher.getMismatches:()Ljava/util/Set;
+     334: astore        4
+     336: aload         4
+     338: aload         7
+     340: invokeinterface #69,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+     345: pop
+     346: goto          527
+     349: ldc           #72                 // String ,
+     351: aload         6
+     353: invokevirtual #34                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     356: ifeq          457
+     359: aload         4
+     361: ifnull        374
+     364: aload         4
+     366: invokeinterface #73,  1           // InterfaceMethod java/util/Set.isEmpty:()Z
+     371: ifeq          444
+     374: new           #41                 // class java/text/ParseException
+     377: dup
+     378: new           #56                 // class java/lang/StringBuilder
+     381: dup
+     382: invokespecial #57                 // Method java/lang/StringBuilder."<init>":()V
+     385: ldc           #58                 // String Illegal route rule \"
+     387: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     390: aload_1
+     391: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     394: ldc           #60                 // String \", The error char \'
+     396: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     399: aload         6
+     401: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     404: ldc           #61                 // String \' at index
+     406: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     409: aload         5
+     411: invokevirtual #62                 // Method java/util/regex/Matcher.start:()I
+     414: invokevirtual #63                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     417: ldc           #64                 // String  before \"
+     419: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     422: aload         7
+     424: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     427: ldc           #65                 // String \".
+     429: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     432: invokevirtual #66                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     435: aload         5
+     437: invokevirtual #62                 // Method java/util/regex/Matcher.start:()I
+     440: invokespecial #67                 // Method java/text/ParseException."<init>":(Ljava/lang/String;I)V
+     443: athrow
+     444: aload         4
+     446: aload         7
+     448: invokeinterface #69,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+     453: pop
+     454: goto          527
+     457: new           #41                 // class java/text/ParseException
+     460: dup
+     461: new           #56                 // class java/lang/StringBuilder
+     464: dup
+     465: invokespecial #57                 // Method java/lang/StringBuilder."<init>":()V
+     468: ldc           #58                 // String Illegal route rule \"
+     470: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     473: aload_1
+     474: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     477: ldc           #60                 // String \", The error char \'
+     479: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     482: aload         6
+     484: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     487: ldc           #61                 // String \' at index
+     489: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     492: aload         5
+     494: invokevirtual #62                 // Method java/util/regex/Matcher.start:()I
+     497: invokevirtual #63                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     500: ldc           #64                 // String  before \"
+     502: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     505: aload         7
+     507: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     510: ldc           #65                 // String \".
+     512: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     515: invokevirtual #66                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     518: aload         5
+     520: invokevirtual #62                 // Method java/util/regex/Matcher.start:()I
+     523: invokespecial #67                 // Method java/text/ParseException."<init>":(Ljava/lang/String;I)V
+     526: athrow
+     527: goto          31
+     530: aload_2
+     531: areturn
+
+  protected org.apache.dubbo.rpc.cluster.router.state.BitList<org.apache.dubbo.rpc.Invoker<T>> doRoute(org.apache.dubbo.rpc.cluster.router.state.BitList<org.apache.dubbo.rpc.Invoker<T>>, org.apache.dubbo.common.URL, org.apache.dubbo.rpc.Invocation, boolean, org.apache.dubbo.common.utils.Holder<org.apache.dubbo.rpc.cluster.router.RouterSnapshotNode<T>>, org.apache.dubbo.common.utils.Holder<java.lang.String>) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field enabled:Z
+       4: ifne          21
+       7: iload         4
+       9: ifeq          19
+      12: aload         6
+      14: ldc           #74                 // String Directly return. Reason: ConditionRouter disabled.
+      16: invokevirtual #75                 // Method org/apache/dubbo/common/utils/Holder.set:(Ljava/lang/Object;)V
+      19: aload_1
+      20: areturn
+      21: aload_1
+      22: invokestatic  #76                 // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+      25: ifeq          42
+      28: iload         4
+      30: ifeq          40
+      33: aload         6
+      35: ldc           #77                 // String Directly return. Reason: Invokers from previous router is empty.
+      37: invokevirtual #75                 // Method org/apache/dubbo/common/utils/Holder.set:(Ljava/lang/Object;)V
+      40: aload_1
+      41: areturn
+      42: aload_0
+      43: aload_2
+      44: aload_3
+      45: invokevirtual #78                 // Method matchWhen:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/rpc/Invocation;)Z
+      48: ifne          65
+      51: iload         4
+      53: ifeq          63
+      56: aload         6
+      58: ldc           #79                 // String Directly return. Reason: WhenCondition not match.
+      60: invokevirtual #75                 // Method org/apache/dubbo/common/utils/Holder.set:(Ljava/lang/Object;)V
+      63: aload_1
+      64: areturn
+      65: aload_0
+      66: getfield      #40                 // Field thenCondition:Ljava/util/Map;
+      69: ifnonnull     135
+      72: getstatic     #80                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      75: ldc           #81                 // String 2-6
+      77: ldc           #82                 // String condition state router thenCondition is empty
+      79: ldc           #25                 // String
+      81: new           #56                 // class java/lang/StringBuilder
+      84: dup
+      85: invokespecial #57                 // Method java/lang/StringBuilder."<init>":()V
+      88: ldc           #83                 // String The current consumer in the service blacklist. consumer:
+      90: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      93: invokestatic  #84                 // Method org/apache/dubbo/common/utils/NetUtils.getLocalHost:()Ljava/lang/String;
+      96: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      99: ldc           #85                 // String , service:
+     101: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     104: aload_2
+     105: invokevirtual #86                 // Method org/apache/dubbo/common/URL.getServiceKey:()Ljava/lang/String;
+     108: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     111: invokevirtual #66                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     114: invokeinterface #87,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     119: iload         4
+     121: ifeq          131
+     124: aload         6
+     126: ldc           #88                 // String Empty return. Reason: ThenCondition is empty.
+     128: invokevirtual #75                 // Method org/apache/dubbo/common/utils/Holder.set:(Ljava/lang/Object;)V
+     131: invokestatic  #89                 // Method org/apache/dubbo/rpc/cluster/router/state/BitList.emptyList:()Lorg/apache/dubbo/rpc/cluster/router/state/BitList;
+     134: areturn
+     135: aload_1
+     136: invokevirtual #90                 // Method org/apache/dubbo/rpc/cluster/router/state/BitList.clone:()Lorg/apache/dubbo/rpc/cluster/router/state/BitList;
+     139: astore        7
+     141: aload         7
+     143: aload_0
+     144: aload_2
+     145: invokedynamic #91,  0             // InvokeDynamic #0:test:(Lorg/apache/dubbo/rpc/cluster/router/condition/ConditionStateRouter;Lorg/apache/dubbo/common/URL;)Ljava/util/function/Predicate;
+     150: invokevirtual #92                 // Method org/apache/dubbo/rpc/cluster/router/state/BitList.removeIf:(Ljava/util/function/Predicate;)Z
+     153: pop
+     154: aload         7
+     156: invokevirtual #93                 // Method org/apache/dubbo/rpc/cluster/router/state/BitList.isEmpty:()Z
+     159: ifne          177
+     162: iload         4
+     164: ifeq          174
+     167: aload         6
+     169: ldc           #94                 // String Match return.
+     171: invokevirtual #75                 // Method org/apache/dubbo/common/utils/Holder.set:(Ljava/lang/Object;)V
+     174: aload         7
+     176: areturn
+     177: aload_0
+     178: invokevirtual #95                 // Method isForce:()Z
+     181: ifeq          260
+     184: getstatic     #80                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     187: ldc           #81                 // String 2-6
+     189: ldc           #96                 // String execute condition state router result list is empty. and force=true
+     191: ldc           #25                 // String
+     193: new           #56                 // class java/lang/StringBuilder
+     196: dup
+     197: invokespecial #57                 // Method java/lang/StringBuilder."<init>":()V
+     200: ldc           #97                 // String The route result is empty and force execute. consumer:
+     202: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     205: invokestatic  #84                 // Method org/apache/dubbo/common/utils/NetUtils.getLocalHost:()Ljava/lang/String;
+     208: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     211: ldc           #85                 // String , service:
+     213: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     216: aload_2
+     217: invokevirtual #86                 // Method org/apache/dubbo/common/URL.getServiceKey:()Ljava/lang/String;
+     220: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     223: ldc           #98                 // String , router:
+     225: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     228: aload_2
+     229: ldc           #17                 // String rule
+     231: invokevirtual #18                 // Method org/apache/dubbo/common/URL.getParameterAndDecoded:(Ljava/lang/String;)Ljava/lang/String;
+     234: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     237: invokevirtual #66                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     240: invokeinterface #87,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     245: iload         4
+     247: ifeq          257
+     250: aload         6
+     252: ldc           #99                 // String Empty return. Reason: Empty result from condition and condition is force.
+     254: invokevirtual #75                 // Method org/apache/dubbo/common/utils/Holder.set:(Ljava/lang/Object;)V
+     257: aload         7
+     259: areturn
+     260: goto          325
+     263: astore        7
+     265: getstatic     #80                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     268: ldc           #101                // String 2-7
+     270: ldc           #102                // String execute condition state router exception
+     272: ldc           #25                 // String
+     274: new           #56                 // class java/lang/StringBuilder
+     277: dup
+     278: invokespecial #57                 // Method java/lang/StringBuilder."<init>":()V
+     281: ldc           #103                // String Failed to execute condition router rule:
+     283: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     286: aload_0
+     287: invokevirtual #104                // Method getUrl:()Lorg/apache/dubbo/common/URL;
+     290: invokevirtual #105                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     293: ldc           #106                // String , invokers:
+     295: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     298: aload_1
+     299: invokevirtual #105                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     302: ldc           #107                // String , cause:
+     304: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     307: aload         7
+     309: invokevirtual #108                // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     312: invokevirtual #59                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     315: invokevirtual #66                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     318: aload         7
+     320: invokeinterface #109,  6          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     325: iload         4
+     327: ifeq          337
+     330: aload         6
+     332: ldc           #110                // String Directly return. Reason: Error occurred ( or result is empty ).
+     334: invokevirtual #75                 // Method org/apache/dubbo/common/utils/Holder.set:(Ljava/lang/Object;)V
+     337: aload_1
+     338: areturn
+    Exception table:
+       from    to  target type
+          42    64   263   Class java/lang/Throwable
+          65   134   263   Class java/lang/Throwable
+         135   176   263   Class java/lang/Throwable
+         177   259   263   Class java/lang/Throwable
+
+  public boolean isRuntime();
+    Code:
+       0: aload_0
+       1: invokevirtual #104                // Method getUrl:()Lorg/apache/dubbo/common/URL;
+       4: ldc           #111                // String runtime
+       6: iconst_0
+       7: invokevirtual #15                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+      10: ireturn
+
+  private org.apache.dubbo.rpc.cluster.router.condition.matcher.ConditionMatcher getMatcher(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field matcherFactories:Ljava/util/List;
+       4: invokeinterface #112,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       9: astore_2
+      10: aload_2
+      11: invokeinterface #113,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      16: ifeq          54
+      19: aload_2
+      20: invokeinterface #114,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      25: checkcast     #8                  // class org/apache/dubbo/rpc/cluster/router/condition/matcher/ConditionMatcherFactory
+      28: astore_3
+      29: aload_3
+      30: aload_1
+      31: invokeinterface #115,  2          // InterfaceMethod org/apache/dubbo/rpc/cluster/router/condition/matcher/ConditionMatcherFactory.shouldMatch:(Ljava/lang/String;)Z
+      36: ifeq          51
+      39: aload_3
+      40: aload_1
+      41: aload_0
+      42: getfield      #7                  // Field moduleModel:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      45: invokeinterface #116,  3          // InterfaceMethod org/apache/dubbo/rpc/cluster/router/condition/matcher/ConditionMatcherFactory.createMatcher:(Ljava/lang/String;Lorg/apache/dubbo/rpc/model/ModuleModel;)Lorg/apache/dubbo/rpc/cluster/router/condition/matcher/ConditionMatcher;
+      50: areturn
+      51: goto          10
+      54: aload_0
+      55: getfield      #7                  // Field moduleModel:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      58: ldc           #8                  // class org/apache/dubbo/rpc/cluster/router/condition/matcher/ConditionMatcherFactory
+      60: invokevirtual #9                  // Method org/apache/dubbo/rpc/model/ModuleModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      63: ldc           #117                // String param
+      65: invokevirtual #118                // Method org/apache/dubbo/common/extension/ExtensionLoader.getExtension:(Ljava/lang/String;)Ljava/lang/Object;
+      68: checkcast     #8                  // class org/apache/dubbo/rpc/cluster/router/condition/matcher/ConditionMatcherFactory
+      71: aload_1
+      72: aload_0
+      73: getfield      #7                  // Field moduleModel:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      76: invokeinterface #116,  3          // InterfaceMethod org/apache/dubbo/rpc/cluster/router/condition/matcher/ConditionMatcherFactory.createMatcher:(Ljava/lang/String;Lorg/apache/dubbo/rpc/model/ModuleModel;)Lorg/apache/dubbo/rpc/cluster/router/condition/matcher/ConditionMatcher;
+      81: areturn
+
+  boolean matchWhen(org.apache.dubbo.common.URL, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_0
+       1: getfield      #39                 // Field whenCondition:Ljava/util/Map;
+       4: invokestatic  #119                // Method org/apache/dubbo/common/utils/CollectionUtils.isEmptyMap:(Ljava/util/Map;)Z
+       7: ifeq          12
+      10: iconst_1
+      11: ireturn
+      12: aload_0
+      13: aload_1
+      14: aconst_null
+      15: aload_2
+      16: aload_0
+      17: getfield      #39                 // Field whenCondition:Ljava/util/Map;
+      20: iconst_1
+      21: invokespecial #120                // Method doMatch:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/rpc/Invocation;Ljava/util/Map;Z)Z
+      24: ireturn
+
+  private boolean matchThen(org.apache.dubbo.common.URL, org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: getfield      #40                 // Field thenCondition:Ljava/util/Map;
+       4: invokestatic  #119                // Method org/apache/dubbo/common/utils/CollectionUtils.isEmptyMap:(Ljava/util/Map;)Z
+       7: ifeq          12
+      10: iconst_0
+      11: ireturn
+      12: aload_0
+      13: aload_1
+      14: aload_2
+      15: aconst_null
+      16: aload_0
+      17: getfield      #40                 // Field thenCondition:Ljava/util/Map;
+      20: iconst_0
+      21: invokespecial #120                // Method doMatch:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/rpc/Invocation;Ljava/util/Map;Z)Z
+      24: ireturn
+
+  private boolean doMatch(org.apache.dubbo.common.URL, org.apache.dubbo.common.URL, org.apache.dubbo.rpc.Invocation, java.util.Map<java.lang.String, org.apache.dubbo.rpc.cluster.router.condition.matcher.ConditionMatcher>, boolean);
+    Code:
+       0: aload_1
+       1: invokevirtual #121                // Method org/apache/dubbo/common/URL.toOriginalMap:()Ljava/util/Map;
+       4: astore        6
+       6: aload         4
+       8: invokeinterface #122,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+      13: invokeinterface #123,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      18: astore        7
+      20: aload         7
+      22: invokeinterface #113,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      27: ifeq          75
+      30: aload         7
+      32: invokeinterface #114,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      37: checkcast     #124                // class java/util/Map$Entry
+      40: astore        8
+      42: aload         8
+      44: invokeinterface #125,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+      49: checkcast     #54                 // class org/apache/dubbo/rpc/cluster/router/condition/matcher/ConditionMatcher
+      52: astore        9
+      54: aload         9
+      56: aload         6
+      58: aload_2
+      59: aload_3
+      60: iload         5
+      62: invokeinterface #126,  5          // InterfaceMethod org/apache/dubbo/rpc/cluster/router/condition/matcher/ConditionMatcher.isMatch:(Ljava/util/Map;Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/rpc/Invocation;Z)Z
+      67: ifne          72
+      70: iconst_0
+      71: ireturn
+      72: goto          20
+      75: iconst_1
+      76: ireturn
+
+  private boolean lambda$doRoute$0(org.apache.dubbo.common.URL, org.apache.dubbo.rpc.Invoker);
+    Code:
+       0: aload_0
+       1: aload_2
+       2: invokeinterface #127,  1          // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+       7: aload_1
+       8: invokespecial #128                // Method matchThen:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/common/URL;)Z
+      11: ifne          18
+      14: iconst_1
+      15: goto          19
+      18: iconst_0
+      19: ireturn
+
+  static {};
+    Code:
+       0: ldc           #129                // class org/apache/dubbo/rpc/cluster/router/state/AbstractStateRouter
+       2: invokestatic  #130                // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #80                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: ldc           #131                // String ([&!=,]*)\\s*([^&!=,\\s]+)
+      10: invokestatic  #132                // Method java/util/regex/Pattern.compile:(Ljava/lang/String;)Ljava/util/regex/Pattern;
+      13: putstatic     #45                 // Field ROUTE_PATTERN:Ljava/util/regex/Pattern;
+      16: return
+}

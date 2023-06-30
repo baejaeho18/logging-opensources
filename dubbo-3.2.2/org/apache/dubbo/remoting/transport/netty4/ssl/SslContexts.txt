@@ -1,0 +1,271 @@
+Compiled from "SslContexts.java"
+public class org.apache.dubbo.remoting.transport.netty4.ssl.SslContexts {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  public org.apache.dubbo.remoting.transport.netty4.ssl.SslContexts();
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static io.netty.handler.ssl.SslContext buildServerSslContext(org.apache.dubbo.common.ssl.ProviderCert);
+    Code:
+       0: aconst_null
+       1: astore_2
+       2: aconst_null
+       3: astore_3
+       4: aconst_null
+       5: astore        4
+       7: aload_0
+       8: invokevirtual #3                  // Method org/apache/dubbo/common/ssl/ProviderCert.getKeyCertChainInputStream:()Ljava/io/InputStream;
+      11: astore_2
+      12: aload_0
+      13: invokevirtual #4                  // Method org/apache/dubbo/common/ssl/ProviderCert.getPrivateKeyInputStream:()Ljava/io/InputStream;
+      16: astore_3
+      17: aload_0
+      18: invokevirtual #5                  // Method org/apache/dubbo/common/ssl/ProviderCert.getTrustCertInputStream:()Ljava/io/InputStream;
+      21: astore        4
+      23: aload_0
+      24: invokevirtual #6                  // Method org/apache/dubbo/common/ssl/ProviderCert.getPassword:()Ljava/lang/String;
+      27: astore        5
+      29: aload         5
+      31: ifnull        45
+      34: aload_2
+      35: aload_3
+      36: aload         5
+      38: invokestatic  #7                  // Method io/netty/handler/ssl/SslContextBuilder.forServer:(Ljava/io/InputStream;Ljava/io/InputStream;Ljava/lang/String;)Lio/netty/handler/ssl/SslContextBuilder;
+      41: astore_1
+      42: goto          51
+      45: aload_2
+      46: aload_3
+      47: invokestatic  #8                  // Method io/netty/handler/ssl/SslContextBuilder.forServer:(Ljava/io/InputStream;Ljava/io/InputStream;)Lio/netty/handler/ssl/SslContextBuilder;
+      50: astore_1
+      51: aload         4
+      53: ifnull        92
+      56: aload_1
+      57: aload         4
+      59: invokevirtual #9                  // Method io/netty/handler/ssl/SslContextBuilder.trustManager:(Ljava/io/InputStream;)Lio/netty/handler/ssl/SslContextBuilder;
+      62: pop
+      63: aload_0
+      64: invokevirtual #10                 // Method org/apache/dubbo/common/ssl/ProviderCert.getAuthPolicy:()Lorg/apache/dubbo/common/ssl/AuthPolicy;
+      67: getstatic     #11                 // Field org/apache/dubbo/common/ssl/AuthPolicy.CLIENT_AUTH:Lorg/apache/dubbo/common/ssl/AuthPolicy;
+      70: if_acmpne     84
+      73: aload_1
+      74: getstatic     #12                 // Field io/netty/handler/ssl/ClientAuth.REQUIRE:Lio/netty/handler/ssl/ClientAuth;
+      77: invokevirtual #13                 // Method io/netty/handler/ssl/SslContextBuilder.clientAuth:(Lio/netty/handler/ssl/ClientAuth;)Lio/netty/handler/ssl/SslContextBuilder;
+      80: pop
+      81: goto          92
+      84: aload_1
+      85: getstatic     #14                 // Field io/netty/handler/ssl/ClientAuth.OPTIONAL:Lio/netty/handler/ssl/ClientAuth;
+      88: invokevirtual #13                 // Method io/netty/handler/ssl/SslContextBuilder.clientAuth:(Lio/netty/handler/ssl/ClientAuth;)Lio/netty/handler/ssl/SslContextBuilder;
+      91: pop
+      92: aload         4
+      94: invokestatic  #15                 // Method safeCloseStream:(Ljava/io/InputStream;)V
+      97: aload_2
+      98: invokestatic  #15                 // Method safeCloseStream:(Ljava/io/InputStream;)V
+     101: aload_3
+     102: invokestatic  #15                 // Method safeCloseStream:(Ljava/io/InputStream;)V
+     105: goto          140
+     108: astore        5
+     110: new           #17                 // class java/lang/IllegalArgumentException
+     113: dup
+     114: ldc           #18                 // String Could not find certificate file or the certificate is invalid.
+     116: aload         5
+     118: invokespecial #19                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     121: athrow
+     122: astore        6
+     124: aload         4
+     126: invokestatic  #15                 // Method safeCloseStream:(Ljava/io/InputStream;)V
+     129: aload_2
+     130: invokestatic  #15                 // Method safeCloseStream:(Ljava/io/InputStream;)V
+     133: aload_3
+     134: invokestatic  #15                 // Method safeCloseStream:(Ljava/io/InputStream;)V
+     137: aload         6
+     139: athrow
+     140: aload_1
+     141: invokestatic  #20                 // Method findSslProvider:()Lio/netty/handler/ssl/SslProvider;
+     144: invokevirtual #21                 // Method io/netty/handler/ssl/SslContextBuilder.sslProvider:(Lio/netty/handler/ssl/SslProvider;)Lio/netty/handler/ssl/SslContextBuilder;
+     147: invokevirtual #22                 // Method io/netty/handler/ssl/SslContextBuilder.build:()Lio/netty/handler/ssl/SslContext;
+     150: areturn
+     151: astore        5
+     153: new           #24                 // class java/lang/IllegalStateException
+     156: dup
+     157: ldc           #25                 // String Build SslSession failed.
+     159: aload         5
+     161: invokespecial #26                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     164: athrow
+    Exception table:
+       from    to  target type
+           7    92   108   Class java/lang/Exception
+           7    92   122   any
+         108   124   122   any
+         140   150   151   Class javax/net/ssl/SSLException
+
+  public static io.netty.handler.ssl.SslContext buildClientSslContext(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: invokevirtual #27                 // Method org/apache/dubbo/common/URL.getOrDefaultFrameworkModel:()Lorg/apache/dubbo/rpc/model/FrameworkModel;
+       4: invokevirtual #28                 // Method org/apache/dubbo/rpc/model/FrameworkModel.getBeanFactory:()Lorg/apache/dubbo/common/beans/factory/ScopeBeanFactory;
+       7: ldc           #29                 // class org/apache/dubbo/common/ssl/CertManager
+       9: invokevirtual #30                 // Method org/apache/dubbo/common/beans/factory/ScopeBeanFactory.getBean:(Ljava/lang/Class;)Ljava/lang/Object;
+      12: checkcast     #29                 // class org/apache/dubbo/common/ssl/CertManager
+      15: astore_1
+      16: aload_1
+      17: aload_0
+      18: invokevirtual #31                 // Method org/apache/dubbo/common/ssl/CertManager.getConsumerConnectionConfig:(Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/common/ssl/Cert;
+      21: astore_2
+      22: aload_2
+      23: ifnonnull     28
+      26: aconst_null
+      27: areturn
+      28: invokestatic  #32                 // Method io/netty/handler/ssl/SslContextBuilder.forClient:()Lio/netty/handler/ssl/SslContextBuilder;
+      31: astore_3
+      32: aconst_null
+      33: astore        4
+      35: aconst_null
+      36: astore        5
+      38: aconst_null
+      39: astore        6
+      41: aload_2
+      42: invokevirtual #33                 // Method org/apache/dubbo/common/ssl/Cert.getTrustCertInputStream:()Ljava/io/InputStream;
+      45: astore        4
+      47: aload         4
+      49: ifnull        59
+      52: aload_3
+      53: aload         4
+      55: invokevirtual #9                  // Method io/netty/handler/ssl/SslContextBuilder.trustManager:(Ljava/io/InputStream;)Lio/netty/handler/ssl/SslContextBuilder;
+      58: pop
+      59: aload_2
+      60: invokevirtual #34                 // Method org/apache/dubbo/common/ssl/Cert.getKeyCertChainInputStream:()Ljava/io/InputStream;
+      63: astore        5
+      65: aload_2
+      66: invokevirtual #35                 // Method org/apache/dubbo/common/ssl/Cert.getPrivateKeyInputStream:()Ljava/io/InputStream;
+      69: astore        6
+      71: aload         5
+      73: ifnull        115
+      76: aload         6
+      78: ifnull        115
+      81: aload_2
+      82: invokevirtual #36                 // Method org/apache/dubbo/common/ssl/Cert.getPassword:()Ljava/lang/String;
+      85: astore        7
+      87: aload         7
+      89: ifnull        106
+      92: aload_3
+      93: aload         5
+      95: aload         6
+      97: aload         7
+      99: invokevirtual #37                 // Method io/netty/handler/ssl/SslContextBuilder.keyManager:(Ljava/io/InputStream;Ljava/io/InputStream;Ljava/lang/String;)Lio/netty/handler/ssl/SslContextBuilder;
+     102: pop
+     103: goto          115
+     106: aload_3
+     107: aload         5
+     109: aload         6
+     111: invokevirtual #38                 // Method io/netty/handler/ssl/SslContextBuilder.keyManager:(Ljava/io/InputStream;Ljava/io/InputStream;)Lio/netty/handler/ssl/SslContextBuilder;
+     114: pop
+     115: aload         4
+     117: invokestatic  #15                 // Method safeCloseStream:(Ljava/io/InputStream;)V
+     120: aload         5
+     122: invokestatic  #15                 // Method safeCloseStream:(Ljava/io/InputStream;)V
+     125: aload         6
+     127: invokestatic  #15                 // Method safeCloseStream:(Ljava/io/InputStream;)V
+     130: goto          167
+     133: astore        7
+     135: new           #17                 // class java/lang/IllegalArgumentException
+     138: dup
+     139: ldc           #39                 // String Could not find certificate file or find invalid certificate.
+     141: aload         7
+     143: invokespecial #19                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     146: athrow
+     147: astore        8
+     149: aload         4
+     151: invokestatic  #15                 // Method safeCloseStream:(Ljava/io/InputStream;)V
+     154: aload         5
+     156: invokestatic  #15                 // Method safeCloseStream:(Ljava/io/InputStream;)V
+     159: aload         6
+     161: invokestatic  #15                 // Method safeCloseStream:(Ljava/io/InputStream;)V
+     164: aload         8
+     166: athrow
+     167: aload_3
+     168: invokestatic  #20                 // Method findSslProvider:()Lio/netty/handler/ssl/SslProvider;
+     171: invokevirtual #21                 // Method io/netty/handler/ssl/SslContextBuilder.sslProvider:(Lio/netty/handler/ssl/SslProvider;)Lio/netty/handler/ssl/SslContextBuilder;
+     174: invokevirtual #22                 // Method io/netty/handler/ssl/SslContextBuilder.build:()Lio/netty/handler/ssl/SslContext;
+     177: areturn
+     178: astore        7
+     180: new           #24                 // class java/lang/IllegalStateException
+     183: dup
+     184: ldc           #25                 // String Build SslSession failed.
+     186: aload         7
+     188: invokespecial #26                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     191: athrow
+    Exception table:
+       from    to  target type
+          41   115   133   Class java/lang/Exception
+          41   115   147   any
+         133   149   147   any
+         167   177   178   Class javax/net/ssl/SSLException
+
+  private static io.netty.handler.ssl.SslProvider findSslProvider();
+    Code:
+       0: invokestatic  #40                 // Method io/netty/handler/ssl/OpenSsl.isAvailable:()Z
+       3: ifeq          20
+       6: getstatic     #41                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       9: ldc           #42                 // String Using OPENSSL provider.
+      11: invokeinterface #43,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.debug:(Ljava/lang/String;)V
+      16: getstatic     #44                 // Field io/netty/handler/ssl/SslProvider.OPENSSL:Lio/netty/handler/ssl/SslProvider;
+      19: areturn
+      20: invokestatic  #45                 // Method checkJdkProvider:()Z
+      23: ifeq          40
+      26: getstatic     #41                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      29: ldc           #46                 // String Using JDK provider.
+      31: invokeinterface #43,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.debug:(Ljava/lang/String;)V
+      36: getstatic     #47                 // Field io/netty/handler/ssl/SslProvider.JDK:Lio/netty/handler/ssl/SslProvider;
+      39: areturn
+      40: new           #24                 // class java/lang/IllegalStateException
+      43: dup
+      44: ldc           #48                 // String Could not find any valid TLS provider, please check your dependency or deployment environment, usually netty-tcnative, Conscrypt, or Jetty NPN/ALPN is needed.
+      46: invokespecial #49                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      49: athrow
+
+  private static boolean checkJdkProvider();
+    Code:
+       0: ldc           #50                 // String SSLContext.TLS
+       2: invokestatic  #51                 // Method java/security/Security.getProviders:(Ljava/lang/String;)[Ljava/security/Provider;
+       5: astore_0
+       6: aload_0
+       7: ifnull        19
+      10: aload_0
+      11: arraylength
+      12: ifle          19
+      15: iconst_1
+      16: goto          20
+      19: iconst_0
+      20: ireturn
+
+  private static void safeCloseStream(java.io.InputStream);
+    Code:
+       0: aload_0
+       1: ifnonnull     5
+       4: return
+       5: aload_0
+       6: invokevirtual #52                 // Method java/io/InputStream.close:()V
+       9: goto          30
+      12: astore_1
+      13: getstatic     #41                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      16: ldc           #54                 // String 6-13
+      18: ldc           #55                 // String
+      20: ldc           #55                 // String
+      22: ldc           #56                 // String Failed to close a stream.
+      24: aload_1
+      25: invokeinterface #57,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      30: return
+    Exception table:
+       from    to  target type
+           5     9    12   Class java/io/IOException
+
+  static {};
+    Code:
+       0: ldc           #58                 // class org/apache/dubbo/remoting/transport/netty4/ssl/SslContexts
+       2: invokestatic  #59                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #41                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

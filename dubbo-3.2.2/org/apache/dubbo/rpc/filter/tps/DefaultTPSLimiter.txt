@@ -1,0 +1,107 @@
+Compiled from "DefaultTPSLimiter.java"
+public class org.apache.dubbo.rpc.filter.tps.DefaultTPSLimiter implements org.apache.dubbo.rpc.filter.tps.TPSLimiter {
+  private final java.util.concurrent.ConcurrentMap<java.lang.String, org.apache.dubbo.rpc.filter.tps.StatItem> stats;
+
+  public org.apache.dubbo.rpc.filter.tps.DefaultTPSLimiter();
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #3                  // class java/util/concurrent/ConcurrentHashMap
+       8: dup
+       9: invokespecial #4                  // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      12: putfield      #5                  // Field stats:Ljava/util/concurrent/ConcurrentMap;
+      15: return
+
+  public boolean isAllowable(org.apache.dubbo.common.URL, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_1
+       1: aload_2
+       2: invokeinterface #6,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+       7: ldc           #7                  // String tps
+       9: iconst_m1
+      10: invokevirtual #8                  // Method org/apache/dubbo/common/URL.getMethodParameter:(Ljava/lang/String;Ljava/lang/String;I)I
+      13: istore_3
+      14: aload_1
+      15: aload_2
+      16: invokeinterface #6,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+      21: ldc           #9                  // String tps.interval
+      23: ldc2_w        #10                 // long 60000l
+      26: invokevirtual #12                 // Method org/apache/dubbo/common/URL.getMethodParameter:(Ljava/lang/String;Ljava/lang/String;J)J
+      29: lstore        4
+      31: aload_1
+      32: invokevirtual #13                 // Method org/apache/dubbo/common/URL.getServiceKey:()Ljava/lang/String;
+      35: astore        6
+      37: iload_3
+      38: ifle          171
+      41: aload_0
+      42: getfield      #5                  // Field stats:Ljava/util/concurrent/ConcurrentMap;
+      45: aload         6
+      47: invokeinterface #14,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      52: checkcast     #15                 // class org/apache/dubbo/rpc/filter/tps/StatItem
+      55: astore        7
+      57: aload         7
+      59: ifnonnull     105
+      62: aload_0
+      63: getfield      #5                  // Field stats:Ljava/util/concurrent/ConcurrentMap;
+      66: aload         6
+      68: new           #15                 // class org/apache/dubbo/rpc/filter/tps/StatItem
+      71: dup
+      72: aload         6
+      74: iload_3
+      75: lload         4
+      77: invokespecial #16                 // Method org/apache/dubbo/rpc/filter/tps/StatItem."<init>":(Ljava/lang/String;IJ)V
+      80: invokeinterface #17,  3           // InterfaceMethod java/util/concurrent/ConcurrentMap.putIfAbsent:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      85: pop
+      86: aload_0
+      87: getfield      #5                  // Field stats:Ljava/util/concurrent/ConcurrentMap;
+      90: aload         6
+      92: invokeinterface #14,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      97: checkcast     #15                 // class org/apache/dubbo/rpc/filter/tps/StatItem
+     100: astore        7
+     102: goto          165
+     105: aload         7
+     107: invokevirtual #18                 // Method org/apache/dubbo/rpc/filter/tps/StatItem.getRate:()I
+     110: iload_3
+     111: if_icmpne     125
+     114: aload         7
+     116: invokevirtual #19                 // Method org/apache/dubbo/rpc/filter/tps/StatItem.getInterval:()J
+     119: lload         4
+     121: lcmp
+     122: ifeq          165
+     125: aload_0
+     126: getfield      #5                  // Field stats:Ljava/util/concurrent/ConcurrentMap;
+     129: aload         6
+     131: new           #15                 // class org/apache/dubbo/rpc/filter/tps/StatItem
+     134: dup
+     135: aload         6
+     137: iload_3
+     138: lload         4
+     140: invokespecial #16                 // Method org/apache/dubbo/rpc/filter/tps/StatItem."<init>":(Ljava/lang/String;IJ)V
+     143: invokeinterface #20,  3           // InterfaceMethod java/util/concurrent/ConcurrentMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     148: pop
+     149: aload_0
+     150: getfield      #5                  // Field stats:Ljava/util/concurrent/ConcurrentMap;
+     153: aload         6
+     155: invokeinterface #14,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     160: checkcast     #15                 // class org/apache/dubbo/rpc/filter/tps/StatItem
+     163: astore        7
+     165: aload         7
+     167: invokevirtual #21                 // Method org/apache/dubbo/rpc/filter/tps/StatItem.isAllowable:()Z
+     170: ireturn
+     171: aload_0
+     172: getfield      #5                  // Field stats:Ljava/util/concurrent/ConcurrentMap;
+     175: aload         6
+     177: invokeinterface #14,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     182: checkcast     #15                 // class org/apache/dubbo/rpc/filter/tps/StatItem
+     185: astore        7
+     187: aload         7
+     189: ifnull        204
+     192: aload_0
+     193: getfield      #5                  // Field stats:Ljava/util/concurrent/ConcurrentMap;
+     196: aload         6
+     198: invokeinterface #22,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+     203: pop
+     204: iconst_1
+     205: ireturn
+}

@@ -1,0 +1,397 @@
+Compiled from "RouterChain.java"
+public class org.apache.dubbo.rpc.cluster.RouterChain<T> {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private volatile org.apache.dubbo.rpc.cluster.SingleRouterChain<T> mainChain;
+
+  private volatile org.apache.dubbo.rpc.cluster.SingleRouterChain<T> backupChain;
+
+  private volatile org.apache.dubbo.rpc.cluster.SingleRouterChain<T> currentChain;
+
+  private final java.util.concurrent.atomic.AtomicReference<org.apache.dubbo.rpc.cluster.router.state.BitList<org.apache.dubbo.rpc.Invoker<T>>> notifyingInvokers;
+
+  private final java.util.concurrent.locks.ReadWriteLock lock;
+
+  public static <T> org.apache.dubbo.rpc.cluster.RouterChain<T> buildChain(java.lang.Class<T>, org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #2                  // Method buildSingleChain:(Ljava/lang/Class;Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+       5: astore_2
+       6: aload_0
+       7: aload_1
+       8: invokestatic  #2                  // Method buildSingleChain:(Ljava/lang/Class;Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      11: astore_3
+      12: new           #3                  // class org/apache/dubbo/rpc/cluster/RouterChain
+      15: dup
+      16: iconst_2
+      17: anewarray     #4                  // class org/apache/dubbo/rpc/cluster/SingleRouterChain
+      20: dup
+      21: iconst_0
+      22: aload_2
+      23: aastore
+      24: dup
+      25: iconst_1
+      26: aload_3
+      27: aastore
+      28: invokespecial #5                  // Method "<init>":([Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;)V
+      31: areturn
+
+  public static <T> org.apache.dubbo.rpc.cluster.SingleRouterChain<T> buildSingleChain(java.lang.Class<T>, org.apache.dubbo.common.URL);
+    Code:
+       0: aload_1
+       1: invokevirtual #6                  // Method org/apache/dubbo/common/URL.getOrDefaultModuleModel:()Lorg/apache/dubbo/rpc/model/ModuleModel;
+       4: astore_2
+       5: aload_2
+       6: ldc           #7                  // class org/apache/dubbo/rpc/cluster/RouterFactory
+       8: invokevirtual #8                  // Method org/apache/dubbo/rpc/model/ModuleModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      11: aload_1
+      12: ldc           #9                  // String router
+      14: invokevirtual #10                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getActivateExtension:(Lorg/apache/dubbo/common/URL;Ljava/lang/String;)Ljava/util/List;
+      17: astore_3
+      18: aload_3
+      19: invokeinterface #11,  1           // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+      24: aload_1
+      25: invokedynamic #12,  0             // InvokeDynamic #0:apply:(Lorg/apache/dubbo/common/URL;)Ljava/util/function/Function;
+      30: invokeinterface #13,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      35: invokedynamic #14,  0             // InvokeDynamic #1:compare:()Ljava/util/Comparator;
+      40: invokeinterface #15,  2           // InterfaceMethod java/util/stream/Stream.sorted:(Ljava/util/Comparator;)Ljava/util/stream/Stream;
+      45: invokestatic  #16                 // Method java/util/stream/Collectors.toList:()Ljava/util/stream/Collector;
+      48: invokeinterface #17,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+      53: checkcast     #18                 // class java/util/List
+      56: astore        4
+      58: aload_2
+      59: ldc           #19                 // class org/apache/dubbo/rpc/cluster/router/state/StateRouterFactory
+      61: invokevirtual #8                  // Method org/apache/dubbo/rpc/model/ModuleModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      64: aload_1
+      65: ldc           #9                  // String router
+      67: invokevirtual #10                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getActivateExtension:(Lorg/apache/dubbo/common/URL;Ljava/lang/String;)Ljava/util/List;
+      70: invokeinterface #11,  1           // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+      75: aload_0
+      76: aload_1
+      77: invokedynamic #20,  0             // InvokeDynamic #2:apply:(Ljava/lang/Class;Lorg/apache/dubbo/common/URL;)Ljava/util/function/Function;
+      82: invokeinterface #13,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      87: invokestatic  #16                 // Method java/util/stream/Collectors.toList:()Ljava/util/stream/Collector;
+      90: invokeinterface #17,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+      95: checkcast     #18                 // class java/util/List
+      98: astore        5
+     100: aload_2
+     101: ldc           #21                 // String dubbo.router.should-fail-fast
+     103: ldc           #22                 // String true
+     105: invokestatic  #23                 // Method org/apache/dubbo/common/config/ConfigurationUtils.getProperty:(Lorg/apache/dubbo/rpc/model/ScopeModel;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     108: invokestatic  #24                 // Method java/lang/Boolean.parseBoolean:(Ljava/lang/String;)Z
+     111: istore        6
+     113: aload_2
+     114: invokestatic  #25                 // Method org/apache/dubbo/rpc/model/ScopeModelUtil.getFrameworkModel:(Lorg/apache/dubbo/rpc/model/ScopeModel;)Lorg/apache/dubbo/rpc/model/FrameworkModel;
+     117: invokevirtual #26                 // Method org/apache/dubbo/rpc/model/FrameworkModel.getBeanFactory:()Lorg/apache/dubbo/common/beans/factory/ScopeBeanFactory;
+     120: ldc           #27                 // class org/apache/dubbo/rpc/cluster/router/RouterSnapshotSwitcher
+     122: invokevirtual #28                 // Method org/apache/dubbo/common/beans/factory/ScopeBeanFactory.getBean:(Ljava/lang/Class;)Ljava/lang/Object;
+     125: checkcast     #27                 // class org/apache/dubbo/rpc/cluster/router/RouterSnapshotSwitcher
+     128: astore        7
+     130: new           #4                  // class org/apache/dubbo/rpc/cluster/SingleRouterChain
+     133: dup
+     134: aload         4
+     136: aload         5
+     138: iload         6
+     140: aload         7
+     142: invokespecial #29                 // Method org/apache/dubbo/rpc/cluster/SingleRouterChain."<init>":(Ljava/util/List;Ljava/util/List;ZLorg/apache/dubbo/rpc/cluster/router/RouterSnapshotSwitcher;)V
+     145: areturn
+
+  public org.apache.dubbo.rpc.cluster.RouterChain(org.apache.dubbo.rpc.cluster.SingleRouterChain<T>[]);
+    Code:
+       0: aload_0
+       1: invokespecial #30                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #31                 // class java/util/concurrent/atomic/AtomicReference
+       8: dup
+       9: invokespecial #32                 // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+      12: putfield      #33                 // Field notifyingInvokers:Ljava/util/concurrent/atomic/AtomicReference;
+      15: aload_0
+      16: new           #34                 // class java/util/concurrent/locks/ReentrantReadWriteLock
+      19: dup
+      20: invokespecial #35                 // Method java/util/concurrent/locks/ReentrantReadWriteLock."<init>":()V
+      23: putfield      #36                 // Field lock:Ljava/util/concurrent/locks/ReadWriteLock;
+      26: aload_1
+      27: arraylength
+      28: iconst_2
+      29: if_icmpeq     42
+      32: new           #37                 // class java/lang/IllegalArgumentException
+      35: dup
+      36: ldc           #38                 // String chains\' size should be 2.
+      38: invokespecial #39                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      41: athrow
+      42: aload_0
+      43: aload_1
+      44: iconst_0
+      45: aaload
+      46: putfield      #40                 // Field mainChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      49: aload_0
+      50: aload_1
+      51: iconst_1
+      52: aaload
+      53: putfield      #41                 // Field backupChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      56: aload_0
+      57: aload_0
+      58: getfield      #40                 // Field mainChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      61: putfield      #42                 // Field currentChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      64: return
+
+  public java.util.concurrent.locks.ReadWriteLock getLock();
+    Code:
+       0: aload_0
+       1: getfield      #36                 // Field lock:Ljava/util/concurrent/locks/ReadWriteLock;
+       4: areturn
+
+  public org.apache.dubbo.rpc.cluster.SingleRouterChain<T> getSingleChain(org.apache.dubbo.common.URL, org.apache.dubbo.rpc.cluster.router.state.BitList<org.apache.dubbo.rpc.Invoker<T>>, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_0
+       1: getfield      #33                 // Field notifyingInvokers:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokevirtual #43                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+       7: checkcast     #44                 // class org/apache/dubbo/rpc/cluster/router/state/BitList
+      10: astore        4
+      12: aload         4
+      14: ifnull        45
+      17: aload_0
+      18: getfield      #42                 // Field currentChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      21: aload_0
+      22: getfield      #41                 // Field backupChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      25: if_acmpne     45
+      28: aload_2
+      29: invokevirtual #45                 // Method org/apache/dubbo/rpc/cluster/router/state/BitList.getOriginList:()Ljava/util/List;
+      32: aload         4
+      34: invokevirtual #45                 // Method org/apache/dubbo/rpc/cluster/router/state/BitList.getOriginList:()Ljava/util/List;
+      37: if_acmpne     45
+      40: aload_0
+      41: getfield      #40                 // Field mainChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      44: areturn
+      45: aload_0
+      46: getfield      #42                 // Field currentChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      49: areturn
+
+  public java.util.List<org.apache.dubbo.rpc.Invoker<T>> route(org.apache.dubbo.common.URL, org.apache.dubbo.rpc.cluster.router.state.BitList<org.apache.dubbo.rpc.Invoker<T>>, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: aload_3
+       4: invokevirtual #46                 // Method getSingleChain:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/rpc/cluster/router/state/BitList;Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+       7: aload_1
+       8: aload_2
+       9: aload_3
+      10: invokevirtual #47                 // Method org/apache/dubbo/rpc/cluster/SingleRouterChain.route:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/rpc/cluster/router/state/BitList;Lorg/apache/dubbo/rpc/Invocation;)Ljava/util/List;
+      13: areturn
+
+  public synchronized void setInvokers(org.apache.dubbo.rpc.cluster.router.state.BitList<org.apache.dubbo.rpc.Invoker<T>>, java.lang.Runnable);
+    Code:
+       0: aload_0
+       1: getfield      #36                 // Field lock:Ljava/util/concurrent/locks/ReadWriteLock;
+       4: invokeinterface #48,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.writeLock:()Ljava/util/concurrent/locks/Lock;
+       9: invokeinterface #49,  1           // InterfaceMethod java/util/concurrent/locks/Lock.lock:()V
+      14: aload_0
+      15: aload_0
+      16: getfield      #41                 // Field backupChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      19: putfield      #42                 // Field currentChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      22: aload_0
+      23: getfield      #36                 // Field lock:Ljava/util/concurrent/locks/ReadWriteLock;
+      26: invokeinterface #48,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.writeLock:()Ljava/util/concurrent/locks/Lock;
+      31: invokeinterface #50,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+      36: goto          56
+      39: astore_3
+      40: aload_0
+      41: getfield      #36                 // Field lock:Ljava/util/concurrent/locks/ReadWriteLock;
+      44: invokeinterface #48,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.writeLock:()Ljava/util/concurrent/locks/Lock;
+      49: invokeinterface #50,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+      54: aload_3
+      55: athrow
+      56: aload_0
+      57: getfield      #40                 // Field mainChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      60: invokevirtual #51                 // Method org/apache/dubbo/rpc/cluster/SingleRouterChain.getLock:()Ljava/util/concurrent/locks/ReadWriteLock;
+      63: invokeinterface #48,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.writeLock:()Ljava/util/concurrent/locks/Lock;
+      68: invokeinterface #49,  1           // InterfaceMethod java/util/concurrent/locks/Lock.lock:()V
+      73: aload_0
+      74: getfield      #40                 // Field mainChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      77: aload_1
+      78: invokevirtual #52                 // Method org/apache/dubbo/rpc/cluster/SingleRouterChain.setInvokers:(Lorg/apache/dubbo/rpc/cluster/router/state/BitList;)V
+      81: aload_0
+      82: getfield      #40                 // Field mainChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      85: invokevirtual #51                 // Method org/apache/dubbo/rpc/cluster/SingleRouterChain.getLock:()Ljava/util/concurrent/locks/ReadWriteLock;
+      88: invokeinterface #48,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.writeLock:()Ljava/util/concurrent/locks/Lock;
+      93: invokeinterface #50,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+      98: goto          143
+     101: astore_3
+     102: getstatic     #54                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     105: ldc           #56                 // String 99-0
+     107: ldc           #57                 // String
+     109: ldc           #57                 // String
+     111: ldc           #58                 // String Error occurred when refreshing router chain.
+     113: aload_3
+     114: invokeinterface #59,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     119: aload_3
+     120: athrow
+     121: astore        4
+     123: aload_0
+     124: getfield      #40                 // Field mainChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+     127: invokevirtual #51                 // Method org/apache/dubbo/rpc/cluster/SingleRouterChain.getLock:()Ljava/util/concurrent/locks/ReadWriteLock;
+     130: invokeinterface #48,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.writeLock:()Ljava/util/concurrent/locks/Lock;
+     135: invokeinterface #50,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     140: aload         4
+     142: athrow
+     143: aload_0
+     144: getfield      #33                 // Field notifyingInvokers:Ljava/util/concurrent/atomic/AtomicReference;
+     147: aload_1
+     148: invokevirtual #60                 // Method java/util/concurrent/atomic/AtomicReference.set:(Ljava/lang/Object;)V
+     151: aload_2
+     152: invokeinterface #61,  1           // InterfaceMethod java/lang/Runnable.run:()V
+     157: aload_0
+     158: getfield      #36                 // Field lock:Ljava/util/concurrent/locks/ReadWriteLock;
+     161: invokeinterface #48,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.writeLock:()Ljava/util/concurrent/locks/Lock;
+     166: invokeinterface #49,  1           // InterfaceMethod java/util/concurrent/locks/Lock.lock:()V
+     171: aload_0
+     172: aload_0
+     173: getfield      #40                 // Field mainChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+     176: putfield      #42                 // Field currentChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+     179: aload_0
+     180: getfield      #33                 // Field notifyingInvokers:Ljava/util/concurrent/atomic/AtomicReference;
+     183: aconst_null
+     184: invokevirtual #60                 // Method java/util/concurrent/atomic/AtomicReference.set:(Ljava/lang/Object;)V
+     187: aload_0
+     188: getfield      #36                 // Field lock:Ljava/util/concurrent/locks/ReadWriteLock;
+     191: invokeinterface #48,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.writeLock:()Ljava/util/concurrent/locks/Lock;
+     196: invokeinterface #50,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     201: goto          223
+     204: astore        5
+     206: aload_0
+     207: getfield      #36                 // Field lock:Ljava/util/concurrent/locks/ReadWriteLock;
+     210: invokeinterface #48,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.writeLock:()Ljava/util/concurrent/locks/Lock;
+     215: invokeinterface #50,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     220: aload         5
+     222: athrow
+     223: aload_0
+     224: getfield      #41                 // Field backupChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+     227: invokevirtual #51                 // Method org/apache/dubbo/rpc/cluster/SingleRouterChain.getLock:()Ljava/util/concurrent/locks/ReadWriteLock;
+     230: invokeinterface #48,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.writeLock:()Ljava/util/concurrent/locks/Lock;
+     235: invokeinterface #49,  1           // InterfaceMethod java/util/concurrent/locks/Lock.lock:()V
+     240: aload_0
+     241: getfield      #41                 // Field backupChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+     244: aload_1
+     245: invokevirtual #52                 // Method org/apache/dubbo/rpc/cluster/SingleRouterChain.setInvokers:(Lorg/apache/dubbo/rpc/cluster/router/state/BitList;)V
+     248: aload_0
+     249: getfield      #41                 // Field backupChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+     252: invokevirtual #51                 // Method org/apache/dubbo/rpc/cluster/SingleRouterChain.getLock:()Ljava/util/concurrent/locks/ReadWriteLock;
+     255: invokeinterface #48,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.writeLock:()Ljava/util/concurrent/locks/Lock;
+     260: invokeinterface #50,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     265: goto          310
+     268: astore_3
+     269: getstatic     #54                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     272: ldc           #56                 // String 99-0
+     274: ldc           #57                 // String
+     276: ldc           #57                 // String
+     278: ldc           #58                 // String Error occurred when refreshing router chain.
+     280: aload_3
+     281: invokeinterface #59,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     286: aload_3
+     287: athrow
+     288: astore        6
+     290: aload_0
+     291: getfield      #41                 // Field backupChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+     294: invokevirtual #51                 // Method org/apache/dubbo/rpc/cluster/SingleRouterChain.getLock:()Ljava/util/concurrent/locks/ReadWriteLock;
+     297: invokeinterface #48,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.writeLock:()Ljava/util/concurrent/locks/Lock;
+     302: invokeinterface #50,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     307: aload         6
+     309: athrow
+     310: return
+    Exception table:
+       from    to  target type
+           0    22    39   any
+          56    81   101   Class java/lang/Throwable
+          56    81   121   any
+         101   123   121   any
+         157   187   204   any
+         204   206   204   any
+         223   248   268   Class java/lang/Throwable
+         223   248   288   any
+         268   290   288   any
+
+  public synchronized void destroy();
+    Code:
+       0: aload_0
+       1: getfield      #41                 // Field backupChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+       4: invokevirtual #62                 // Method org/apache/dubbo/rpc/cluster/SingleRouterChain.destroy:()V
+       7: aload_0
+       8: getfield      #36                 // Field lock:Ljava/util/concurrent/locks/ReadWriteLock;
+      11: invokeinterface #48,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.writeLock:()Ljava/util/concurrent/locks/Lock;
+      16: invokeinterface #49,  1           // InterfaceMethod java/util/concurrent/locks/Lock.lock:()V
+      21: aload_0
+      22: aload_0
+      23: getfield      #41                 // Field backupChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      26: putfield      #42                 // Field currentChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      29: aload_0
+      30: getfield      #36                 // Field lock:Ljava/util/concurrent/locks/ReadWriteLock;
+      33: invokeinterface #48,  1           // InterfaceMethod java/util/concurrent/locks/ReadWriteLock.writeLock:()Ljava/util/concurrent/locks/Lock;
+      38: invokeinterface #50,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+      43: aload_0
+      44: getfield      #40                 // Field mainChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      47: invokevirtual #62                 // Method org/apache/dubbo/rpc/cluster/SingleRouterChain.destroy:()V
+      50: return
+
+  public void addRouters(java.util.List<org.apache.dubbo.rpc.cluster.Router>);
+    Code:
+       0: aload_0
+       1: getfield      #40                 // Field mainChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+       4: aload_1
+       5: invokevirtual #63                 // Method org/apache/dubbo/rpc/cluster/SingleRouterChain.addRouters:(Ljava/util/List;)V
+       8: aload_0
+       9: getfield      #41                 // Field backupChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+      12: aload_1
+      13: invokevirtual #63                 // Method org/apache/dubbo/rpc/cluster/SingleRouterChain.addRouters:(Ljava/util/List;)V
+      16: return
+
+  public org.apache.dubbo.rpc.cluster.SingleRouterChain<T> getCurrentChain();
+    Code:
+       0: aload_0
+       1: getfield      #42                 // Field currentChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+       4: areturn
+
+  public java.util.List<org.apache.dubbo.rpc.cluster.Router> getRouters();
+    Code:
+       0: aload_0
+       1: getfield      #42                 // Field currentChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+       4: invokevirtual #64                 // Method org/apache/dubbo/rpc/cluster/SingleRouterChain.getRouters:()Ljava/util/List;
+       7: areturn
+
+  public org.apache.dubbo.rpc.cluster.router.state.StateRouter<T> getHeadStateRouter();
+    Code:
+       0: aload_0
+       1: getfield      #42                 // Field currentChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+       4: invokevirtual #65                 // Method org/apache/dubbo/rpc/cluster/SingleRouterChain.getHeadStateRouter:()Lorg/apache/dubbo/rpc/cluster/router/state/StateRouter;
+       7: areturn
+
+  public java.util.List<org.apache.dubbo.rpc.cluster.router.state.StateRouter<T>> getStateRouters();
+    Code:
+       0: aload_0
+       1: getfield      #42                 // Field currentChain:Lorg/apache/dubbo/rpc/cluster/SingleRouterChain;
+       4: invokevirtual #66                 // Method org/apache/dubbo/rpc/cluster/SingleRouterChain.getStateRouters:()Ljava/util/List;
+       7: areturn
+
+  private static org.apache.dubbo.rpc.cluster.router.state.StateRouter lambda$buildSingleChain$1(java.lang.Class, org.apache.dubbo.common.URL, org.apache.dubbo.rpc.cluster.router.state.StateRouterFactory);
+    Code:
+       0: aload_2
+       1: aload_0
+       2: aload_1
+       3: invokeinterface #67,  3           // InterfaceMethod org/apache/dubbo/rpc/cluster/router/state/StateRouterFactory.getRouter:(Ljava/lang/Class;Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/rpc/cluster/router/state/StateRouter;
+       8: areturn
+
+  private static org.apache.dubbo.rpc.cluster.Router lambda$buildSingleChain$0(org.apache.dubbo.common.URL, org.apache.dubbo.rpc.cluster.RouterFactory);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: invokeinterface #68,  2           // InterfaceMethod org/apache/dubbo/rpc/cluster/RouterFactory.getRouter:(Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/rpc/cluster/Router;
+       7: areturn
+
+  static {};
+    Code:
+       0: ldc           #3                  // class org/apache/dubbo/rpc/cluster/RouterChain
+       2: invokestatic  #69                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #54                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

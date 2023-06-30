@@ -1,0 +1,855 @@
+Compiled from "ApplicationModel.java"
+public class org.apache.dubbo.rpc.model.ApplicationModel extends org.apache.dubbo.rpc.model.ScopeModel {
+  protected static final org.apache.dubbo.common.logger.Logger LOGGER;
+
+  public static final java.lang.String NAME;
+
+  private final java.util.List<org.apache.dubbo.rpc.model.ModuleModel> moduleModels;
+
+  private final java.util.List<org.apache.dubbo.rpc.model.ModuleModel> pubModuleModels;
+
+  private volatile org.apache.dubbo.common.config.Environment environment;
+
+  private volatile org.apache.dubbo.config.context.ConfigManager configManager;
+
+  private volatile org.apache.dubbo.rpc.model.ServiceRepository serviceRepository;
+
+  private volatile org.apache.dubbo.common.deploy.ApplicationDeployer deployer;
+
+  private final org.apache.dubbo.rpc.model.FrameworkModel frameworkModel;
+
+  private final org.apache.dubbo.rpc.model.ModuleModel internalModule;
+
+  private volatile org.apache.dubbo.rpc.model.ModuleModel defaultModule;
+
+  private final java.util.concurrent.atomic.AtomicInteger moduleIndex;
+
+  public static org.apache.dubbo.rpc.model.ApplicationModel ofNullable(org.apache.dubbo.rpc.model.ApplicationModel);
+    Code:
+       0: aload_0
+       1: ifnull        6
+       4: aload_0
+       5: areturn
+       6: invokestatic  #1                  // Method defaultModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       9: areturn
+
+  public static org.apache.dubbo.rpc.model.ApplicationModel defaultModel();
+    Code:
+       0: invokestatic  #2                  // Method org/apache/dubbo/rpc/model/FrameworkModel.defaultModel:()Lorg/apache/dubbo/rpc/model/FrameworkModel;
+       3: invokevirtual #3                  // Method org/apache/dubbo/rpc/model/FrameworkModel.defaultApplication:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       6: areturn
+
+  protected org.apache.dubbo.rpc.model.ApplicationModel(org.apache.dubbo.rpc.model.FrameworkModel);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iconst_0
+       3: invokespecial #4                  // Method "<init>":(Lorg/apache/dubbo/rpc/model/FrameworkModel;Z)V
+       6: return
+
+  protected org.apache.dubbo.rpc.model.ApplicationModel(org.apache.dubbo.rpc.model.FrameworkModel, boolean);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: getstatic     #5                  // Field org/apache/dubbo/common/extension/ExtensionScope.APPLICATION:Lorg/apache/dubbo/common/extension/ExtensionScope;
+       5: iload_2
+       6: invokespecial #6                  // Method org/apache/dubbo/rpc/model/ScopeModel."<init>":(Lorg/apache/dubbo/rpc/model/ScopeModel;Lorg/apache/dubbo/common/extension/ExtensionScope;Z)V
+       9: aload_0
+      10: new           #7                  // class java/util/concurrent/CopyOnWriteArrayList
+      13: dup
+      14: invokespecial #8                  // Method java/util/concurrent/CopyOnWriteArrayList."<init>":()V
+      17: putfield      #9                  // Field moduleModels:Ljava/util/List;
+      20: aload_0
+      21: new           #7                  // class java/util/concurrent/CopyOnWriteArrayList
+      24: dup
+      25: invokespecial #8                  // Method java/util/concurrent/CopyOnWriteArrayList."<init>":()V
+      28: putfield      #10                 // Field pubModuleModels:Ljava/util/List;
+      31: aload_0
+      32: new           #11                 // class java/util/concurrent/atomic/AtomicInteger
+      35: dup
+      36: iconst_0
+      37: invokespecial #12                 // Method java/util/concurrent/atomic/AtomicInteger."<init>":(I)V
+      40: putfield      #13                 // Field moduleIndex:Ljava/util/concurrent/atomic/AtomicInteger;
+      43: aload_0
+      44: getfield      #14                 // Field instLock:Ljava/lang/Object;
+      47: dup
+      48: astore_3
+      49: monitorenter
+      50: aload_1
+      51: ldc           #15                 // String FrameworkModel can not be null
+      53: invokestatic  #16                 // Method org/apache/dubbo/common/utils/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      56: aload_0
+      57: aload_1
+      58: putfield      #17                 // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+      61: aload_1
+      62: aload_0
+      63: invokevirtual #18                 // Method org/apache/dubbo/rpc/model/FrameworkModel.addApplication:(Lorg/apache/dubbo/rpc/model/ApplicationModel;)V
+      66: getstatic     #19                 // Field LOGGER:Lorg/apache/dubbo/common/logger/Logger;
+      69: invokeinterface #20,  1           // InterfaceMethod org/apache/dubbo/common/logger/Logger.isInfoEnabled:()Z
+      74: ifeq          107
+      77: getstatic     #19                 // Field LOGGER:Lorg/apache/dubbo/common/logger/Logger;
+      80: new           #21                 // class java/lang/StringBuilder
+      83: dup
+      84: invokespecial #22                 // Method java/lang/StringBuilder."<init>":()V
+      87: aload_0
+      88: invokevirtual #23                 // Method getDesc:()Ljava/lang/String;
+      91: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      94: ldc           #25                 // String  is created
+      96: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      99: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     102: invokeinterface #27,  2           // InterfaceMethod org/apache/dubbo/common/logger/Logger.info:(Ljava/lang/String;)V
+     107: aload_0
+     108: invokevirtual #28                 // Method initialize:()V
+     111: aload_0
+     112: new           #29                 // class org/apache/dubbo/rpc/model/ModuleModel
+     115: dup
+     116: aload_0
+     117: iconst_1
+     118: invokespecial #30                 // Method org/apache/dubbo/rpc/model/ModuleModel."<init>":(Lorg/apache/dubbo/rpc/model/ApplicationModel;Z)V
+     121: putfield      #31                 // Field internalModule:Lorg/apache/dubbo/rpc/model/ModuleModel;
+     124: aload_0
+     125: new           #32                 // class org/apache/dubbo/rpc/model/ServiceRepository
+     128: dup
+     129: aload_0
+     130: invokespecial #33                 // Method org/apache/dubbo/rpc/model/ServiceRepository."<init>":(Lorg/apache/dubbo/rpc/model/ApplicationModel;)V
+     133: putfield      #34                 // Field serviceRepository:Lorg/apache/dubbo/rpc/model/ServiceRepository;
+     136: aload_0
+     137: ldc           #35                 // class org/apache/dubbo/rpc/model/ApplicationInitListener
+     139: invokevirtual #36                 // Method getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+     142: astore        4
+     144: aload         4
+     146: invokevirtual #37                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getSupportedExtensions:()Ljava/util/Set;
+     149: astore        5
+     151: aload         5
+     153: invokeinterface #38,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     158: astore        6
+     160: aload         6
+     162: invokeinterface #39,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     167: ifeq          200
+     170: aload         6
+     172: invokeinterface #40,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     177: checkcast     #41                 // class java/lang/String
+     180: astore        7
+     182: aload         4
+     184: aload         7
+     186: invokevirtual #42                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getExtension:(Ljava/lang/String;)Ljava/lang/Object;
+     189: checkcast     #35                 // class org/apache/dubbo/rpc/model/ApplicationInitListener
+     192: invokeinterface #43,  1           // InterfaceMethod org/apache/dubbo/rpc/model/ApplicationInitListener.init:()V
+     197: goto          160
+     200: aload_0
+     201: invokespecial #44                 // Method initApplicationExts:()V
+     204: aload_0
+     205: ldc           #45                 // class org/apache/dubbo/rpc/model/ScopeModelInitializer
+     207: invokevirtual #36                 // Method getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+     210: astore        6
+     212: aload         6
+     214: invokevirtual #46                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getSupportedExtensionInstances:()Ljava/util/Set;
+     217: astore        7
+     219: aload         7
+     221: invokeinterface #38,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     226: astore        8
+     228: aload         8
+     230: invokeinterface #39,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     235: ifeq          261
+     238: aload         8
+     240: invokeinterface #40,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     245: checkcast     #45                 // class org/apache/dubbo/rpc/model/ScopeModelInitializer
+     248: astore        9
+     250: aload         9
+     252: aload_0
+     253: invokeinterface #47,  2           // InterfaceMethod org/apache/dubbo/rpc/model/ScopeModelInitializer.initializeApplicationModel:(Lorg/apache/dubbo/rpc/model/ApplicationModel;)V
+     258: goto          228
+     261: aload_0
+     262: invokevirtual #48                 // Method getApplicationServiceRepository:()Lorg/apache/dubbo/rpc/model/ServiceRepository;
+     265: ldc           #49                 // String ApplicationServiceRepository can not be null
+     267: invokestatic  #16                 // Method org/apache/dubbo/common/utils/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+     270: aload_0
+     271: invokevirtual #50                 // Method getApplicationConfigManager:()Lorg/apache/dubbo/config/context/ConfigManager;
+     274: ldc           #51                 // String ApplicationConfigManager can not be null
+     276: invokestatic  #16                 // Method org/apache/dubbo/common/utils/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+     279: aload_0
+     280: invokevirtual #50                 // Method getApplicationConfigManager:()Lorg/apache/dubbo/config/context/ConfigManager;
+     283: invokevirtual #52                 // Method org/apache/dubbo/config/context/ConfigManager.isInitialized:()Z
+     286: ldc           #53                 // String ApplicationConfigManager can not be initialized
+     288: invokestatic  #54                 // Method org/apache/dubbo/common/utils/Assert.assertTrue:(ZLjava/lang/String;)V
+     291: aload_3
+     292: monitorexit
+     293: goto          303
+     296: astore        10
+     298: aload_3
+     299: monitorexit
+     300: aload         10
+     302: athrow
+     303: return
+    Exception table:
+       from    to  target type
+          50   293   296   any
+         296   300   296   any
+
+  private void initApplicationExts();
+    Code:
+       0: aload_0
+       1: ldc           #55                 // class org/apache/dubbo/common/context/ApplicationExt
+       3: invokevirtual #36                 // Method getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+       6: invokevirtual #46                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getSupportedExtensionInstances:()Ljava/util/Set;
+       9: astore_1
+      10: aload_1
+      11: invokeinterface #38,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      16: astore_2
+      17: aload_2
+      18: invokeinterface #39,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      23: ifeq          45
+      26: aload_2
+      27: invokeinterface #40,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      32: checkcast     #55                 // class org/apache/dubbo/common/context/ApplicationExt
+      35: astore_3
+      36: aload_3
+      37: invokeinterface #56,  1           // InterfaceMethod org/apache/dubbo/common/context/ApplicationExt.initialize:()V
+      42: goto          17
+      45: return
+
+  protected void onDestroy();
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field instLock:Ljava/lang/Object;
+       4: dup
+       5: astore_1
+       6: monitorenter
+       7: aload_0
+       8: getfield      #17                 // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+      11: aload_0
+      12: invokevirtual #57                 // Method org/apache/dubbo/rpc/model/FrameworkModel.removeApplication:(Lorg/apache/dubbo/rpc/model/ApplicationModel;)V
+      15: aload_0
+      16: getfield      #58                 // Field deployer:Lorg/apache/dubbo/common/deploy/ApplicationDeployer;
+      19: ifnull        31
+      22: aload_0
+      23: getfield      #58                 // Field deployer:Lorg/apache/dubbo/common/deploy/ApplicationDeployer;
+      26: invokeinterface #59,  1           // InterfaceMethod org/apache/dubbo/common/deploy/ApplicationDeployer.preDestroy:()V
+      31: aload_0
+      32: getfield      #17                 // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+      35: invokevirtual #60                 // Method org/apache/dubbo/rpc/model/FrameworkModel.tryDestroyProtocols:()V
+      38: aload_0
+      39: getfield      #9                  // Field moduleModels:Ljava/util/List;
+      42: invokeinterface #61,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      47: astore_2
+      48: aload_2
+      49: invokeinterface #39,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      54: ifeq          82
+      57: aload_2
+      58: invokeinterface #40,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      63: checkcast     #29                 // class org/apache/dubbo/rpc/model/ModuleModel
+      66: astore_3
+      67: aload_3
+      68: aload_0
+      69: getfield      #31                 // Field internalModule:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      72: if_acmpeq     79
+      75: aload_3
+      76: invokevirtual #62                 // Method org/apache/dubbo/rpc/model/ModuleModel.destroy:()V
+      79: goto          48
+      82: aload_0
+      83: getfield      #31                 // Field internalModule:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      86: invokevirtual #62                 // Method org/apache/dubbo/rpc/model/ModuleModel.destroy:()V
+      89: aload_0
+      90: getfield      #58                 // Field deployer:Lorg/apache/dubbo/common/deploy/ApplicationDeployer;
+      93: ifnull        105
+      96: aload_0
+      97: getfield      #58                 // Field deployer:Lorg/apache/dubbo/common/deploy/ApplicationDeployer;
+     100: invokeinterface #63,  1           // InterfaceMethod org/apache/dubbo/common/deploy/ApplicationDeployer.postDestroy:()V
+     105: aload_0
+     106: invokevirtual #64                 // Method notifyDestroy:()V
+     109: aload_0
+     110: getfield      #65                 // Field environment:Lorg/apache/dubbo/common/config/Environment;
+     113: ifnull        128
+     116: aload_0
+     117: getfield      #65                 // Field environment:Lorg/apache/dubbo/common/config/Environment;
+     120: invokevirtual #66                 // Method org/apache/dubbo/common/config/Environment.destroy:()V
+     123: aload_0
+     124: aconst_null
+     125: putfield      #65                 // Field environment:Lorg/apache/dubbo/common/config/Environment;
+     128: aload_0
+     129: getfield      #67                 // Field configManager:Lorg/apache/dubbo/config/context/ConfigManager;
+     132: ifnull        147
+     135: aload_0
+     136: getfield      #67                 // Field configManager:Lorg/apache/dubbo/config/context/ConfigManager;
+     139: invokevirtual #68                 // Method org/apache/dubbo/config/context/ConfigManager.destroy:()V
+     142: aload_0
+     143: aconst_null
+     144: putfield      #67                 // Field configManager:Lorg/apache/dubbo/config/context/ConfigManager;
+     147: aload_0
+     148: getfield      #34                 // Field serviceRepository:Lorg/apache/dubbo/rpc/model/ServiceRepository;
+     151: ifnull        166
+     154: aload_0
+     155: getfield      #34                 // Field serviceRepository:Lorg/apache/dubbo/rpc/model/ServiceRepository;
+     158: invokevirtual #69                 // Method org/apache/dubbo/rpc/model/ServiceRepository.destroy:()V
+     161: aload_0
+     162: aconst_null
+     163: putfield      #34                 // Field serviceRepository:Lorg/apache/dubbo/rpc/model/ServiceRepository;
+     166: aload_0
+     167: getfield      #17                 // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+     170: invokevirtual #70                 // Method org/apache/dubbo/rpc/model/FrameworkModel.tryDestroy:()V
+     173: aload_1
+     174: monitorexit
+     175: goto          185
+     178: astore        4
+     180: aload_1
+     181: monitorexit
+     182: aload         4
+     184: athrow
+     185: return
+    Exception table:
+       from    to  target type
+           7   175   178   any
+         178   182   178   any
+
+  public org.apache.dubbo.rpc.model.FrameworkModel getFrameworkModel();
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+       4: areturn
+
+  public org.apache.dubbo.rpc.model.ModuleModel newModule();
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field instLock:Ljava/lang/Object;
+       4: dup
+       5: astore_1
+       6: monitorenter
+       7: new           #29                 // class org/apache/dubbo/rpc/model/ModuleModel
+      10: dup
+      11: aload_0
+      12: invokespecial #71                 // Method org/apache/dubbo/rpc/model/ModuleModel."<init>":(Lorg/apache/dubbo/rpc/model/ApplicationModel;)V
+      15: aload_1
+      16: monitorexit
+      17: areturn
+      18: astore_2
+      19: aload_1
+      20: monitorexit
+      21: aload_2
+      22: athrow
+    Exception table:
+       from    to  target type
+           7    17    18   any
+          18    21    18   any
+
+  public org.apache.dubbo.common.config.Environment getModelEnvironment();
+    Code:
+       0: aload_0
+       1: getfield      #65                 // Field environment:Lorg/apache/dubbo/common/config/Environment;
+       4: ifnonnull     25
+       7: aload_0
+       8: aload_0
+       9: ldc           #55                 // class org/apache/dubbo/common/context/ApplicationExt
+      11: invokevirtual #36                 // Method getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      14: ldc           #73                 // String environment
+      16: invokevirtual #42                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getExtension:(Ljava/lang/String;)Ljava/lang/Object;
+      19: checkcast     #72                 // class org/apache/dubbo/common/config/Environment
+      22: putfield      #65                 // Field environment:Lorg/apache/dubbo/common/config/Environment;
+      25: aload_0
+      26: getfield      #65                 // Field environment:Lorg/apache/dubbo/common/config/Environment;
+      29: areturn
+
+  public org.apache.dubbo.config.context.ConfigManager getApplicationConfigManager();
+    Code:
+       0: aload_0
+       1: getfield      #67                 // Field configManager:Lorg/apache/dubbo/config/context/ConfigManager;
+       4: ifnonnull     25
+       7: aload_0
+       8: aload_0
+       9: ldc           #55                 // class org/apache/dubbo/common/context/ApplicationExt
+      11: invokevirtual #36                 // Method getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      14: ldc           #75                 // String config
+      16: invokevirtual #42                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getExtension:(Ljava/lang/String;)Ljava/lang/Object;
+      19: checkcast     #74                 // class org/apache/dubbo/config/context/ConfigManager
+      22: putfield      #67                 // Field configManager:Lorg/apache/dubbo/config/context/ConfigManager;
+      25: aload_0
+      26: getfield      #67                 // Field configManager:Lorg/apache/dubbo/config/context/ConfigManager;
+      29: areturn
+
+  public org.apache.dubbo.rpc.model.ServiceRepository getApplicationServiceRepository();
+    Code:
+       0: aload_0
+       1: getfield      #34                 // Field serviceRepository:Lorg/apache/dubbo/rpc/model/ServiceRepository;
+       4: areturn
+
+  public org.apache.dubbo.common.threadpool.manager.ExecutorRepository getApplicationExecutorRepository();
+    Code:
+       0: aload_0
+       1: invokestatic  #76                 // InterfaceMethod org/apache/dubbo/common/threadpool/manager/ExecutorRepository.getInstance:(Lorg/apache/dubbo/rpc/model/ApplicationModel;)Lorg/apache/dubbo/common/threadpool/manager/ExecutorRepository;
+       4: areturn
+
+  public boolean NotExistApplicationConfig();
+    Code:
+       0: aload_0
+       1: invokevirtual #50                 // Method getApplicationConfigManager:()Lorg/apache/dubbo/config/context/ConfigManager;
+       4: invokevirtual #77                 // Method org/apache/dubbo/config/context/ConfigManager.getApplication:()Ljava/util/Optional;
+       7: invokevirtual #78                 // Method java/util/Optional.isPresent:()Z
+      10: ifne          17
+      13: iconst_1
+      14: goto          18
+      17: iconst_0
+      18: ireturn
+
+  public org.apache.dubbo.config.ApplicationConfig getCurrentConfig();
+    Code:
+       0: aload_0
+       1: invokevirtual #50                 // Method getApplicationConfigManager:()Lorg/apache/dubbo/config/context/ConfigManager;
+       4: invokevirtual #79                 // Method org/apache/dubbo/config/context/ConfigManager.getApplicationOrElseThrow:()Lorg/apache/dubbo/config/ApplicationConfig;
+       7: areturn
+
+  public java.lang.String getApplicationName();
+    Code:
+       0: aload_0
+       1: invokevirtual #80                 // Method getCurrentConfig:()Lorg/apache/dubbo/config/ApplicationConfig;
+       4: invokevirtual #81                 // Method org/apache/dubbo/config/ApplicationConfig.getName:()Ljava/lang/String;
+       7: areturn
+
+  public java.lang.String tryGetApplicationName();
+    Code:
+       0: aload_0
+       1: invokevirtual #50                 // Method getApplicationConfigManager:()Lorg/apache/dubbo/config/context/ConfigManager;
+       4: invokevirtual #77                 // Method org/apache/dubbo/config/context/ConfigManager.getApplication:()Ljava/util/Optional;
+       7: astore_1
+       8: aload_1
+       9: invokevirtual #78                 // Method java/util/Optional.isPresent:()Z
+      12: ifeq          28
+      15: aload_1
+      16: invokevirtual #82                 // Method java/util/Optional.get:()Ljava/lang/Object;
+      19: checkcast     #83                 // class org/apache/dubbo/config/ApplicationConfig
+      22: invokevirtual #81                 // Method org/apache/dubbo/config/ApplicationConfig.getName:()Ljava/lang/String;
+      25: goto          29
+      28: aconst_null
+      29: areturn
+
+  void addModule(org.apache.dubbo.rpc.model.ModuleModel, boolean);
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field instLock:Ljava/lang/Object;
+       4: dup
+       5: astore_3
+       6: monitorenter
+       7: aload_0
+       8: getfield      #9                  // Field moduleModels:Ljava/util/List;
+      11: aload_1
+      12: invokeinterface #84,  2           // InterfaceMethod java/util/List.contains:(Ljava/lang/Object;)Z
+      17: ifne          70
+      20: aload_0
+      21: invokespecial #85                 // Method checkDestroyed:()V
+      24: aload_0
+      25: getfield      #9                  // Field moduleModels:Ljava/util/List;
+      28: aload_1
+      29: invokeinterface #86,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      34: pop
+      35: aload_1
+      36: aload_0
+      37: aload_0
+      38: invokevirtual #87                 // Method getInternalId:()Ljava/lang/String;
+      41: aload_0
+      42: getfield      #13                 // Field moduleIndex:Ljava/util/concurrent/atomic/AtomicInteger;
+      45: invokevirtual #88                 // Method java/util/concurrent/atomic/AtomicInteger.getAndIncrement:()I
+      48: i2l
+      49: invokevirtual #89                 // Method buildInternalId:(Ljava/lang/String;J)Ljava/lang/String;
+      52: invokevirtual #90                 // Method org/apache/dubbo/rpc/model/ModuleModel.setInternalId:(Ljava/lang/String;)V
+      55: iload_2
+      56: ifne          70
+      59: aload_0
+      60: getfield      #10                 // Field pubModuleModels:Ljava/util/List;
+      63: aload_1
+      64: invokeinterface #86,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      69: pop
+      70: aload_3
+      71: monitorexit
+      72: goto          82
+      75: astore        4
+      77: aload_3
+      78: monitorexit
+      79: aload         4
+      81: athrow
+      82: return
+    Exception table:
+       from    to  target type
+           7    72    75   any
+          75    79    75   any
+
+  public void removeModule(org.apache.dubbo.rpc.model.ModuleModel);
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field instLock:Ljava/lang/Object;
+       4: dup
+       5: astore_2
+       6: monitorenter
+       7: aload_0
+       8: getfield      #9                  // Field moduleModels:Ljava/util/List;
+      11: aload_1
+      12: invokeinterface #91,  2           // InterfaceMethod java/util/List.remove:(Ljava/lang/Object;)Z
+      17: pop
+      18: aload_0
+      19: getfield      #10                 // Field pubModuleModels:Ljava/util/List;
+      22: aload_1
+      23: invokeinterface #91,  2           // InterfaceMethod java/util/List.remove:(Ljava/lang/Object;)Z
+      28: pop
+      29: aload_1
+      30: aload_0
+      31: getfield      #92                 // Field defaultModule:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      34: if_acmpne     45
+      37: aload_0
+      38: aload_0
+      39: invokespecial #93                 // Method findDefaultModule:()Lorg/apache/dubbo/rpc/model/ModuleModel;
+      42: putfield      #92                 // Field defaultModule:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      45: aload_2
+      46: monitorexit
+      47: goto          55
+      50: astore_3
+      51: aload_2
+      52: monitorexit
+      53: aload_3
+      54: athrow
+      55: return
+    Exception table:
+       from    to  target type
+           7    47    50   any
+          50    53    50   any
+
+  void tryDestroy();
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field instLock:Ljava/lang/Object;
+       4: dup
+       5: astore_1
+       6: monitorenter
+       7: aload_0
+       8: getfield      #9                  // Field moduleModels:Ljava/util/List;
+      11: invokeinterface #94,  1           // InterfaceMethod java/util/List.isEmpty:()Z
+      16: ifne          49
+      19: aload_0
+      20: getfield      #9                  // Field moduleModels:Ljava/util/List;
+      23: invokeinterface #95,  1           // InterfaceMethod java/util/List.size:()I
+      28: iconst_1
+      29: if_icmpne     53
+      32: aload_0
+      33: getfield      #9                  // Field moduleModels:Ljava/util/List;
+      36: iconst_0
+      37: invokeinterface #96,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+      42: aload_0
+      43: getfield      #31                 // Field internalModule:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      46: if_acmpne     53
+      49: aload_0
+      50: invokevirtual #97                 // Method destroy:()V
+      53: aload_1
+      54: monitorexit
+      55: goto          63
+      58: astore_2
+      59: aload_1
+      60: monitorexit
+      61: aload_2
+      62: athrow
+      63: return
+    Exception table:
+       from    to  target type
+           7    55    58   any
+          58    61    58   any
+
+  private void checkDestroyed();
+    Code:
+       0: aload_0
+       1: invokevirtual #98                 // Method isDestroyed:()Z
+       4: ifeq          17
+       7: new           #99                 // class java/lang/IllegalStateException
+      10: dup
+      11: ldc           #100                // String ApplicationModel is destroyed
+      13: invokespecial #101                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: return
+
+  public java.util.List<org.apache.dubbo.rpc.model.ModuleModel> getModuleModels();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field moduleModels:Ljava/util/List;
+       4: invokestatic  #102                // Method java/util/Collections.unmodifiableList:(Ljava/util/List;)Ljava/util/List;
+       7: areturn
+
+  public java.util.List<org.apache.dubbo.rpc.model.ModuleModel> getPubModuleModels();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field pubModuleModels:Ljava/util/List;
+       4: invokestatic  #102                // Method java/util/Collections.unmodifiableList:(Ljava/util/List;)Ljava/util/List;
+       7: areturn
+
+  public org.apache.dubbo.rpc.model.ModuleModel getDefaultModule();
+    Code:
+       0: aload_0
+       1: getfield      #92                 // Field defaultModule:Lorg/apache/dubbo/rpc/model/ModuleModel;
+       4: ifnonnull     54
+       7: aload_0
+       8: getfield      #14                 // Field instLock:Ljava/lang/Object;
+      11: dup
+      12: astore_1
+      13: monitorenter
+      14: aload_0
+      15: getfield      #92                 // Field defaultModule:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      18: ifnonnull     44
+      21: aload_0
+      22: aload_0
+      23: invokespecial #93                 // Method findDefaultModule:()Lorg/apache/dubbo/rpc/model/ModuleModel;
+      26: putfield      #92                 // Field defaultModule:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      29: aload_0
+      30: getfield      #92                 // Field defaultModule:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      33: ifnonnull     44
+      36: aload_0
+      37: aload_0
+      38: invokevirtual #103                // Method newModule:()Lorg/apache/dubbo/rpc/model/ModuleModel;
+      41: putfield      #92                 // Field defaultModule:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      44: aload_1
+      45: monitorexit
+      46: goto          54
+      49: astore_2
+      50: aload_1
+      51: monitorexit
+      52: aload_2
+      53: athrow
+      54: aload_0
+      55: getfield      #92                 // Field defaultModule:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      58: areturn
+    Exception table:
+       from    to  target type
+          14    46    49   any
+          49    52    49   any
+
+  private org.apache.dubbo.rpc.model.ModuleModel findDefaultModule();
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field instLock:Ljava/lang/Object;
+       4: dup
+       5: astore_1
+       6: monitorenter
+       7: aload_0
+       8: getfield      #9                  // Field moduleModels:Ljava/util/List;
+      11: invokeinterface #61,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      16: astore_2
+      17: aload_2
+      18: invokeinterface #39,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      23: ifeq          51
+      26: aload_2
+      27: invokeinterface #40,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      32: checkcast     #29                 // class org/apache/dubbo/rpc/model/ModuleModel
+      35: astore_3
+      36: aload_3
+      37: aload_0
+      38: getfield      #31                 // Field internalModule:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      41: if_acmpeq     48
+      44: aload_3
+      45: aload_1
+      46: monitorexit
+      47: areturn
+      48: goto          17
+      51: aconst_null
+      52: aload_1
+      53: monitorexit
+      54: areturn
+      55: astore        4
+      57: aload_1
+      58: monitorexit
+      59: aload         4
+      61: athrow
+    Exception table:
+       from    to  target type
+           7    47    55   any
+          48    54    55   any
+          55    59    55   any
+
+  public org.apache.dubbo.rpc.model.ModuleModel getInternalModule();
+    Code:
+       0: aload_0
+       1: getfield      #31                 // Field internalModule:Lorg/apache/dubbo/rpc/model/ModuleModel;
+       4: areturn
+
+  public void addClassLoader(java.lang.ClassLoader);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #104                // Method org/apache/dubbo/rpc/model/ScopeModel.addClassLoader:(Ljava/lang/ClassLoader;)V
+       5: aload_0
+       6: getfield      #65                 // Field environment:Lorg/apache/dubbo/common/config/Environment;
+       9: ifnull        19
+      12: aload_0
+      13: getfield      #65                 // Field environment:Lorg/apache/dubbo/common/config/Environment;
+      16: invokevirtual #105                // Method org/apache/dubbo/common/config/Environment.refreshClassLoaders:()V
+      19: return
+
+  public void removeClassLoader(java.lang.ClassLoader);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #106                // Method org/apache/dubbo/rpc/model/ScopeModel.removeClassLoader:(Ljava/lang/ClassLoader;)V
+       5: aload_0
+       6: getfield      #65                 // Field environment:Lorg/apache/dubbo/common/config/Environment;
+       9: ifnull        19
+      12: aload_0
+      13: getfield      #65                 // Field environment:Lorg/apache/dubbo/common/config/Environment;
+      16: invokevirtual #105                // Method org/apache/dubbo/common/config/Environment.refreshClassLoaders:()V
+      19: return
+
+  protected boolean checkIfClassLoaderCanRemoved(java.lang.ClassLoader);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #107                // Method org/apache/dubbo/rpc/model/ScopeModel.checkIfClassLoaderCanRemoved:(Ljava/lang/ClassLoader;)Z
+       5: ifeq          20
+       8: aload_0
+       9: aload_1
+      10: invokevirtual #108                // Method containsClassLoader:(Ljava/lang/ClassLoader;)Z
+      13: ifne          20
+      16: iconst_1
+      17: goto          21
+      20: iconst_0
+      21: ireturn
+
+  protected boolean containsClassLoader(java.lang.ClassLoader);
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field moduleModels:Ljava/util/List;
+       4: invokeinterface #109,  1          // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+       9: aload_1
+      10: invokedynamic #110,  0            // InvokeDynamic #0:test:(Ljava/lang/ClassLoader;)Ljava/util/function/Predicate;
+      15: invokeinterface #111,  2          // InterfaceMethod java/util/stream/Stream.anyMatch:(Ljava/util/function/Predicate;)Z
+      20: ireturn
+
+  public org.apache.dubbo.common.deploy.ApplicationDeployer getDeployer();
+    Code:
+       0: aload_0
+       1: getfield      #58                 // Field deployer:Lorg/apache/dubbo/common/deploy/ApplicationDeployer;
+       4: areturn
+
+  public void setDeployer(org.apache.dubbo.common.deploy.ApplicationDeployer);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #58                 // Field deployer:Lorg/apache/dubbo/common/deploy/ApplicationDeployer;
+       5: return
+
+  protected java.util.concurrent.locks.Lock acquireDestroyLock();
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+       4: invokevirtual #112                // Method org/apache/dubbo/rpc/model/FrameworkModel.acquireDestroyLock:()Ljava/util/concurrent/locks/Lock;
+       7: areturn
+
+  public static java.util.Collection<org.apache.dubbo.rpc.model.ConsumerModel> allConsumerModels();
+    Code:
+       0: invokestatic  #1                  // Method defaultModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       3: invokevirtual #48                 // Method getApplicationServiceRepository:()Lorg/apache/dubbo/rpc/model/ServiceRepository;
+       6: invokevirtual #113                // Method org/apache/dubbo/rpc/model/ServiceRepository.allConsumerModels:()Ljava/util/Collection;
+       9: areturn
+
+  public static java.util.Collection<org.apache.dubbo.rpc.model.ProviderModel> allProviderModels();
+    Code:
+       0: invokestatic  #1                  // Method defaultModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       3: invokevirtual #48                 // Method getApplicationServiceRepository:()Lorg/apache/dubbo/rpc/model/ServiceRepository;
+       6: invokevirtual #114                // Method org/apache/dubbo/rpc/model/ServiceRepository.allProviderModels:()Ljava/util/Collection;
+       9: areturn
+
+  public static org.apache.dubbo.rpc.model.ProviderModel getProviderModel(java.lang.String);
+    Code:
+       0: invokestatic  #1                  // Method defaultModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       3: invokevirtual #115                // Method getDefaultModule:()Lorg/apache/dubbo/rpc/model/ModuleModel;
+       6: invokevirtual #116                // Method org/apache/dubbo/rpc/model/ModuleModel.getServiceRepository:()Lorg/apache/dubbo/rpc/model/ModuleServiceRepository;
+       9: aload_0
+      10: invokevirtual #117                // Method org/apache/dubbo/rpc/model/ModuleServiceRepository.lookupExportedService:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/model/ProviderModel;
+      13: areturn
+
+  public static org.apache.dubbo.rpc.model.ConsumerModel getConsumerModel(java.lang.String);
+    Code:
+       0: invokestatic  #1                  // Method defaultModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       3: invokevirtual #115                // Method getDefaultModule:()Lorg/apache/dubbo/rpc/model/ModuleModel;
+       6: invokevirtual #116                // Method org/apache/dubbo/rpc/model/ModuleModel.getServiceRepository:()Lorg/apache/dubbo/rpc/model/ModuleServiceRepository;
+       9: aload_0
+      10: invokevirtual #118                // Method org/apache/dubbo/rpc/model/ModuleServiceRepository.lookupReferredService:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/model/ConsumerModel;
+      13: areturn
+
+  public static org.apache.dubbo.common.config.Environment getEnvironment();
+    Code:
+       0: invokestatic  #1                  // Method defaultModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       3: invokevirtual #119                // Method getModelEnvironment:()Lorg/apache/dubbo/common/config/Environment;
+       6: areturn
+
+  public static org.apache.dubbo.config.context.ConfigManager getConfigManager();
+    Code:
+       0: invokestatic  #1                  // Method defaultModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       3: invokevirtual #50                 // Method getApplicationConfigManager:()Lorg/apache/dubbo/config/context/ConfigManager;
+       6: areturn
+
+  public static org.apache.dubbo.rpc.model.ServiceRepository getServiceRepository();
+    Code:
+       0: invokestatic  #1                  // Method defaultModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       3: invokevirtual #48                 // Method getApplicationServiceRepository:()Lorg/apache/dubbo/rpc/model/ServiceRepository;
+       6: areturn
+
+  public static org.apache.dubbo.common.threadpool.manager.ExecutorRepository getExecutorRepository();
+    Code:
+       0: invokestatic  #1                  // Method defaultModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       3: invokevirtual #120                // Method getApplicationExecutorRepository:()Lorg/apache/dubbo/common/threadpool/manager/ExecutorRepository;
+       6: areturn
+
+  public static org.apache.dubbo.config.ApplicationConfig getApplicationConfig();
+    Code:
+       0: invokestatic  #1                  // Method defaultModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       3: invokevirtual #80                 // Method getCurrentConfig:()Lorg/apache/dubbo/config/ApplicationConfig;
+       6: areturn
+
+  public static java.lang.String getName();
+    Code:
+       0: invokestatic  #1                  // Method defaultModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       3: invokevirtual #80                 // Method getCurrentConfig:()Lorg/apache/dubbo/config/ApplicationConfig;
+       6: invokevirtual #81                 // Method org/apache/dubbo/config/ApplicationConfig.getName:()Ljava/lang/String;
+       9: areturn
+
+  public static java.lang.String getApplication();
+    Code:
+       0: invokestatic  #121                // Method getName:()Ljava/lang/String;
+       3: areturn
+
+  public static void reset();
+    Code:
+       0: invokestatic  #2                  // Method org/apache/dubbo/rpc/model/FrameworkModel.defaultModel:()Lorg/apache/dubbo/rpc/model/FrameworkModel;
+       3: invokevirtual #122                // Method org/apache/dubbo/rpc/model/FrameworkModel.getDefaultAppModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       6: ifnull        18
+       9: invokestatic  #2                  // Method org/apache/dubbo/rpc/model/FrameworkModel.defaultModel:()Lorg/apache/dubbo/rpc/model/FrameworkModel;
+      12: invokevirtual #122                // Method org/apache/dubbo/rpc/model/FrameworkModel.getDefaultAppModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      15: invokevirtual #97                 // Method destroy:()V
+      18: return
+
+  public void setEnvironment(org.apache.dubbo.common.config.Environment);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #65                 // Field environment:Lorg/apache/dubbo/common/config/Environment;
+       5: return
+
+  public void setConfigManager(org.apache.dubbo.config.context.ConfigManager);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #67                 // Field configManager:Lorg/apache/dubbo/config/context/ConfigManager;
+       5: return
+
+  public void setServiceRepository(org.apache.dubbo.rpc.model.ServiceRepository);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #34                 // Field serviceRepository:Lorg/apache/dubbo/rpc/model/ServiceRepository;
+       5: return
+
+  private static boolean lambda$containsClassLoader$0(java.lang.ClassLoader, org.apache.dubbo.rpc.model.ModuleModel);
+    Code:
+       0: aload_1
+       1: invokevirtual #123                // Method org/apache/dubbo/rpc/model/ModuleModel.getClassLoaders:()Ljava/util/Set;
+       4: aload_0
+       5: invokeinterface #124,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+      10: ireturn
+
+  static {};
+    Code:
+       0: ldc           #125                // class org/apache/dubbo/rpc/model/ApplicationModel
+       2: invokestatic  #126                // Method org/apache/dubbo/common/logger/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/Logger;
+       5: putstatic     #19                 // Field LOGGER:Lorg/apache/dubbo/common/logger/Logger;
+       8: return
+}

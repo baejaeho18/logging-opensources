@@ -1,0 +1,153 @@
+Compiled from "CuratorZookeeperClient.java"
+class org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient$CuratorWatcherImpl implements org.apache.curator.framework.api.CuratorWatcher {
+  private static volatile java.util.concurrent.ExecutorService CURATOR_WATCHER_EXECUTOR_SERVICE;
+
+  private static volatile boolean closed;
+
+  private org.apache.curator.framework.CuratorFramework client;
+
+  private volatile org.apache.dubbo.remoting.zookeeper.ChildListener childListener;
+
+  private java.lang.String path;
+
+  private static void initExecutorIfNecessary();
+    Code:
+       0: getstatic     #3                  // Field closed:Z
+       3: ifne          54
+       6: getstatic     #2                  // Field CURATOR_WATCHER_EXECUTOR_SERVICE:Ljava/util/concurrent/ExecutorService;
+       9: ifnonnull     54
+      12: ldc           #4                  // class org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorWatcherImpl
+      14: dup
+      15: astore_0
+      16: monitorenter
+      17: getstatic     #3                  // Field closed:Z
+      20: ifne          44
+      23: getstatic     #2                  // Field CURATOR_WATCHER_EXECUTOR_SERVICE:Ljava/util/concurrent/ExecutorService;
+      26: ifnonnull     44
+      29: new           #5                  // class org/apache/dubbo/common/utils/NamedThreadFactory
+      32: dup
+      33: ldc           #6                  // String Dubbo-CuratorWatcher
+      35: invokespecial #7                  // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;)V
+      38: invokestatic  #8                  // Method java/util/concurrent/Executors.newSingleThreadExecutor:(Ljava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ExecutorService;
+      41: putstatic     #2                  // Field CURATOR_WATCHER_EXECUTOR_SERVICE:Ljava/util/concurrent/ExecutorService;
+      44: aload_0
+      45: monitorexit
+      46: goto          54
+      49: astore_1
+      50: aload_0
+      51: monitorexit
+      52: aload_1
+      53: athrow
+      54: return
+    Exception table:
+       from    to  target type
+          17    46    49   any
+          49    52    49   any
+
+  public org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient$CuratorWatcherImpl(org.apache.curator.framework.CuratorFramework, org.apache.dubbo.remoting.zookeeper.ChildListener, java.lang.String);
+    Code:
+       0: aload_0
+       1: invokespecial #9                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #10                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+       9: aload_0
+      10: aload_2
+      11: putfield      #11                 // Field childListener:Lorg/apache/dubbo/remoting/zookeeper/ChildListener;
+      14: aload_0
+      15: aload_3
+      16: putfield      #12                 // Field path:Ljava/lang/String;
+      19: return
+
+  protected org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient$CuratorWatcherImpl();
+    Code:
+       0: aload_0
+       1: invokespecial #9                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public void unwatch();
+    Code:
+       0: aload_0
+       1: aconst_null
+       2: putfield      #11                 // Field childListener:Lorg/apache/dubbo/remoting/zookeeper/ChildListener;
+       5: return
+
+  public void process(org.apache.zookeeper.WatchedEvent) throws java.lang.Exception;
+    Code:
+       0: aload_1
+       1: invokevirtual #13                 // Method org/apache/zookeeper/WatchedEvent.getType:()Lorg/apache/zookeeper/Watcher$Event$EventType;
+       4: getstatic     #14                 // Field org/apache/zookeeper/Watcher$Event$EventType.None:Lorg/apache/zookeeper/Watcher$Event$EventType;
+       7: if_acmpne     11
+      10: return
+      11: aload_0
+      12: getfield      #11                 // Field childListener:Lorg/apache/dubbo/remoting/zookeeper/ChildListener;
+      15: ifnull        49
+      18: aload_0
+      19: invokedynamic #15,  0             // InvokeDynamic #0:run:(Lorg/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient$CuratorWatcherImpl;)Ljava/lang/Runnable;
+      24: astore_2
+      25: invokestatic  #16                 // Method initExecutorIfNecessary:()V
+      28: getstatic     #3                  // Field closed:Z
+      31: ifne          49
+      34: getstatic     #2                  // Field CURATOR_WATCHER_EXECUTOR_SERVICE:Ljava/util/concurrent/ExecutorService;
+      37: ifnull        49
+      40: getstatic     #2                  // Field CURATOR_WATCHER_EXECUTOR_SERVICE:Ljava/util/concurrent/ExecutorService;
+      43: aload_2
+      44: invokeinterface #17,  2           // InterfaceMethod java/util/concurrent/ExecutorService.execute:(Ljava/lang/Runnable;)V
+      49: return
+
+  private void lambda$process$0();
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field childListener:Lorg/apache/dubbo/remoting/zookeeper/ChildListener;
+       4: aload_0
+       5: getfield      #12                 // Field path:Ljava/lang/String;
+       8: aload_0
+       9: getfield      #10                 // Field client:Lorg/apache/curator/framework/CuratorFramework;
+      12: invokeinterface #18,  1           // InterfaceMethod org/apache/curator/framework/CuratorFramework.getChildren:()Lorg/apache/curator/framework/api/GetChildrenBuilder;
+      17: aload_0
+      18: invokeinterface #19,  2           // InterfaceMethod org/apache/curator/framework/api/GetChildrenBuilder.usingWatcher:(Lorg/apache/curator/framework/api/CuratorWatcher;)Ljava/lang/Object;
+      23: checkcast     #20                 // class org/apache/curator/framework/api/BackgroundPathable
+      26: aload_0
+      27: getfield      #12                 // Field path:Ljava/lang/String;
+      30: invokeinterface #21,  2           // InterfaceMethod org/apache/curator/framework/api/BackgroundPathable.forPath:(Ljava/lang/String;)Ljava/lang/Object;
+      35: checkcast     #22                 // class java/util/List
+      38: invokeinterface #23,  3           // InterfaceMethod org/apache/dubbo/remoting/zookeeper/ChildListener.childChanged:(Ljava/lang/String;Ljava/util/List;)V
+      43: goto          64
+      46: astore_1
+      47: getstatic     #25                 // Field org/apache/dubbo/remoting/zookeeper/curator/CuratorZookeeperClient.logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      50: ldc           #26                 // String 1-35
+      52: ldc           #27                 // String
+      54: ldc           #27                 // String
+      56: ldc           #28                 // String client get children error
+      58: aload_1
+      59: invokeinterface #29,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      64: return
+    Exception table:
+       from    to  target type
+           0    43    46   Class java/lang/Exception
+
+  static boolean access$002(boolean);
+    Code:
+       0: iload_0
+       1: dup
+       2: putstatic     #3                  // Field closed:Z
+       5: ireturn
+
+  static java.util.concurrent.ExecutorService access$100();
+    Code:
+       0: getstatic     #2                  // Field CURATOR_WATCHER_EXECUTOR_SERVICE:Ljava/util/concurrent/ExecutorService;
+       3: areturn
+
+  static java.util.concurrent.ExecutorService access$102(java.util.concurrent.ExecutorService);
+    Code:
+       0: aload_0
+       1: dup
+       2: putstatic     #2                  // Field CURATOR_WATCHER_EXECUTOR_SERVICE:Ljava/util/concurrent/ExecutorService;
+       5: areturn
+
+  static {};
+    Code:
+       0: iconst_0
+       1: putstatic     #3                  // Field closed:Z
+       4: return
+}

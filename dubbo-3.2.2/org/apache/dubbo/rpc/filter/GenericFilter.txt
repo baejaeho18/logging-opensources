@@ -1,0 +1,743 @@
+Compiled from "GenericFilter.java"
+public class org.apache.dubbo.rpc.filter.GenericFilter implements org.apache.dubbo.rpc.Filter,org.apache.dubbo.rpc.BaseFilter$Listener,org.apache.dubbo.rpc.model.ScopeModelAware {
+  private final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private org.apache.dubbo.rpc.model.ApplicationModel applicationModel;
+
+  public org.apache.dubbo.rpc.filter.GenericFilter();
+    Code:
+       0: aload_0
+       1: invokespecial #4                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: ldc           #5                  // class org/apache/dubbo/rpc/filter/GenericFilter
+       7: invokestatic  #6                  // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      10: putfield      #7                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      13: return
+
+  public void setApplicationModel(org.apache.dubbo.rpc.model.ApplicationModel);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       5: return
+
+  public org.apache.dubbo.rpc.Result invoke(org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aload_2
+       1: invokeinterface #9,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+       6: ldc           #10                 // String $invoke
+       8: invokevirtual #11                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      11: ifne          28
+      14: aload_2
+      15: invokeinterface #9,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+      20: ldc           #12                 // String $invokeAsync
+      22: invokevirtual #11                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      25: ifeq          1098
+      28: aload_2
+      29: invokeinterface #13,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getArguments:()[Ljava/lang/Object;
+      34: ifnull        1098
+      37: aload_2
+      38: invokeinterface #13,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getArguments:()[Ljava/lang/Object;
+      43: arraylength
+      44: iconst_3
+      45: if_icmpne     1098
+      48: ldc           #14                 // class org/apache/dubbo/rpc/service/GenericService
+      50: aload_1
+      51: invokeinterface #15,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.getInterface:()Ljava/lang/Class;
+      56: invokevirtual #16                 // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+      59: ifne          1098
+      62: aload_2
+      63: invokeinterface #13,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getArguments:()[Ljava/lang/Object;
+      68: iconst_0
+      69: aaload
+      70: checkcast     #17                 // class java/lang/String
+      73: invokevirtual #18                 // Method java/lang/String.trim:()Ljava/lang/String;
+      76: astore_3
+      77: aload_2
+      78: invokeinterface #13,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getArguments:()[Ljava/lang/Object;
+      83: iconst_1
+      84: aaload
+      85: checkcast     #19                 // class "[Ljava/lang/String;"
+      88: checkcast     #19                 // class "[Ljava/lang/String;"
+      91: astore        4
+      93: aload_2
+      94: invokeinterface #13,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getArguments:()[Ljava/lang/Object;
+      99: iconst_2
+     100: aaload
+     101: checkcast     #20                 // class "[Ljava/lang/Object;"
+     104: checkcast     #20                 // class "[Ljava/lang/Object;"
+     107: astore        5
+     109: aload_1
+     110: invokeinterface #15,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.getInterface:()Ljava/lang/Class;
+     115: aload_3
+     116: aload         4
+     118: invokestatic  #21                 // Method org/apache/dubbo/common/utils/ReflectUtils.findMethodByMethodSignature:(Ljava/lang/Class;Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/reflect/Method;
+     121: astore        6
+     123: aload         6
+     125: invokevirtual #22                 // Method java/lang/reflect/Method.getParameterTypes:()[Ljava/lang/Class;
+     128: astore        7
+     130: aload         5
+     132: ifnonnull     143
+     135: aload         7
+     137: arraylength
+     138: anewarray     #23                 // class java/lang/Object
+     141: astore        5
+     143: aload         4
+     145: ifnonnull     156
+     148: aload         7
+     150: arraylength
+     151: anewarray     #17                 // class java/lang/String
+     154: astore        4
+     156: aload         5
+     158: arraylength
+     159: aload         4
+     161: arraylength
+     162: if_icmpeq     175
+     165: new           #24                 // class org/apache/dubbo/rpc/RpcException
+     168: dup
+     169: ldc           #25                 // String GenericFilter#invoke args.length != types.length, please check your params
+     171: invokespecial #26                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;)V
+     174: athrow
+     175: aload_2
+     176: ldc           #27                 // String generic
+     178: invokeinterface #28,  2           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getAttachment:(Ljava/lang/String;)Ljava/lang/String;
+     183: astore        8
+     185: aload         8
+     187: invokestatic  #29                 // Method org/apache/dubbo/common/utils/StringUtils.isBlank:(Ljava/lang/CharSequence;)Z
+     190: ifeq          199
+     193: aload_0
+     194: invokespecial #30                 // Method getGenericValueFromRpcContext:()Ljava/lang/String;
+     197: astore        8
+     199: aload         8
+     201: invokestatic  #31                 // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+     204: ifne          223
+     207: aload         8
+     209: invokestatic  #32                 // Method org/apache/dubbo/rpc/support/ProtocolUtils.isDefaultGenericSerialization:(Ljava/lang/String;)Z
+     212: ifne          223
+     215: aload         8
+     217: invokestatic  #33                 // Method org/apache/dubbo/rpc/support/ProtocolUtils.isGenericReturnRawResult:(Ljava/lang/String;)Z
+     220: ifeq          252
+     223: aload         5
+     225: aload         7
+     227: aload         6
+     229: invokevirtual #34                 // Method java/lang/reflect/Method.getGenericParameterTypes:()[Ljava/lang/reflect/Type;
+     232: invokestatic  #35                 // Method org/apache/dubbo/common/utils/PojoUtils.realize:([Ljava/lang/Object;[Ljava/lang/Class;[Ljava/lang/reflect/Type;)[Ljava/lang/Object;
+     235: astore        5
+     237: goto          982
+     240: astore        9
+     242: new           #24                 // class org/apache/dubbo/rpc/RpcException
+     245: dup
+     246: aload         9
+     248: invokespecial #37                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/Throwable;)V
+     251: athrow
+     252: aload         8
+     254: invokestatic  #38                 // Method org/apache/dubbo/rpc/support/ProtocolUtils.isGsonGenericSerialization:(Ljava/lang/String;)Z
+     257: ifeq          276
+     260: aload_0
+     261: aload         5
+     263: aload         6
+     265: invokevirtual #34                 // Method java/lang/reflect/Method.getGenericParameterTypes:()[Ljava/lang/reflect/Type;
+     268: invokespecial #39                 // Method getGsonGenericArgs:([Ljava/lang/Object;[Ljava/lang/reflect/Type;)[Ljava/lang/Object;
+     271: astore        5
+     273: goto          982
+     276: aload         8
+     278: invokestatic  #40                 // Method org/apache/dubbo/rpc/support/ProtocolUtils.isJavaGenericSerialization:(Ljava/lang/String;)Z
+     281: ifeq          614
+     284: aload_0
+     285: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     288: invokestatic  #41                 // Method org/apache/dubbo/rpc/model/ApplicationModel.ofNullable:(Lorg/apache/dubbo/rpc/model/ApplicationModel;)Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     291: invokevirtual #42                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getModelEnvironment:()Lorg/apache/dubbo/common/config/Environment;
+     294: invokevirtual #43                 // Method org/apache/dubbo/common/config/Environment.getConfiguration:()Lorg/apache/dubbo/common/config/CompositeConfiguration;
+     297: astore        9
+     299: aload         9
+     301: ldc           #44                 // String dubbo.security.serialize.generic.native-java-enable
+     303: iconst_0
+     304: invokeinterface #45,  3           // InterfaceMethod org/apache/dubbo/common/config/Configuration.getBoolean:(Ljava/lang/String;Z)Z
+     309: ifne          350
+     312: ldc           #46                 // String Trigger the safety barrier! Native Java Serializer is not allowed by default.This means currently maybe being attacking by others. If you are sure this is a mistake, please set `dubbo.security.serialize.generic.native-java-enable` enable in configuration! Before doing so, please make sure you have configure JEP290 to prevent serialization attack.
+     314: astore        10
+     316: aload_0
+     317: getfield      #7                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     320: ldc           #47                 // String 5-36
+     322: ldc           #48                 // String
+     324: ldc           #48                 // String
+     326: aload         10
+     328: invokeinterface #49,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     333: new           #24                 // class org/apache/dubbo/rpc/RpcException
+     336: dup
+     337: new           #50                 // class java/lang/IllegalStateException
+     340: dup
+     341: aload         10
+     343: invokespecial #51                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     346: invokespecial #37                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/Throwable;)V
+     349: athrow
+     350: iconst_0
+     351: istore        10
+     353: iload         10
+     355: aload         5
+     357: arraylength
+     358: if_icmpge     611
+     361: ldc           #52                 // class "[B"
+     363: aload         5
+     365: iload         10
+     367: aaload
+     368: invokevirtual #53                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     371: if_acmpne     561
+     374: new           #54                 // class org/apache/dubbo/common/io/UnsafeByteArrayInputStream
+     377: dup
+     378: aload         5
+     380: iload         10
+     382: aaload
+     383: checkcast     #52                 // class "[B"
+     386: checkcast     #52                 // class "[B"
+     389: invokespecial #55                 // Method org/apache/dubbo/common/io/UnsafeByteArrayInputStream."<init>":([B)V
+     392: astore        11
+     394: aconst_null
+     395: astore        12
+     397: aload         5
+     399: iload         10
+     401: aload_0
+     402: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     405: ldc           #56                 // class org/apache/dubbo/common/serialize/Serialization
+     407: invokevirtual #57                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+     410: ldc           #58                 // String nativejava
+     412: invokevirtual #59                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getExtension:(Ljava/lang/String;)Ljava/lang/Object;
+     415: checkcast     #56                 // class org/apache/dubbo/common/serialize/Serialization
+     418: aconst_null
+     419: aload         11
+     421: invokeinterface #60,  3           // InterfaceMethod org/apache/dubbo/common/serialize/Serialization.deserialize:(Lorg/apache/dubbo/common/URL;Ljava/io/InputStream;)Lorg/apache/dubbo/common/serialize/ObjectInput;
+     426: invokeinterface #61,  1           // InterfaceMethod org/apache/dubbo/common/serialize/ObjectInput.readObject:()Ljava/lang/Object;
+     431: aastore
+     432: aload         11
+     434: ifnull        519
+     437: aload         12
+     439: ifnull        462
+     442: aload         11
+     444: invokevirtual #62                 // Method org/apache/dubbo/common/io/UnsafeByteArrayInputStream.close:()V
+     447: goto          519
+     450: astore        13
+     452: aload         12
+     454: aload         13
+     456: invokevirtual #64                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     459: goto          519
+     462: aload         11
+     464: invokevirtual #62                 // Method org/apache/dubbo/common/io/UnsafeByteArrayInputStream.close:()V
+     467: goto          519
+     470: astore        13
+     472: aload         13
+     474: astore        12
+     476: aload         13
+     478: athrow
+     479: astore        14
+     481: aload         11
+     483: ifnull        516
+     486: aload         12
+     488: ifnull        511
+     491: aload         11
+     493: invokevirtual #62                 // Method org/apache/dubbo/common/io/UnsafeByteArrayInputStream.close:()V
+     496: goto          516
+     499: astore        15
+     501: aload         12
+     503: aload         15
+     505: invokevirtual #64                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     508: goto          516
+     511: aload         11
+     513: invokevirtual #62                 // Method org/apache/dubbo/common/io/UnsafeByteArrayInputStream.close:()V
+     516: aload         14
+     518: athrow
+     519: goto          605
+     522: astore        11
+     524: new           #24                 // class org/apache/dubbo/rpc/RpcException
+     527: dup
+     528: new           #66                 // class java/lang/StringBuilder
+     531: dup
+     532: invokespecial #67                 // Method java/lang/StringBuilder."<init>":()V
+     535: ldc           #68                 // String Deserialize argument [
+     537: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     540: iload         10
+     542: iconst_1
+     543: iadd
+     544: invokevirtual #70                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     547: ldc           #71                 // String ] failed.
+     549: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     552: invokevirtual #72                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     555: aload         11
+     557: invokespecial #73                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     560: athrow
+     561: new           #24                 // class org/apache/dubbo/rpc/RpcException
+     564: dup
+     565: new           #66                 // class java/lang/StringBuilder
+     568: dup
+     569: invokespecial #67                 // Method java/lang/StringBuilder."<init>":()V
+     572: ldc           #74                 // String Generic serialization [nativejava] only support message type
+     574: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     577: ldc           #52                 // class "[B"
+     579: invokevirtual #75                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     582: ldc           #76                 // String  and your message type is
+     584: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     587: aload         5
+     589: iload         10
+     591: aaload
+     592: invokevirtual #53                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     595: invokevirtual #75                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     598: invokevirtual #72                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     601: invokespecial #26                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;)V
+     604: athrow
+     605: iinc          10, 1
+     608: goto          353
+     611: goto          982
+     614: aload         8
+     616: invokestatic  #77                 // Method org/apache/dubbo/rpc/support/ProtocolUtils.isBeanGenericSerialization:(Ljava/lang/String;)Z
+     619: ifeq          730
+     622: iconst_0
+     623: istore        9
+     625: iload         9
+     627: aload         5
+     629: arraylength
+     630: if_icmpge     727
+     633: aload         5
+     635: iload         9
+     637: aaload
+     638: ifnull        721
+     641: aload         5
+     643: iload         9
+     645: aaload
+     646: instanceof    #78                 // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+     649: ifeq          671
+     652: aload         5
+     654: iload         9
+     656: aload         5
+     658: iload         9
+     660: aaload
+     661: checkcast     #78                 // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+     664: invokestatic  #79                 // Method org/apache/dubbo/common/beanutil/JavaBeanSerializeUtil.deserialize:(Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;)Ljava/lang/Object;
+     667: aastore
+     668: goto          721
+     671: new           #24                 // class org/apache/dubbo/rpc/RpcException
+     674: dup
+     675: new           #66                 // class java/lang/StringBuilder
+     678: dup
+     679: invokespecial #67                 // Method java/lang/StringBuilder."<init>":()V
+     682: ldc           #80                 // String Generic serialization [bean] only support message type
+     684: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     687: ldc           #78                 // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+     689: invokevirtual #81                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     692: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     695: ldc           #76                 // String  and your message type is
+     697: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     700: aload         5
+     702: iload         9
+     704: aaload
+     705: invokevirtual #53                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     708: invokevirtual #81                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     711: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     714: invokevirtual #72                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     717: invokespecial #26                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;)V
+     720: athrow
+     721: iinc          9, 1
+     724: goto          625
+     727: goto          982
+     730: aload         8
+     732: invokestatic  #82                 // Method org/apache/dubbo/rpc/support/ProtocolUtils.isProtobufGenericSerialization:(Ljava/lang/String;)Z
+     735: ifeq          982
+     738: aload         5
+     740: arraylength
+     741: iconst_1
+     742: if_icmpne     922
+     745: aload         5
+     747: iconst_0
+     748: aaload
+     749: instanceof    #17                 // class java/lang/String
+     752: ifeq          922
+     755: new           #54                 // class org/apache/dubbo/common/io/UnsafeByteArrayInputStream
+     758: dup
+     759: aload         5
+     761: iconst_0
+     762: aaload
+     763: checkcast     #17                 // class java/lang/String
+     766: invokevirtual #83                 // Method java/lang/String.getBytes:()[B
+     769: invokespecial #55                 // Method org/apache/dubbo/common/io/UnsafeByteArrayInputStream."<init>":([B)V
+     772: astore        9
+     774: aconst_null
+     775: astore        10
+     777: aload         5
+     779: iconst_0
+     780: aload_0
+     781: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     784: ldc           #56                 // class org/apache/dubbo/common/serialize/Serialization
+     786: invokevirtual #57                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+     789: ldc           #84                 // String protobuf-json
+     791: invokevirtual #59                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getExtension:(Ljava/lang/String;)Ljava/lang/Object;
+     794: checkcast     #56                 // class org/apache/dubbo/common/serialize/Serialization
+     797: aconst_null
+     798: aload         9
+     800: invokeinterface #60,  3           // InterfaceMethod org/apache/dubbo/common/serialize/Serialization.deserialize:(Lorg/apache/dubbo/common/URL;Ljava/io/InputStream;)Lorg/apache/dubbo/common/serialize/ObjectInput;
+     805: aload         6
+     807: invokevirtual #22                 // Method java/lang/reflect/Method.getParameterTypes:()[Ljava/lang/Class;
+     810: iconst_0
+     811: aaload
+     812: invokeinterface #85,  2           // InterfaceMethod org/apache/dubbo/common/serialize/ObjectInput.readObject:(Ljava/lang/Class;)Ljava/lang/Object;
+     817: aastore
+     818: aload         9
+     820: ifnull        905
+     823: aload         10
+     825: ifnull        848
+     828: aload         9
+     830: invokevirtual #62                 // Method org/apache/dubbo/common/io/UnsafeByteArrayInputStream.close:()V
+     833: goto          905
+     836: astore        11
+     838: aload         10
+     840: aload         11
+     842: invokevirtual #64                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     845: goto          905
+     848: aload         9
+     850: invokevirtual #62                 // Method org/apache/dubbo/common/io/UnsafeByteArrayInputStream.close:()V
+     853: goto          905
+     856: astore        11
+     858: aload         11
+     860: astore        10
+     862: aload         11
+     864: athrow
+     865: astore        16
+     867: aload         9
+     869: ifnull        902
+     872: aload         10
+     874: ifnull        897
+     877: aload         9
+     879: invokevirtual #62                 // Method org/apache/dubbo/common/io/UnsafeByteArrayInputStream.close:()V
+     882: goto          902
+     885: astore        17
+     887: aload         10
+     889: aload         17
+     891: invokevirtual #64                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     894: goto          902
+     897: aload         9
+     899: invokevirtual #62                 // Method org/apache/dubbo/common/io/UnsafeByteArrayInputStream.close:()V
+     902: aload         16
+     904: athrow
+     905: goto          982
+     908: astore        9
+     910: new           #24                 // class org/apache/dubbo/rpc/RpcException
+     913: dup
+     914: ldc           #86                 // String Deserialize argument failed.
+     916: aload         9
+     918: invokespecial #73                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     921: athrow
+     922: new           #24                 // class org/apache/dubbo/rpc/RpcException
+     925: dup
+     926: new           #66                 // class java/lang/StringBuilder
+     929: dup
+     930: invokespecial #67                 // Method java/lang/StringBuilder."<init>":()V
+     933: ldc           #87                 // String Generic serialization [protobuf-json] only support one
+     935: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     938: ldc           #17                 // class java/lang/String
+     940: invokevirtual #81                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     943: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     946: ldc           #88                 // String  argument and your message size is
+     948: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     951: aload         5
+     953: arraylength
+     954: invokevirtual #70                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     957: ldc           #89                 // String  and type is
+     959: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     962: aload         5
+     964: iconst_0
+     965: aaload
+     966: invokevirtual #53                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     969: invokevirtual #81                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     972: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     975: invokevirtual #72                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     978: invokespecial #26                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;)V
+     981: athrow
+     982: new           #90                 // class org/apache/dubbo/rpc/RpcInvocation
+     985: dup
+     986: aload_2
+     987: invokeinterface #91,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getTargetServiceUniqueName:()Ljava/lang/String;
+     992: aload_1
+     993: invokeinterface #92,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+     998: invokevirtual #93                 // Method org/apache/dubbo/common/URL.getServiceModel:()Lorg/apache/dubbo/rpc/model/ServiceModel;
+    1001: aload         6
+    1003: invokevirtual #94                 // Method java/lang/reflect/Method.getName:()Ljava/lang/String;
+    1006: aload_1
+    1007: invokeinterface #15,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.getInterface:()Ljava/lang/Class;
+    1012: invokevirtual #81                 // Method java/lang/Class.getName:()Ljava/lang/String;
+    1015: aload_1
+    1016: invokeinterface #92,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+    1021: invokevirtual #95                 // Method org/apache/dubbo/common/URL.getProtocolServiceKey:()Ljava/lang/String;
+    1024: aload         6
+    1026: invokevirtual #22                 // Method java/lang/reflect/Method.getParameterTypes:()[Ljava/lang/Class;
+    1029: aload         5
+    1031: aload_2
+    1032: invokeinterface #96,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getObjectAttachments:()Ljava/util/Map;
+    1037: aload_2
+    1038: invokeinterface #97,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getInvoker:()Lorg/apache/dubbo/rpc/Invoker;
+    1043: aload_2
+    1044: invokeinterface #98,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getAttributes:()Ljava/util/Map;
+    1049: aload_2
+    1050: instanceof    #90                 // class org/apache/dubbo/rpc/RpcInvocation
+    1053: ifeq          1066
+    1056: aload_2
+    1057: checkcast     #90                 // class org/apache/dubbo/rpc/RpcInvocation
+    1060: invokevirtual #99                 // Method org/apache/dubbo/rpc/RpcInvocation.getInvokeMode:()Lorg/apache/dubbo/rpc/InvokeMode;
+    1063: goto          1067
+    1066: aconst_null
+    1067: invokespecial #100                // Method org/apache/dubbo/rpc/RpcInvocation."<init>":(Ljava/lang/String;Lorg/apache/dubbo/rpc/model/ServiceModel;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Class;[Ljava/lang/Object;Ljava/util/Map;Lorg/apache/dubbo/rpc/Invoker;Ljava/util/Map;Lorg/apache/dubbo/rpc/InvokeMode;)V
+    1070: astore        9
+    1072: aload_1
+    1073: aload         9
+    1075: invokeinterface #101,  2          // InterfaceMethod org/apache/dubbo/rpc/Invoker.invoke:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+    1080: areturn
+    1081: astore        6
+    1083: new           #24                 // class org/apache/dubbo/rpc/RpcException
+    1086: dup
+    1087: aload         6
+    1089: invokevirtual #104                // Method java/lang/ReflectiveOperationException.getMessage:()Ljava/lang/String;
+    1092: aload         6
+    1094: invokespecial #73                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+    1097: athrow
+    1098: aload_1
+    1099: aload_2
+    1100: invokeinterface #101,  2          // InterfaceMethod org/apache/dubbo/rpc/Invoker.invoke:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+    1105: areturn
+    Exception table:
+       from    to  target type
+         223   237   240   Class java/lang/IllegalArgumentException
+         442   447   450   Class java/lang/Throwable
+         397   432   470   Class java/lang/Throwable
+         397   432   479   any
+         491   496   499   Class java/lang/Throwable
+         470   481   479   any
+         374   519   522   Class java/lang/Exception
+         828   833   836   Class java/lang/Throwable
+         777   818   856   Class java/lang/Throwable
+         777   818   865   any
+         877   882   885   Class java/lang/Throwable
+         856   867   865   any
+         755   905   908   Class java/lang/Exception
+         109  1080  1081   Class java/lang/NoSuchMethodException
+         109  1080  1081   Class java/lang/ClassNotFoundException
+
+  private java.lang.Object[] getGsonGenericArgs(java.lang.Object[], java.lang.reflect.Type[]);
+    Code:
+       0: iconst_0
+       1: aload_1
+       2: arraylength
+       3: invokestatic  #105                // InterfaceMethod java/util/stream/IntStream.range:(II)Ljava/util/stream/IntStream;
+       6: aload_1
+       7: aload_2
+       8: invokedynamic #106,  0            // InvokeDynamic #0:apply:([Ljava/lang/Object;[Ljava/lang/reflect/Type;)Ljava/util/function/IntFunction;
+      13: invokeinterface #107,  2          // InterfaceMethod java/util/stream/IntStream.mapToObj:(Ljava/util/function/IntFunction;)Ljava/util/stream/Stream;
+      18: invokeinterface #108,  1          // InterfaceMethod java/util/stream/Stream.toArray:()[Ljava/lang/Object;
+      23: areturn
+
+  private java.lang.String getGenericValueFromRpcContext();
+    Code:
+       0: invokestatic  #109                // Method org/apache/dubbo/rpc/RpcContext.getServerAttachment:()Lorg/apache/dubbo/rpc/RpcContextAttachment;
+       3: ldc           #27                 // String generic
+       5: invokevirtual #110                // Method org/apache/dubbo/rpc/RpcContextAttachment.getAttachment:(Ljava/lang/String;)Ljava/lang/String;
+       8: astore_1
+       9: aload_1
+      10: invokestatic  #29                 // Method org/apache/dubbo/common/utils/StringUtils.isBlank:(Ljava/lang/CharSequence;)Z
+      13: ifeq          25
+      16: invokestatic  #111                // Method org/apache/dubbo/rpc/RpcContext.getClientAttachment:()Lorg/apache/dubbo/rpc/RpcContextAttachment;
+      19: ldc           #27                 // String generic
+      21: invokevirtual #110                // Method org/apache/dubbo/rpc/RpcContextAttachment.getAttachment:(Ljava/lang/String;)Ljava/lang/String;
+      24: astore_1
+      25: aload_1
+      26: areturn
+
+  public void onResponse(org.apache.dubbo.rpc.Result, org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_3
+       1: invokeinterface #9,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+       6: ldc           #10                 // String $invoke
+       8: invokevirtual #11                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      11: ifne          28
+      14: aload_3
+      15: invokeinterface #9,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+      20: ldc           #12                 // String $invokeAsync
+      22: invokevirtual #11                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      25: ifeq          385
+      28: aload_3
+      29: invokeinterface #13,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getArguments:()[Ljava/lang/Object;
+      34: ifnull        385
+      37: aload_3
+      38: invokeinterface #13,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getArguments:()[Ljava/lang/Object;
+      43: arraylength
+      44: iconst_3
+      45: if_icmpne     385
+      48: ldc           #14                 // class org/apache/dubbo/rpc/service/GenericService
+      50: aload_2
+      51: invokeinterface #15,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.getInterface:()Ljava/lang/Class;
+      56: invokevirtual #16                 // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+      59: ifne          385
+      62: aload_3
+      63: ldc           #27                 // String generic
+      65: invokeinterface #28,  2           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getAttachment:(Ljava/lang/String;)Ljava/lang/String;
+      70: astore        4
+      72: aload         4
+      74: invokestatic  #29                 // Method org/apache/dubbo/common/utils/StringUtils.isBlank:(Ljava/lang/CharSequence;)Z
+      77: ifeq          86
+      80: aload_0
+      81: invokespecial #30                 // Method getGenericValueFromRpcContext:()Ljava/lang/String;
+      84: astore        4
+      86: aload_1
+      87: invokeinterface #112,  1          // InterfaceMethod org/apache/dubbo/rpc/Result.hasException:()Z
+      92: ifeq          164
+      95: aload_1
+      96: invokeinterface #113,  1          // InterfaceMethod org/apache/dubbo/rpc/Result.getException:()Ljava/lang/Throwable;
+     101: astore        5
+     103: aload         5
+     105: instanceof    #114                // class org/apache/dubbo/rpc/service/GenericException
+     108: ifeq          137
+     111: aload         5
+     113: checkcast     #114                // class org/apache/dubbo/rpc/service/GenericException
+     116: astore        6
+     118: new           #115                // class com/alibaba/dubbo/rpc/service/GenericException
+     121: dup
+     122: aload         6
+     124: invokevirtual #116                // Method org/apache/dubbo/rpc/service/GenericException.getExceptionClass:()Ljava/lang/String;
+     127: aload         6
+     129: invokevirtual #117                // Method org/apache/dubbo/rpc/service/GenericException.getExceptionMessage:()Ljava/lang/String;
+     132: invokespecial #118                // Method com/alibaba/dubbo/rpc/service/GenericException."<init>":(Ljava/lang/String;Ljava/lang/String;)V
+     135: astore        5
+     137: aload         5
+     139: instanceof    #115                // class com/alibaba/dubbo/rpc/service/GenericException
+     142: ifne          156
+     145: new           #115                // class com/alibaba/dubbo/rpc/service/GenericException
+     148: dup
+     149: aload         5
+     151: invokespecial #119                // Method com/alibaba/dubbo/rpc/service/GenericException."<init>":(Ljava/lang/Throwable;)V
+     154: astore        5
+     156: aload_1
+     157: aload         5
+     159: invokeinterface #120,  2          // InterfaceMethod org/apache/dubbo/rpc/Result.setException:(Ljava/lang/Throwable;)V
+     164: aload         4
+     166: invokestatic  #40                 // Method org/apache/dubbo/rpc/support/ProtocolUtils.isJavaGenericSerialization:(Ljava/lang/String;)Z
+     169: ifeq          248
+     172: new           #121                // class org/apache/dubbo/common/io/UnsafeByteArrayOutputStream
+     175: dup
+     176: sipush        512
+     179: invokespecial #122                // Method org/apache/dubbo/common/io/UnsafeByteArrayOutputStream."<init>":(I)V
+     182: astore        5
+     184: aload_0
+     185: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     188: ldc           #56                 // class org/apache/dubbo/common/serialize/Serialization
+     190: invokevirtual #57                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+     193: ldc           #58                 // String nativejava
+     195: invokevirtual #59                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getExtension:(Ljava/lang/String;)Ljava/lang/Object;
+     198: checkcast     #56                 // class org/apache/dubbo/common/serialize/Serialization
+     201: aconst_null
+     202: aload         5
+     204: invokeinterface #123,  3          // InterfaceMethod org/apache/dubbo/common/serialize/Serialization.serialize:(Lorg/apache/dubbo/common/URL;Ljava/io/OutputStream;)Lorg/apache/dubbo/common/serialize/ObjectOutput;
+     209: aload_1
+     210: invokeinterface #124,  1          // InterfaceMethod org/apache/dubbo/rpc/Result.getValue:()Ljava/lang/Object;
+     215: invokeinterface #125,  2          // InterfaceMethod org/apache/dubbo/common/serialize/ObjectOutput.writeObject:(Ljava/lang/Object;)V
+     220: aload_1
+     221: aload         5
+     223: invokevirtual #126                // Method org/apache/dubbo/common/io/UnsafeByteArrayOutputStream.toByteArray:()[B
+     226: invokeinterface #127,  2          // InterfaceMethod org/apache/dubbo/rpc/Result.setValue:(Ljava/lang/Object;)V
+     231: goto          385
+     234: astore        5
+     236: new           #24                 // class org/apache/dubbo/rpc/RpcException
+     239: dup
+     240: ldc           #129                // String Generic serialization [nativejava] serialize result failed.
+     242: aload         5
+     244: invokespecial #73                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     247: athrow
+     248: aload         4
+     250: invokestatic  #77                 // Method org/apache/dubbo/rpc/support/ProtocolUtils.isBeanGenericSerialization:(Ljava/lang/String;)Z
+     253: ifeq          277
+     256: aload_1
+     257: aload_1
+     258: invokeinterface #124,  1          // InterfaceMethod org/apache/dubbo/rpc/Result.getValue:()Ljava/lang/Object;
+     263: getstatic     #130                // Field org/apache/dubbo/common/beanutil/JavaBeanAccessor.METHOD:Lorg/apache/dubbo/common/beanutil/JavaBeanAccessor;
+     266: invokestatic  #131                // Method org/apache/dubbo/common/beanutil/JavaBeanSerializeUtil.serialize:(Ljava/lang/Object;Lorg/apache/dubbo/common/beanutil/JavaBeanAccessor;)Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;
+     269: invokeinterface #127,  2          // InterfaceMethod org/apache/dubbo/rpc/Result.setValue:(Ljava/lang/Object;)V
+     274: goto          385
+     277: aload         4
+     279: invokestatic  #82                 // Method org/apache/dubbo/rpc/support/ProtocolUtils.isProtobufGenericSerialization:(Ljava/lang/String;)Z
+     282: ifeq          361
+     285: new           #121                // class org/apache/dubbo/common/io/UnsafeByteArrayOutputStream
+     288: dup
+     289: sipush        512
+     292: invokespecial #122                // Method org/apache/dubbo/common/io/UnsafeByteArrayOutputStream."<init>":(I)V
+     295: astore        5
+     297: aload_0
+     298: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     301: ldc           #56                 // class org/apache/dubbo/common/serialize/Serialization
+     303: invokevirtual #57                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+     306: ldc           #84                 // String protobuf-json
+     308: invokevirtual #59                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getExtension:(Ljava/lang/String;)Ljava/lang/Object;
+     311: checkcast     #56                 // class org/apache/dubbo/common/serialize/Serialization
+     314: aconst_null
+     315: aload         5
+     317: invokeinterface #123,  3          // InterfaceMethod org/apache/dubbo/common/serialize/Serialization.serialize:(Lorg/apache/dubbo/common/URL;Ljava/io/OutputStream;)Lorg/apache/dubbo/common/serialize/ObjectOutput;
+     322: aload_1
+     323: invokeinterface #124,  1          // InterfaceMethod org/apache/dubbo/rpc/Result.getValue:()Ljava/lang/Object;
+     328: invokeinterface #125,  2          // InterfaceMethod org/apache/dubbo/common/serialize/ObjectOutput.writeObject:(Ljava/lang/Object;)V
+     333: aload_1
+     334: aload         5
+     336: invokevirtual #132                // Method org/apache/dubbo/common/io/UnsafeByteArrayOutputStream.toString:()Ljava/lang/String;
+     339: invokeinterface #127,  2          // InterfaceMethod org/apache/dubbo/rpc/Result.setValue:(Ljava/lang/Object;)V
+     344: goto          385
+     347: astore        5
+     349: new           #24                 // class org/apache/dubbo/rpc/RpcException
+     352: dup
+     353: ldc           #133                // String Generic serialization [protobuf-json] serialize result failed.
+     355: aload         5
+     357: invokespecial #73                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     360: athrow
+     361: aload         4
+     363: invokestatic  #33                 // Method org/apache/dubbo/rpc/support/ProtocolUtils.isGenericReturnRawResult:(Ljava/lang/String;)Z
+     366: ifeq          370
+     369: return
+     370: aload_1
+     371: aload_1
+     372: invokeinterface #124,  1          // InterfaceMethod org/apache/dubbo/rpc/Result.getValue:()Ljava/lang/Object;
+     377: invokestatic  #134                // Method org/apache/dubbo/common/utils/PojoUtils.generalize:(Ljava/lang/Object;)Ljava/lang/Object;
+     380: invokeinterface #127,  2          // InterfaceMethod org/apache/dubbo/rpc/Result.setValue:(Ljava/lang/Object;)V
+     385: return
+    Exception table:
+       from    to  target type
+         172   231   234   Class java/io/IOException
+         285   344   347   Class java/io/IOException
+
+  public void onError(java.lang.Throwable, org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: return
+
+  private static java.lang.Object lambda$getGsonGenericArgs$0(java.lang.Object[], java.lang.reflect.Type[], int);
+    Code:
+       0: aload_0
+       1: iload_2
+       2: aaload
+       3: instanceof    #17                 // class java/lang/String
+       6: ifne          19
+       9: new           #24                 // class org/apache/dubbo/rpc/RpcException
+      12: dup
+      13: ldc           #135                // String When using GSON to deserialize generic dubbo request arguments, the arguments must be of type String
+      15: invokespecial #26                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;)V
+      18: athrow
+      19: aload_0
+      20: iload_2
+      21: aaload
+      22: invokevirtual #136                // Method java/lang/Object.toString:()Ljava/lang/String;
+      25: astore_3
+      26: aload_3
+      27: aload_1
+      28: iload_2
+      29: aaload
+      30: invokestatic  #137                // Method org/apache/dubbo/common/json/GsonUtils.fromJson:(Ljava/lang/String;Ljava/lang/reflect/Type;)Ljava/lang/Object;
+      33: areturn
+      34: astore        4
+      36: new           #24                 // class org/apache/dubbo/rpc/RpcException
+      39: dup
+      40: aload         4
+      42: invokevirtual #139                // Method java/lang/RuntimeException.getMessage:()Ljava/lang/String;
+      45: invokespecial #26                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;)V
+      48: athrow
+    Exception table:
+       from    to  target type
+          26    33    34   Class java/lang/RuntimeException
+}

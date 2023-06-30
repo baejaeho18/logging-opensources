@@ -1,0 +1,286 @@
+Compiled from "BroadcastClusterInvoker.java"
+public class org.apache.dubbo.rpc.cluster.support.BroadcastClusterInvoker<T> extends org.apache.dubbo.rpc.cluster.support.AbstractClusterInvoker<T> {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private static final java.lang.String BROADCAST_FAIL_PERCENT_KEY;
+
+  private static final int MAX_BROADCAST_FAIL_PERCENT;
+
+  private static final int MIN_BROADCAST_FAIL_PERCENT;
+
+  public org.apache.dubbo.rpc.cluster.support.BroadcastClusterInvoker(org.apache.dubbo.rpc.cluster.Directory<T>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #2                  // Method org/apache/dubbo/rpc/cluster/support/AbstractClusterInvoker."<init>":(Lorg/apache/dubbo/rpc/cluster/Directory;)V
+       5: return
+
+  public org.apache.dubbo.rpc.Result doInvoke(org.apache.dubbo.rpc.Invocation, java.util.List<org.apache.dubbo.rpc.Invoker<T>>, org.apache.dubbo.rpc.cluster.LoadBalance) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: invokestatic  #3                  // Method org/apache/dubbo/rpc/RpcContext.getServiceContext:()Lorg/apache/dubbo/rpc/RpcServiceContext;
+       3: aload_2
+       4: invokevirtual #4                  // Method org/apache/dubbo/rpc/RpcServiceContext.setInvokers:(Ljava/util/List;)Lorg/apache/dubbo/rpc/RpcServiceContext;
+       7: pop
+       8: aconst_null
+       9: astore        4
+      11: aconst_null
+      12: astore        5
+      14: aload_0
+      15: invokevirtual #5                  // Method getUrl:()Lorg/apache/dubbo/common/URL;
+      18: astore        6
+      20: aload         6
+      22: ldc           #7                  // String broadcast.fail.percent
+      24: bipush        100
+      26: invokevirtual #8                  // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;I)I
+      29: istore        7
+      31: iload         7
+      33: iflt          43
+      36: iload         7
+      38: bipush        100
+      40: if_icmple     72
+      43: getstatic     #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      46: ldc           #10                 // String The value corresponding to the broadcast.fail.percent parameter must be between 0 and 100. The current setting is %s, which is reset to 100.
+      48: iconst_1
+      49: anewarray     #11                 // class java/lang/Object
+      52: dup
+      53: iconst_0
+      54: iload         7
+      56: invokestatic  #12                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      59: aastore
+      60: invokestatic  #13                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      63: invokeinterface #14,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      68: bipush        100
+      70: istore        7
+      72: aload_2
+      73: invokeinterface #15,  1           // InterfaceMethod java/util/List.size:()I
+      78: iload         7
+      80: imul
+      81: bipush        100
+      83: idiv
+      84: istore        8
+      86: iconst_0
+      87: istore        9
+      89: iconst_0
+      90: istore        10
+      92: aload_2
+      93: invokeinterface #15,  1           // InterfaceMethod java/util/List.size:()I
+      98: istore        11
+     100: iload         10
+     102: iload         11
+     104: if_icmpge     445
+     107: aload_2
+     108: iload         10
+     110: invokeinterface #16,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     115: checkcast     #17                 // class org/apache/dubbo/rpc/Invoker
+     118: astore        12
+     120: new           #18                 // class org/apache/dubbo/rpc/RpcContext$RestoreContext
+     123: dup
+     124: invokespecial #19                 // Method org/apache/dubbo/rpc/RpcContext$RestoreContext."<init>":()V
+     127: astore        13
+     129: new           #20                 // class org/apache/dubbo/rpc/RpcInvocation
+     132: dup
+     133: aload_1
+     134: invokeinterface #21,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getTargetServiceUniqueName:()Ljava/lang/String;
+     139: aload_1
+     140: invokeinterface #22,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getServiceModel:()Lorg/apache/dubbo/rpc/model/ServiceModel;
+     145: aload_1
+     146: invokeinterface #23,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+     151: aload_1
+     152: invokeinterface #24,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getServiceName:()Ljava/lang/String;
+     157: aload_1
+     158: invokeinterface #25,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getProtocolServiceKey:()Ljava/lang/String;
+     163: aload_1
+     164: invokeinterface #26,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getParameterTypes:()[Ljava/lang/Class;
+     169: aload_1
+     170: invokeinterface #27,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getArguments:()[Ljava/lang/Object;
+     175: aload_1
+     176: invokeinterface #28,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.copyObjectAttachments:()Ljava/util/Map;
+     181: aload_1
+     182: invokeinterface #29,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getInvoker:()Lorg/apache/dubbo/rpc/Invoker;
+     187: new           #30                 // class java/util/HashMap
+     190: dup
+     191: aload_1
+     192: invokeinterface #31,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getAttributes:()Ljava/util/Map;
+     197: invokespecial #32                 // Method java/util/HashMap."<init>":(Ljava/util/Map;)V
+     200: invokestatic  #33                 // Method java/util/Collections.synchronizedMap:(Ljava/util/Map;)Ljava/util/Map;
+     203: aload_1
+     204: instanceof    #20                 // class org/apache/dubbo/rpc/RpcInvocation
+     207: ifeq          220
+     210: aload_1
+     211: checkcast     #20                 // class org/apache/dubbo/rpc/RpcInvocation
+     214: invokevirtual #34                 // Method org/apache/dubbo/rpc/RpcInvocation.getInvokeMode:()Lorg/apache/dubbo/rpc/InvokeMode;
+     217: goto          221
+     220: aconst_null
+     221: invokespecial #35                 // Method org/apache/dubbo/rpc/RpcInvocation."<init>":(Ljava/lang/String;Lorg/apache/dubbo/rpc/model/ServiceModel;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Class;[Ljava/lang/Object;Ljava/util/Map;Lorg/apache/dubbo/rpc/Invoker;Ljava/util/Map;Lorg/apache/dubbo/rpc/InvokeMode;)V
+     224: astore        14
+     226: aload_0
+     227: aload         12
+     229: aload         14
+     231: invokevirtual #36                 // Method invokeWithContext:(Lorg/apache/dubbo/rpc/Invoker;Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+     234: astore        5
+     236: aconst_null
+     237: aload         5
+     239: if_acmpeq     328
+     242: aload         5
+     244: invokeinterface #37,  1           // InterfaceMethod org/apache/dubbo/rpc/Result.hasException:()Z
+     249: ifeq          328
+     252: aload         5
+     254: invokeinterface #38,  1           // InterfaceMethod org/apache/dubbo/rpc/Result.getException:()Ljava/lang/Throwable;
+     259: astore        15
+     261: aconst_null
+     262: aload         15
+     264: if_acmpeq     328
+     267: aload_0
+     268: aload         5
+     270: invokeinterface #38,  1           // InterfaceMethod org/apache/dubbo/rpc/Result.getException:()Ljava/lang/Throwable;
+     275: invokespecial #39                 // Method getRpcException:(Ljava/lang/Throwable;)Lorg/apache/dubbo/rpc/RpcException;
+     278: astore        4
+     280: getstatic     #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     283: ldc           #40                 // String 2-8
+     285: ldc           #41                 // String provider return error response
+     287: ldc           #42                 // String
+     289: aload         4
+     291: invokevirtual #43                 // Method org/apache/dubbo/rpc/RpcException.getMessage:()Ljava/lang/String;
+     294: aload         4
+     296: invokeinterface #44,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     301: iinc          9, 1
+     304: iload         9
+     306: iload         8
+     308: if_icmpne     328
+     311: iload         10
+     313: iload         11
+     315: iconst_1
+     316: isub
+     317: if_icmpeq     445
+     320: aload         13
+     322: invokevirtual #45                 // Method org/apache/dubbo/rpc/RpcContext$RestoreContext.restore:()V
+     325: goto          445
+     328: iload         10
+     330: iload         11
+     332: iconst_1
+     333: isub
+     334: if_icmpeq     439
+     337: aload         13
+     339: invokevirtual #45                 // Method org/apache/dubbo/rpc/RpcContext$RestoreContext.restore:()V
+     342: goto          439
+     345: astore        14
+     347: aload_0
+     348: aload         14
+     350: invokespecial #39                 // Method getRpcException:(Ljava/lang/Throwable;)Lorg/apache/dubbo/rpc/RpcException;
+     353: astore        4
+     355: getstatic     #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     358: ldc           #40                 // String 2-8
+     360: ldc           #41                 // String provider return error response
+     362: ldc           #42                 // String
+     364: aload         4
+     366: invokevirtual #43                 // Method org/apache/dubbo/rpc/RpcException.getMessage:()Ljava/lang/String;
+     369: aload         4
+     371: invokeinterface #44,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     376: iinc          9, 1
+     379: iload         9
+     381: iload         8
+     383: if_icmpne     403
+     386: iload         10
+     388: iload         11
+     390: iconst_1
+     391: isub
+     392: if_icmpeq     445
+     395: aload         13
+     397: invokevirtual #45                 // Method org/apache/dubbo/rpc/RpcContext$RestoreContext.restore:()V
+     400: goto          445
+     403: iload         10
+     405: iload         11
+     407: iconst_1
+     408: isub
+     409: if_icmpeq     439
+     412: aload         13
+     414: invokevirtual #45                 // Method org/apache/dubbo/rpc/RpcContext$RestoreContext.restore:()V
+     417: goto          439
+     420: astore        16
+     422: iload         10
+     424: iload         11
+     426: iconst_1
+     427: isub
+     428: if_icmpeq     436
+     431: aload         13
+     433: invokevirtual #45                 // Method org/apache/dubbo/rpc/RpcContext$RestoreContext.restore:()V
+     436: aload         16
+     438: athrow
+     439: iinc          10, 1
+     442: goto          100
+     445: aload         4
+     447: ifnull        543
+     450: iload         9
+     452: iload         8
+     454: if_icmpne     496
+     457: getstatic     #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     460: invokeinterface #47,  1           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isDebugEnabled:()Z
+     465: ifeq          540
+     468: getstatic     #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     471: ldc           #48                 // String The number of BroadcastCluster call failures has reached the threshold %s
+     473: iconst_1
+     474: anewarray     #11                 // class java/lang/Object
+     477: dup
+     478: iconst_0
+     479: iload         8
+     481: invokestatic  #12                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     484: aastore
+     485: invokestatic  #13                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+     488: invokeinterface #49,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.debug:(Ljava/lang/String;)V
+     493: goto          540
+     496: getstatic     #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     499: invokeinterface #47,  1           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isDebugEnabled:()Z
+     504: ifeq          540
+     507: getstatic     #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     510: ldc           #50                 // String The number of BroadcastCluster call failures has not reached the threshold %s, fail size is %s
+     512: iconst_2
+     513: anewarray     #11                 // class java/lang/Object
+     516: dup
+     517: iconst_0
+     518: iload         8
+     520: invokestatic  #12                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     523: aastore
+     524: dup
+     525: iconst_1
+     526: iload         9
+     528: invokestatic  #12                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     531: aastore
+     532: invokestatic  #13                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+     535: invokeinterface #49,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.debug:(Ljava/lang/String;)V
+     540: aload         4
+     542: athrow
+     543: aload         5
+     545: areturn
+    Exception table:
+       from    to  target type
+         129   311   345   Class java/lang/Throwable
+         129   311   420   any
+         345   386   420   any
+         420   422   420   any
+
+  private org.apache.dubbo.rpc.RpcException getRpcException(java.lang.Throwable);
+    Code:
+       0: aload_1
+       1: instanceof    #51                 // class org/apache/dubbo/rpc/RpcException
+       4: ifeq          15
+       7: aload_1
+       8: checkcast     #51                 // class org/apache/dubbo/rpc/RpcException
+      11: astore_2
+      12: goto          28
+      15: new           #51                 // class org/apache/dubbo/rpc/RpcException
+      18: dup
+      19: aload_1
+      20: invokevirtual #52                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+      23: aload_1
+      24: invokespecial #53                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      27: astore_2
+      28: aload_2
+      29: areturn
+
+  static {};
+    Code:
+       0: ldc           #6                  // class org/apache/dubbo/rpc/cluster/support/BroadcastClusterInvoker
+       2: invokestatic  #54                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

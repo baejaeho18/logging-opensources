@@ -1,0 +1,1024 @@
+Compiled from "RpcContext.java"
+public class org.apache.dubbo.rpc.RpcContext {
+  private static final org.apache.dubbo.rpc.RpcContext AGENT;
+
+  private static final org.apache.dubbo.common.threadlocal.InternalThreadLocal<org.apache.dubbo.rpc.RpcContextAttachment> CLIENT_RESPONSE_LOCAL;
+
+  private static final org.apache.dubbo.common.threadlocal.InternalThreadLocal<org.apache.dubbo.rpc.RpcContextAttachment> SERVER_RESPONSE_LOCAL;
+
+  private static final org.apache.dubbo.common.threadlocal.InternalThreadLocal<org.apache.dubbo.rpc.RpcContextAttachment> CLIENT_ATTACHMENT;
+
+  private static final org.apache.dubbo.common.threadlocal.InternalThreadLocal<org.apache.dubbo.rpc.RpcContextAttachment> SERVER_ATTACHMENT;
+
+  private static final org.apache.dubbo.common.threadlocal.InternalThreadLocal<org.apache.dubbo.rpc.RpcServiceContext> SERVICE_CONTEXT;
+
+  private static final org.apache.dubbo.common.threadlocal.InternalThreadLocal<org.apache.dubbo.rpc.CancellationContext> CANCELLATION_CONTEXT;
+
+  private boolean remove;
+
+  public static org.apache.dubbo.rpc.CancellationContext getCancellationContext();
+    Code:
+       0: getstatic     #6                  // Field CANCELLATION_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #8                  // class org/apache/dubbo/rpc/CancellationContext
+       9: areturn
+
+  public static void removeCancellationContext();
+    Code:
+       0: getstatic     #6                  // Field CANCELLATION_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #9                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.remove:()V
+       6: return
+
+  public static void restoreCancellationContext(org.apache.dubbo.rpc.CancellationContext);
+    Code:
+       0: getstatic     #6                  // Field CANCELLATION_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: aload_0
+       4: invokevirtual #10                 // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.set:(Ljava/lang/Object;)V
+       7: return
+
+  protected org.apache.dubbo.rpc.RpcContext();
+    Code:
+       0: aload_0
+       1: invokespecial #11                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iconst_1
+       6: putfield      #12                 // Field remove:Z
+       9: return
+
+  public static org.apache.dubbo.rpc.RpcContextAttachment getServerContext();
+    Code:
+       0: new           #13                 // class org/apache/dubbo/rpc/RpcServerContextAttachment
+       3: dup
+       4: invokespecial #14                 // Method org/apache/dubbo/rpc/RpcServerContextAttachment."<init>":()V
+       7: areturn
+
+  public static org.apache.dubbo.rpc.RpcContextAttachment getClientResponseContext();
+    Code:
+       0: getstatic     #2                  // Field CLIENT_RESPONSE_LOCAL:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: areturn
+
+  public static org.apache.dubbo.rpc.RpcContextAttachment getServerResponseContext();
+    Code:
+       0: getstatic     #1                  // Field SERVER_RESPONSE_LOCAL:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: areturn
+
+  public static void removeClientResponseContext();
+    Code:
+       0: getstatic     #2                  // Field CLIENT_RESPONSE_LOCAL:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #9                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.remove:()V
+       6: return
+
+  public static void removeServerResponseContext();
+    Code:
+       0: getstatic     #1                  // Field SERVER_RESPONSE_LOCAL:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #9                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.remove:()V
+       6: return
+
+  public static org.apache.dubbo.rpc.RpcContext getContext();
+    Code:
+       0: getstatic     #16                 // Field AGENT:Lorg/apache/dubbo/rpc/RpcContext;
+       3: areturn
+
+  public static org.apache.dubbo.rpc.RpcContextAttachment getClientAttachment();
+    Code:
+       0: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: areturn
+
+  public static org.apache.dubbo.rpc.RpcContextAttachment getServerAttachment();
+    Code:
+       0: getstatic     #3                  // Field SERVER_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: areturn
+
+  public static void removeServerContext();
+    Code:
+       0: invokestatic  #17                 // Method getServerContext:()Lorg/apache/dubbo/rpc/RpcContextAttachment;
+       3: astore_0
+       4: aload_0
+       5: getfield      #18                 // Field org/apache/dubbo/rpc/RpcContextAttachment.attachments:Ljava/util/Map;
+       8: invokeinterface #19,  1           // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+      13: invokeinterface #20,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      18: astore_1
+      19: aload_1
+      20: invokeinterface #21,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      25: ifeq          47
+      28: aload_1
+      29: invokeinterface #22,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      34: checkcast     #23                 // class java/lang/String
+      37: astore_2
+      38: aload_0
+      39: aload_2
+      40: invokevirtual #24                 // Method org/apache/dubbo/rpc/RpcContextAttachment.remove:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/RpcContextAttachment;
+      43: pop
+      44: goto          19
+      47: return
+
+  public boolean canRemove();
+    Code:
+       0: aload_0
+       1: getfield      #12                 // Field remove:Z
+       4: ireturn
+
+  public void clearAfterEachInvoke(boolean);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: putfield      #12                 // Field remove:Z
+       5: return
+
+  public static org.apache.dubbo.rpc.RpcServiceContext getServiceContext();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: areturn
+
+  public static org.apache.dubbo.rpc.RpcServiceContext getCurrentServiceContext();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #26                 // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.getWithoutInitialize:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: areturn
+
+  public static void removeServiceContext();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #9                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.remove:()V
+       6: return
+
+  public static void removeClientAttachment();
+    Code:
+       0: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: invokevirtual #27                 // Method org/apache/dubbo/rpc/RpcContextAttachment.canRemove:()Z
+      12: ifeq          21
+      15: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      18: invokevirtual #9                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.remove:()V
+      21: return
+
+  public static void removeServerAttachment();
+    Code:
+       0: getstatic     #3                  // Field SERVER_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: invokevirtual #27                 // Method org/apache/dubbo/rpc/RpcContextAttachment.canRemove:()Z
+      12: ifeq          21
+      15: getstatic     #3                  // Field SERVER_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      18: invokevirtual #9                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.remove:()V
+      21: return
+
+  public static void removeContext();
+    Code:
+       0: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: invokevirtual #27                 // Method org/apache/dubbo/rpc/RpcContextAttachment.canRemove:()Z
+      12: ifeq          21
+      15: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      18: invokevirtual #9                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.remove:()V
+      21: getstatic     #3                  // Field SERVER_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      24: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+      27: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+      30: invokevirtual #27                 // Method org/apache/dubbo/rpc/RpcContextAttachment.canRemove:()Z
+      33: ifeq          42
+      36: getstatic     #3                  // Field SERVER_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      39: invokevirtual #9                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.remove:()V
+      42: getstatic     #2                  // Field CLIENT_RESPONSE_LOCAL:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      45: invokevirtual #9                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.remove:()V
+      48: getstatic     #1                  // Field SERVER_RESPONSE_LOCAL:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      51: invokevirtual #9                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.remove:()V
+      54: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      57: invokevirtual #9                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.remove:()V
+      60: getstatic     #6                  // Field CANCELLATION_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      63: invokevirtual #9                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.remove:()V
+      66: return
+
+  public java.lang.Object getRequest();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #28                 // Method org/apache/dubbo/rpc/RpcServiceContext.getRequest:()Ljava/lang/Object;
+      12: areturn
+
+  public void setRequest(java.lang.Object);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #29                 // Method org/apache/dubbo/rpc/RpcServiceContext.setRequest:(Ljava/lang/Object;)V
+      13: return
+
+  public <T> T getRequest(java.lang.Class<T>);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #30                 // Method org/apache/dubbo/rpc/RpcServiceContext.getRequest:(Ljava/lang/Class;)Ljava/lang/Object;
+      13: areturn
+
+  public java.lang.Object getResponse();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #31                 // Method org/apache/dubbo/rpc/RpcServiceContext.getResponse:()Ljava/lang/Object;
+      12: areturn
+
+  public void setResponse(java.lang.Object);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #32                 // Method org/apache/dubbo/rpc/RpcServiceContext.setResponse:(Ljava/lang/Object;)V
+      13: return
+
+  public <T> T getResponse(java.lang.Class<T>);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #33                 // Method org/apache/dubbo/rpc/RpcServiceContext.getResponse:(Ljava/lang/Class;)Ljava/lang/Object;
+      13: areturn
+
+  public boolean isProviderSide();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #34                 // Method org/apache/dubbo/rpc/RpcServiceContext.isProviderSide:()Z
+      12: ireturn
+
+  public boolean isConsumerSide();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #35                 // Method org/apache/dubbo/rpc/RpcServiceContext.isConsumerSide:()Z
+      12: ireturn
+
+  public <T> java.util.concurrent.CompletableFuture<T> getCompletableFuture();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #36                 // Method org/apache/dubbo/rpc/RpcServiceContext.getCompletableFuture:()Ljava/util/concurrent/CompletableFuture;
+      12: areturn
+
+  public <T> java.util.concurrent.Future<T> getFuture();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #37                 // Method org/apache/dubbo/rpc/RpcServiceContext.getFuture:()Ljava/util/concurrent/Future;
+      12: areturn
+
+  public void setFuture(java.util.concurrent.CompletableFuture<?>);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #38                 // Method org/apache/dubbo/rpc/RpcServiceContext.setFuture:(Ljava/util/concurrent/CompletableFuture;)V
+      13: return
+
+  public java.util.List<org.apache.dubbo.common.URL> getUrls();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #39                 // Method org/apache/dubbo/rpc/RpcServiceContext.getUrls:()Ljava/util/List;
+      12: areturn
+
+  public void setUrls(java.util.List<org.apache.dubbo.common.URL>);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #40                 // Method org/apache/dubbo/rpc/RpcServiceContext.setUrls:(Ljava/util/List;)V
+      13: return
+
+  public org.apache.dubbo.common.URL getUrl();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #41                 // Method org/apache/dubbo/rpc/RpcServiceContext.getUrl:()Lorg/apache/dubbo/common/URL;
+      12: areturn
+
+  public void setUrl(org.apache.dubbo.common.URL);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #42                 // Method org/apache/dubbo/rpc/RpcServiceContext.setUrl:(Lorg/apache/dubbo/common/URL;)V
+      13: return
+
+  public java.lang.String getMethodName();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #43                 // Method org/apache/dubbo/rpc/RpcServiceContext.getMethodName:()Ljava/lang/String;
+      12: areturn
+
+  public void setMethodName(java.lang.String);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #44                 // Method org/apache/dubbo/rpc/RpcServiceContext.setMethodName:(Ljava/lang/String;)V
+      13: return
+
+  public java.lang.Class<?>[] getParameterTypes();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #45                 // Method org/apache/dubbo/rpc/RpcServiceContext.getParameterTypes:()[Ljava/lang/Class;
+      12: areturn
+
+  public void setParameterTypes(java.lang.Class<?>[]);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #46                 // Method org/apache/dubbo/rpc/RpcServiceContext.setParameterTypes:([Ljava/lang/Class;)V
+      13: return
+
+  public java.lang.Object[] getArguments();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #47                 // Method org/apache/dubbo/rpc/RpcServiceContext.getArguments:()[Ljava/lang/Object;
+      12: areturn
+
+  public void setArguments(java.lang.Object[]);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #48                 // Method org/apache/dubbo/rpc/RpcServiceContext.setArguments:([Ljava/lang/Object;)V
+      13: return
+
+  public org.apache.dubbo.rpc.RpcContext setLocalAddress(java.lang.String, int);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: iload_2
+      11: invokevirtual #49                 // Method org/apache/dubbo/rpc/RpcServiceContext.setLocalAddress:(Ljava/lang/String;I)Lorg/apache/dubbo/rpc/RpcServiceContext;
+      14: areturn
+
+  public java.net.InetSocketAddress getLocalAddress();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #50                 // Method org/apache/dubbo/rpc/RpcServiceContext.getLocalAddress:()Ljava/net/InetSocketAddress;
+      12: areturn
+
+  public org.apache.dubbo.rpc.RpcContext setLocalAddress(java.net.InetSocketAddress);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #51                 // Method org/apache/dubbo/rpc/RpcServiceContext.setLocalAddress:(Ljava/net/InetSocketAddress;)Lorg/apache/dubbo/rpc/RpcServiceContext;
+      13: areturn
+
+  public java.lang.String getLocalAddressString();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #52                 // Method org/apache/dubbo/rpc/RpcServiceContext.getLocalAddressString:()Ljava/lang/String;
+      12: areturn
+
+  public java.lang.String getLocalHostName();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #53                 // Method org/apache/dubbo/rpc/RpcServiceContext.getLocalHostName:()Ljava/lang/String;
+      12: areturn
+
+  public org.apache.dubbo.rpc.RpcContext setRemoteAddress(java.lang.String, int);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: iload_2
+      11: invokevirtual #54                 // Method org/apache/dubbo/rpc/RpcServiceContext.setRemoteAddress:(Ljava/lang/String;I)Lorg/apache/dubbo/rpc/RpcServiceContext;
+      14: areturn
+
+  public java.net.InetSocketAddress getRemoteAddress();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #55                 // Method org/apache/dubbo/rpc/RpcServiceContext.getRemoteAddress:()Ljava/net/InetSocketAddress;
+      12: areturn
+
+  public org.apache.dubbo.rpc.RpcContext setRemoteAddress(java.net.InetSocketAddress);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #56                 // Method org/apache/dubbo/rpc/RpcServiceContext.setRemoteAddress:(Ljava/net/InetSocketAddress;)Lorg/apache/dubbo/rpc/RpcServiceContext;
+      13: areturn
+
+  public java.lang.String getRemoteApplicationName();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #57                 // Method org/apache/dubbo/rpc/RpcServiceContext.getRemoteApplicationName:()Ljava/lang/String;
+      12: areturn
+
+  public org.apache.dubbo.rpc.RpcContext setRemoteApplicationName(java.lang.String);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #58                 // Method org/apache/dubbo/rpc/RpcServiceContext.setRemoteApplicationName:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/RpcServiceContext;
+      13: areturn
+
+  public java.lang.String getRemoteAddressString();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #59                 // Method org/apache/dubbo/rpc/RpcServiceContext.getRemoteAddressString:()Ljava/lang/String;
+      12: areturn
+
+  public java.lang.String getRemoteHostName();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #60                 // Method org/apache/dubbo/rpc/RpcServiceContext.getRemoteHostName:()Ljava/lang/String;
+      12: areturn
+
+  public java.lang.String getLocalHost();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #61                 // Method org/apache/dubbo/rpc/RpcServiceContext.getLocalHost:()Ljava/lang/String;
+      12: areturn
+
+  public int getLocalPort();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #62                 // Method org/apache/dubbo/rpc/RpcServiceContext.getLocalPort:()I
+      12: ireturn
+
+  public java.lang.String getRemoteHost();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #63                 // Method org/apache/dubbo/rpc/RpcServiceContext.getRemoteHost:()Ljava/lang/String;
+      12: areturn
+
+  public int getRemotePort();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #64                 // Method org/apache/dubbo/rpc/RpcServiceContext.getRemotePort:()I
+      12: ireturn
+
+  public java.lang.String getAttachment(java.lang.String);
+    Code:
+       0: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: aload_1
+      10: invokevirtual #65                 // Method org/apache/dubbo/rpc/RpcContextAttachment.getAttachment:(Ljava/lang/String;)Ljava/lang/String;
+      13: astore_2
+      14: aload_2
+      15: invokestatic  #66                 // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+      18: ifeq          35
+      21: getstatic     #3                  // Field SERVER_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      24: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+      27: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+      30: aload_1
+      31: invokevirtual #65                 // Method org/apache/dubbo/rpc/RpcContextAttachment.getAttachment:(Ljava/lang/String;)Ljava/lang/String;
+      34: areturn
+      35: aload_2
+      36: areturn
+
+  public java.lang.Object getObjectAttachment(java.lang.String);
+    Code:
+       0: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: aload_1
+      10: invokevirtual #67                 // Method org/apache/dubbo/rpc/RpcContextAttachment.getObjectAttachment:(Ljava/lang/String;)Ljava/lang/Object;
+      13: astore_2
+      14: aload_2
+      15: ifnonnull     32
+      18: getstatic     #3                  // Field SERVER_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      21: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+      24: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+      27: aload_1
+      28: invokevirtual #67                 // Method org/apache/dubbo/rpc/RpcContextAttachment.getObjectAttachment:(Ljava/lang/String;)Ljava/lang/Object;
+      31: areturn
+      32: aload_2
+      33: areturn
+
+  public org.apache.dubbo.rpc.RpcContext setAttachment(java.lang.String, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokevirtual #68                 // Method setObjectAttachment:(Ljava/lang/String;Ljava/lang/Object;)Lorg/apache/dubbo/rpc/RpcContext;
+       6: areturn
+
+  public org.apache.dubbo.rpc.RpcContext setAttachment(java.lang.String, java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokevirtual #68                 // Method setObjectAttachment:(Ljava/lang/String;Ljava/lang/Object;)Lorg/apache/dubbo/rpc/RpcContext;
+       6: areturn
+
+  public org.apache.dubbo.rpc.RpcContext setObjectAttachment(java.lang.String, java.lang.Object);
+    Code:
+       0: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: aload_1
+      10: aload_2
+      11: invokevirtual #69                 // Method org/apache/dubbo/rpc/RpcContextAttachment.setObjectAttachment:(Ljava/lang/String;Ljava/lang/Object;)Lorg/apache/dubbo/rpc/RpcContextAttachment;
+      14: pop
+      15: aload_0
+      16: areturn
+
+  public org.apache.dubbo.rpc.RpcContext removeAttachment(java.lang.String);
+    Code:
+       0: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: aload_1
+      10: invokevirtual #70                 // Method org/apache/dubbo/rpc/RpcContextAttachment.removeAttachment:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/RpcContextAttachment;
+      13: pop
+      14: aload_0
+      15: areturn
+
+  public java.util.Map<java.lang.String, java.lang.String> getAttachments();
+    Code:
+       0: new           #71                 // class org/apache/dubbo/rpc/AttachmentsAdapter$ObjectToStringMap
+       3: dup
+       4: aload_0
+       5: invokevirtual #72                 // Method getObjectAttachments:()Ljava/util/Map;
+       8: invokespecial #73                 // Method org/apache/dubbo/rpc/AttachmentsAdapter$ObjectToStringMap."<init>":(Ljava/util/Map;)V
+      11: areturn
+
+  public java.util.Map<java.lang.String, java.lang.Object> getObjectAttachments();
+    Code:
+       0: new           #74                 // class java/util/HashMap
+       3: dup
+       4: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       7: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+      10: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+      13: getfield      #18                 // Field org/apache/dubbo/rpc/RpcContextAttachment.attachments:Ljava/util/Map;
+      16: invokeinterface #75,  1           // InterfaceMethod java/util/Map.size:()I
+      21: getstatic     #3                  // Field SERVER_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      24: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+      27: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+      30: getfield      #18                 // Field org/apache/dubbo/rpc/RpcContextAttachment.attachments:Ljava/util/Map;
+      33: invokeinterface #75,  1           // InterfaceMethod java/util/Map.size:()I
+      38: iadd
+      39: i2d
+      40: ldc2_w        #76                 // double 0.75d
+      43: ddiv
+      44: d2i
+      45: iconst_1
+      46: iadd
+      47: invokespecial #78                 // Method java/util/HashMap."<init>":(I)V
+      50: astore_1
+      51: aload_1
+      52: getstatic     #3                  // Field SERVER_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      55: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+      58: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+      61: getfield      #18                 // Field org/apache/dubbo/rpc/RpcContextAttachment.attachments:Ljava/util/Map;
+      64: invokeinterface #79,  2           // InterfaceMethod java/util/Map.putAll:(Ljava/util/Map;)V
+      69: aload_1
+      70: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      73: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+      76: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+      79: getfield      #18                 // Field org/apache/dubbo/rpc/RpcContextAttachment.attachments:Ljava/util/Map;
+      82: invokeinterface #79,  2           // InterfaceMethod java/util/Map.putAll:(Ljava/util/Map;)V
+      87: aload_1
+      88: areturn
+
+  public org.apache.dubbo.rpc.RpcContext setAttachments(java.util.Map<java.lang.String, java.lang.String>);
+    Code:
+       0: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: getfield      #18                 // Field org/apache/dubbo/rpc/RpcContextAttachment.attachments:Ljava/util/Map;
+      12: invokeinterface #80,  1           // InterfaceMethod java/util/Map.clear:()V
+      17: aload_1
+      18: ifnull        48
+      21: aload_1
+      22: invokeinterface #75,  1           // InterfaceMethod java/util/Map.size:()I
+      27: ifle          48
+      30: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      33: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+      36: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+      39: getfield      #18                 // Field org/apache/dubbo/rpc/RpcContextAttachment.attachments:Ljava/util/Map;
+      42: aload_1
+      43: invokeinterface #79,  2           // InterfaceMethod java/util/Map.putAll:(Ljava/util/Map;)V
+      48: aload_0
+      49: areturn
+
+  public org.apache.dubbo.rpc.RpcContext setObjectAttachments(java.util.Map<java.lang.String, java.lang.Object>);
+    Code:
+       0: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: getfield      #18                 // Field org/apache/dubbo/rpc/RpcContextAttachment.attachments:Ljava/util/Map;
+      12: invokeinterface #80,  1           // InterfaceMethod java/util/Map.clear:()V
+      17: aload_1
+      18: ifnull        48
+      21: aload_1
+      22: invokeinterface #75,  1           // InterfaceMethod java/util/Map.size:()I
+      27: ifle          48
+      30: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      33: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+      36: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+      39: getfield      #18                 // Field org/apache/dubbo/rpc/RpcContextAttachment.attachments:Ljava/util/Map;
+      42: aload_1
+      43: invokeinterface #79,  2           // InterfaceMethod java/util/Map.putAll:(Ljava/util/Map;)V
+      48: aload_0
+      49: areturn
+
+  public void clearAttachments();
+    Code:
+       0: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: getfield      #18                 // Field org/apache/dubbo/rpc/RpcContextAttachment.attachments:Ljava/util/Map;
+      12: invokeinterface #80,  1           // InterfaceMethod java/util/Map.clear:()V
+      17: return
+
+  public java.util.Map<java.lang.String, java.lang.Object> get();
+    Code:
+       0: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: invokevirtual #81                 // Method org/apache/dubbo/rpc/RpcContextAttachment.get:()Ljava/util/Map;
+      12: areturn
+
+  public org.apache.dubbo.rpc.RpcContext set(java.lang.String, java.lang.Object);
+    Code:
+       0: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: aload_1
+      10: aload_2
+      11: invokevirtual #82                 // Method org/apache/dubbo/rpc/RpcContextAttachment.set:(Ljava/lang/String;Ljava/lang/Object;)Lorg/apache/dubbo/rpc/RpcContextAttachment;
+      14: pop
+      15: aload_0
+      16: areturn
+
+  public org.apache.dubbo.rpc.RpcContext remove(java.lang.String);
+    Code:
+       0: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: aload_1
+      10: invokevirtual #24                 // Method org/apache/dubbo/rpc/RpcContextAttachment.remove:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/RpcContextAttachment;
+      13: pop
+      14: aload_0
+      15: areturn
+
+  public java.lang.Object get(java.lang.String);
+    Code:
+       0: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: aload_1
+      10: invokevirtual #83                 // Method org/apache/dubbo/rpc/RpcContextAttachment.get:(Ljava/lang/String;)Ljava/lang/Object;
+      13: areturn
+
+  public boolean isServerSide();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #84                 // Method org/apache/dubbo/rpc/RpcServiceContext.isServerSide:()Z
+      12: ireturn
+
+  public boolean isClientSide();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #85                 // Method org/apache/dubbo/rpc/RpcServiceContext.isClientSide:()Z
+      12: ireturn
+
+  public java.util.List<org.apache.dubbo.rpc.Invoker<?>> getInvokers();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #86                 // Method org/apache/dubbo/rpc/RpcServiceContext.getInvokers:()Ljava/util/List;
+      12: areturn
+
+  public org.apache.dubbo.rpc.RpcContext setInvokers(java.util.List<org.apache.dubbo.rpc.Invoker<?>>);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #87                 // Method org/apache/dubbo/rpc/RpcServiceContext.setInvokers:(Ljava/util/List;)Lorg/apache/dubbo/rpc/RpcServiceContext;
+      13: areturn
+
+  public org.apache.dubbo.rpc.Invoker<?> getInvoker();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #88                 // Method org/apache/dubbo/rpc/RpcServiceContext.getInvoker:()Lorg/apache/dubbo/rpc/Invoker;
+      12: areturn
+
+  public org.apache.dubbo.rpc.RpcContext setInvoker(org.apache.dubbo.rpc.Invoker<?>);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #89                 // Method org/apache/dubbo/rpc/RpcServiceContext.setInvoker:(Lorg/apache/dubbo/rpc/Invoker;)Lorg/apache/dubbo/rpc/RpcServiceContext;
+      13: areturn
+
+  public org.apache.dubbo.rpc.Invocation getInvocation();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #90                 // Method org/apache/dubbo/rpc/RpcServiceContext.getInvocation:()Lorg/apache/dubbo/rpc/Invocation;
+      12: areturn
+
+  public org.apache.dubbo.rpc.RpcContext setInvocation(org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #91                 // Method org/apache/dubbo/rpc/RpcServiceContext.setInvocation:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/RpcServiceContext;
+      13: areturn
+
+  public <T> java.util.concurrent.CompletableFuture<T> asyncCall(java.util.concurrent.Callable<T>);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #92                 // Method org/apache/dubbo/rpc/RpcServiceContext.asyncCall:(Ljava/util/concurrent/Callable;)Ljava/util/concurrent/CompletableFuture;
+      13: areturn
+
+  public void asyncCall(java.lang.Runnable);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #93                 // Method org/apache/dubbo/rpc/RpcServiceContext.asyncCall:(Ljava/lang/Runnable;)V
+      13: return
+
+  public static org.apache.dubbo.rpc.AsyncContext startAsync() throws java.lang.IllegalStateException;
+    Code:
+       0: invokestatic  #94                 // Method org/apache/dubbo/rpc/RpcContextAttachment.startAsync:()Lorg/apache/dubbo/rpc/AsyncContext;
+       3: areturn
+
+  protected void setAsyncContext(org.apache.dubbo.rpc.AsyncContext);
+    Code:
+       0: getstatic     #3                  // Field SERVER_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: aload_1
+      10: invokevirtual #95                 // Method org/apache/dubbo/rpc/RpcContextAttachment.setAsyncContext:(Lorg/apache/dubbo/rpc/AsyncContext;)V
+      13: return
+
+  public boolean isAsyncStarted();
+    Code:
+       0: getstatic     #3                  // Field SERVER_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: invokevirtual #96                 // Method org/apache/dubbo/rpc/RpcContextAttachment.isAsyncStarted:()Z
+      12: ireturn
+
+  public boolean stopAsync();
+    Code:
+       0: getstatic     #3                  // Field SERVER_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: invokevirtual #97                 // Method org/apache/dubbo/rpc/RpcContextAttachment.stopAsync:()Z
+      12: ireturn
+
+  public org.apache.dubbo.rpc.AsyncContext getAsyncContext();
+    Code:
+       0: getstatic     #3                  // Field SERVER_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #15                 // class org/apache/dubbo/rpc/RpcContextAttachment
+       9: invokevirtual #98                 // Method org/apache/dubbo/rpc/RpcContextAttachment.getAsyncContext:()Lorg/apache/dubbo/rpc/AsyncContext;
+      12: areturn
+
+  public java.lang.String getGroup();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #99                 // Method org/apache/dubbo/rpc/RpcServiceContext.getGroup:()Ljava/lang/String;
+      12: areturn
+
+  public java.lang.String getVersion();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #100                // Method org/apache/dubbo/rpc/RpcServiceContext.getVersion:()Ljava/lang/String;
+      12: areturn
+
+  public java.lang.String getInterfaceName();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #101                // Method org/apache/dubbo/rpc/RpcServiceContext.getInterfaceName:()Ljava/lang/String;
+      12: areturn
+
+  public java.lang.String getProtocol();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #102                // Method org/apache/dubbo/rpc/RpcServiceContext.getProtocol:()Ljava/lang/String;
+      12: areturn
+
+  public java.lang.String getServiceKey();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #103                // Method org/apache/dubbo/rpc/RpcServiceContext.getServiceKey:()Ljava/lang/String;
+      12: areturn
+
+  public java.lang.String getProtocolServiceKey();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #104                // Method org/apache/dubbo/rpc/RpcServiceContext.getProtocolServiceKey:()Ljava/lang/String;
+      12: areturn
+
+  public org.apache.dubbo.common.URL getConsumerUrl();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: invokevirtual #105                // Method org/apache/dubbo/rpc/RpcServiceContext.getConsumerUrl:()Lorg/apache/dubbo/common/URL;
+      12: areturn
+
+  public void setConsumerUrl(org.apache.dubbo.common.URL);
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: invokevirtual #7                  // Method org/apache/dubbo/common/threadlocal/InternalThreadLocal.get:()Ljava/lang/Object;
+       6: checkcast     #25                 // class org/apache/dubbo/rpc/RpcServiceContext
+       9: aload_1
+      10: invokevirtual #106                // Method org/apache/dubbo/rpc/RpcServiceContext.setConsumerUrl:(Lorg/apache/dubbo/common/URL;)V
+      13: return
+
+  public static void setRpcContext(org.apache.dubbo.common.URL);
+    Code:
+       0: invokestatic  #107                // Method org/apache/dubbo/rpc/RpcServiceContext.getServiceContext:()Lorg/apache/dubbo/rpc/RpcServiceContext;
+       3: aload_0
+       4: invokevirtual #106                // Method org/apache/dubbo/rpc/RpcServiceContext.setConsumerUrl:(Lorg/apache/dubbo/common/URL;)V
+       7: return
+
+  protected static org.apache.dubbo.rpc.RpcContext$RestoreContext clearAndStoreContext();
+    Code:
+       0: new           #108                // class org/apache/dubbo/rpc/RpcContext$RestoreContext
+       3: dup
+       4: invokespecial #109                // Method org/apache/dubbo/rpc/RpcContext$RestoreContext."<init>":()V
+       7: astore_0
+       8: invokestatic  #110                // Method removeContext:()V
+      11: aload_0
+      12: areturn
+
+  protected static org.apache.dubbo.rpc.RpcContext$RestoreContext storeContext();
+    Code:
+       0: new           #108                // class org/apache/dubbo/rpc/RpcContext$RestoreContext
+       3: dup
+       4: invokespecial #109                // Method org/apache/dubbo/rpc/RpcContext$RestoreContext."<init>":()V
+       7: areturn
+
+  public static org.apache.dubbo.rpc.RpcContext$RestoreServiceContext storeServiceContext();
+    Code:
+       0: new           #111                // class org/apache/dubbo/rpc/RpcContext$RestoreServiceContext
+       3: dup
+       4: invokespecial #112                // Method org/apache/dubbo/rpc/RpcContext$RestoreServiceContext."<init>":()V
+       7: areturn
+
+  public static void restoreServiceContext(org.apache.dubbo.rpc.RpcContext$RestoreServiceContext);
+    Code:
+       0: aload_0
+       1: ifnull        8
+       4: aload_0
+       5: invokevirtual #113                // Method org/apache/dubbo/rpc/RpcContext$RestoreServiceContext.restore:()V
+       8: return
+
+  protected static void restoreContext(org.apache.dubbo.rpc.RpcContext$RestoreContext);
+    Code:
+       0: aload_0
+       1: ifnull        8
+       4: aload_0
+       5: invokevirtual #114                // Method org/apache/dubbo/rpc/RpcContext$RestoreContext.restore:()V
+       8: return
+
+  static org.apache.dubbo.common.threadlocal.InternalThreadLocal access$000();
+    Code:
+       0: getstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: areturn
+
+  static org.apache.dubbo.common.threadlocal.InternalThreadLocal access$100();
+    Code:
+       0: getstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: areturn
+
+  static org.apache.dubbo.common.threadlocal.InternalThreadLocal access$200();
+    Code:
+       0: getstatic     #3                  // Field SERVER_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: areturn
+
+  static org.apache.dubbo.common.threadlocal.InternalThreadLocal access$300();
+    Code:
+       0: getstatic     #2                  // Field CLIENT_RESPONSE_LOCAL:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: areturn
+
+  static org.apache.dubbo.common.threadlocal.InternalThreadLocal access$400();
+    Code:
+       0: getstatic     #1                  // Field SERVER_RESPONSE_LOCAL:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+       3: areturn
+
+  static {};
+    Code:
+       0: new           #115                // class org/apache/dubbo/rpc/RpcContext
+       3: dup
+       4: invokespecial #116                // Method "<init>":()V
+       7: putstatic     #16                 // Field AGENT:Lorg/apache/dubbo/rpc/RpcContext;
+      10: new           #117                // class org/apache/dubbo/rpc/RpcContext$1
+      13: dup
+      14: invokespecial #118                // Method org/apache/dubbo/rpc/RpcContext$1."<init>":()V
+      17: putstatic     #2                  // Field CLIENT_RESPONSE_LOCAL:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      20: new           #119                // class org/apache/dubbo/rpc/RpcContext$2
+      23: dup
+      24: invokespecial #120                // Method org/apache/dubbo/rpc/RpcContext$2."<init>":()V
+      27: putstatic     #1                  // Field SERVER_RESPONSE_LOCAL:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      30: new           #121                // class org/apache/dubbo/rpc/RpcContext$3
+      33: dup
+      34: invokespecial #122                // Method org/apache/dubbo/rpc/RpcContext$3."<init>":()V
+      37: putstatic     #4                  // Field CLIENT_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      40: new           #123                // class org/apache/dubbo/rpc/RpcContext$4
+      43: dup
+      44: invokespecial #124                // Method org/apache/dubbo/rpc/RpcContext$4."<init>":()V
+      47: putstatic     #3                  // Field SERVER_ATTACHMENT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      50: new           #125                // class org/apache/dubbo/rpc/RpcContext$5
+      53: dup
+      54: invokespecial #126                // Method org/apache/dubbo/rpc/RpcContext$5."<init>":()V
+      57: putstatic     #5                  // Field SERVICE_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      60: new           #127                // class org/apache/dubbo/rpc/RpcContext$6
+      63: dup
+      64: invokespecial #128                // Method org/apache/dubbo/rpc/RpcContext$6."<init>":()V
+      67: putstatic     #6                  // Field CANCELLATION_CONTEXT:Lorg/apache/dubbo/common/threadlocal/InternalThreadLocal;
+      70: return
+}

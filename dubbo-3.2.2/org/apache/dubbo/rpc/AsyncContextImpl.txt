@@ -1,0 +1,139 @@
+Compiled from "AsyncContextImpl.java"
+public class org.apache.dubbo.rpc.AsyncContextImpl implements org.apache.dubbo.rpc.AsyncContext {
+  private final java.util.concurrent.atomic.AtomicBoolean started;
+
+  private final java.util.concurrent.atomic.AtomicBoolean stopped;
+
+  private java.util.concurrent.CompletableFuture<java.lang.Object> future;
+
+  private final org.apache.dubbo.rpc.RpcContext$RestoreContext restoreContext;
+
+  private final java.lang.ClassLoader restoreClassLoader;
+
+  private java.lang.ClassLoader stagedClassLoader;
+
+  public org.apache.dubbo.rpc.AsyncContextImpl();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #2                  // class java/util/concurrent/atomic/AtomicBoolean
+       8: dup
+       9: iconst_0
+      10: invokespecial #3                  // Method java/util/concurrent/atomic/AtomicBoolean."<init>":(Z)V
+      13: putfield      #4                  // Field started:Ljava/util/concurrent/atomic/AtomicBoolean;
+      16: aload_0
+      17: new           #2                  // class java/util/concurrent/atomic/AtomicBoolean
+      20: dup
+      21: iconst_0
+      22: invokespecial #3                  // Method java/util/concurrent/atomic/AtomicBoolean."<init>":(Z)V
+      25: putfield      #5                  // Field stopped:Ljava/util/concurrent/atomic/AtomicBoolean;
+      28: aload_0
+      29: invokestatic  #6                  // Method org/apache/dubbo/rpc/RpcContext.storeContext:()Lorg/apache/dubbo/rpc/RpcContext$RestoreContext;
+      32: putfield      #7                  // Field restoreContext:Lorg/apache/dubbo/rpc/RpcContext$RestoreContext;
+      35: aload_0
+      36: invokestatic  #8                  // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+      39: invokevirtual #9                  // Method java/lang/Thread.getContextClassLoader:()Ljava/lang/ClassLoader;
+      42: putfield      #10                 // Field restoreClassLoader:Ljava/lang/ClassLoader;
+      45: return
+
+  public void write(java.lang.Object);
+    Code:
+       0: aload_0
+       1: invokevirtual #11                 // Method isAsyncStarted:()Z
+       4: ifeq          50
+       7: aload_0
+       8: invokevirtual #12                 // Method stop:()Z
+      11: ifeq          50
+      14: aload_1
+      15: instanceof    #13                 // class java/lang/Throwable
+      18: ifeq          38
+      21: aload_1
+      22: checkcast     #13                 // class java/lang/Throwable
+      25: astore_2
+      26: aload_0
+      27: getfield      #14                 // Field future:Ljava/util/concurrent/CompletableFuture;
+      30: aload_2
+      31: invokevirtual #15                 // Method java/util/concurrent/CompletableFuture.completeExceptionally:(Ljava/lang/Throwable;)Z
+      34: pop
+      35: goto          60
+      38: aload_0
+      39: getfield      #14                 // Field future:Ljava/util/concurrent/CompletableFuture;
+      42: aload_1
+      43: invokevirtual #16                 // Method java/util/concurrent/CompletableFuture.complete:(Ljava/lang/Object;)Z
+      46: pop
+      47: goto          60
+      50: new           #17                 // class java/lang/IllegalStateException
+      53: dup
+      54: ldc           #18                 // String The async response has probably been wrote back by another thread, or the asyncContext has been closed.
+      56: invokespecial #19                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      59: athrow
+      60: return
+
+  public boolean isAsyncStarted();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field started:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: invokevirtual #20                 // Method java/util/concurrent/atomic/AtomicBoolean.get:()Z
+       7: ireturn
+
+  public boolean stop();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field stopped:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: iconst_0
+       5: iconst_1
+       6: invokevirtual #21                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+       9: ireturn
+
+  public void start();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field started:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: iconst_0
+       5: iconst_1
+       6: invokevirtual #21                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+       9: ifeq          23
+      12: aload_0
+      13: new           #22                 // class java/util/concurrent/CompletableFuture
+      16: dup
+      17: invokespecial #23                 // Method java/util/concurrent/CompletableFuture."<init>":()V
+      20: putfield      #14                 // Field future:Ljava/util/concurrent/CompletableFuture;
+      23: return
+
+  public void signalContextSwitch();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field restoreContext:Lorg/apache/dubbo/rpc/RpcContext$RestoreContext;
+       4: invokestatic  #24                 // Method org/apache/dubbo/rpc/RpcContext.restoreContext:(Lorg/apache/dubbo/rpc/RpcContext$RestoreContext;)V
+       7: aload_0
+       8: getfield      #10                 // Field restoreClassLoader:Ljava/lang/ClassLoader;
+      11: ifnull        34
+      14: aload_0
+      15: invokestatic  #8                  // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+      18: invokevirtual #9                  // Method java/lang/Thread.getContextClassLoader:()Ljava/lang/ClassLoader;
+      21: putfield      #25                 // Field stagedClassLoader:Ljava/lang/ClassLoader;
+      24: invokestatic  #8                  // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+      27: aload_0
+      28: getfield      #10                 // Field restoreClassLoader:Ljava/lang/ClassLoader;
+      31: invokevirtual #26                 // Method java/lang/Thread.setContextClassLoader:(Ljava/lang/ClassLoader;)V
+      34: return
+
+  public void resetContext();
+    Code:
+       0: invokestatic  #27                 // Method org/apache/dubbo/rpc/RpcContext.removeContext:()V
+       3: aload_0
+       4: getfield      #25                 // Field stagedClassLoader:Ljava/lang/ClassLoader;
+       7: ifnull        20
+      10: invokestatic  #8                  // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+      13: aload_0
+      14: getfield      #10                 // Field restoreClassLoader:Ljava/lang/ClassLoader;
+      17: invokevirtual #26                 // Method java/lang/Thread.setContextClassLoader:(Ljava/lang/ClassLoader;)V
+      20: return
+
+  public java.util.concurrent.CompletableFuture<java.lang.Object> getInternalFuture();
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field future:Ljava/util/concurrent/CompletableFuture;
+       4: areturn
+}

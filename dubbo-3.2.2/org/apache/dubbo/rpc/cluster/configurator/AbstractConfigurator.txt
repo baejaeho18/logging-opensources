@@ -1,0 +1,564 @@
+Compiled from "AbstractConfigurator.java"
+public abstract class org.apache.dubbo.rpc.cluster.configurator.AbstractConfigurator implements org.apache.dubbo.rpc.cluster.Configurator {
+  private static final org.apache.dubbo.common.logger.Logger logger;
+
+  private static final java.lang.String TILDE;
+
+  private final org.apache.dubbo.common.URL configuratorUrl;
+
+  public org.apache.dubbo.rpc.cluster.configurator.AbstractConfigurator(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: invokespecial #5                  // Method java/lang/Object."<init>":()V
+       4: aload_1
+       5: ifnonnull     18
+       8: new           #6                  // class java/lang/IllegalArgumentException
+      11: dup
+      12: ldc           #7                  // String configurator url == null
+      14: invokespecial #8                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      17: athrow
+      18: aload_0
+      19: aload_1
+      20: putfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+      23: return
+
+  public org.apache.dubbo.common.URL getUrl();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+       4: areturn
+
+  public org.apache.dubbo.common.URL configure(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+       4: ldc           #10                 // String enabled
+       6: iconst_1
+       7: invokevirtual #11                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+      10: ifeq          34
+      13: aload_0
+      14: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+      17: invokevirtual #12                 // Method org/apache/dubbo/common/URL.getHost:()Ljava/lang/String;
+      20: ifnull        34
+      23: aload_1
+      24: ifnull        34
+      27: aload_1
+      28: invokevirtual #12                 // Method org/apache/dubbo/common/URL.getHost:()Ljava/lang/String;
+      31: ifnonnull     66
+      34: getstatic     #13                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+      37: new           #14                 // class java/lang/StringBuilder
+      40: dup
+      41: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+      44: ldc           #16                 // String Cannot apply configurator rule, the rule is disabled or is invalid: \n
+      46: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      49: aload_0
+      50: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+      53: invokevirtual #18                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      56: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      59: invokeinterface #20,  2           // InterfaceMethod org/apache/dubbo/common/logger/Logger.info:(Ljava/lang/String;)V
+      64: aload_1
+      65: areturn
+      66: aload_0
+      67: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+      70: ldc           #21                 // String configVersion
+      72: invokevirtual #22                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;)Ljava/lang/String;
+      75: astore_2
+      76: aload_2
+      77: invokestatic  #23                 // Method org/apache/dubbo/common/utils/StringUtils.isNotEmpty:(Ljava/lang/String;)Z
+      80: ifeq          160
+      83: aload_1
+      84: invokevirtual #24                 // Method org/apache/dubbo/common/URL.getSide:()Ljava/lang/String;
+      87: astore_3
+      88: aload_0
+      89: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+      92: invokevirtual #24                 // Method org/apache/dubbo/common/URL.getSide:()Ljava/lang/String;
+      95: astore        4
+      97: aload_3
+      98: aload         4
+     100: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     103: ifeq          128
+     106: ldc           #26                 // String consumer
+     108: aload         4
+     110: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     113: ifeq          128
+     116: aload_0
+     117: invokestatic  #27                 // Method org/apache/dubbo/common/utils/NetUtils.getLocalHost:()Ljava/lang/String;
+     120: aload_1
+     121: invokespecial #28                 // Method configureIfMatch:(Ljava/lang/String;Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/common/URL;
+     124: astore_1
+     125: goto          157
+     128: aload_3
+     129: aload         4
+     131: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     134: ifeq          157
+     137: ldc           #29                 // String provider
+     139: aload         4
+     141: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     144: ifeq          157
+     147: aload_0
+     148: aload_1
+     149: invokevirtual #12                 // Method org/apache/dubbo/common/URL.getHost:()Ljava/lang/String;
+     152: aload_1
+     153: invokespecial #28                 // Method configureIfMatch:(Ljava/lang/String;Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/common/URL;
+     156: astore_1
+     157: goto          166
+     160: aload_0
+     161: aload_1
+     162: invokespecial #30                 // Method configureDeprecated:(Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/common/URL;
+     165: astore_1
+     166: aload_1
+     167: areturn
+
+  private org.apache.dubbo.common.URL configureDeprecated(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+       4: invokevirtual #31                 // Method org/apache/dubbo/common/URL.getPort:()I
+       7: ifeq          34
+      10: aload_1
+      11: invokevirtual #31                 // Method org/apache/dubbo/common/URL.getPort:()I
+      14: aload_0
+      15: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+      18: invokevirtual #31                 // Method org/apache/dubbo/common/URL.getPort:()I
+      21: if_icmpne     79
+      24: aload_0
+      25: aload_1
+      26: invokevirtual #12                 // Method org/apache/dubbo/common/URL.getHost:()Ljava/lang/String;
+      29: aload_1
+      30: invokespecial #28                 // Method configureIfMatch:(Ljava/lang/String;Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/common/URL;
+      33: areturn
+      34: aload_1
+      35: ldc           #29                 // String provider
+      37: invokevirtual #32                 // Method org/apache/dubbo/common/URL.getSide:(Ljava/lang/String;)Ljava/lang/String;
+      40: ldc           #26                 // String consumer
+      42: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      45: ifeq          57
+      48: aload_0
+      49: invokestatic  #27                 // Method org/apache/dubbo/common/utils/NetUtils.getLocalHost:()Ljava/lang/String;
+      52: aload_1
+      53: invokespecial #28                 // Method configureIfMatch:(Ljava/lang/String;Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/common/URL;
+      56: areturn
+      57: aload_1
+      58: ldc           #26                 // String consumer
+      60: invokevirtual #32                 // Method org/apache/dubbo/common/URL.getSide:(Ljava/lang/String;)Ljava/lang/String;
+      63: ldc           #29                 // String provider
+      65: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      68: ifeq          79
+      71: aload_0
+      72: ldc           #33                 // String 0.0.0.0
+      74: aload_1
+      75: invokespecial #28                 // Method configureIfMatch:(Ljava/lang/String;Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/common/URL;
+      78: areturn
+      79: aload_1
+      80: areturn
+
+  private org.apache.dubbo.common.URL configureIfMatch(java.lang.String, org.apache.dubbo.common.URL);
+    Code:
+       0: ldc           #33                 // String 0.0.0.0
+       2: aload_0
+       3: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+       6: invokevirtual #12                 // Method org/apache/dubbo/common/URL.getHost:()Ljava/lang/String;
+       9: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      12: ifne          29
+      15: aload_1
+      16: aload_0
+      17: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+      20: invokevirtual #12                 // Method org/apache/dubbo/common/URL.getHost:()Ljava/lang/String;
+      23: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      26: ifeq          193
+      29: aload_0
+      30: aload_2
+      31: invokespecial #34                 // Method isV27ConditionMatchOrUnset:(Lorg/apache/dubbo/common/URL;)Z
+      34: ifeq          235
+      37: aload_0
+      38: invokespecial #35                 // Method genConditionKeys:()Ljava/util/Set;
+      41: astore_3
+      42: aload_0
+      43: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+      46: ldc           #21                 // String configVersion
+      48: invokevirtual #22                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;)Ljava/lang/String;
+      51: astore        4
+      53: aload         4
+      55: ifnull        167
+      58: aload         4
+      60: ldc           #36                 // String v3.0
+      62: invokevirtual #37                 // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+      65: ifeq          167
+      68: aload_0
+      69: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+      72: ldc           #38                 // String MATCH_CONDITION
+      74: invokevirtual #39                 // Method org/apache/dubbo/common/URL.getAttribute:(Ljava/lang/String;)Ljava/lang/Object;
+      77: checkcast     #40                 // class org/apache/dubbo/rpc/cluster/configurator/parser/model/ConditionMatch
+      80: astore        5
+      82: aload         5
+      84: ifnull        150
+      87: aload         5
+      89: aload_2
+      90: invokevirtual #41                 // Method org/apache/dubbo/rpc/cluster/configurator/parser/model/ConditionMatch.isMatch:(Lorg/apache/dubbo/common/URL;)Z
+      93: ifeq          110
+      96: aload_0
+      97: aload_2
+      98: aload_0
+      99: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+     102: aload_3
+     103: invokevirtual #42                 // Method org/apache/dubbo/common/URL.removeParameters:(Ljava/util/Collection;)Lorg/apache/dubbo/common/URL;
+     106: invokevirtual #43                 // Method doConfigure:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/common/URL;
+     109: areturn
+     110: getstatic     #13                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+     113: new           #14                 // class java/lang/StringBuilder
+     116: dup
+     117: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+     120: ldc           #44                 // String Cannot apply configurator rule, param mismatch, current params are
+     122: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     125: aload_2
+     126: invokevirtual #18                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     129: ldc           #45                 // String , params in rule is
+     131: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     134: aload         5
+     136: invokevirtual #18                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     139: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     142: invokeinterface #46,  2           // InterfaceMethod org/apache/dubbo/common/logger/Logger.debug:(Ljava/lang/String;)V
+     147: goto          164
+     150: aload_0
+     151: aload_2
+     152: aload_0
+     153: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+     156: aload_3
+     157: invokevirtual #42                 // Method org/apache/dubbo/common/URL.removeParameters:(Ljava/util/Collection;)Lorg/apache/dubbo/common/URL;
+     160: invokevirtual #43                 // Method doConfigure:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/common/URL;
+     163: areturn
+     164: goto          190
+     167: aload_0
+     168: aload_3
+     169: aload_2
+     170: invokespecial #47                 // Method isDeprecatedConditionMatch:(Ljava/util/Set;Lorg/apache/dubbo/common/URL;)Z
+     173: ifeq          190
+     176: aload_0
+     177: aload_2
+     178: aload_0
+     179: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+     182: aload_3
+     183: invokevirtual #42                 // Method org/apache/dubbo/common/URL.removeParameters:(Ljava/util/Collection;)Lorg/apache/dubbo/common/URL;
+     186: invokevirtual #43                 // Method doConfigure:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/common/URL;
+     189: areturn
+     190: goto          235
+     193: getstatic     #13                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+     196: new           #14                 // class java/lang/StringBuilder
+     199: dup
+     200: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+     203: ldc           #48                 // String Cannot apply configurator rule, host mismatch, current host is
+     205: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     208: aload_1
+     209: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     212: ldc           #49                 // String , host in rule is
+     214: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     217: aload_0
+     218: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+     221: invokevirtual #12                 // Method org/apache/dubbo/common/URL.getHost:()Ljava/lang/String;
+     224: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     227: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     230: invokeinterface #46,  2           // InterfaceMethod org/apache/dubbo/common/logger/Logger.debug:(Ljava/lang/String;)V
+     235: aload_2
+     236: areturn
+
+  private boolean isV27ConditionMatchOrUnset(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+       4: ldc           #50                 // String providerAddresses
+       6: invokevirtual #22                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;)Ljava/lang/String;
+       9: astore_2
+      10: aload_2
+      11: invokestatic  #23                 // Method org/apache/dubbo/common/utils/StringUtils.isNotEmpty:(Ljava/lang/String;)Z
+      14: ifeq          180
+      17: iconst_0
+      18: istore_3
+      19: aload_2
+      20: ldc           #51                 // String ,
+      22: invokevirtual #52                 // Method java/lang/String.split:(Ljava/lang/String;)[Ljava/lang/String;
+      25: astore        4
+      27: aload         4
+      29: astore        5
+      31: aload         5
+      33: arraylength
+      34: istore        6
+      36: iconst_0
+      37: istore        7
+      39: iload         7
+      41: iload         6
+      43: if_icmpge     135
+      46: aload         5
+      48: iload         7
+      50: aaload
+      51: astore        8
+      53: aload         8
+      55: aload_1
+      56: invokevirtual #53                 // Method org/apache/dubbo/common/URL.getAddress:()Ljava/lang/String;
+      59: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      62: ifne          127
+      65: aload         8
+      67: ldc           #33                 // String 0.0.0.0
+      69: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      72: ifne          127
+      75: aload         8
+      77: ldc           #54                 // String 0.0.0.0:*
+      79: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      82: ifne          127
+      85: aload         8
+      87: new           #14                 // class java/lang/StringBuilder
+      90: dup
+      91: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+      94: ldc           #55                 // String 0.0.0.0:
+      96: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      99: aload_1
+     100: invokevirtual #31                 // Method org/apache/dubbo/common/URL.getPort:()I
+     103: invokevirtual #56                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     106: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     109: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     112: ifne          127
+     115: aload         8
+     117: aload_1
+     118: invokevirtual #12                 // Method org/apache/dubbo/common/URL.getHost:()Ljava/lang/String;
+     121: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     124: ifeq          129
+     127: iconst_1
+     128: istore_3
+     129: iinc          7, 1
+     132: goto          39
+     135: iload_3
+     136: ifne          180
+     139: getstatic     #13                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+     142: new           #14                 // class java/lang/StringBuilder
+     145: dup
+     146: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+     149: ldc           #57                 // String Cannot apply configurator rule, provider address mismatch, current address
+     151: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     154: aload_1
+     155: invokevirtual #53                 // Method org/apache/dubbo/common/URL.getAddress:()Ljava/lang/String;
+     158: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     161: ldc           #58                 // String , address in rule is
+     163: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     166: aload_2
+     167: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     170: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     173: invokeinterface #46,  2           // InterfaceMethod org/apache/dubbo/common/logger/Logger.debug:(Ljava/lang/String;)V
+     178: iconst_0
+     179: ireturn
+     180: aload_0
+     181: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+     184: aload_0
+     185: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+     188: invokevirtual #59                 // Method org/apache/dubbo/common/URL.getUsername:()Ljava/lang/String;
+     191: invokevirtual #60                 // Method org/apache/dubbo/common/URL.getApplication:(Ljava/lang/String;)Ljava/lang/String;
+     194: astore_3
+     195: aload_1
+     196: aload_1
+     197: invokevirtual #59                 // Method org/apache/dubbo/common/URL.getUsername:()Ljava/lang/String;
+     200: invokevirtual #60                 // Method org/apache/dubbo/common/URL.getApplication:(Ljava/lang/String;)Ljava/lang/String;
+     203: astore        4
+     205: aload_3
+     206: ifnull        266
+     209: ldc           #61                 // String *
+     211: aload_3
+     212: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     215: ifne          266
+     218: aload_3
+     219: aload         4
+     221: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     224: ifne          266
+     227: getstatic     #13                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+     230: new           #14                 // class java/lang/StringBuilder
+     233: dup
+     234: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+     237: ldc           #62                 // String Cannot apply configurator rule, application name mismatch, current application is
+     239: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     242: aload         4
+     244: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     247: ldc           #63                 // String , application in rule is
+     249: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     252: aload_3
+     253: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     256: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     259: invokeinterface #46,  2           // InterfaceMethod org/apache/dubbo/common/logger/Logger.debug:(Ljava/lang/String;)V
+     264: iconst_0
+     265: ireturn
+     266: aload_0
+     267: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+     270: invokevirtual #64                 // Method org/apache/dubbo/common/URL.getServiceKey:()Ljava/lang/String;
+     273: astore        5
+     275: aload_1
+     276: invokevirtual #64                 // Method org/apache/dubbo/common/URL.getServiceKey:()Ljava/lang/String;
+     279: astore        6
+     281: ldc           #61                 // String *
+     283: aload         5
+     285: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     288: ifne          341
+     291: aload         5
+     293: aload         6
+     295: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     298: ifne          341
+     301: getstatic     #13                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+     304: new           #14                 // class java/lang/StringBuilder
+     307: dup
+     308: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+     311: ldc           #65                 // String Cannot apply configurator rule, service mismatch, current service is
+     313: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     316: aload         6
+     318: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     321: ldc           #66                 // String , service in rule is
+     323: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     326: aload         5
+     328: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     331: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     334: invokeinterface #46,  2           // InterfaceMethod org/apache/dubbo/common/logger/Logger.debug:(Ljava/lang/String;)V
+     339: iconst_0
+     340: ireturn
+     341: iconst_1
+     342: ireturn
+
+  private boolean isDeprecatedConditionMatch(java.util.Set<java.lang.String>, org.apache.dubbo.common.URL);
+    Code:
+       0: iconst_1
+       1: istore_3
+       2: aload_0
+       3: getfield      #9                  // Field configuratorUrl:Lorg/apache/dubbo/common/URL;
+       6: invokevirtual #67                 // Method org/apache/dubbo/common/URL.getParameters:()Ljava/util/Map;
+       9: invokeinterface #68,  1           // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+      14: invokeinterface #69,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      19: astore        4
+      21: aload         4
+      23: invokeinterface #70,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      28: ifeq          165
+      31: aload         4
+      33: invokeinterface #71,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      38: checkcast     #72                 // class java/util/Map$Entry
+      41: astore        5
+      43: aload         5
+      45: invokeinterface #73,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+      50: checkcast     #74                 // class java/lang/String
+      53: astore        6
+      55: aload         5
+      57: invokeinterface #75,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+      62: checkcast     #74                 // class java/lang/String
+      65: astore        7
+      67: aload_0
+      68: aload         6
+      70: invokespecial #76                 // Method startWithTilde:(Ljava/lang/String;)Z
+      73: istore        8
+      75: iload         8
+      77: ifne          100
+      80: ldc           #77                 // String application
+      82: aload         6
+      84: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      87: ifne          100
+      90: ldc           #78                 // String side
+      92: aload         6
+      94: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      97: ifeq          162
+     100: iload         8
+     102: ifeq          114
+     105: aload_1
+     106: aload         6
+     108: invokeinterface #79,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+     113: pop
+     114: aload         7
+     116: ifnull        162
+     119: ldc           #61                 // String *
+     121: aload         7
+     123: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     126: ifne          162
+     129: aload         7
+     131: aload_2
+     132: iload         8
+     134: ifeq          146
+     137: aload         6
+     139: iconst_1
+     140: invokevirtual #80                 // Method java/lang/String.substring:(I)Ljava/lang/String;
+     143: goto          148
+     146: aload         6
+     148: invokevirtual #22                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;)Ljava/lang/String;
+     151: invokevirtual #25                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     154: ifne          162
+     157: iconst_0
+     158: istore_3
+     159: goto          165
+     162: goto          21
+     165: iload_3
+     166: ireturn
+
+  private java.util.Set<java.lang.String> genConditionKeys();
+    Code:
+       0: new           #81                 // class java/util/HashSet
+       3: dup
+       4: invokespecial #82                 // Method java/util/HashSet."<init>":()V
+       7: astore_1
+       8: aload_1
+       9: ldc           #83                 // String category
+      11: invokeinterface #79,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      16: pop
+      17: aload_1
+      18: ldc           #85                 // String check
+      20: invokeinterface #79,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      25: pop
+      26: aload_1
+      27: ldc           #86                 // String dynamic
+      29: invokeinterface #79,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      34: pop
+      35: aload_1
+      36: ldc           #10                 // String enabled
+      38: invokeinterface #79,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      43: pop
+      44: aload_1
+      45: ldc           #87                 // String group
+      47: invokeinterface #79,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      52: pop
+      53: aload_1
+      54: ldc           #88                 // String version
+      56: invokeinterface #79,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      61: pop
+      62: aload_1
+      63: ldc           #77                 // String application
+      65: invokeinterface #79,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      70: pop
+      71: aload_1
+      72: ldc           #78                 // String side
+      74: invokeinterface #79,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      79: pop
+      80: aload_1
+      81: ldc           #21                 // String configVersion
+      83: invokeinterface #79,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      88: pop
+      89: aload_1
+      90: ldc           #89                 // String compatible_config
+      92: invokeinterface #79,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      97: pop
+      98: aload_1
+      99: ldc           #90                 // String interfaces
+     101: invokeinterface #79,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+     106: pop
+     107: aload_1
+     108: areturn
+
+  private boolean startWithTilde(java.lang.String);
+    Code:
+       0: aload_1
+       1: invokestatic  #23                 // Method org/apache/dubbo/common/utils/StringUtils.isNotEmpty:(Ljava/lang/String;)Z
+       4: ifeq          20
+       7: aload_1
+       8: ldc           #92                 // String ~
+      10: invokevirtual #37                 // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+      13: ifeq          20
+      16: iconst_1
+      17: goto          21
+      20: iconst_0
+      21: ireturn
+
+  protected abstract org.apache.dubbo.common.URL doConfigure(org.apache.dubbo.common.URL, org.apache.dubbo.common.URL);
+
+  static {};
+    Code:
+       0: ldc           #91                 // class org/apache/dubbo/rpc/cluster/configurator/AbstractConfigurator
+       2: invokestatic  #93                 // Method org/apache/dubbo/common/logger/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/Logger;
+       5: putstatic     #13                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+       8: return
+}

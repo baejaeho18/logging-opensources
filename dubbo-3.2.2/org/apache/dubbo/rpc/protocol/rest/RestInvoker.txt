@@ -1,0 +1,233 @@
+Compiled from "RestInvoker.java"
+public class org.apache.dubbo.rpc.protocol.rest.RestInvoker<T> extends org.apache.dubbo.rpc.protocol.AbstractInvoker<T> {
+  private final org.apache.dubbo.metadata.rest.ServiceRestMetadata serviceRestMetadata;
+
+  private final org.apache.dubbo.rpc.protocol.rest.ReferenceCountedClient<? extends org.apache.dubbo.remoting.http.RestClient> referenceCountedClient;
+
+  private final java.util.Set<org.apache.dubbo.rpc.protocol.rest.annotation.consumer.HttpConnectionPreBuildIntercept> httpConnectionPreBuildIntercepts;
+
+  public org.apache.dubbo.rpc.protocol.rest.RestInvoker(java.lang.Class, org.apache.dubbo.common.URL, org.apache.dubbo.rpc.protocol.rest.ReferenceCountedClient<? extends org.apache.dubbo.remoting.http.RestClient>, java.util.Set<org.apache.dubbo.rpc.protocol.rest.annotation.consumer.HttpConnectionPreBuildIntercept>, org.apache.dubbo.metadata.rest.ServiceRestMetadata);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #1                  // Method org/apache/dubbo/rpc/protocol/AbstractInvoker."<init>":(Ljava/lang/Class;Lorg/apache/dubbo/common/URL;)V
+       6: aload_0
+       7: aload         5
+       9: putfield      #2                  // Field serviceRestMetadata:Lorg/apache/dubbo/metadata/rest/ServiceRestMetadata;
+      12: aload_0
+      13: aload_3
+      14: putfield      #3                  // Field referenceCountedClient:Lorg/apache/dubbo/rpc/protocol/rest/ReferenceCountedClient;
+      17: aload_0
+      18: aload         4
+      20: putfield      #4                  // Field httpConnectionPreBuildIntercepts:Ljava/util/Set;
+      23: return
+
+  protected org.apache.dubbo.rpc.Result doInvoke(org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field serviceRestMetadata:Lorg/apache/dubbo/metadata/rest/ServiceRestMetadata;
+       4: invokevirtual #5                  // Method org/apache/dubbo/metadata/rest/ServiceRestMetadata.getMethodToServiceMap:()Ljava/util/Map;
+       7: astore_2
+       8: aload_2
+       9: aload_1
+      10: invokeinterface #6,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+      15: invokeinterface #7,  2            // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      20: checkcast     #8                  // class java/util/Map
+      23: aload_1
+      24: invokeinterface #9,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getParameterTypes:()[Ljava/lang/Class;
+      29: invokestatic  #10                 // Method org/apache/dubbo/metadata/ParameterTypesComparator.getInstance:([Ljava/lang/Class;)Lorg/apache/dubbo/metadata/ParameterTypesComparator;
+      32: invokeinterface #7,  2            // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      37: checkcast     #11                 // class org/apache/dubbo/metadata/rest/RestMethodMetadata
+      40: astore_3
+      41: new           #12                 // class org/apache/dubbo/remoting/http/RequestTemplate
+      44: dup
+      45: aload_1
+      46: aload_3
+      47: invokevirtual #13                 // Method org/apache/dubbo/metadata/rest/RestMethodMetadata.getRequest:()Lorg/apache/dubbo/metadata/rest/RequestMetadata;
+      50: invokevirtual #14                 // Method org/apache/dubbo/metadata/rest/RequestMetadata.getMethod:()Ljava/lang/String;
+      53: aload_0
+      54: invokevirtual #15                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+      57: invokevirtual #16                 // Method org/apache/dubbo/common/URL.getAddress:()Ljava/lang/String;
+      60: invokespecial #17                 // Method org/apache/dubbo/remoting/http/RequestTemplate."<init>":(Lorg/apache/dubbo/rpc/Invocation;Ljava/lang/String;Ljava/lang/String;)V
+      63: astore        4
+      65: aload_0
+      66: aload_1
+      67: aload_0
+      68: getfield      #2                  // Field serviceRestMetadata:Lorg/apache/dubbo/metadata/rest/ServiceRestMetadata;
+      71: aload_3
+      72: aload         4
+      74: invokespecial #18                 // Method creatHttpConnectionCreateContext:(Lorg/apache/dubbo/rpc/Invocation;Lorg/apache/dubbo/metadata/rest/ServiceRestMetadata;Lorg/apache/dubbo/metadata/rest/RestMethodMetadata;Lorg/apache/dubbo/remoting/http/RequestTemplate;)Lorg/apache/dubbo/rpc/protocol/rest/annotation/consumer/HttpConnectionCreateContext;
+      77: astore        5
+      79: aload_0
+      80: getfield      #4                  // Field httpConnectionPreBuildIntercepts:Ljava/util/Set;
+      83: invokeinterface #19,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      88: astore        6
+      90: aload         6
+      92: invokeinterface #20,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      97: ifeq          124
+     100: aload         6
+     102: invokeinterface #21,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     107: checkcast     #22                 // class org/apache/dubbo/rpc/protocol/rest/annotation/consumer/HttpConnectionPreBuildIntercept
+     110: astore        7
+     112: aload         7
+     114: aload         5
+     116: invokeinterface #23,  2           // InterfaceMethod org/apache/dubbo/rpc/protocol/rest/annotation/consumer/HttpConnectionPreBuildIntercept.intercept:(Lorg/apache/dubbo/rpc/protocol/rest/annotation/consumer/HttpConnectionCreateContext;)V
+     121: goto          90
+     124: aload_0
+     125: getfield      #3                  // Field referenceCountedClient:Lorg/apache/dubbo/rpc/protocol/rest/ReferenceCountedClient;
+     128: invokevirtual #24                 // Method org/apache/dubbo/rpc/protocol/rest/ReferenceCountedClient.getClient:()Lorg/apache/dubbo/remoting/http/RestClient;
+     131: aload         4
+     133: invokeinterface #25,  2           // InterfaceMethod org/apache/dubbo/remoting/http/RestClient.send:(Lorg/apache/dubbo/remoting/http/RequestTemplate;)Ljava/util/concurrent/CompletableFuture;
+     138: astore        6
+     140: new           #26                 // class java/util/concurrent/CompletableFuture
+     143: dup
+     144: invokespecial #27                 // Method java/util/concurrent/CompletableFuture."<init>":()V
+     147: astore        7
+     149: new           #28                 // class org/apache/dubbo/rpc/AsyncRpcResult
+     152: dup
+     153: aload         7
+     155: aload_1
+     156: invokespecial #29                 // Method org/apache/dubbo/rpc/AsyncRpcResult."<init>":(Ljava/util/concurrent/CompletableFuture;Lorg/apache/dubbo/rpc/Invocation;)V
+     159: astore        8
+     161: aload         6
+     163: aload         7
+     165: aload_3
+     166: invokedynamic #30,  0             // InvokeDynamic #0:accept:(Ljava/util/concurrent/CompletableFuture;Lorg/apache/dubbo/metadata/rest/RestMethodMetadata;)Ljava/util/function/BiConsumer;
+     171: invokevirtual #31                 // Method java/util/concurrent/CompletableFuture.whenComplete:(Ljava/util/function/BiConsumer;)Ljava/util/concurrent/CompletableFuture;
+     174: pop
+     175: aload         8
+     177: areturn
+     178: astore_2
+     179: aload_2
+     180: athrow
+    Exception table:
+       from    to  target type
+           0   177   178   Class org/apache/dubbo/rpc/RpcException
+
+  private org.apache.dubbo.rpc.protocol.rest.annotation.consumer.HttpConnectionCreateContext creatHttpConnectionCreateContext(org.apache.dubbo.rpc.Invocation, org.apache.dubbo.metadata.rest.ServiceRestMetadata, org.apache.dubbo.metadata.rest.RestMethodMetadata, org.apache.dubbo.remoting.http.RequestTemplate);
+    Code:
+       0: new           #33                 // class org/apache/dubbo/rpc/protocol/rest/annotation/consumer/HttpConnectionCreateContext
+       3: dup
+       4: invokespecial #34                 // Method org/apache/dubbo/rpc/protocol/rest/annotation/consumer/HttpConnectionCreateContext."<init>":()V
+       7: astore        5
+       9: aload         5
+      11: aload         4
+      13: invokevirtual #35                 // Method org/apache/dubbo/rpc/protocol/rest/annotation/consumer/HttpConnectionCreateContext.setRequestTemplate:(Lorg/apache/dubbo/remoting/http/RequestTemplate;)V
+      16: aload         5
+      18: aload_3
+      19: invokevirtual #36                 // Method org/apache/dubbo/rpc/protocol/rest/annotation/consumer/HttpConnectionCreateContext.setRestMethodMetadata:(Lorg/apache/dubbo/metadata/rest/RestMethodMetadata;)V
+      22: aload         5
+      24: aload_2
+      25: invokevirtual #37                 // Method org/apache/dubbo/rpc/protocol/rest/annotation/consumer/HttpConnectionCreateContext.setServiceRestMetadata:(Lorg/apache/dubbo/metadata/rest/ServiceRestMetadata;)V
+      28: aload         5
+      30: aload_1
+      31: invokevirtual #38                 // Method org/apache/dubbo/rpc/protocol/rest/annotation/consumer/HttpConnectionCreateContext.setInvocation:(Lorg/apache/dubbo/rpc/Invocation;)V
+      34: aload         5
+      36: aload_0
+      37: invokevirtual #15                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+      40: invokevirtual #39                 // Method org/apache/dubbo/rpc/protocol/rest/annotation/consumer/HttpConnectionCreateContext.setUrl:(Lorg/apache/dubbo/common/URL;)V
+      43: aload         5
+      45: areturn
+
+  private static void lambda$doInvoke$0(java.util.concurrent.CompletableFuture, org.apache.dubbo.metadata.rest.RestMethodMetadata, org.apache.dubbo.remoting.http.RestResult, java.lang.Throwable);
+    Code:
+       0: aload_3
+       1: ifnull        13
+       4: aload_0
+       5: aload_3
+       6: invokevirtual #40                 // Method java/util/concurrent/CompletableFuture.completeExceptionally:(Ljava/lang/Throwable;)Z
+       9: pop
+      10: goto          215
+      13: new           #41                 // class org/apache/dubbo/rpc/AppResponse
+      16: dup
+      17: invokespecial #42                 // Method org/apache/dubbo/rpc/AppResponse."<init>":()V
+      20: astore        4
+      22: aload_2
+      23: invokeinterface #43,  1           // InterfaceMethod org/apache/dubbo/remoting/http/RestResult.getResponseCode:()I
+      28: istore        5
+      30: getstatic     #44                 // Field org/apache/dubbo/metadata/rest/media/MediaType.TEXT_PLAIN:Lorg/apache/dubbo/metadata/rest/media/MediaType;
+      33: astore        6
+      35: iload         5
+      37: sipush        404
+      40: if_icmpne     64
+      43: aload_0
+      44: new           #45                 // class org/apache/dubbo/rpc/protocol/rest/exception/PathNoFoundException
+      47: dup
+      48: aload_2
+      49: invokeinterface #46,  1           // InterfaceMethod org/apache/dubbo/remoting/http/RestResult.getMessage:()Ljava/lang/String;
+      54: invokespecial #47                 // Method org/apache/dubbo/rpc/protocol/rest/exception/PathNoFoundException."<init>":(Ljava/lang/String;)V
+      57: invokevirtual #40                 // Method java/util/concurrent/CompletableFuture.completeExceptionally:(Ljava/lang/Throwable;)Z
+      60: pop
+      61: goto          203
+      64: sipush        400
+      67: iload         5
+      69: if_icmpgt     101
+      72: iload         5
+      74: sipush        500
+      77: if_icmpge     101
+      80: aload_0
+      81: new           #48                 // class org/apache/dubbo/rpc/protocol/rest/exception/ParamParseException
+      84: dup
+      85: aload_2
+      86: invokeinterface #46,  1           // InterfaceMethod org/apache/dubbo/remoting/http/RestResult.getMessage:()Ljava/lang/String;
+      91: invokespecial #49                 // Method org/apache/dubbo/rpc/protocol/rest/exception/ParamParseException."<init>":(Ljava/lang/String;)V
+      94: invokevirtual #40                 // Method java/util/concurrent/CompletableFuture.completeExceptionally:(Ljava/lang/Throwable;)Z
+      97: pop
+      98: goto          203
+     101: iload         5
+     103: sipush        500
+     106: if_icmplt     130
+     109: aload_0
+     110: new           #50                 // class org/apache/dubbo/rpc/protocol/rest/exception/RemoteServerInternalException
+     113: dup
+     114: aload_2
+     115: invokeinterface #46,  1           // InterfaceMethod org/apache/dubbo/remoting/http/RestResult.getMessage:()Ljava/lang/String;
+     120: invokespecial #51                 // Method org/apache/dubbo/rpc/protocol/rest/exception/RemoteServerInternalException."<init>":(Ljava/lang/String;)V
+     123: invokevirtual #40                 // Method java/util/concurrent/CompletableFuture.completeExceptionally:(Ljava/lang/Throwable;)Z
+     126: pop
+     127: goto          203
+     130: iload         5
+     132: sipush        400
+     135: if_icmpge     203
+     138: aload_1
+     139: invokevirtual #52                 // Method org/apache/dubbo/metadata/rest/RestMethodMetadata.getReflectMethod:()Ljava/lang/reflect/Method;
+     142: invokevirtual #53                 // Method java/lang/reflect/Method.getReturnType:()Ljava/lang/Class;
+     145: iconst_1
+     146: anewarray     #54                 // class java/lang/String
+     149: dup
+     150: iconst_0
+     151: aload_2
+     152: invokeinterface #55,  1           // InterfaceMethod org/apache/dubbo/remoting/http/RestResult.getContentType:()Ljava/lang/String;
+     157: aastore
+     158: invokestatic  #56                 // Method org/apache/dubbo/rpc/protocol/rest/util/MediaTypeUtil.convertMediaType:(Ljava/lang/Class;[Ljava/lang/String;)Lorg/apache/dubbo/metadata/rest/media/MediaType;
+     161: astore        6
+     163: aload_2
+     164: invokeinterface #57,  1           // InterfaceMethod org/apache/dubbo/remoting/http/RestResult.getBody:()[B
+     169: aload_1
+     170: invokevirtual #52                 // Method org/apache/dubbo/metadata/rest/RestMethodMetadata.getReflectMethod:()Ljava/lang/reflect/Method;
+     173: invokevirtual #53                 // Method java/lang/reflect/Method.getReturnType:()Ljava/lang/Class;
+     176: aload         6
+     178: invokestatic  #58                 // Method org/apache/dubbo/rpc/protocol/rest/message/HttpMessageCodecManager.httpMessageDecode:([BLjava/lang/Class;Lorg/apache/dubbo/metadata/rest/media/MediaType;)Ljava/lang/Object;
+     181: astore        7
+     183: aload         4
+     185: aload         7
+     187: invokevirtual #59                 // Method org/apache/dubbo/rpc/AppResponse.setValue:(Ljava/lang/Object;)V
+     190: aload         4
+     192: aload_2
+     193: invokestatic  #60                 // Method org/apache/dubbo/rpc/protocol/rest/util/HttpHeaderUtil.parseResponseHeader:(Lorg/apache/dubbo/rpc/AppResponse;Lorg/apache/dubbo/remoting/http/RestResult;)V
+     196: aload_0
+     197: aload         4
+     199: invokevirtual #61                 // Method java/util/concurrent/CompletableFuture.complete:(Ljava/lang/Object;)Z
+     202: pop
+     203: goto          215
+     206: astore        5
+     208: aload_0
+     209: aload         5
+     211: invokevirtual #40                 // Method java/util/concurrent/CompletableFuture.completeExceptionally:(Ljava/lang/Throwable;)Z
+     214: pop
+     215: return
+    Exception table:
+       from    to  target type
+          22   203   206   Class java/lang/Exception
+}

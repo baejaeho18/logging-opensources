@@ -1,0 +1,297 @@
+Compiled from "TraceFilter.java"
+public class org.apache.dubbo.rpc.protocol.dubbo.filter.TraceFilter implements org.apache.dubbo.rpc.Filter {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private static final java.lang.String TRACE_MAX;
+
+  private static final java.lang.String TRACE_COUNT;
+
+  private static final java.util.concurrent.ConcurrentMap<java.lang.String, java.util.Set<org.apache.dubbo.remoting.Channel>> TRACERS;
+
+  public org.apache.dubbo.rpc.protocol.dubbo.filter.TraceFilter();
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static void addTracer(java.lang.Class<?>, java.lang.String, org.apache.dubbo.remoting.Channel, int);
+    Code:
+       0: aload_2
+       1: ldc           #4                  // String trace.max
+       3: iload_3
+       4: invokestatic  #5                  // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       7: invokeinterface #6,  3            // InterfaceMethod org/apache/dubbo/remoting/Channel.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+      12: aload_2
+      13: ldc           #7                  // String trace.count
+      15: new           #8                  // class java/util/concurrent/atomic/AtomicInteger
+      18: dup
+      19: invokespecial #9                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+      22: invokeinterface #6,  3            // InterfaceMethod org/apache/dubbo/remoting/Channel.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+      27: aload_1
+      28: invokestatic  #10                 // Method org/apache/dubbo/common/utils/StringUtils.isNotEmpty:(Ljava/lang/String;)Z
+      31: ifeq          63
+      34: new           #11                 // class java/lang/StringBuilder
+      37: dup
+      38: invokespecial #12                 // Method java/lang/StringBuilder."<init>":()V
+      41: aload_0
+      42: invokevirtual #13                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      45: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      48: ldc           #15                 // String .
+      50: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      53: aload_1
+      54: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      57: invokevirtual #16                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      60: goto          67
+      63: aload_0
+      64: invokevirtual #13                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      67: astore        4
+      69: getstatic     #17                 // Field TRACERS:Ljava/util/concurrent/ConcurrentMap;
+      72: aload         4
+      74: invokedynamic #18,  0             // InvokeDynamic #0:apply:()Ljava/util/function/Function;
+      79: invokeinterface #19,  3           // InterfaceMethod java/util/concurrent/ConcurrentMap.computeIfAbsent:(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+      84: checkcast     #20                 // class java/util/Set
+      87: astore        5
+      89: aload         5
+      91: aload_2
+      92: invokeinterface #21,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      97: pop
+      98: return
+
+  public static void removeTracer(java.lang.Class<?>, java.lang.String, org.apache.dubbo.remoting.Channel);
+    Code:
+       0: aload_2
+       1: ldc           #4                  // String trace.max
+       3: invokeinterface #22,  2           // InterfaceMethod org/apache/dubbo/remoting/Channel.removeAttribute:(Ljava/lang/String;)V
+       8: aload_2
+       9: ldc           #7                  // String trace.count
+      11: invokeinterface #22,  2           // InterfaceMethod org/apache/dubbo/remoting/Channel.removeAttribute:(Ljava/lang/String;)V
+      16: aload_1
+      17: invokestatic  #10                 // Method org/apache/dubbo/common/utils/StringUtils.isNotEmpty:(Ljava/lang/String;)Z
+      20: ifeq          52
+      23: new           #11                 // class java/lang/StringBuilder
+      26: dup
+      27: invokespecial #12                 // Method java/lang/StringBuilder."<init>":()V
+      30: aload_0
+      31: invokevirtual #13                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      34: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      37: ldc           #15                 // String .
+      39: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      42: aload_1
+      43: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      46: invokevirtual #16                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      49: goto          56
+      52: aload_0
+      53: invokevirtual #13                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      56: astore_3
+      57: getstatic     #17                 // Field TRACERS:Ljava/util/concurrent/ConcurrentMap;
+      60: aload_3
+      61: invokeinterface #23,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      66: checkcast     #20                 // class java/util/Set
+      69: astore        4
+      71: aload         4
+      73: ifnull        85
+      76: aload         4
+      78: aload_2
+      79: invokeinterface #24,  2           // InterfaceMethod java/util/Set.remove:(Ljava/lang/Object;)Z
+      84: pop
+      85: return
+
+  public org.apache.dubbo.rpc.Result invoke(org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: invokestatic  #25                 // Method java/lang/System.currentTimeMillis:()J
+       3: lstore_3
+       4: aload_1
+       5: aload_2
+       6: invokeinterface #26,  2           // InterfaceMethod org/apache/dubbo/rpc/Invoker.invoke:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+      11: astore        5
+      13: invokestatic  #25                 // Method java/lang/System.currentTimeMillis:()J
+      16: lstore        6
+      18: getstatic     #17                 // Field TRACERS:Ljava/util/concurrent/ConcurrentMap;
+      21: invokeinterface #27,  1           // InterfaceMethod java/util/concurrent/ConcurrentMap.size:()I
+      26: ifle          458
+      29: new           #11                 // class java/lang/StringBuilder
+      32: dup
+      33: invokespecial #12                 // Method java/lang/StringBuilder."<init>":()V
+      36: aload_1
+      37: invokeinterface #28,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.getInterface:()Ljava/lang/Class;
+      42: invokevirtual #13                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      45: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      48: ldc           #15                 // String .
+      50: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      53: aload_2
+      54: invokeinterface #29,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+      59: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      62: invokevirtual #16                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      65: astore        8
+      67: getstatic     #17                 // Field TRACERS:Ljava/util/concurrent/ConcurrentMap;
+      70: aload         8
+      72: invokeinterface #23,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      77: checkcast     #20                 // class java/util/Set
+      80: astore        9
+      82: aload         9
+      84: invokestatic  #30                 // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+      87: ifeq          116
+      90: aload_1
+      91: invokeinterface #28,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.getInterface:()Ljava/lang/Class;
+      96: invokevirtual #13                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      99: astore        8
+     101: getstatic     #17                 // Field TRACERS:Ljava/util/concurrent/ConcurrentMap;
+     104: aload         8
+     106: invokeinterface #23,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     111: checkcast     #20                 // class java/util/Set
+     114: astore        9
+     116: aload         9
+     118: invokestatic  #31                 // Method org/apache/dubbo/common/utils/CollectionUtils.isNotEmpty:(Ljava/util/Collection;)Z
+     121: ifeq          458
+     124: new           #32                 // class java/util/ArrayList
+     127: dup
+     128: aload         9
+     130: invokespecial #33                 // Method java/util/ArrayList."<init>":(Ljava/util/Collection;)V
+     133: invokevirtual #34                 // Method java/util/ArrayList.iterator:()Ljava/util/Iterator;
+     136: astore        10
+     138: aload         10
+     140: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     145: ifeq          458
+     148: aload         10
+     150: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     155: checkcast     #37                 // class org/apache/dubbo/remoting/Channel
+     158: astore        11
+     160: aload         11
+     162: invokeinterface #38,  1           // InterfaceMethod org/apache/dubbo/remoting/Channel.isConnected:()Z
+     167: ifeq          445
+     170: iconst_1
+     171: istore        12
+     173: aload         11
+     175: ldc           #4                  // String trace.max
+     177: invokeinterface #39,  2           // InterfaceMethod org/apache/dubbo/remoting/Channel.getAttribute:(Ljava/lang/String;)Ljava/lang/Object;
+     182: checkcast     #40                 // class java/lang/Integer
+     185: astore        13
+     187: aload         13
+     189: ifnull        199
+     192: aload         13
+     194: invokevirtual #41                 // Method java/lang/Integer.intValue:()I
+     197: istore        12
+     199: aload         11
+     201: ldc           #7                  // String trace.count
+     203: invokeinterface #39,  2           // InterfaceMethod org/apache/dubbo/remoting/Channel.getAttribute:(Ljava/lang/String;)Ljava/lang/Object;
+     208: checkcast     #8                  // class java/util/concurrent/atomic/AtomicInteger
+     211: astore        15
+     213: aload         15
+     215: ifnonnull     238
+     218: new           #8                  // class java/util/concurrent/atomic/AtomicInteger
+     221: dup
+     222: invokespecial #9                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+     225: astore        15
+     227: aload         11
+     229: ldc           #7                  // String trace.count
+     231: aload         15
+     233: invokeinterface #6,  3            // InterfaceMethod org/apache/dubbo/remoting/Channel.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+     238: aload         15
+     240: invokevirtual #42                 // Method java/util/concurrent/atomic/AtomicInteger.getAndIncrement:()I
+     243: istore        14
+     245: iload         14
+     247: iload         12
+     249: if_icmpge     387
+     252: aload         11
+     254: invokeinterface #43,  1           // InterfaceMethod org/apache/dubbo/remoting/Channel.getUrl:()Lorg/apache/dubbo/common/URL;
+     259: ldc           #45                 // String prompt
+     261: ldc           #46                 // String dubbo>
+     263: invokevirtual #47                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     266: astore        16
+     268: aload         11
+     270: new           #11                 // class java/lang/StringBuilder
+     273: dup
+     274: invokespecial #12                 // Method java/lang/StringBuilder."<init>":()V
+     277: ldc           #48                 // String \r\n
+     279: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     282: invokestatic  #49                 // Method org/apache/dubbo/rpc/RpcContext.getServiceContext:()Lorg/apache/dubbo/rpc/RpcServiceContext;
+     285: invokevirtual #50                 // Method org/apache/dubbo/rpc/RpcServiceContext.getRemoteAddress:()Ljava/net/InetSocketAddress;
+     288: invokevirtual #51                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     291: ldc           #52                 // String  ->
+     293: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     296: aload_1
+     297: invokeinterface #28,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.getInterface:()Ljava/lang/Class;
+     302: invokevirtual #13                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     305: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     308: ldc           #15                 // String .
+     310: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     313: aload_2
+     314: invokeinterface #29,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+     319: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     322: ldc           #53                 // String (
+     324: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     327: aload_2
+     328: invokeinterface #54,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getArguments:()[Ljava/lang/Object;
+     333: invokestatic  #55                 // Method org/apache/dubbo/common/utils/JsonUtils.toJson:(Ljava/lang/Object;)Ljava/lang/String;
+     336: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     339: ldc           #56                 // String ) ->
+     341: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     344: aload         5
+     346: invokeinterface #57,  1           // InterfaceMethod org/apache/dubbo/rpc/Result.getValue:()Ljava/lang/Object;
+     351: invokestatic  #55                 // Method org/apache/dubbo/common/utils/JsonUtils.toJson:(Ljava/lang/Object;)Ljava/lang/String;
+     354: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     357: ldc           #58                 // String \r\nelapsed:
+     359: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     362: lload         6
+     364: lload_3
+     365: lsub
+     366: invokevirtual #59                 // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+     369: ldc           #60                 // String  ms.\r\n\r\n
+     371: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     374: aload         16
+     376: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     379: invokevirtual #16                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     382: invokeinterface #61,  2           // InterfaceMethod org/apache/dubbo/remoting/Channel.send:(Ljava/lang/Object;)V
+     387: iload         14
+     389: iload         12
+     391: iconst_1
+     392: isub
+     393: if_icmplt     406
+     396: aload         9
+     398: aload         11
+     400: invokeinterface #24,  2           // InterfaceMethod java/util/Set.remove:(Ljava/lang/Object;)Z
+     405: pop
+     406: goto          455
+     409: astore        12
+     411: aload         9
+     413: aload         11
+     415: invokeinterface #24,  2           // InterfaceMethod java/util/Set.remove:(Ljava/lang/Object;)Z
+     420: pop
+     421: getstatic     #63                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     424: ldc           #64                 // String 4-9
+     426: ldc           #65                 // String
+     428: ldc           #65                 // String
+     430: aload         12
+     432: invokevirtual #66                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     435: aload         12
+     437: invokeinterface #67,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     442: goto          455
+     445: aload         9
+     447: aload         11
+     449: invokeinterface #24,  2           // InterfaceMethod java/util/Set.remove:(Ljava/lang/Object;)Z
+     454: pop
+     455: goto          138
+     458: aload         5
+     460: areturn
+    Exception table:
+       from    to  target type
+         170   406   409   Class java/lang/Throwable
+
+  private static java.util.Set lambda$addTracer$0(java.lang.String);
+    Code:
+       0: new           #68                 // class org/apache/dubbo/common/utils/ConcurrentHashSet
+       3: dup
+       4: invokespecial #69                 // Method org/apache/dubbo/common/utils/ConcurrentHashSet."<init>":()V
+       7: areturn
+
+  static {};
+    Code:
+       0: ldc           #3                  // class org/apache/dubbo/rpc/protocol/dubbo/filter/TraceFilter
+       2: invokestatic  #70                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #63                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: new           #71                 // class java/util/concurrent/ConcurrentHashMap
+      11: dup
+      12: invokespecial #72                 // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      15: putstatic     #17                 // Field TRACERS:Ljava/util/concurrent/ConcurrentMap;
+      18: return
+}

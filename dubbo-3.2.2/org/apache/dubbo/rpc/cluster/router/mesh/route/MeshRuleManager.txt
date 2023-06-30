@@ -1,0 +1,211 @@
+Compiled from "MeshRuleManager.java"
+public class org.apache.dubbo.rpc.cluster.router.mesh.route.MeshRuleManager {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final java.util.concurrent.ConcurrentHashMap<java.lang.String, org.apache.dubbo.rpc.cluster.router.mesh.route.MeshAppRuleListener> APP_RULE_LISTENERS;
+
+  private final org.apache.dubbo.rpc.cluster.governance.GovernanceRuleRepository ruleRepository;
+
+  private final java.util.Set<org.apache.dubbo.rpc.cluster.router.mesh.route.MeshEnvListener> envListeners;
+
+  public org.apache.dubbo.rpc.cluster.router.mesh.route.MeshRuleManager(org.apache.dubbo.rpc.model.ModuleModel);
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #4                  // class java/util/concurrent/ConcurrentHashMap
+       8: dup
+       9: invokespecial #5                  // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      12: putfield      #6                  // Field APP_RULE_LISTENERS:Ljava/util/concurrent/ConcurrentHashMap;
+      15: aload_0
+      16: aload_1
+      17: ldc           #7                  // class org/apache/dubbo/rpc/cluster/governance/GovernanceRuleRepository
+      19: invokevirtual #8                  // Method org/apache/dubbo/rpc/model/ModuleModel.getDefaultExtension:(Ljava/lang/Class;)Ljava/lang/Object;
+      22: checkcast     #7                  // class org/apache/dubbo/rpc/cluster/governance/GovernanceRuleRepository
+      25: putfield      #9                  // Field ruleRepository:Lorg/apache/dubbo/rpc/cluster/governance/GovernanceRuleRepository;
+      28: aload_1
+      29: ldc           #10                 // class org/apache/dubbo/rpc/cluster/router/mesh/route/MeshEnvListenerFactory
+      31: invokevirtual #11                 // Method org/apache/dubbo/rpc/model/ModuleModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      34: invokevirtual #12                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getSupportedExtensionInstances:()Ljava/util/Set;
+      37: astore_2
+      38: aload_0
+      39: aload_2
+      40: invokeinterface #13,  1           // InterfaceMethod java/util/Set.stream:()Ljava/util/stream/Stream;
+      45: invokedynamic #14,  0             // InvokeDynamic #0:apply:()Ljava/util/function/Function;
+      50: invokeinterface #15,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      55: invokedynamic #16,  0             // InvokeDynamic #1:test:()Ljava/util/function/Predicate;
+      60: invokeinterface #17,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+      65: invokestatic  #18                 // Method java/util/stream/Collectors.toSet:()Ljava/util/stream/Collector;
+      68: invokeinterface #19,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+      73: checkcast     #20                 // class java/util/Set
+      76: putfield      #21                 // Field envListeners:Ljava/util/Set;
+      79: return
+
+  private synchronized org.apache.dubbo.rpc.cluster.router.mesh.route.MeshAppRuleListener subscribeAppRule(java.lang.String);
+    Code:
+       0: new           #22                 // class org/apache/dubbo/rpc/cluster/router/mesh/route/MeshAppRuleListener
+       3: dup
+       4: aload_1
+       5: invokespecial #23                 // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshAppRuleListener."<init>":(Ljava/lang/String;)V
+       8: astore_2
+       9: new           #24                 // class java/lang/StringBuilder
+      12: dup
+      13: invokespecial #25                 // Method java/lang/StringBuilder."<init>":()V
+      16: aload_1
+      17: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      20: ldc           #27                 // String .MESHAPPRULE
+      22: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      25: invokevirtual #28                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      28: astore_3
+      29: aload_0
+      30: getfield      #9                  // Field ruleRepository:Lorg/apache/dubbo/rpc/cluster/governance/GovernanceRuleRepository;
+      33: aload_3
+      34: ldc           #30                 // String dubbo
+      36: ldc2_w        #31                 // long 5000l
+      39: invokeinterface #33,  5           // InterfaceMethod org/apache/dubbo/rpc/cluster/governance/GovernanceRuleRepository.getRule:(Ljava/lang/String;Ljava/lang/String;J)Ljava/lang/String;
+      44: astore        4
+      46: aload         4
+      48: ifnull        57
+      51: aload_2
+      52: aload         4
+      54: invokevirtual #34                 // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshAppRuleListener.receiveConfigInfo:(Ljava/lang/String;)V
+      57: goto          80
+      60: astore        4
+      62: getstatic     #36                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      65: ldc           #37                 // String 2-13
+      67: ldc           #38                 // String failed to get mesh app route rule
+      69: ldc           #39                 // String
+      71: ldc           #40                 // String get MeshRuleManager app rule failed.
+      73: aload         4
+      75: invokeinterface #41,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      80: aload_0
+      81: getfield      #9                  // Field ruleRepository:Lorg/apache/dubbo/rpc/cluster/governance/GovernanceRuleRepository;
+      84: aload_3
+      85: ldc           #30                 // String dubbo
+      87: aload_2
+      88: invokeinterface #42,  4           // InterfaceMethod org/apache/dubbo/rpc/cluster/governance/GovernanceRuleRepository.addListener:(Ljava/lang/String;Ljava/lang/String;Lorg/apache/dubbo/common/config/configcenter/ConfigurationListener;)V
+      93: aload_0
+      94: getfield      #21                 // Field envListeners:Ljava/util/Set;
+      97: invokeinterface #43,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     102: astore        4
+     104: aload         4
+     106: invokeinterface #44,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     111: ifeq          148
+     114: aload         4
+     116: invokeinterface #45,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     121: checkcast     #46                 // class org/apache/dubbo/rpc/cluster/router/mesh/route/MeshEnvListener
+     124: astore        5
+     126: aload         5
+     128: invokeinterface #47,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/router/mesh/route/MeshEnvListener.isEnable:()Z
+     133: ifeq          145
+     136: aload         5
+     138: aload_1
+     139: aload_2
+     140: invokeinterface #48,  3           // InterfaceMethod org/apache/dubbo/rpc/cluster/router/mesh/route/MeshEnvListener.onSubscribe:(Ljava/lang/String;Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshAppRuleListener;)V
+     145: goto          104
+     148: aload_0
+     149: getfield      #6                  // Field APP_RULE_LISTENERS:Ljava/util/concurrent/ConcurrentHashMap;
+     152: aload_1
+     153: aload_2
+     154: invokevirtual #49                 // Method java/util/concurrent/ConcurrentHashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     157: pop
+     158: aload_2
+     159: areturn
+    Exception table:
+       from    to  target type
+          29    57    60   Class java/lang/Throwable
+
+  private synchronized void unsubscribeAppRule(java.lang.String, org.apache.dubbo.rpc.cluster.router.mesh.route.MeshAppRuleListener);
+    Code:
+       0: new           #24                 // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #25                 // Method java/lang/StringBuilder."<init>":()V
+       7: aload_1
+       8: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      11: ldc           #27                 // String .MESHAPPRULE
+      13: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      16: invokevirtual #28                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      19: astore_3
+      20: aload_0
+      21: getfield      #9                  // Field ruleRepository:Lorg/apache/dubbo/rpc/cluster/governance/GovernanceRuleRepository;
+      24: aload_3
+      25: ldc           #30                 // String dubbo
+      27: aload_2
+      28: invokeinterface #50,  4           // InterfaceMethod org/apache/dubbo/rpc/cluster/governance/GovernanceRuleRepository.removeListener:(Ljava/lang/String;Ljava/lang/String;Lorg/apache/dubbo/common/config/configcenter/ConfigurationListener;)V
+      33: aload_0
+      34: getfield      #21                 // Field envListeners:Ljava/util/Set;
+      37: invokeinterface #43,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      42: astore        4
+      44: aload         4
+      46: invokeinterface #44,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      51: ifeq          87
+      54: aload         4
+      56: invokeinterface #45,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      61: checkcast     #46                 // class org/apache/dubbo/rpc/cluster/router/mesh/route/MeshEnvListener
+      64: astore        5
+      66: aload         5
+      68: invokeinterface #47,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/router/mesh/route/MeshEnvListener.isEnable:()Z
+      73: ifeq          84
+      76: aload         5
+      78: aload_1
+      79: invokeinterface #51,  2           // InterfaceMethod org/apache/dubbo/rpc/cluster/router/mesh/route/MeshEnvListener.onUnSubscribe:(Ljava/lang/String;)V
+      84: goto          44
+      87: return
+
+  public synchronized <T> void register(java.lang.String, org.apache.dubbo.rpc.cluster.router.mesh.util.MeshRuleListener);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field APP_RULE_LISTENERS:Ljava/util/concurrent/ConcurrentHashMap;
+       4: aload_1
+       5: invokevirtual #52                 // Method java/util/concurrent/ConcurrentHashMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       8: checkcast     #22                 // class org/apache/dubbo/rpc/cluster/router/mesh/route/MeshAppRuleListener
+      11: astore_3
+      12: aload_3
+      13: ifnonnull     22
+      16: aload_0
+      17: aload_1
+      18: invokespecial #53                 // Method subscribeAppRule:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshAppRuleListener;
+      21: astore_3
+      22: aload_3
+      23: aload_2
+      24: invokevirtual #54                 // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshAppRuleListener.register:(Lorg/apache/dubbo/rpc/cluster/router/mesh/util/MeshRuleListener;)V
+      27: return
+
+  public synchronized <T> void unregister(java.lang.String, org.apache.dubbo.rpc.cluster.router.mesh.util.MeshRuleListener);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field APP_RULE_LISTENERS:Ljava/util/concurrent/ConcurrentHashMap;
+       4: aload_1
+       5: invokevirtual #52                 // Method java/util/concurrent/ConcurrentHashMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       8: checkcast     #22                 // class org/apache/dubbo/rpc/cluster/router/mesh/route/MeshAppRuleListener
+      11: astore_3
+      12: aload_3
+      13: aload_2
+      14: invokevirtual #55                 // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshAppRuleListener.unregister:(Lorg/apache/dubbo/rpc/cluster/router/mesh/util/MeshRuleListener;)V
+      17: aload_3
+      18: invokevirtual #56                 // Method org/apache/dubbo/rpc/cluster/router/mesh/route/MeshAppRuleListener.isEmpty:()Z
+      21: ifeq          39
+      24: aload_0
+      25: aload_1
+      26: aload_3
+      27: invokespecial #57                 // Method unsubscribeAppRule:(Ljava/lang/String;Lorg/apache/dubbo/rpc/cluster/router/mesh/route/MeshAppRuleListener;)V
+      30: aload_0
+      31: getfield      #6                  // Field APP_RULE_LISTENERS:Ljava/util/concurrent/ConcurrentHashMap;
+      34: aload_1
+      35: invokevirtual #58                 // Method java/util/concurrent/ConcurrentHashMap.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      38: pop
+      39: return
+
+  public java.util.concurrent.ConcurrentHashMap<java.lang.String, org.apache.dubbo.rpc.cluster.router.mesh.route.MeshAppRuleListener> getAppRuleListeners();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field APP_RULE_LISTENERS:Ljava/util/concurrent/ConcurrentHashMap;
+       4: areturn
+
+  static {};
+    Code:
+       0: ldc           #59                 // class org/apache/dubbo/rpc/cluster/router/mesh/route/MeshRuleManager
+       2: invokestatic  #60                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #36                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

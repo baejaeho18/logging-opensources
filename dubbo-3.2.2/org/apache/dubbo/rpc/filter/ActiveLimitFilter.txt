@@ -1,0 +1,248 @@
+Compiled from "ActiveLimitFilter.java"
+public class org.apache.dubbo.rpc.filter.ActiveLimitFilter implements org.apache.dubbo.rpc.Filter,org.apache.dubbo.rpc.BaseFilter$Listener {
+  private static final java.lang.String ACTIVE_LIMIT_FILTER_START_TIME;
+
+  public org.apache.dubbo.rpc.filter.ActiveLimitFilter();
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public org.apache.dubbo.rpc.Result invoke(org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aload_1
+       1: invokeinterface #4,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+       6: astore_3
+       7: aload_2
+       8: invokeinterface #5,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+      13: astore        4
+      15: aload_1
+      16: invokeinterface #4,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+      21: aload         4
+      23: ldc           #6                  // String actives
+      25: iconst_0
+      26: invokevirtual #7                  // Method org/apache/dubbo/common/URL.getMethodParameter:(Ljava/lang/String;Ljava/lang/String;I)I
+      29: istore        5
+      31: aload_1
+      32: invokeinterface #4,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+      37: aload_2
+      38: invokeinterface #5,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+      43: invokestatic  #8                  // Method org/apache/dubbo/rpc/RpcStatus.getStatus:(Lorg/apache/dubbo/common/URL;Ljava/lang/String;)Lorg/apache/dubbo/rpc/RpcStatus;
+      46: astore        6
+      48: aload_3
+      49: aload         4
+      51: iload         5
+      53: invokestatic  #9                  // Method org/apache/dubbo/rpc/RpcStatus.beginCount:(Lorg/apache/dubbo/common/URL;Ljava/lang/String;I)Z
+      56: ifne          251
+      59: aload_1
+      60: invokeinterface #4,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+      65: aload_2
+      66: invokeinterface #5,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+      71: ldc           #10                 // String timeout
+      73: iconst_0
+      74: invokevirtual #7                  // Method org/apache/dubbo/common/URL.getMethodParameter:(Ljava/lang/String;Ljava/lang/String;I)I
+      77: i2l
+      78: lstore        7
+      80: invokestatic  #11                 // Method java/lang/System.currentTimeMillis:()J
+      83: lstore        9
+      85: lload         7
+      87: lstore        11
+      89: aload         6
+      91: dup
+      92: astore        13
+      94: monitorenter
+      95: aload_3
+      96: aload         4
+      98: iload         5
+     100: invokestatic  #9                  // Method org/apache/dubbo/rpc/RpcStatus.beginCount:(Lorg/apache/dubbo/common/URL;Ljava/lang/String;I)Z
+     103: ifne          237
+     106: aload         6
+     108: lload         11
+     110: invokevirtual #12                 // Method java/lang/Object.wait:(J)V
+     113: goto          118
+     116: astore        14
+     118: invokestatic  #11                 // Method java/lang/System.currentTimeMillis:()J
+     121: lload         9
+     123: lsub
+     124: lstore        14
+     126: lload         7
+     128: lload         14
+     130: lsub
+     131: lstore        11
+     133: lload         11
+     135: lconst_0
+     136: lcmp
+     137: ifgt          234
+     140: new           #14                 // class org/apache/dubbo/rpc/RpcException
+     143: dup
+     144: bipush        7
+     146: new           #15                 // class java/lang/StringBuilder
+     149: dup
+     150: invokespecial #16                 // Method java/lang/StringBuilder."<init>":()V
+     153: ldc           #17                 // String Waiting concurrent invoke timeout in client-side for service:
+     155: invokevirtual #18                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     158: aload_1
+     159: invokeinterface #19,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.getInterface:()Ljava/lang/Class;
+     164: invokevirtual #20                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     167: invokevirtual #18                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     170: ldc           #21                 // String , method:
+     172: invokevirtual #18                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     175: aload_2
+     176: invokeinterface #5,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+     181: invokevirtual #18                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     184: ldc           #22                 // String , elapsed:
+     186: invokevirtual #18                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     189: lload         14
+     191: invokevirtual #23                 // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+     194: ldc           #24                 // String , timeout:
+     196: invokevirtual #18                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     199: lload         7
+     201: invokevirtual #23                 // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+     204: ldc           #25                 // String . concurrent invokes:
+     206: invokevirtual #18                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     209: aload         6
+     211: invokevirtual #26                 // Method org/apache/dubbo/rpc/RpcStatus.getActive:()I
+     214: invokevirtual #27                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     217: ldc           #28                 // String . max concurrent invoke limit:
+     219: invokevirtual #18                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     222: iload         5
+     224: invokevirtual #27                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     227: invokevirtual #29                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     230: invokespecial #30                 // Method org/apache/dubbo/rpc/RpcException."<init>":(ILjava/lang/String;)V
+     233: athrow
+     234: goto          95
+     237: aload         13
+     239: monitorexit
+     240: goto          251
+     243: astore        16
+     245: aload         13
+     247: monitorexit
+     248: aload         16
+     250: athrow
+     251: aload_2
+     252: ldc           #32                 // String active_limit_filter_start_time
+     254: invokestatic  #11                 // Method java/lang/System.currentTimeMillis:()J
+     257: invokestatic  #33                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+     260: invokeinterface #34,  3           // InterfaceMethod org/apache/dubbo/rpc/Invocation.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     265: pop
+     266: aload_1
+     267: aload_2
+     268: invokeinterface #35,  2           // InterfaceMethod org/apache/dubbo/rpc/Invoker.invoke:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+     273: areturn
+    Exception table:
+       from    to  target type
+         106   113   116   Class java/lang/InterruptedException
+          95   240   243   any
+         243   248   243   any
+
+  public void onResponse(org.apache.dubbo.rpc.Result, org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_3
+       1: invokeinterface #5,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+       6: astore        4
+       8: aload_2
+       9: invokeinterface #4,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+      14: astore        5
+      16: aload_2
+      17: invokeinterface #4,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+      22: aload         4
+      24: ldc           #6                  // String actives
+      26: iconst_0
+      27: invokevirtual #7                  // Method org/apache/dubbo/common/URL.getMethodParameter:(Ljava/lang/String;Ljava/lang/String;I)I
+      30: istore        6
+      32: aload         5
+      34: aload         4
+      36: aload_0
+      37: aload_3
+      38: invokespecial #36                 // Method getElapsed:(Lorg/apache/dubbo/rpc/Invocation;)J
+      41: iconst_1
+      42: invokestatic  #37                 // Method org/apache/dubbo/rpc/RpcStatus.endCount:(Lorg/apache/dubbo/common/URL;Ljava/lang/String;JZ)V
+      45: aload_0
+      46: aload         5
+      48: aload         4
+      50: invokestatic  #8                  // Method org/apache/dubbo/rpc/RpcStatus.getStatus:(Lorg/apache/dubbo/common/URL;Ljava/lang/String;)Lorg/apache/dubbo/rpc/RpcStatus;
+      53: iload         6
+      55: invokespecial #38                 // Method notifyFinish:(Lorg/apache/dubbo/rpc/RpcStatus;I)V
+      58: return
+
+  public void onError(java.lang.Throwable, org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_3
+       1: invokeinterface #5,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+       6: astore        4
+       8: aload_2
+       9: invokeinterface #4,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+      14: astore        5
+      16: aload_2
+      17: invokeinterface #4,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+      22: aload         4
+      24: ldc           #6                  // String actives
+      26: iconst_0
+      27: invokevirtual #7                  // Method org/apache/dubbo/common/URL.getMethodParameter:(Ljava/lang/String;Ljava/lang/String;I)I
+      30: istore        6
+      32: aload_1
+      33: instanceof    #14                 // class org/apache/dubbo/rpc/RpcException
+      36: ifeq          54
+      39: aload_1
+      40: checkcast     #14                 // class org/apache/dubbo/rpc/RpcException
+      43: astore        7
+      45: aload         7
+      47: invokevirtual #39                 // Method org/apache/dubbo/rpc/RpcException.isLimitExceed:()Z
+      50: ifeq          54
+      53: return
+      54: aload         5
+      56: aload         4
+      58: aload_0
+      59: aload_3
+      60: invokespecial #36                 // Method getElapsed:(Lorg/apache/dubbo/rpc/Invocation;)J
+      63: iconst_0
+      64: invokestatic  #37                 // Method org/apache/dubbo/rpc/RpcStatus.endCount:(Lorg/apache/dubbo/common/URL;Ljava/lang/String;JZ)V
+      67: aload_0
+      68: aload         5
+      70: aload         4
+      72: invokestatic  #8                  // Method org/apache/dubbo/rpc/RpcStatus.getStatus:(Lorg/apache/dubbo/common/URL;Ljava/lang/String;)Lorg/apache/dubbo/rpc/RpcStatus;
+      75: iload         6
+      77: invokespecial #38                 // Method notifyFinish:(Lorg/apache/dubbo/rpc/RpcStatus;I)V
+      80: return
+
+  private long getElapsed(org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_1
+       1: ldc           #32                 // String active_limit_filter_start_time
+       3: invokeinterface #40,  2           // InterfaceMethod org/apache/dubbo/rpc/Invocation.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       8: astore_2
+       9: aload_2
+      10: ifnull        27
+      13: invokestatic  #11                 // Method java/lang/System.currentTimeMillis:()J
+      16: aload_2
+      17: checkcast     #41                 // class java/lang/Long
+      20: invokevirtual #42                 // Method java/lang/Long.longValue:()J
+      23: lsub
+      24: goto          28
+      27: lconst_0
+      28: lreturn
+
+  private void notifyFinish(org.apache.dubbo.rpc.RpcStatus, int);
+    Code:
+       0: iload_2
+       1: ifle          24
+       4: aload_1
+       5: dup
+       6: astore_3
+       7: monitorenter
+       8: aload_1
+       9: invokevirtual #43                 // Method java/lang/Object.notifyAll:()V
+      12: aload_3
+      13: monitorexit
+      14: goto          24
+      17: astore        4
+      19: aload_3
+      20: monitorexit
+      21: aload         4
+      23: athrow
+      24: return
+    Exception table:
+       from    to  target type
+           8    14    17   any
+          17    21    17   any
+}

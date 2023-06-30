@@ -1,0 +1,117 @@
+Compiled from "AbstractIsolationExecutorSupport.java"
+public abstract class org.apache.dubbo.rpc.executor.AbstractIsolationExecutorSupport implements org.apache.dubbo.rpc.executor.ExecutorSupport {
+  private final org.apache.dubbo.common.URL url;
+
+  private final org.apache.dubbo.common.threadpool.manager.ExecutorRepository executorRepository;
+
+  private final org.apache.dubbo.rpc.model.FrameworkServiceRepository frameworkServiceRepository;
+
+  public org.apache.dubbo.rpc.executor.AbstractIsolationExecutorSupport(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field url:Lorg/apache/dubbo/common/URL;
+       9: aload_0
+      10: aload_1
+      11: invokevirtual #3                  // Method org/apache/dubbo/common/URL.getOrDefaultApplicationModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      14: invokestatic  #4                  // InterfaceMethod org/apache/dubbo/common/threadpool/manager/ExecutorRepository.getInstance:(Lorg/apache/dubbo/rpc/model/ApplicationModel;)Lorg/apache/dubbo/common/threadpool/manager/ExecutorRepository;
+      17: putfield      #5                  // Field executorRepository:Lorg/apache/dubbo/common/threadpool/manager/ExecutorRepository;
+      20: aload_0
+      21: aload_1
+      22: invokevirtual #6                  // Method org/apache/dubbo/common/URL.getOrDefaultFrameworkModel:()Lorg/apache/dubbo/rpc/model/FrameworkModel;
+      25: invokevirtual #7                  // Method org/apache/dubbo/rpc/model/FrameworkModel.getServiceRepository:()Lorg/apache/dubbo/rpc/model/FrameworkServiceRepository;
+      28: putfield      #8                  // Field frameworkServiceRepository:Lorg/apache/dubbo/rpc/model/FrameworkServiceRepository;
+      31: return
+
+  public java.util.concurrent.Executor getExecutor(java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #9                  // Method getProviderModel:(Ljava/lang/Object;)Lorg/apache/dubbo/rpc/model/ProviderModel;
+       5: astore_2
+       6: aload_2
+       7: ifnonnull     24
+      10: aload_0
+      11: getfield      #5                  // Field executorRepository:Lorg/apache/dubbo/common/threadpool/manager/ExecutorRepository;
+      14: aload_0
+      15: getfield      #2                  // Field url:Lorg/apache/dubbo/common/URL;
+      18: invokeinterface #10,  2           // InterfaceMethod org/apache/dubbo/common/threadpool/manager/ExecutorRepository.getExecutor:(Lorg/apache/dubbo/common/URL;)Ljava/util/concurrent/ExecutorService;
+      23: areturn
+      24: aload_2
+      25: invokevirtual #11                 // Method org/apache/dubbo/rpc/model/ProviderModel.getServiceUrls:()Ljava/util/List;
+      28: astore_3
+      29: aload_3
+      30: ifnull        42
+      33: aload_3
+      34: invokeinterface #12,  1           // InterfaceMethod java/util/List.isEmpty:()Z
+      39: ifeq          56
+      42: aload_0
+      43: getfield      #5                  // Field executorRepository:Lorg/apache/dubbo/common/threadpool/manager/ExecutorRepository;
+      46: aload_0
+      47: getfield      #2                  // Field url:Lorg/apache/dubbo/common/URL;
+      50: invokeinterface #10,  2           // InterfaceMethod org/apache/dubbo/common/threadpool/manager/ExecutorRepository.getExecutor:(Lorg/apache/dubbo/common/URL;)Ljava/util/concurrent/ExecutorService;
+      55: areturn
+      56: aload_3
+      57: invokeinterface #13,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      62: astore        4
+      64: aload         4
+      66: invokeinterface #14,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      71: ifeq          135
+      74: aload         4
+      76: invokeinterface #15,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      81: checkcast     #16                 // class org/apache/dubbo/common/URL
+      84: astore        5
+      86: aload         5
+      88: invokevirtual #17                 // Method org/apache/dubbo/common/URL.getProtocol:()Ljava/lang/String;
+      91: aload_0
+      92: getfield      #2                  // Field url:Lorg/apache/dubbo/common/URL;
+      95: invokevirtual #17                 // Method org/apache/dubbo/common/URL.getProtocol:()Ljava/lang/String;
+      98: invokevirtual #18                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     101: ifeq          132
+     104: aload         5
+     106: invokevirtual #19                 // Method org/apache/dubbo/common/URL.getPort:()I
+     109: aload_0
+     110: getfield      #2                  // Field url:Lorg/apache/dubbo/common/URL;
+     113: invokevirtual #19                 // Method org/apache/dubbo/common/URL.getPort:()I
+     116: if_icmpne     132
+     119: aload_0
+     120: getfield      #5                  // Field executorRepository:Lorg/apache/dubbo/common/threadpool/manager/ExecutorRepository;
+     123: aload_2
+     124: aload         5
+     126: invokeinterface #20,  3           // InterfaceMethod org/apache/dubbo/common/threadpool/manager/ExecutorRepository.getExecutor:(Lorg/apache/dubbo/rpc/model/ServiceModel;Lorg/apache/dubbo/common/URL;)Ljava/util/concurrent/ExecutorService;
+     131: areturn
+     132: goto          64
+     135: aload_0
+     136: getfield      #5                  // Field executorRepository:Lorg/apache/dubbo/common/threadpool/manager/ExecutorRepository;
+     139: aload_2
+     140: aload_3
+     141: iconst_0
+     142: invokeinterface #21,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     147: checkcast     #16                 // class org/apache/dubbo/common/URL
+     150: invokeinterface #20,  3           // InterfaceMethod org/apache/dubbo/common/threadpool/manager/ExecutorRepository.getExecutor:(Lorg/apache/dubbo/rpc/model/ServiceModel;Lorg/apache/dubbo/common/URL;)Ljava/util/concurrent/ExecutorService;
+     155: areturn
+
+  protected org.apache.dubbo.common.ServiceKey getServiceKey(java.lang.Object);
+    Code:
+       0: aconst_null
+       1: areturn
+
+  protected org.apache.dubbo.rpc.model.ProviderModel getProviderModel(java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #22                 // Method getServiceKey:(Ljava/lang/Object;)Lorg/apache/dubbo/common/ServiceKey;
+       5: astore_2
+       6: aload_2
+       7: ifnonnull     12
+      10: aconst_null
+      11: areturn
+      12: aload_0
+      13: getfield      #8                  // Field frameworkServiceRepository:Lorg/apache/dubbo/rpc/model/FrameworkServiceRepository;
+      16: aload_2
+      17: invokevirtual #23                 // Method org/apache/dubbo/common/ServiceKey.toString:()Ljava/lang/String;
+      20: invokevirtual #24                 // Method org/apache/dubbo/rpc/model/FrameworkServiceRepository.lookupExportedService:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/model/ProviderModel;
+      23: areturn
+}

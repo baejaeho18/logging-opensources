@@ -1,0 +1,119 @@
+Compiled from "DubboGracefulShutdown.java"
+public class org.apache.dubbo.rpc.protocol.dubbo.DubboGracefulShutdown implements org.apache.dubbo.rpc.GracefulShutdown {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final org.apache.dubbo.rpc.protocol.dubbo.DubboProtocol dubboProtocol;
+
+  public org.apache.dubbo.rpc.protocol.dubbo.DubboGracefulShutdown(org.apache.dubbo.rpc.protocol.dubbo.DubboProtocol);
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #4                  // Field dubboProtocol:Lorg/apache/dubbo/rpc/protocol/dubbo/DubboProtocol;
+       9: return
+
+  public void readonly();
+    Code:
+       0: aload_0
+       1: ldc           #5                  // String R
+       3: invokespecial #6                  // Method sendEvent:(Ljava/lang/String;)V
+       6: return
+
+  public void writeable();
+    Code:
+       0: aload_0
+       1: ldc           #7                  // String W
+       3: invokespecial #6                  // Method sendEvent:(Ljava/lang/String;)V
+       6: return
+
+  private void sendEvent(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field dubboProtocol:Lorg/apache/dubbo/rpc/protocol/dubbo/DubboProtocol;
+       4: invokevirtual #8                  // Method org/apache/dubbo/rpc/protocol/dubbo/DubboProtocol.getServers:()Ljava/util/List;
+       7: invokeinterface #9,  1            // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      12: astore_2
+      13: aload_2
+      14: invokeinterface #10,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      19: ifeq          180
+      22: aload_2
+      23: invokeinterface #11,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      28: checkcast     #12                 // class org/apache/dubbo/rpc/ProtocolServer
+      31: astore_3
+      32: aload_3
+      33: invokeinterface #13,  1           // InterfaceMethod org/apache/dubbo/rpc/ProtocolServer.getRemotingServer:()Lorg/apache/dubbo/remoting/RemotingServer;
+      38: invokeinterface #14,  1           // InterfaceMethod org/apache/dubbo/remoting/RemotingServer.getChannels:()Ljava/util/Collection;
+      43: astore        4
+      45: new           #15                 // class org/apache/dubbo/remoting/exchange/Request
+      48: dup
+      49: invokespecial #16                 // Method org/apache/dubbo/remoting/exchange/Request."<init>":()V
+      52: astore        5
+      54: aload         5
+      56: aload_1
+      57: invokevirtual #17                 // Method org/apache/dubbo/remoting/exchange/Request.setEvent:(Ljava/lang/String;)V
+      60: aload         5
+      62: iconst_0
+      63: invokevirtual #18                 // Method org/apache/dubbo/remoting/exchange/Request.setTwoWay:(Z)V
+      66: aload         5
+      68: invokestatic  #19                 // Method org/apache/dubbo/common/Version.getProtocolVersion:()Ljava/lang/String;
+      71: invokevirtual #20                 // Method org/apache/dubbo/remoting/exchange/Request.setVersion:(Ljava/lang/String;)V
+      74: aload         4
+      76: invokeinterface #21,  1           // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+      81: astore        6
+      83: aload         6
+      85: invokeinterface #10,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      90: ifeq          177
+      93: aload         6
+      95: invokeinterface #11,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     100: checkcast     #22                 // class org/apache/dubbo/remoting/Channel
+     103: astore        7
+     105: aload         7
+     107: invokeinterface #23,  1           // InterfaceMethod org/apache/dubbo/remoting/Channel.isConnected:()Z
+     112: ifeq          137
+     115: aload         7
+     117: aload         5
+     119: aload         7
+     121: invokeinterface #24,  1           // InterfaceMethod org/apache/dubbo/remoting/Channel.getUrl:()Lorg/apache/dubbo/common/URL;
+     126: ldc           #26                 // String channel.readonly.sent
+     128: iconst_1
+     129: invokevirtual #27                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+     132: invokeinterface #28,  3           // InterfaceMethod org/apache/dubbo/remoting/Channel.send:(Ljava/lang/Object;Z)V
+     137: goto          174
+     140: astore        8
+     142: aload         8
+     144: invokevirtual #30                 // Method org/apache/dubbo/remoting/RemotingException.getCause:()Ljava/lang/Throwable;
+     147: instanceof    #31                 // class java/nio/channels/ClosedChannelException
+     150: ifeq          156
+     153: goto          83
+     156: getstatic     #32                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     159: ldc           #33                 // String 6-13
+     161: ldc           #34                 // String
+     163: ldc           #34                 // String
+     165: ldc           #35                 // String send cannot write message error.
+     167: aload         8
+     169: invokeinterface #36,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     174: goto          83
+     177: goto          13
+     180: goto          201
+     183: astore_2
+     184: getstatic     #32                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     187: ldc           #33                 // String 6-13
+     189: ldc           #34                 // String
+     191: ldc           #34                 // String
+     193: ldc           #35                 // String send cannot write message error.
+     195: aload_2
+     196: invokeinterface #36,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     201: return
+    Exception table:
+       from    to  target type
+         105   137   140   Class org/apache/dubbo/remoting/RemotingException
+           0   180   183   Class java/lang/Throwable
+
+  static {};
+    Code:
+       0: ldc           #38                 // class org/apache/dubbo/rpc/protocol/dubbo/DubboGracefulShutdown
+       2: invokestatic  #39                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #32                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

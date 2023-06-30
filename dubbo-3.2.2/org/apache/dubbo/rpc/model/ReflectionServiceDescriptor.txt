@@ -1,0 +1,359 @@
+Compiled from "ReflectionServiceDescriptor.java"
+public class org.apache.dubbo.rpc.model.ReflectionServiceDescriptor implements org.apache.dubbo.rpc.model.ServiceDescriptor {
+  private final java.lang.String interfaceName;
+
+  private final java.lang.Class<?> serviceInterfaceClass;
+
+  private final java.util.Map<java.lang.String, java.util.List<org.apache.dubbo.rpc.model.MethodDescriptor>> methods;
+
+  private final java.util.Map<java.lang.String, java.util.Map<java.lang.String, org.apache.dubbo.rpc.model.MethodDescriptor>> descToMethods;
+
+  private final java.util.concurrent.ConcurrentNavigableMap<java.lang.String, org.apache.dubbo.metadata.definition.model.FullServiceDefinition> serviceDefinitions;
+
+  public org.apache.dubbo.rpc.model.ReflectionServiceDescriptor(java.lang.String, java.lang.Class<?>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #2                  // class java/util/HashMap
+       8: dup
+       9: invokespecial #3                  // Method java/util/HashMap."<init>":()V
+      12: putfield      #4                  // Field methods:Ljava/util/Map;
+      15: aload_0
+      16: new           #2                  // class java/util/HashMap
+      19: dup
+      20: invokespecial #3                  // Method java/util/HashMap."<init>":()V
+      23: putfield      #5                  // Field descToMethods:Ljava/util/Map;
+      26: aload_0
+      27: new           #6                  // class java/util/concurrent/ConcurrentSkipListMap
+      30: dup
+      31: invokespecial #7                  // Method java/util/concurrent/ConcurrentSkipListMap."<init>":()V
+      34: putfield      #8                  // Field serviceDefinitions:Ljava/util/concurrent/ConcurrentNavigableMap;
+      37: aload_0
+      38: aload_1
+      39: putfield      #9                  // Field interfaceName:Ljava/lang/String;
+      42: aload_0
+      43: aload_2
+      44: putfield      #10                 // Field serviceInterfaceClass:Ljava/lang/Class;
+      47: return
+
+  public void addMethod(org.apache.dubbo.rpc.model.MethodDescriptor);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field methods:Ljava/util/Map;
+       4: aload_1
+       5: invokeinterface #11,  1           // InterfaceMethod org/apache/dubbo/rpc/model/MethodDescriptor.getMethodName:()Ljava/lang/String;
+      10: aload_1
+      11: invokestatic  #12                 // Method java/util/Collections.singletonList:(Ljava/lang/Object;)Ljava/util/List;
+      14: invokeinterface #13,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      19: pop
+      20: return
+
+  public org.apache.dubbo.rpc.model.ReflectionServiceDescriptor(java.lang.Class<?>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #2                  // class java/util/HashMap
+       8: dup
+       9: invokespecial #3                  // Method java/util/HashMap."<init>":()V
+      12: putfield      #4                  // Field methods:Ljava/util/Map;
+      15: aload_0
+      16: new           #2                  // class java/util/HashMap
+      19: dup
+      20: invokespecial #3                  // Method java/util/HashMap."<init>":()V
+      23: putfield      #5                  // Field descToMethods:Ljava/util/Map;
+      26: aload_0
+      27: new           #6                  // class java/util/concurrent/ConcurrentSkipListMap
+      30: dup
+      31: invokespecial #7                  // Method java/util/concurrent/ConcurrentSkipListMap."<init>":()V
+      34: putfield      #8                  // Field serviceDefinitions:Ljava/util/concurrent/ConcurrentNavigableMap;
+      37: aload_0
+      38: aload_1
+      39: putfield      #10                 // Field serviceInterfaceClass:Ljava/lang/Class;
+      42: aload_0
+      43: aload_1
+      44: invokevirtual #14                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      47: putfield      #9                  // Field interfaceName:Ljava/lang/String;
+      50: aload_0
+      51: invokespecial #15                 // Method initMethods:()V
+      54: return
+
+  public org.apache.dubbo.metadata.definition.model.FullServiceDefinition getFullServiceDefinition(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field serviceDefinitions:Ljava/util/concurrent/ConcurrentNavigableMap;
+       4: aload_1
+       5: aload_0
+       6: invokedynamic #16,  0             // InvokeDynamic #0:apply:(Lorg/apache/dubbo/rpc/model/ReflectionServiceDescriptor;)Ljava/util/function/Function;
+      11: invokeinterface #17,  3           // InterfaceMethod java/util/concurrent/ConcurrentNavigableMap.computeIfAbsent:(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+      16: checkcast     #18                 // class org/apache/dubbo/metadata/definition/model/FullServiceDefinition
+      19: areturn
+
+  private void initMethods();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field serviceInterfaceClass:Ljava/lang/Class;
+       4: invokevirtual #19                 // Method java/lang/Class.getMethods:()[Ljava/lang/reflect/Method;
+       7: astore_1
+       8: aload_1
+       9: astore_2
+      10: aload_2
+      11: arraylength
+      12: istore_3
+      13: iconst_0
+      14: istore        4
+      16: iload         4
+      18: iload_3
+      19: if_icmpge     85
+      22: aload_2
+      23: iload         4
+      25: aaload
+      26: astore        5
+      28: aload         5
+      30: iconst_1
+      31: invokevirtual #20                 // Method java/lang/reflect/Method.setAccessible:(Z)V
+      34: new           #21                 // class org/apache/dubbo/rpc/model/ReflectionMethodDescriptor
+      37: dup
+      38: aload         5
+      40: invokespecial #22                 // Method org/apache/dubbo/rpc/model/ReflectionMethodDescriptor."<init>":(Ljava/lang/reflect/Method;)V
+      43: astore        6
+      45: aload_0
+      46: getfield      #4                  // Field methods:Ljava/util/Map;
+      49: aload         5
+      51: invokevirtual #23                 // Method java/lang/reflect/Method.getName:()Ljava/lang/String;
+      54: invokedynamic #24,  0             // InvokeDynamic #1:apply:()Ljava/util/function/Function;
+      59: invokeinterface #25,  3           // InterfaceMethod java/util/Map.computeIfAbsent:(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+      64: checkcast     #26                 // class java/util/List
+      67: astore        7
+      69: aload         7
+      71: aload         6
+      73: invokeinterface #27,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      78: pop
+      79: iinc          4, 1
+      82: goto          16
+      85: aload_0
+      86: getfield      #4                  // Field methods:Ljava/util/Map;
+      89: aload_0
+      90: invokedynamic #28,  0             // InvokeDynamic #2:accept:(Lorg/apache/dubbo/rpc/model/ReflectionServiceDescriptor;)Ljava/util/function/BiConsumer;
+      95: invokeinterface #29,  2           // InterfaceMethod java/util/Map.forEach:(Ljava/util/function/BiConsumer;)V
+     100: return
+
+  public java.lang.String getInterfaceName();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field interfaceName:Ljava/lang/String;
+       4: areturn
+
+  public java.lang.Class<?> getServiceInterfaceClass();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field serviceInterfaceClass:Ljava/lang/Class;
+       4: areturn
+
+  public java.util.Set<org.apache.dubbo.rpc.model.MethodDescriptor> getAllMethods();
+    Code:
+       0: new           #30                 // class java/util/HashSet
+       3: dup
+       4: invokespecial #31                 // Method java/util/HashSet."<init>":()V
+       7: astore_1
+       8: aload_0
+       9: getfield      #4                  // Field methods:Ljava/util/Map;
+      12: aload_1
+      13: invokedynamic #32,  0             // InvokeDynamic #3:accept:(Ljava/util/Set;)Ljava/util/function/BiConsumer;
+      18: invokeinterface #29,  2           // InterfaceMethod java/util/Map.forEach:(Ljava/util/function/BiConsumer;)V
+      23: aload_1
+      24: areturn
+
+  public org.apache.dubbo.rpc.model.MethodDescriptor getMethod(java.lang.String, java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field descToMethods:Ljava/util/Map;
+       4: aload_1
+       5: invokeinterface #33,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      10: checkcast     #34                 // class java/util/Map
+      13: astore_3
+      14: aload_3
+      15: invokestatic  #35                 // Method org/apache/dubbo/common/utils/CollectionUtils.isNotEmptyMap:(Ljava/util/Map;)Z
+      18: ifeq          32
+      21: aload_3
+      22: aload_2
+      23: invokeinterface #33,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      28: checkcast     #36                 // class org/apache/dubbo/rpc/model/MethodDescriptor
+      31: areturn
+      32: aconst_null
+      33: areturn
+
+  public org.apache.dubbo.rpc.model.MethodDescriptor getMethod(java.lang.String, java.lang.Class<?>[]);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field methods:Ljava/util/Map;
+       4: aload_1
+       5: invokeinterface #33,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      10: checkcast     #26                 // class java/util/List
+      13: astore_3
+      14: aload_3
+      15: invokestatic  #37                 // Method org/apache/dubbo/common/utils/CollectionUtils.isNotEmpty:(Ljava/util/Collection;)Z
+      18: ifeq          71
+      21: aload_3
+      22: invokeinterface #38,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      27: astore        4
+      29: aload         4
+      31: invokeinterface #39,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      36: ifeq          71
+      39: aload         4
+      41: invokeinterface #40,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      46: checkcast     #36                 // class org/apache/dubbo/rpc/model/MethodDescriptor
+      49: astore        5
+      51: aload_2
+      52: aload         5
+      54: invokeinterface #41,  1           // InterfaceMethod org/apache/dubbo/rpc/model/MethodDescriptor.getParameterClasses:()[Ljava/lang/Class;
+      59: invokestatic  #42                 // Method java/util/Arrays.equals:([Ljava/lang/Object;[Ljava/lang/Object;)Z
+      62: ifeq          68
+      65: aload         5
+      67: areturn
+      68: goto          29
+      71: aconst_null
+      72: areturn
+
+  public java.util.List<org.apache.dubbo.rpc.model.MethodDescriptor> getMethods(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field methods:Ljava/util/Map;
+       4: aload_1
+       5: invokeinterface #33,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      10: checkcast     #26                 // class java/util/List
+      13: areturn
+
+  public boolean equals(java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: if_acmpne     7
+       5: iconst_1
+       6: ireturn
+       7: aload_1
+       8: ifnull        22
+      11: aload_0
+      12: invokevirtual #43                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      15: aload_1
+      16: invokevirtual #43                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      19: if_acmpeq     24
+      22: iconst_0
+      23: ireturn
+      24: aload_1
+      25: checkcast     #44                 // class org/apache/dubbo/rpc/model/ReflectionServiceDescriptor
+      28: astore_2
+      29: aload_0
+      30: getfield      #9                  // Field interfaceName:Ljava/lang/String;
+      33: aload_2
+      34: getfield      #9                  // Field interfaceName:Ljava/lang/String;
+      37: invokestatic  #45                 // Method java/util/Objects.equals:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      40: ifeq          89
+      43: aload_0
+      44: getfield      #10                 // Field serviceInterfaceClass:Ljava/lang/Class;
+      47: aload_2
+      48: getfield      #10                 // Field serviceInterfaceClass:Ljava/lang/Class;
+      51: invokestatic  #45                 // Method java/util/Objects.equals:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      54: ifeq          89
+      57: aload_0
+      58: getfield      #4                  // Field methods:Ljava/util/Map;
+      61: aload_2
+      62: getfield      #4                  // Field methods:Ljava/util/Map;
+      65: invokestatic  #45                 // Method java/util/Objects.equals:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      68: ifeq          89
+      71: aload_0
+      72: getfield      #5                  // Field descToMethods:Ljava/util/Map;
+      75: aload_2
+      76: getfield      #5                  // Field descToMethods:Ljava/util/Map;
+      79: invokestatic  #45                 // Method java/util/Objects.equals:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      82: ifeq          89
+      85: iconst_1
+      86: goto          90
+      89: iconst_0
+      90: ireturn
+
+  public int hashCode();
+    Code:
+       0: iconst_4
+       1: anewarray     #46                 // class java/lang/Object
+       4: dup
+       5: iconst_0
+       6: aload_0
+       7: getfield      #9                  // Field interfaceName:Ljava/lang/String;
+      10: aastore
+      11: dup
+      12: iconst_1
+      13: aload_0
+      14: getfield      #10                 // Field serviceInterfaceClass:Ljava/lang/Class;
+      17: aastore
+      18: dup
+      19: iconst_2
+      20: aload_0
+      21: getfield      #4                  // Field methods:Ljava/util/Map;
+      24: aastore
+      25: dup
+      26: iconst_3
+      27: aload_0
+      28: getfield      #5                  // Field descToMethods:Ljava/util/Map;
+      31: aastore
+      32: invokestatic  #47                 // Method java/util/Objects.hash:([Ljava/lang/Object;)I
+      35: ireturn
+
+  private static void lambda$getAllMethods$5(java.util.Set, java.lang.String, java.util.List);
+    Code:
+       0: aload_0
+       1: aload_2
+       2: invokeinterface #48,  2           // InterfaceMethod java/util/Set.addAll:(Ljava/util/Collection;)Z
+       7: pop
+       8: return
+
+  private void lambda$initMethods$4(java.lang.String, java.util.List);
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field descToMethods:Ljava/util/Map;
+       4: aload_1
+       5: invokedynamic #49,  0             // InvokeDynamic #4:apply:()Ljava/util/function/Function;
+      10: invokeinterface #25,  3           // InterfaceMethod java/util/Map.computeIfAbsent:(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+      15: checkcast     #34                 // class java/util/Map
+      18: astore_3
+      19: aload_2
+      20: aload_3
+      21: invokedynamic #50,  0             // InvokeDynamic #5:accept:(Ljava/util/Map;)Ljava/util/function/Consumer;
+      26: invokeinterface #51,  2           // InterfaceMethod java/util/List.forEach:(Ljava/util/function/Consumer;)V
+      31: return
+
+  private static void lambda$null$3(java.util.Map, org.apache.dubbo.rpc.model.MethodDescriptor);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokeinterface #52,  1           // InterfaceMethod org/apache/dubbo/rpc/model/MethodDescriptor.getParamDesc:()Ljava/lang/String;
+       7: aload_1
+       8: invokeinterface #13,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      13: checkcast     #36                 // class org/apache/dubbo/rpc/model/MethodDescriptor
+      16: pop
+      17: return
+
+  private static java.util.Map lambda$null$2(java.lang.String);
+    Code:
+       0: new           #2                  // class java/util/HashMap
+       3: dup
+       4: invokespecial #3                  // Method java/util/HashMap."<init>":()V
+       7: areturn
+
+  private static java.util.List lambda$initMethods$1(java.lang.String);
+    Code:
+       0: new           #53                 // class java/util/ArrayList
+       3: dup
+       4: iconst_1
+       5: invokespecial #54                 // Method java/util/ArrayList."<init>":(I)V
+       8: areturn
+
+  private org.apache.dubbo.metadata.definition.model.FullServiceDefinition lambda$getFullServiceDefinition$0(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field serviceInterfaceClass:Ljava/lang/Class;
+       4: invokestatic  #55                 // Method java/util/Collections.emptyMap:()Ljava/util/Map;
+       7: invokestatic  #56                 // Method org/apache/dubbo/metadata/definition/ServiceDefinitionBuilder.buildFullDefinition:(Ljava/lang/Class;Ljava/util/Map;)Lorg/apache/dubbo/metadata/definition/model/FullServiceDefinition;
+      10: areturn
+}

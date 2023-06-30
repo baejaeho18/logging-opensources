@@ -1,0 +1,271 @@
+Compiled from "RdsRouteRuleManager.java"
+public class org.apache.dubbo.rpc.cluster.router.xds.RdsRouteRuleManager {
+  private static final java.util.concurrent.ConcurrentHashMap<java.lang.String, java.util.Set<org.apache.dubbo.rpc.cluster.router.xds.XdsRouteRuleListener>> RULE_LISTENERS;
+
+  private static final java.util.concurrent.ConcurrentHashMap<java.lang.String, java.util.List<org.apache.dubbo.rpc.cluster.router.xds.rule.XdsRouteRule>> ROUTE_DATA_CACHE;
+
+  private static final java.util.concurrent.ConcurrentMap<java.lang.String, org.apache.dubbo.rpc.cluster.router.xds.RdsVirtualHostListener> RDS_LISTENERS;
+
+  private static volatile java.util.function.Consumer<java.util.Map<java.lang.String, org.apache.dubbo.registry.xds.util.protocol.message.ListenerResult>> LDS_LISTENER;
+
+  private static volatile java.util.function.Consumer<java.util.Map<java.lang.String, org.apache.dubbo.registry.xds.util.protocol.message.RouteResult>> RDS_LISTENER;
+
+  private static java.util.Map<java.lang.String, org.apache.dubbo.registry.xds.util.protocol.message.RouteResult> RDS_RESULT;
+
+  public org.apache.dubbo.rpc.cluster.router.xds.RdsRouteRuleManager();
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public synchronized void subscribeRds(java.lang.String, org.apache.dubbo.rpc.cluster.router.xds.XdsRouteRuleListener);
+    Code:
+       0: getstatic     #3                  // Field RULE_LISTENERS:Ljava/util/concurrent/ConcurrentHashMap;
+       3: aload_1
+       4: invokedynamic #4,  0              // InvokeDynamic #0:apply:()Ljava/util/function/Function;
+       9: invokestatic  #5                  // Method org/apache/dubbo/common/utils/ConcurrentHashMapUtils.computeIfAbsent:(Ljava/util/concurrent/ConcurrentMap;Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+      12: checkcast     #6                  // class java/util/Set
+      15: astore_3
+      16: aload_3
+      17: invokestatic  #7                  // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+      20: ifeq          28
+      23: aload_0
+      24: aload_1
+      25: invokespecial #8                  // Method doSubscribeRds:(Ljava/lang/String;)V
+      28: aload_3
+      29: aload_2
+      30: invokeinterface #9,  2            // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      35: pop
+      36: getstatic     #10                 // Field ROUTE_DATA_CACHE:Ljava/util/concurrent/ConcurrentHashMap;
+      39: aload_1
+      40: invokevirtual #11                 // Method java/util/concurrent/ConcurrentHashMap.containsKey:(Ljava/lang/Object;)Z
+      43: ifeq          63
+      46: aload_2
+      47: aload_1
+      48: getstatic     #10                 // Field ROUTE_DATA_CACHE:Ljava/util/concurrent/ConcurrentHashMap;
+      51: aload_1
+      52: invokevirtual #12                 // Method java/util/concurrent/ConcurrentHashMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      55: checkcast     #13                 // class java/util/List
+      58: invokeinterface #14,  3           // InterfaceMethod org/apache/dubbo/rpc/cluster/router/xds/XdsRouteRuleListener.onRuleChange:(Ljava/lang/String;Ljava/util/List;)V
+      63: return
+
+  private void doSubscribeRds(java.lang.String);
+    Code:
+       0: ldc           #15                 // class org/apache/dubbo/rpc/cluster/router/xds/RdsRouteRuleManager
+       2: dup
+       3: astore_2
+       4: monitorenter
+       5: getstatic     #1                  // Field RDS_LISTENER:Ljava/util/function/Consumer;
+       8: ifnonnull     19
+      11: invokedynamic #16,  0             // InvokeDynamic #1:accept:()Ljava/util/function/Consumer;
+      16: putstatic     #1                  // Field RDS_LISTENER:Ljava/util/function/Consumer;
+      19: getstatic     #17                 // Field LDS_LISTENER:Ljava/util/function/Consumer;
+      22: ifnonnull     51
+      25: new           #18                 // class org/apache/dubbo/rpc/cluster/router/xds/RdsRouteRuleManager$1
+      28: dup
+      29: aload_0
+      30: invokespecial #19                 // Method org/apache/dubbo/rpc/cluster/router/xds/RdsRouteRuleManager$1."<init>":(Lorg/apache/dubbo/rpc/cluster/router/xds/RdsRouteRuleManager;)V
+      33: putstatic     #17                 // Field LDS_LISTENER:Ljava/util/function/Consumer;
+      36: invokestatic  #20                 // Method org/apache/dubbo/registry/xds/util/PilotExchanger.isEnabled:()Z
+      39: ifeq          51
+      42: invokestatic  #21                 // Method org/apache/dubbo/registry/xds/util/PilotExchanger.getInstance:()Lorg/apache/dubbo/registry/xds/util/PilotExchanger;
+      45: getstatic     #17                 // Field LDS_LISTENER:Ljava/util/function/Consumer;
+      48: invokevirtual #22                 // Method org/apache/dubbo/registry/xds/util/PilotExchanger.observeLds:(Ljava/util/function/Consumer;)V
+      51: aload_2
+      52: monitorexit
+      53: goto          61
+      56: astore_3
+      57: aload_2
+      58: monitorexit
+      59: aload_3
+      60: athrow
+      61: getstatic     #23                 // Field RDS_LISTENERS:Ljava/util/concurrent/ConcurrentMap;
+      64: aload_1
+      65: aload_0
+      66: aload_1
+      67: invokedynamic #24,  0             // InvokeDynamic #2:apply:(Lorg/apache/dubbo/rpc/cluster/router/xds/RdsRouteRuleManager;Ljava/lang/String;)Ljava/util/function/Function;
+      72: invokestatic  #5                  // Method org/apache/dubbo/common/utils/ConcurrentHashMapUtils.computeIfAbsent:(Ljava/util/concurrent/ConcurrentMap;Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+      75: pop
+      76: getstatic     #1                  // Field RDS_LISTENER:Ljava/util/function/Consumer;
+      79: getstatic     #25                 // Field RDS_RESULT:Ljava/util/Map;
+      82: invokeinterface #26,  2           // InterfaceMethod java/util/function/Consumer.accept:(Ljava/lang/Object;)V
+      87: return
+    Exception table:
+       from    to  target type
+           5    53    56   any
+          56    59    56   any
+
+  public synchronized void unSubscribeRds(java.lang.String, org.apache.dubbo.rpc.cluster.router.xds.XdsRouteRuleListener);
+    Code:
+       0: getstatic     #3                  // Field RULE_LISTENERS:Ljava/util/concurrent/ConcurrentHashMap;
+       3: aload_1
+       4: invokevirtual #12                 // Method java/util/concurrent/ConcurrentHashMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       7: checkcast     #6                  // class java/util/Set
+      10: astore_3
+      11: aload_3
+      12: invokestatic  #7                  // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+      15: ifeq          19
+      18: return
+      19: aload_3
+      20: aload_2
+      21: invokeinterface #27,  2           // InterfaceMethod java/util/Set.remove:(Ljava/lang/Object;)Z
+      26: pop
+      27: aload_3
+      28: invokeinterface #28,  1           // InterfaceMethod java/util/Set.isEmpty:()Z
+      33: ifeq          49
+      36: getstatic     #3                  // Field RULE_LISTENERS:Ljava/util/concurrent/ConcurrentHashMap;
+      39: aload_1
+      40: invokevirtual #29                 // Method java/util/concurrent/ConcurrentHashMap.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      43: pop
+      44: aload_0
+      45: aload_1
+      46: invokespecial #30                 // Method doUnsubscribeRds:(Ljava/lang/String;)V
+      49: return
+
+  private void doUnsubscribeRds(java.lang.String);
+    Code:
+       0: getstatic     #23                 // Field RDS_LISTENERS:Ljava/util/concurrent/ConcurrentMap;
+       3: aload_1
+       4: invokeinterface #31,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+       9: pop
+      10: return
+
+  public void notifyRuleChange(java.lang.String, java.util.List<org.apache.dubbo.rpc.cluster.router.xds.rule.XdsRouteRule>);
+    Code:
+       0: getstatic     #10                 // Field ROUTE_DATA_CACHE:Ljava/util/concurrent/ConcurrentHashMap;
+       3: aload_1
+       4: aload_2
+       5: invokevirtual #32                 // Method java/util/concurrent/ConcurrentHashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       8: pop
+       9: getstatic     #3                  // Field RULE_LISTENERS:Ljava/util/concurrent/ConcurrentHashMap;
+      12: aload_1
+      13: invokevirtual #12                 // Method java/util/concurrent/ConcurrentHashMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      16: checkcast     #6                  // class java/util/Set
+      19: astore_3
+      20: aload_3
+      21: invokestatic  #7                  // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+      24: ifeq          28
+      27: return
+      28: aload_2
+      29: invokestatic  #7                  // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+      32: istore        4
+      34: aload_3
+      35: invokeinterface #33,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      40: astore        5
+      42: aload         5
+      44: invokeinterface #34,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      49: ifeq          92
+      52: aload         5
+      54: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      59: checkcast     #36                 // class org/apache/dubbo/rpc/cluster/router/xds/XdsRouteRuleListener
+      62: astore        6
+      64: iload         4
+      66: ifeq          80
+      69: aload         6
+      71: aload_1
+      72: invokeinterface #37,  2           // InterfaceMethod org/apache/dubbo/rpc/cluster/router/xds/XdsRouteRuleListener.clearRule:(Ljava/lang/String;)V
+      77: goto          89
+      80: aload         6
+      82: aload_1
+      83: aload_2
+      84: invokeinterface #14,  3           // InterfaceMethod org/apache/dubbo/rpc/cluster/router/xds/XdsRouteRuleListener.onRuleChange:(Ljava/lang/String;Ljava/util/List;)V
+      89: goto          42
+      92: return
+
+  static java.util.concurrent.ConcurrentHashMap<java.lang.String, java.util.Set<org.apache.dubbo.rpc.cluster.router.xds.XdsRouteRuleListener>> getRuleListeners();
+    Code:
+       0: getstatic     #3                  // Field RULE_LISTENERS:Ljava/util/concurrent/ConcurrentHashMap;
+       3: areturn
+
+  static java.util.concurrent.ConcurrentHashMap<java.lang.String, java.util.List<org.apache.dubbo.rpc.cluster.router.xds.rule.XdsRouteRule>> getRouteDataCache();
+    Code:
+       0: getstatic     #10                 // Field ROUTE_DATA_CACHE:Ljava/util/concurrent/ConcurrentHashMap;
+       3: areturn
+
+  static java.util.Map<java.lang.String, org.apache.dubbo.rpc.cluster.router.xds.RdsVirtualHostListener> getRdsListeners();
+    Code:
+       0: getstatic     #23                 // Field RDS_LISTENERS:Ljava/util/concurrent/ConcurrentMap;
+       3: areturn
+
+  private org.apache.dubbo.rpc.cluster.router.xds.RdsVirtualHostListener lambda$doSubscribeRds$2(java.lang.String, java.lang.String);
+    Code:
+       0: new           #38                 // class org/apache/dubbo/rpc/cluster/router/xds/RdsVirtualHostListener
+       3: dup
+       4: aload_1
+       5: aload_0
+       6: invokespecial #39                 // Method org/apache/dubbo/rpc/cluster/router/xds/RdsVirtualHostListener."<init>":(Ljava/lang/String;Lorg/apache/dubbo/rpc/cluster/router/xds/RdsRouteRuleManager;)V
+       9: areturn
+
+  private static void lambda$doSubscribeRds$1(java.util.Map);
+    Code:
+       0: aload_0
+       1: ifnonnull     5
+       4: return
+       5: aload_0
+       6: invokeinterface #40,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+      11: invokeinterface #41,  1           // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+      16: astore_1
+      17: aload_1
+      18: invokeinterface #34,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      23: ifeq          107
+      26: aload_1
+      27: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      32: checkcast     #42                 // class org/apache/dubbo/registry/xds/util/protocol/message/RouteResult
+      35: astore_2
+      36: getstatic     #23                 // Field RDS_LISTENERS:Ljava/util/concurrent/ConcurrentMap;
+      39: invokeinterface #43,  1           // InterfaceMethod java/util/concurrent/ConcurrentMap.keySet:()Ljava/util/Set;
+      44: invokeinterface #33,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      49: astore_3
+      50: aload_3
+      51: invokeinterface #34,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      56: ifeq          104
+      59: aload_3
+      60: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      65: checkcast     #44                 // class java/lang/String
+      68: astore        4
+      70: aload_2
+      71: aload         4
+      73: invokevirtual #45                 // Method org/apache/dubbo/registry/xds/util/protocol/message/RouteResult.searchVirtualHost:(Ljava/lang/String;)Lio/envoyproxy/envoy/config/route/v3/VirtualHost;
+      76: astore        5
+      78: aload         5
+      80: ifnull        101
+      83: getstatic     #23                 // Field RDS_LISTENERS:Ljava/util/concurrent/ConcurrentMap;
+      86: aload         4
+      88: invokeinterface #46,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      93: checkcast     #38                 // class org/apache/dubbo/rpc/cluster/router/xds/RdsVirtualHostListener
+      96: aload         5
+      98: invokevirtual #47                 // Method org/apache/dubbo/rpc/cluster/router/xds/RdsVirtualHostListener.parseVirtualHost:(Lio/envoyproxy/envoy/config/route/v3/VirtualHost;)V
+     101: goto          50
+     104: goto          17
+     107: aload_0
+     108: putstatic     #25                 // Field RDS_RESULT:Ljava/util/Map;
+     111: return
+
+  private static java.util.Set lambda$subscribeRds$0(java.lang.String);
+    Code:
+       0: new           #48                 // class org/apache/dubbo/common/utils/ConcurrentHashSet
+       3: dup
+       4: invokespecial #49                 // Method org/apache/dubbo/common/utils/ConcurrentHashSet."<init>":()V
+       7: areturn
+
+  static java.util.function.Consumer access$000();
+    Code:
+       0: getstatic     #1                  // Field RDS_LISTENER:Ljava/util/function/Consumer;
+       3: areturn
+
+  static {};
+    Code:
+       0: new           #50                 // class java/util/concurrent/ConcurrentHashMap
+       3: dup
+       4: invokespecial #51                 // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+       7: putstatic     #3                  // Field RULE_LISTENERS:Ljava/util/concurrent/ConcurrentHashMap;
+      10: new           #50                 // class java/util/concurrent/ConcurrentHashMap
+      13: dup
+      14: invokespecial #51                 // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      17: putstatic     #10                 // Field ROUTE_DATA_CACHE:Ljava/util/concurrent/ConcurrentHashMap;
+      20: new           #50                 // class java/util/concurrent/ConcurrentHashMap
+      23: dup
+      24: invokespecial #51                 // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      27: putstatic     #23                 // Field RDS_LISTENERS:Ljava/util/concurrent/ConcurrentMap;
+      30: return
+}

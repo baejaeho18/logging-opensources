@@ -1,0 +1,303 @@
+Compiled from "ListenableStateRouter.java"
+public abstract class org.apache.dubbo.rpc.cluster.router.condition.config.ListenableStateRouter<T> extends org.apache.dubbo.rpc.cluster.router.state.AbstractStateRouter<T> implements org.apache.dubbo.common.config.configcenter.ConfigurationListener {
+  public static final java.lang.String NAME;
+
+  public static final java.lang.String RULE_SUFFIX;
+
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private volatile org.apache.dubbo.rpc.cluster.router.condition.config.model.ConditionRouterRule routerRule;
+
+  private volatile java.util.List<org.apache.dubbo.rpc.cluster.router.condition.ConditionStateRouter<T>> conditionRouters;
+
+  private final java.lang.String ruleKey;
+
+  public org.apache.dubbo.rpc.cluster.router.condition.config.ListenableStateRouter(org.apache.dubbo.common.URL, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #2                  // Method org/apache/dubbo/rpc/cluster/router/state/AbstractStateRouter."<init>":(Lorg/apache/dubbo/common/URL;)V
+       5: aload_0
+       6: invokestatic  #3                  // Method java/util/Collections.emptyList:()Ljava/util/List;
+       9: putfield      #4                  // Field conditionRouters:Ljava/util/List;
+      12: aload_0
+      13: iconst_0
+      14: invokevirtual #5                  // Method setForce:(Z)V
+      17: aload_0
+      18: aload_2
+      19: invokespecial #6                  // Method init:(Ljava/lang/String;)V
+      22: aload_0
+      23: aload_2
+      24: putfield      #7                  // Field ruleKey:Ljava/lang/String;
+      27: return
+
+  public synchronized void process(org.apache.dubbo.common.config.configcenter.ConfigChangedEvent);
+    Code:
+       0: getstatic     #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       3: invokeinterface #9,  1            // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isDebugEnabled:()Z
+       8: ifeq          53
+      11: getstatic     #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      14: new           #10                 // class java/lang/StringBuilder
+      17: dup
+      18: invokespecial #11                 // Method java/lang/StringBuilder."<init>":()V
+      21: ldc           #12                 // String Notification of condition rule, change type is:
+      23: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      26: aload_1
+      27: invokevirtual #14                 // Method org/apache/dubbo/common/config/configcenter/ConfigChangedEvent.getChangeType:()Lorg/apache/dubbo/common/config/configcenter/ConfigChangeType;
+      30: invokevirtual #15                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      33: ldc           #16                 // String , raw rule is:\n
+      35: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      38: aload_1
+      39: invokevirtual #17                 // Method org/apache/dubbo/common/config/configcenter/ConfigChangedEvent.getContent:()Ljava/lang/String;
+      42: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      45: invokevirtual #18                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      48: invokeinterface #19,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.debug:(Ljava/lang/String;)V
+      53: aload_1
+      54: invokevirtual #14                 // Method org/apache/dubbo/common/config/configcenter/ConfigChangedEvent.getChangeType:()Lorg/apache/dubbo/common/config/configcenter/ConfigChangeType;
+      57: getstatic     #20                 // Field org/apache/dubbo/common/config/configcenter/ConfigChangeType.DELETED:Lorg/apache/dubbo/common/config/configcenter/ConfigChangeType;
+      60: invokevirtual #21                 // Method org/apache/dubbo/common/config/configcenter/ConfigChangeType.equals:(Ljava/lang/Object;)Z
+      63: ifeq          81
+      66: aload_0
+      67: aconst_null
+      68: putfield      #22                 // Field routerRule:Lorg/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule;
+      71: aload_0
+      72: invokestatic  #3                  // Method java/util/Collections.emptyList:()Ljava/util/List;
+      75: putfield      #4                  // Field conditionRouters:Ljava/util/List;
+      78: goto          141
+      81: aload_0
+      82: aload_1
+      83: invokevirtual #17                 // Method org/apache/dubbo/common/config/configcenter/ConfigChangedEvent.getContent:()Ljava/lang/String;
+      86: invokestatic  #23                 // Method org/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRuleParser.parse:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule;
+      89: putfield      #22                 // Field routerRule:Lorg/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule;
+      92: aload_0
+      93: aload_0
+      94: getfield      #22                 // Field routerRule:Lorg/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule;
+      97: invokespecial #24                 // Method generateConditions:(Lorg/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule;)V
+     100: goto          141
+     103: astore_2
+     104: getstatic     #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     107: ldc           #26                 // String 2-15
+     109: ldc           #27                 // String Failed to parse the raw condition rule
+     111: ldc           #28                 // String
+     113: new           #10                 // class java/lang/StringBuilder
+     116: dup
+     117: invokespecial #11                 // Method java/lang/StringBuilder."<init>":()V
+     120: ldc           #29                 // String Failed to parse the raw condition rule and it will not take effect, please check if the condition rule matches with the template, the raw rule is:\n
+     122: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     125: aload_1
+     126: invokevirtual #17                 // Method org/apache/dubbo/common/config/configcenter/ConfigChangedEvent.getContent:()Ljava/lang/String;
+     129: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     132: invokevirtual #18                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     135: aload_2
+     136: invokeinterface #30,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     141: return
+    Exception table:
+       from    to  target type
+          81   100   103   Class java/lang/Exception
+
+  public org.apache.dubbo.rpc.cluster.router.state.BitList<org.apache.dubbo.rpc.Invoker<T>> doRoute(org.apache.dubbo.rpc.cluster.router.state.BitList<org.apache.dubbo.rpc.Invoker<T>>, org.apache.dubbo.common.URL, org.apache.dubbo.rpc.Invocation, boolean, org.apache.dubbo.common.utils.Holder<org.apache.dubbo.rpc.cluster.router.RouterSnapshotNode<T>>, org.apache.dubbo.common.utils.Holder<java.lang.String>) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aload_1
+       1: invokestatic  #31                 // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+       4: ifne          19
+       7: aload_0
+       8: getfield      #4                  // Field conditionRouters:Ljava/util/List;
+      11: invokeinterface #32,  1           // InterfaceMethod java/util/List.size:()I
+      16: ifne          33
+      19: iload         4
+      21: ifeq          31
+      24: aload         6
+      26: ldc           #33                 // String Directly return. Reason: Invokers from previous router is empty or conditionRouters is empty.
+      28: invokevirtual #34                 // Method org/apache/dubbo/common/utils/Holder.set:(Ljava/lang/Object;)V
+      31: aload_1
+      32: areturn
+      33: aconst_null
+      34: astore        7
+      36: iload         4
+      38: ifeq          50
+      41: new           #10                 // class java/lang/StringBuilder
+      44: dup
+      45: invokespecial #11                 // Method java/lang/StringBuilder."<init>":()V
+      48: astore        7
+      50: aload_0
+      51: getfield      #4                  // Field conditionRouters:Ljava/util/List;
+      54: invokeinterface #35,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      59: astore        8
+      61: aload         8
+      63: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      68: ifeq          118
+      71: aload         8
+      73: invokeinterface #37,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      78: checkcast     #38                 // class org/apache/dubbo/rpc/cluster/router/state/AbstractStateRouter
+      81: astore        9
+      83: aload         9
+      85: aload_1
+      86: aload_2
+      87: aload_3
+      88: iload         4
+      90: aload         5
+      92: invokevirtual #39                 // Method org/apache/dubbo/rpc/cluster/router/state/AbstractStateRouter.route:(Lorg/apache/dubbo/rpc/cluster/router/state/BitList;Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/rpc/Invocation;ZLorg/apache/dubbo/common/utils/Holder;)Lorg/apache/dubbo/rpc/cluster/router/state/BitList;
+      95: astore_1
+      96: iload         4
+      98: ifeq          115
+     101: aload         7
+     103: aload         6
+     105: invokevirtual #40                 // Method org/apache/dubbo/common/utils/Holder.get:()Ljava/lang/Object;
+     108: checkcast     #41                 // class java/lang/String
+     111: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     114: pop
+     115: goto          61
+     118: iload         4
+     120: ifeq          133
+     123: aload         6
+     125: aload         7
+     127: invokevirtual #18                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     130: invokevirtual #34                 // Method org/apache/dubbo/common/utils/Holder.set:(Ljava/lang/Object;)V
+     133: aload_1
+     134: areturn
+
+  public boolean isForce();
+    Code:
+       0: aload_0
+       1: getfield      #22                 // Field routerRule:Lorg/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule;
+       4: ifnull        21
+       7: aload_0
+       8: getfield      #22                 // Field routerRule:Lorg/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule;
+      11: invokevirtual #42                 // Method org/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule.isForce:()Z
+      14: ifeq          21
+      17: iconst_1
+      18: goto          22
+      21: iconst_0
+      22: ireturn
+
+  private boolean isRuleRuntime();
+    Code:
+       0: aload_0
+       1: getfield      #22                 // Field routerRule:Lorg/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule;
+       4: ifnull        31
+       7: aload_0
+       8: getfield      #22                 // Field routerRule:Lorg/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule;
+      11: invokevirtual #43                 // Method org/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule.isValid:()Z
+      14: ifeq          31
+      17: aload_0
+      18: getfield      #22                 // Field routerRule:Lorg/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule;
+      21: invokevirtual #44                 // Method org/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule.isRuntime:()Z
+      24: ifeq          31
+      27: iconst_1
+      28: goto          32
+      31: iconst_0
+      32: ireturn
+
+  private void generateConditions(org.apache.dubbo.rpc.cluster.router.condition.config.model.ConditionRouterRule);
+    Code:
+       0: aload_1
+       1: ifnull        86
+       4: aload_1
+       5: invokevirtual #43                 // Method org/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule.isValid:()Z
+       8: ifeq          86
+      11: aload_0
+      12: aload_1
+      13: invokevirtual #45                 // Method org/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule.getConditions:()Ljava/util/List;
+      16: invokeinterface #46,  1           // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+      21: aload_0
+      22: aload_1
+      23: invokedynamic #47,  0             // InvokeDynamic #0:apply:(Lorg/apache/dubbo/rpc/cluster/router/condition/config/ListenableStateRouter;Lorg/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule;)Ljava/util/function/Function;
+      28: invokeinterface #48,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      33: invokestatic  #49                 // Method java/util/stream/Collectors.toList:()Ljava/util/stream/Collector;
+      36: invokeinterface #50,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+      41: checkcast     #51                 // class java/util/List
+      44: putfield      #4                  // Field conditionRouters:Ljava/util/List;
+      47: aload_0
+      48: getfield      #4                  // Field conditionRouters:Ljava/util/List;
+      51: invokeinterface #35,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      56: astore_2
+      57: aload_2
+      58: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      63: ifeq          86
+      66: aload_2
+      67: invokeinterface #37,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      72: checkcast     #52                 // class org/apache/dubbo/rpc/cluster/router/condition/ConditionStateRouter
+      75: astore_3
+      76: aload_3
+      77: invokestatic  #53                 // Method org/apache/dubbo/rpc/cluster/router/state/TailStateRouter.getInstance:()Lorg/apache/dubbo/rpc/cluster/router/state/TailStateRouter;
+      80: invokevirtual #54                 // Method org/apache/dubbo/rpc/cluster/router/condition/ConditionStateRouter.setNextRouter:(Lorg/apache/dubbo/rpc/cluster/router/state/StateRouter;)V
+      83: goto          57
+      86: return
+
+  private synchronized void init(java.lang.String);
+    Code:
+       0: aload_1
+       1: invokestatic  #55                 // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+       4: ifeq          8
+       7: return
+       8: new           #10                 // class java/lang/StringBuilder
+      11: dup
+      12: invokespecial #11                 // Method java/lang/StringBuilder."<init>":()V
+      15: aload_1
+      16: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      19: ldc           #57                 // String .condition-router
+      21: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      24: invokevirtual #18                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      27: astore_2
+      28: aload_0
+      29: invokevirtual #58                 // Method getRuleRepository:()Lorg/apache/dubbo/rpc/cluster/governance/GovernanceRuleRepository;
+      32: aload_2
+      33: aload_0
+      34: invokeinterface #59,  3           // InterfaceMethod org/apache/dubbo/rpc/cluster/governance/GovernanceRuleRepository.addListener:(Ljava/lang/String;Lorg/apache/dubbo/common/config/configcenter/ConfigurationListener;)V
+      39: aload_0
+      40: invokevirtual #58                 // Method getRuleRepository:()Lorg/apache/dubbo/rpc/cluster/governance/GovernanceRuleRepository;
+      43: aload_2
+      44: ldc           #61                 // String dubbo
+      46: invokeinterface #62,  3           // InterfaceMethod org/apache/dubbo/rpc/cluster/governance/GovernanceRuleRepository.getRule:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      51: astore_3
+      52: aload_3
+      53: invokestatic  #63                 // Method org/apache/dubbo/common/utils/StringUtils.isNotEmpty:(Ljava/lang/String;)Z
+      56: ifeq          74
+      59: aload_0
+      60: new           #64                 // class org/apache/dubbo/common/config/configcenter/ConfigChangedEvent
+      63: dup
+      64: aload_2
+      65: ldc           #61                 // String dubbo
+      67: aload_3
+      68: invokespecial #65                 // Method org/apache/dubbo/common/config/configcenter/ConfigChangedEvent."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      71: invokevirtual #66                 // Method process:(Lorg/apache/dubbo/common/config/configcenter/ConfigChangedEvent;)V
+      74: return
+
+  public void stop();
+    Code:
+       0: aload_0
+       1: invokevirtual #58                 // Method getRuleRepository:()Lorg/apache/dubbo/rpc/cluster/governance/GovernanceRuleRepository;
+       4: new           #10                 // class java/lang/StringBuilder
+       7: dup
+       8: invokespecial #11                 // Method java/lang/StringBuilder."<init>":()V
+      11: aload_0
+      12: getfield      #7                  // Field ruleKey:Ljava/lang/String;
+      15: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      18: ldc           #57                 // String .condition-router
+      20: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      23: invokevirtual #18                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      26: aload_0
+      27: invokeinterface #67,  3           // InterfaceMethod org/apache/dubbo/rpc/cluster/governance/GovernanceRuleRepository.removeListener:(Ljava/lang/String;Lorg/apache/dubbo/common/config/configcenter/ConfigurationListener;)V
+      32: return
+
+  private org.apache.dubbo.rpc.cluster.router.condition.ConditionStateRouter lambda$generateConditions$0(org.apache.dubbo.rpc.cluster.router.condition.config.model.ConditionRouterRule, java.lang.String);
+    Code:
+       0: new           #52                 // class org/apache/dubbo/rpc/cluster/router/condition/ConditionStateRouter
+       3: dup
+       4: aload_0
+       5: invokevirtual #68                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+       8: aload_2
+       9: aload_1
+      10: invokevirtual #42                 // Method org/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule.isForce:()Z
+      13: aload_1
+      14: invokevirtual #69                 // Method org/apache/dubbo/rpc/cluster/router/condition/config/model/ConditionRouterRule.isEnabled:()Z
+      17: invokespecial #70                 // Method org/apache/dubbo/rpc/cluster/router/condition/ConditionStateRouter."<init>":(Lorg/apache/dubbo/common/URL;Ljava/lang/String;ZZ)V
+      20: areturn
+
+  static {};
+    Code:
+       0: ldc           #56                 // class org/apache/dubbo/rpc/cluster/router/condition/config/ListenableStateRouter
+       2: invokestatic  #71                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}
