@@ -1,0 +1,144 @@
+Compiled from "SimpleMetricsEventMulticaster.java"
+public class org.apache.dubbo.metrics.event.SimpleMetricsEventMulticaster implements org.apache.dubbo.metrics.event.MetricsEventMulticaster {
+  private final java.util.List<org.apache.dubbo.metrics.listener.MetricsListener<?>> listeners;
+
+  public org.apache.dubbo.metrics.event.SimpleMetricsEventMulticaster();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #2                  // class java/util/ArrayList
+       8: dup
+       9: invokespecial #3                  // Method java/util/ArrayList."<init>":()V
+      12: invokestatic  #4                  // Method java/util/Collections.synchronizedList:(Ljava/util/List;)Ljava/util/List;
+      15: putfield      #5                  // Field listeners:Ljava/util/List;
+      18: return
+
+  public void addListener(org.apache.dubbo.metrics.listener.MetricsListener<?>);
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field listeners:Ljava/util/List;
+       4: aload_1
+       5: invokeinterface #6,  2            // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      10: pop
+      11: return
+
+  public void publishEvent(org.apache.dubbo.metrics.event.MetricsEvent);
+    Code:
+       0: aload_1
+       1: instanceof    #7                  // class org/apache/dubbo/metrics/event/EmptyEvent
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: aload_1
+      10: invokespecial #8                  // Method validateIfApplicationConfigExist:(Lorg/apache/dubbo/metrics/event/MetricsEvent;)Z
+      13: ifeq          17
+      16: return
+      17: aload_0
+      18: getfield      #5                  // Field listeners:Ljava/util/List;
+      21: invokeinterface #9,  1            // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      26: astore_2
+      27: aload_2
+      28: invokeinterface #10,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      33: ifeq          66
+      36: aload_2
+      37: invokeinterface #11,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      42: checkcast     #12                 // class org/apache/dubbo/metrics/listener/MetricsListener
+      45: astore_3
+      46: aload_3
+      47: aload_1
+      48: invokeinterface #13,  2           // InterfaceMethod org/apache/dubbo/metrics/listener/MetricsListener.isSupport:(Lorg/apache/dubbo/metrics/event/MetricsEvent;)Z
+      53: ifeq          63
+      56: aload_3
+      57: aload_1
+      58: invokeinterface #14,  2           // InterfaceMethod org/apache/dubbo/metrics/listener/MetricsListener.onEvent:(Lorg/apache/dubbo/metrics/event/MetricsEvent;)V
+      63: goto          27
+      66: return
+
+  private boolean validateIfApplicationConfigExist(org.apache.dubbo.metrics.event.MetricsEvent);
+    Code:
+       0: aload_1
+       1: invokevirtual #15                 // Method org/apache/dubbo/metrics/event/MetricsEvent.getSource:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       4: ifnull        15
+       7: aload_1
+       8: invokevirtual #15                 // Method org/apache/dubbo/metrics/event/MetricsEvent.getSource:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      11: invokevirtual #16                 // Method org/apache/dubbo/rpc/model/ApplicationModel.NotExistApplicationConfig:()Z
+      14: ireturn
+      15: iconst_0
+      16: ireturn
+
+  public void publishFinishEvent(org.apache.dubbo.metrics.event.TimeCounterEvent);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_1
+       3: invokedynamic #17,  0             // InvokeDynamic #0:accept:(Lorg/apache/dubbo/metrics/event/TimeCounterEvent;)Ljava/util/function/Consumer;
+       8: invokespecial #18                 // Method publishTimeEvent:(Lorg/apache/dubbo/metrics/event/MetricsEvent;Ljava/util/function/Consumer;)V
+      11: return
+
+  public void publishErrorEvent(org.apache.dubbo.metrics.event.TimeCounterEvent);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_1
+       3: invokedynamic #19,  0             // InvokeDynamic #1:accept:(Lorg/apache/dubbo/metrics/event/TimeCounterEvent;)Ljava/util/function/Consumer;
+       8: invokespecial #18                 // Method publishTimeEvent:(Lorg/apache/dubbo/metrics/event/MetricsEvent;Ljava/util/function/Consumer;)V
+      11: return
+
+  private void publishTimeEvent(org.apache.dubbo.metrics.event.MetricsEvent, java.util.function.Consumer<org.apache.dubbo.metrics.listener.MetricsLifeListener>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #8                  // Method validateIfApplicationConfigExist:(Lorg/apache/dubbo/metrics/event/MetricsEvent;)Z
+       5: ifeq          9
+       8: return
+       9: aload_1
+      10: instanceof    #7                  // class org/apache/dubbo/metrics/event/EmptyEvent
+      13: ifeq          17
+      16: return
+      17: aload_1
+      18: instanceof    #20                 // class org/apache/dubbo/metrics/event/TimeCounterEvent
+      21: ifeq          34
+      24: aload_1
+      25: checkcast     #20                 // class org/apache/dubbo/metrics/event/TimeCounterEvent
+      28: invokevirtual #21                 // Method org/apache/dubbo/metrics/event/TimeCounterEvent.getTimePair:()Lorg/apache/dubbo/metrics/model/TimePair;
+      31: invokevirtual #22                 // Method org/apache/dubbo/metrics/model/TimePair.end:()V
+      34: aload_0
+      35: getfield      #5                  // Field listeners:Ljava/util/List;
+      38: invokeinterface #9,  1            // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      43: astore_3
+      44: aload_3
+      45: invokeinterface #10,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      50: ifeq          97
+      53: aload_3
+      54: invokeinterface #11,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      59: checkcast     #12                 // class org/apache/dubbo/metrics/listener/MetricsListener
+      62: astore        4
+      64: aload         4
+      66: instanceof    #23                 // class org/apache/dubbo/metrics/listener/MetricsLifeListener
+      69: ifeq          94
+      72: aload         4
+      74: aload_1
+      75: invokeinterface #13,  2           // InterfaceMethod org/apache/dubbo/metrics/listener/MetricsListener.isSupport:(Lorg/apache/dubbo/metrics/event/MetricsEvent;)Z
+      80: ifeq          94
+      83: aload_2
+      84: aload         4
+      86: checkcast     #23                 // class org/apache/dubbo/metrics/listener/MetricsLifeListener
+      89: invokeinterface #24,  2           // InterfaceMethod java/util/function/Consumer.accept:(Ljava/lang/Object;)V
+      94: goto          44
+      97: return
+
+  private static void lambda$publishErrorEvent$1(org.apache.dubbo.metrics.event.TimeCounterEvent, org.apache.dubbo.metrics.listener.MetricsLifeListener);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: invokeinterface #25,  2           // InterfaceMethod org/apache/dubbo/metrics/listener/MetricsLifeListener.onEventError:(Lorg/apache/dubbo/metrics/event/TimeCounterEvent;)V
+       7: return
+
+  private static void lambda$publishFinishEvent$0(org.apache.dubbo.metrics.event.TimeCounterEvent, org.apache.dubbo.metrics.listener.MetricsLifeListener);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: invokeinterface #26,  2           // InterfaceMethod org/apache/dubbo/metrics/listener/MetricsLifeListener.onEventFinish:(Lorg/apache/dubbo/metrics/event/TimeCounterEvent;)V
+       7: return
+}

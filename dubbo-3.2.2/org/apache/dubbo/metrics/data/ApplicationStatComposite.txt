@@ -1,0 +1,115 @@
+Compiled from "ApplicationStatComposite.java"
+public class org.apache.dubbo.metrics.data.ApplicationStatComposite extends org.apache.dubbo.metrics.report.AbstractMetricsExport {
+  private final java.util.Map<org.apache.dubbo.metrics.model.key.MetricsKey, java.util.concurrent.atomic.AtomicLong> applicationNumStats;
+
+  public org.apache.dubbo.metrics.data.ApplicationStatComposite(org.apache.dubbo.rpc.model.ApplicationModel);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #1                  // Method org/apache/dubbo/metrics/report/AbstractMetricsExport."<init>":(Lorg/apache/dubbo/rpc/model/ApplicationModel;)V
+       5: aload_0
+       6: new           #2                  // class java/util/concurrent/ConcurrentHashMap
+       9: dup
+      10: invokespecial #3                  // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      13: putfield      #4                  // Field applicationNumStats:Ljava/util/Map;
+      16: return
+
+  public void init(java.util.List<org.apache.dubbo.metrics.model.key.MetricsKey>);
+    Code:
+       0: aload_1
+       1: invokestatic  #5                  // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+       4: ifeq          8
+       7: return
+       8: aload_1
+       9: aload_0
+      10: invokedynamic #6,  0              // InvokeDynamic #0:accept:(Lorg/apache/dubbo/metrics/data/ApplicationStatComposite;)Ljava/util/function/Consumer;
+      15: invokeinterface #7,  2            // InterfaceMethod java/util/List.forEach:(Ljava/util/function/Consumer;)V
+      20: return
+
+  public void incrementSize(org.apache.dubbo.metrics.model.key.MetricsKey, int);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field applicationNumStats:Ljava/util/Map;
+       4: aload_1
+       5: invokeinterface #8,  2            // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      10: ifne          14
+      13: return
+      14: aload_0
+      15: getfield      #4                  // Field applicationNumStats:Ljava/util/Map;
+      18: aload_1
+      19: invokeinterface #9,  2            // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      24: checkcast     #10                 // class java/util/concurrent/atomic/AtomicLong
+      27: iload_2
+      28: i2l
+      29: invokevirtual #11                 // Method java/util/concurrent/atomic/AtomicLong.getAndAdd:(J)J
+      32: pop2
+      33: return
+
+  public java.util.List<org.apache.dubbo.metrics.model.sample.MetricSample> export(org.apache.dubbo.metrics.model.MetricsCategory);
+    Code:
+       0: new           #12                 // class java/util/ArrayList
+       3: dup
+       4: invokespecial #13                 // Method java/util/ArrayList."<init>":()V
+       7: astore_2
+       8: aload_0
+       9: getfield      #4                  // Field applicationNumStats:Ljava/util/Map;
+      12: invokeinterface #14,  1           // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+      17: invokeinterface #15,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      22: astore_3
+      23: aload_3
+      24: invokeinterface #16,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      29: ifeq          74
+      32: aload_3
+      33: invokeinterface #17,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      38: checkcast     #18                 // class org/apache/dubbo/metrics/model/key/MetricsKey
+      41: astore        4
+      43: aload_2
+      44: aload_0
+      45: aload         4
+      47: aload_1
+      48: aload_0
+      49: getfield      #4                  // Field applicationNumStats:Ljava/util/Map;
+      52: aload         4
+      54: invokeinterface #9,  2            // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      59: checkcast     #10                 // class java/util/concurrent/atomic/AtomicLong
+      62: invokespecial #19                 // Method convertToSample:(Lorg/apache/dubbo/metrics/model/key/MetricsKey;Lorg/apache/dubbo/metrics/model/MetricsCategory;Ljava/util/concurrent/atomic/AtomicLong;)Lorg/apache/dubbo/metrics/model/sample/GaugeMetricSample;
+      65: invokeinterface #20,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      70: pop
+      71: goto          23
+      74: aload_2
+      75: areturn
+
+  private org.apache.dubbo.metrics.model.sample.GaugeMetricSample convertToSample(org.apache.dubbo.metrics.model.key.MetricsKey, org.apache.dubbo.metrics.model.MetricsCategory, java.util.concurrent.atomic.AtomicLong);
+    Code:
+       0: new           #21                 // class org/apache/dubbo/metrics/model/sample/GaugeMetricSample
+       3: dup
+       4: aload_1
+       5: aload_0
+       6: invokevirtual #22                 // Method getApplicationModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       9: invokestatic  #23                 // Method org/apache/dubbo/metrics/model/MetricsSupport.applicationTags:(Lorg/apache/dubbo/rpc/model/ApplicationModel;)Ljava/util/Map;
+      12: aload_2
+      13: aload_3
+      14: invokedynamic #24,  0             // InvokeDynamic #1:applyAsDouble:()Ljava/util/function/ToDoubleFunction;
+      19: invokespecial #25                 // Method org/apache/dubbo/metrics/model/sample/GaugeMetricSample."<init>":(Lorg/apache/dubbo/metrics/model/key/MetricsKey;Ljava/util/Map;Lorg/apache/dubbo/metrics/model/MetricsCategory;Ljava/lang/Object;Ljava/util/function/ToDoubleFunction;)V
+      22: areturn
+
+  public java.util.Map<org.apache.dubbo.metrics.model.key.MetricsKey, java.util.concurrent.atomic.AtomicLong> getApplicationNumStats();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field applicationNumStats:Ljava/util/Map;
+       4: areturn
+
+  private void lambda$init$0(org.apache.dubbo.metrics.model.key.MetricsKey);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field applicationNumStats:Ljava/util/Map;
+       4: aload_1
+       5: new           #10                 // class java/util/concurrent/atomic/AtomicLong
+       8: dup
+       9: lconst_0
+      10: invokespecial #26                 // Method java/util/concurrent/atomic/AtomicLong."<init>":(J)V
+      13: invokeinterface #27,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      18: checkcast     #10                 // class java/util/concurrent/atomic/AtomicLong
+      21: pop
+      22: return
+}

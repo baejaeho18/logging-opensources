@@ -1,0 +1,121 @@
+Compiled from "MetricsFilter.java"
+public class org.apache.dubbo.metrics.filter.MetricsFilter implements org.apache.dubbo.rpc.Filter,org.apache.dubbo.rpc.BaseFilter$Listener,org.apache.dubbo.rpc.model.ScopeModelAware {
+  private org.apache.dubbo.rpc.model.ApplicationModel applicationModel;
+
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger LOGGER;
+
+  public org.apache.dubbo.metrics.filter.MetricsFilter();
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public void setApplicationModel(org.apache.dubbo.rpc.model.ApplicationModel);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #4                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       5: return
+
+  public org.apache.dubbo.rpc.Result invoke(org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       4: aload_2
+       5: invokestatic  #5                  // Method org/apache/dubbo/metrics/event/RequestEvent.toRequestEvent:(Lorg/apache/dubbo/rpc/model/ApplicationModel;Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/metrics/event/RequestEvent;
+       8: astore_3
+       9: aload_3
+      10: aload_2
+      11: aload_3
+      12: invokedynamic #6,  0              // InvokeDynamic #0:run:(Lorg/apache/dubbo/rpc/Invocation;Lorg/apache/dubbo/metrics/event/RequestEvent;)Ljava/lang/Runnable;
+      17: invokestatic  #7                  // Method org/apache/dubbo/metrics/event/MetricsEventBus.before:(Lorg/apache/dubbo/metrics/event/MetricsEvent;Ljava/lang/Runnable;)V
+      20: goto          41
+      23: astore_3
+      24: getstatic     #9                  // Field LOGGER:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      27: ldc           #10                 // String 99-0
+      29: ldc           #11                 // String
+      31: ldc           #11                 // String
+      33: ldc           #12                 // String Error occurred when invoke.
+      35: aload_3
+      36: invokeinterface #13,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      41: aload_1
+      42: aload_2
+      43: invokeinterface #14,  2           // InterfaceMethod org/apache/dubbo/rpc/Invoker.invoke:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+      48: areturn
+    Exception table:
+       from    to  target type
+           0    20    23   Class java/lang/Throwable
+
+  public void onResponse(org.apache.dubbo.rpc.Result, org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_3
+       1: ldc           #15                 // String metric_filter_event
+       3: invokeinterface #16,  2           // InterfaceMethod org/apache/dubbo/rpc/Invocation.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       8: astore        4
+      10: aload         4
+      12: ifnull        47
+      15: aload         4
+      17: checkcast     #17                 // class org/apache/dubbo/metrics/event/RequestEvent
+      20: aload_1
+      21: invokestatic  #18                 // Method org/apache/dubbo/metrics/event/MetricsEventBus.after:(Lorg/apache/dubbo/metrics/event/MetricsEvent;Ljava/lang/Object;)V
+      24: goto          47
+      27: astore        5
+      29: getstatic     #9                  // Field LOGGER:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      32: ldc           #10                 // String 99-0
+      34: ldc           #11                 // String
+      36: ldc           #11                 // String
+      38: ldc           #19                 // String Error occurred when onResponse.
+      40: aload         5
+      42: invokeinterface #13,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      47: return
+    Exception table:
+       from    to  target type
+          15    24    27   Class java/lang/Throwable
+
+  public void onError(java.lang.Throwable, org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_3
+       1: ldc           #15                 // String metric_filter_event
+       3: invokeinterface #16,  2           // InterfaceMethod org/apache/dubbo/rpc/Invocation.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       8: astore        4
+      10: aload         4
+      12: ifnull        58
+      15: aload         4
+      17: checkcast     #17                 // class org/apache/dubbo/metrics/event/RequestEvent
+      20: astore        5
+      22: aload         5
+      24: ldc           #20                 // String metric_filter_throwable
+      26: aload_1
+      27: invokevirtual #21                 // Method org/apache/dubbo/metrics/event/RequestEvent.putAttachment:(Ljava/lang/String;Ljava/lang/Object;)V
+      30: aload         5
+      32: invokestatic  #22                 // Method org/apache/dubbo/metrics/event/MetricsEventBus.error:(Lorg/apache/dubbo/metrics/event/MetricsEvent;)V
+      35: goto          58
+      38: astore        5
+      40: getstatic     #9                  // Field LOGGER:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      43: ldc           #10                 // String 99-0
+      45: ldc           #11                 // String
+      47: ldc           #11                 // String
+      49: ldc           #19                 // String Error occurred when onResponse.
+      51: aload         5
+      53: invokeinterface #13,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      58: return
+    Exception table:
+       from    to  target type
+          15    35    38   Class java/lang/Throwable
+
+  private static void lambda$invoke$0(org.apache.dubbo.rpc.Invocation, org.apache.dubbo.metrics.event.RequestEvent);
+    Code:
+       0: aload_0
+       1: ldc           #15                 // String metric_filter_event
+       3: aload_1
+       4: invokeinterface #23,  3           // InterfaceMethod org/apache/dubbo/rpc/Invocation.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       9: pop
+      10: return
+
+  static {};
+    Code:
+       0: ldc           #24                 // class org/apache/dubbo/metrics/filter/MetricsFilter
+       2: invokestatic  #25                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #9                  // Field LOGGER:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

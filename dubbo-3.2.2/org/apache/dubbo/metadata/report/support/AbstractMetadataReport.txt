@@ -1,0 +1,1335 @@
+Compiled from "AbstractMetadataReport.java"
+public abstract class org.apache.dubbo.metadata.report.support.AbstractMetadataReport implements org.apache.dubbo.metadata.report.MetadataReport {
+  protected static final java.lang.String DEFAULT_ROOT;
+
+  private static final int ONE_DAY_IN_MILLISECONDS;
+
+  private static final int FOUR_HOURS_IN_MILLISECONDS;
+
+  protected final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  final java.util.Properties properties;
+
+  private final java.util.concurrent.ExecutorService reportCacheExecutor;
+
+  final java.util.Map<org.apache.dubbo.metadata.report.identifier.MetadataIdentifier, java.lang.Object> allMetadataReports;
+
+  private final java.util.concurrent.atomic.AtomicLong lastCacheChanged;
+
+  final java.util.Map<org.apache.dubbo.metadata.report.identifier.MetadataIdentifier, java.lang.Object> failedReports;
+
+  private org.apache.dubbo.common.URL reportURL;
+
+  boolean syncReport;
+
+  java.io.File file;
+
+  private java.util.concurrent.atomic.AtomicBoolean initialized;
+
+  public org.apache.dubbo.metadata.report.support.AbstractMetadataReport$MetadataReportRetry metadataReportRetry;
+
+  private java.util.concurrent.ScheduledExecutorService reportTimerScheduler;
+
+  private final boolean reportMetadata;
+
+  private final boolean reportDefinition;
+
+  protected org.apache.dubbo.rpc.model.ApplicationModel applicationModel;
+
+  public org.apache.dubbo.metadata.report.support.AbstractMetadataReport(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: invokespecial #5                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_0
+       6: invokevirtual #6                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       9: invokestatic  #7                  // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      12: putfield      #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      15: aload_0
+      16: new           #9                  // class java/util/Properties
+      19: dup
+      20: invokespecial #10                 // Method java/util/Properties."<init>":()V
+      23: putfield      #11                 // Field properties:Ljava/util/Properties;
+      26: aload_0
+      27: iconst_1
+      28: new           #12                 // class org/apache/dubbo/common/utils/NamedThreadFactory
+      31: dup
+      32: ldc           #13                 // String DubboSaveMetadataReport
+      34: iconst_1
+      35: invokespecial #14                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;Z)V
+      38: invokestatic  #15                 // Method java/util/concurrent/Executors.newFixedThreadPool:(ILjava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ExecutorService;
+      41: putfield      #16                 // Field reportCacheExecutor:Ljava/util/concurrent/ExecutorService;
+      44: aload_0
+      45: new           #17                 // class java/util/concurrent/ConcurrentHashMap
+      48: dup
+      49: iconst_4
+      50: invokespecial #18                 // Method java/util/concurrent/ConcurrentHashMap."<init>":(I)V
+      53: putfield      #19                 // Field allMetadataReports:Ljava/util/Map;
+      56: aload_0
+      57: new           #20                 // class java/util/concurrent/atomic/AtomicLong
+      60: dup
+      61: invokespecial #21                 // Method java/util/concurrent/atomic/AtomicLong."<init>":()V
+      64: putfield      #22                 // Field lastCacheChanged:Ljava/util/concurrent/atomic/AtomicLong;
+      67: aload_0
+      68: new           #17                 // class java/util/concurrent/ConcurrentHashMap
+      71: dup
+      72: iconst_4
+      73: invokespecial #18                 // Method java/util/concurrent/ConcurrentHashMap."<init>":(I)V
+      76: putfield      #23                 // Field failedReports:Ljava/util/Map;
+      79: aload_0
+      80: new           #24                 // class java/util/concurrent/atomic/AtomicBoolean
+      83: dup
+      84: iconst_0
+      85: invokespecial #25                 // Method java/util/concurrent/atomic/AtomicBoolean."<init>":(Z)V
+      88: putfield      #26                 // Field initialized:Ljava/util/concurrent/atomic/AtomicBoolean;
+      91: aload_0
+      92: aload_1
+      93: invokevirtual #27                 // Method setUrl:(Lorg/apache/dubbo/common/URL;)V
+      96: aload_0
+      97: aload_1
+      98: invokevirtual #28                 // Method org/apache/dubbo/common/URL.getOrDefaultApplicationModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     101: putfield      #29                 // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     104: aload_1
+     105: ldc           #30                 // String file-cache
+     107: iconst_1
+     108: invokevirtual #31                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+     111: istore_2
+     112: new           #32                 // class java/lang/StringBuilder
+     115: dup
+     116: invokespecial #33                 // Method java/lang/StringBuilder."<init>":()V
+     119: ldc           #34                 // String user.home
+     121: invokestatic  #35                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+     124: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     127: ldc           #37                 // String /.dubbo/dubbo-metadata-
+     129: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     132: aload_1
+     133: invokevirtual #38                 // Method org/apache/dubbo/common/URL.getApplication:()Ljava/lang/String;
+     136: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     139: ldc           #39                 // String -
+     141: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     144: aload_1
+     145: invokevirtual #40                 // Method org/apache/dubbo/common/URL.getAddress:()Ljava/lang/String;
+     148: ldc           #41                 // String :
+     150: ldc           #39                 // String -
+     152: invokestatic  #42                 // Method org/apache/dubbo/common/utils/StringUtils.replace:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     155: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     158: ldc           #43                 // String .cache
+     160: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     163: invokevirtual #44                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     166: astore_3
+     167: aload_1
+     168: ldc           #45                 // String file
+     170: aload_3
+     171: invokevirtual #46                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     174: astore        4
+     176: aconst_null
+     177: astore        5
+     179: iload_2
+     180: ifeq          311
+     183: aload         4
+     185: invokestatic  #47                 // Method org/apache/dubbo/common/utils/ConfigUtils.isNotEmpty:(Ljava/lang/String;)Z
+     188: ifeq          311
+     191: new           #48                 // class java/io/File
+     194: dup
+     195: aload         4
+     197: invokespecial #49                 // Method java/io/File."<init>":(Ljava/lang/String;)V
+     200: astore        5
+     202: aload         5
+     204: invokevirtual #50                 // Method java/io/File.exists:()Z
+     207: ifne          286
+     210: aload         5
+     212: invokevirtual #51                 // Method java/io/File.getParentFile:()Ljava/io/File;
+     215: ifnull        286
+     218: aload         5
+     220: invokevirtual #51                 // Method java/io/File.getParentFile:()Ljava/io/File;
+     223: invokevirtual #50                 // Method java/io/File.exists:()Z
+     226: ifne          286
+     229: aload         5
+     231: invokevirtual #51                 // Method java/io/File.getParentFile:()Ljava/io/File;
+     234: invokevirtual #52                 // Method java/io/File.mkdirs:()Z
+     237: ifne          286
+     240: new           #53                 // class java/lang/IllegalArgumentException
+     243: dup
+     244: new           #32                 // class java/lang/StringBuilder
+     247: dup
+     248: invokespecial #33                 // Method java/lang/StringBuilder."<init>":()V
+     251: ldc           #54                 // String Invalid service store file
+     253: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     256: aload         5
+     258: invokevirtual #55                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     261: ldc           #56                 // String , cause: Failed to create directory
+     263: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     266: aload         5
+     268: invokevirtual #51                 // Method java/io/File.getParentFile:()Ljava/io/File;
+     271: invokevirtual #55                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     274: ldc           #57                 // String !
+     276: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     279: invokevirtual #44                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     282: invokespecial #58                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     285: athrow
+     286: aload_0
+     287: getfield      #26                 // Field initialized:Ljava/util/concurrent/atomic/AtomicBoolean;
+     290: iconst_1
+     291: invokevirtual #59                 // Method java/util/concurrent/atomic/AtomicBoolean.getAndSet:(Z)Z
+     294: ifne          311
+     297: aload         5
+     299: invokevirtual #50                 // Method java/io/File.exists:()Z
+     302: ifeq          311
+     305: aload         5
+     307: invokevirtual #60                 // Method java/io/File.delete:()Z
+     310: pop
+     311: aload_0
+     312: aload         5
+     314: putfield      #61                 // Field file:Ljava/io/File;
+     317: aload_0
+     318: invokevirtual #62                 // Method loadProperties:()V
+     321: aload_0
+     322: aload_1
+     323: ldc           #63                 // String sync-report
+     325: iconst_0
+     326: invokevirtual #31                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+     329: putfield      #64                 // Field syncReport:Z
+     332: aload_0
+     333: new           #65                 // class org/apache/dubbo/metadata/report/support/AbstractMetadataReport$MetadataReportRetry
+     336: dup
+     337: aload_0
+     338: aload_1
+     339: ldc           #66                 // String retry-times
+     341: getstatic     #67                 // Field org/apache/dubbo/metadata/report/support/Constants.DEFAULT_METADATA_REPORT_RETRY_TIMES:Ljava/lang/Integer;
+     344: invokevirtual #68                 // Method java/lang/Integer.intValue:()I
+     347: invokevirtual #69                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;I)I
+     350: aload_1
+     351: ldc           #70                 // String retry-period
+     353: getstatic     #71                 // Field org/apache/dubbo/metadata/report/support/Constants.DEFAULT_METADATA_REPORT_RETRY_PERIOD:Ljava/lang/Integer;
+     356: invokevirtual #68                 // Method java/lang/Integer.intValue:()I
+     359: invokevirtual #69                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;I)I
+     362: invokespecial #72                 // Method org/apache/dubbo/metadata/report/support/AbstractMetadataReport$MetadataReportRetry."<init>":(Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport;II)V
+     365: putfield      #73                 // Field metadataReportRetry:Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport$MetadataReportRetry;
+     368: aload_1
+     369: ldc           #74                 // String cycle-report
+     371: getstatic     #75                 // Field org/apache/dubbo/metadata/report/support/Constants.DEFAULT_METADATA_REPORT_CYCLE_REPORT:Ljava/lang/Boolean;
+     374: invokevirtual #76                 // Method java/lang/Boolean.booleanValue:()Z
+     377: invokevirtual #31                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+     380: ifeq          426
+     383: aload_0
+     384: new           #12                 // class org/apache/dubbo/common/utils/NamedThreadFactory
+     387: dup
+     388: ldc           #77                 // String DubboMetadataReportTimer
+     390: iconst_1
+     391: invokespecial #14                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;Z)V
+     394: invokestatic  #78                 // Method java/util/concurrent/Executors.newSingleThreadScheduledExecutor:(Ljava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ScheduledExecutorService;
+     397: putfield      #79                 // Field reportTimerScheduler:Ljava/util/concurrent/ScheduledExecutorService;
+     400: aload_0
+     401: getfield      #79                 // Field reportTimerScheduler:Ljava/util/concurrent/ScheduledExecutorService;
+     404: aload_0
+     405: invokedynamic #80,  0             // InvokeDynamic #0:run:(Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport;)Ljava/lang/Runnable;
+     410: aload_0
+     411: invokevirtual #81                 // Method calculateStartTime:()J
+     414: ldc2_w        #83                 // long 86400000l
+     417: getstatic     #85                 // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+     420: invokeinterface #86,  7           // InterfaceMethod java/util/concurrent/ScheduledExecutorService.scheduleAtFixedRate:(Ljava/lang/Runnable;JJLjava/util/concurrent/TimeUnit;)Ljava/util/concurrent/ScheduledFuture;
+     425: pop
+     426: aload_0
+     427: aload_1
+     428: ldc           #87                 // String report-metadata
+     430: iconst_0
+     431: invokevirtual #31                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+     434: putfield      #88                 // Field reportMetadata:Z
+     437: aload_0
+     438: aload_1
+     439: ldc           #89                 // String report-definition
+     441: iconst_1
+     442: invokevirtual #31                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+     445: putfield      #90                 // Field reportDefinition:Z
+     448: return
+
+  public org.apache.dubbo.common.URL getUrl();
+    Code:
+       0: aload_0
+       1: getfield      #91                 // Field reportURL:Lorg/apache/dubbo/common/URL;
+       4: areturn
+
+  protected void setUrl(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_1
+       1: ifnonnull     14
+       4: new           #53                 // class java/lang/IllegalArgumentException
+       7: dup
+       8: ldc           #92                 // String metadataReport url == null
+      10: invokespecial #58                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      13: athrow
+      14: aload_0
+      15: aload_1
+      16: putfield      #91                 // Field reportURL:Lorg/apache/dubbo/common/URL;
+      19: return
+
+  private void doSaveProperties(long);
+    Code:
+       0: lload_1
+       1: aload_0
+       2: getfield      #22                 // Field lastCacheChanged:Ljava/util/concurrent/atomic/AtomicLong;
+       5: invokevirtual #93                 // Method java/util/concurrent/atomic/AtomicLong.get:()J
+       8: lcmp
+       9: ifge          13
+      12: return
+      13: aload_0
+      14: getfield      #61                 // Field file:Ljava/io/File;
+      17: ifnonnull     21
+      20: return
+      21: new           #48                 // class java/io/File
+      24: dup
+      25: new           #32                 // class java/lang/StringBuilder
+      28: dup
+      29: invokespecial #33                 // Method java/lang/StringBuilder."<init>":()V
+      32: aload_0
+      33: getfield      #61                 // Field file:Ljava/io/File;
+      36: invokevirtual #94                 // Method java/io/File.getAbsolutePath:()Ljava/lang/String;
+      39: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      42: ldc           #95                 // String .lock
+      44: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      47: invokevirtual #44                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      50: invokespecial #49                 // Method java/io/File."<init>":(Ljava/lang/String;)V
+      53: astore_3
+      54: aload_3
+      55: invokevirtual #50                 // Method java/io/File.exists:()Z
+      58: ifne          66
+      61: aload_3
+      62: invokevirtual #96                 // Method java/io/File.createNewFile:()Z
+      65: pop
+      66: new           #97                 // class java/io/RandomAccessFile
+      69: dup
+      70: aload_3
+      71: ldc           #98                 // String rw
+      73: invokespecial #99                 // Method java/io/RandomAccessFile."<init>":(Ljava/io/File;Ljava/lang/String;)V
+      76: astore        4
+      78: aconst_null
+      79: astore        5
+      81: aload         4
+      83: invokevirtual #100                // Method java/io/RandomAccessFile.getChannel:()Ljava/nio/channels/FileChannel;
+      86: astore        6
+      88: aconst_null
+      89: astore        7
+      91: aload         6
+      93: invokevirtual #101                // Method java/nio/channels/FileChannel.tryLock:()Ljava/nio/channels/FileLock;
+      96: astore        8
+      98: aload         8
+     100: ifnonnull     141
+     103: new           #102                // class java/io/IOException
+     106: dup
+     107: new           #32                 // class java/lang/StringBuilder
+     110: dup
+     111: invokespecial #33                 // Method java/lang/StringBuilder."<init>":()V
+     114: ldc           #103                // String Can not lock the metadataReport cache file
+     116: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     119: aload_0
+     120: getfield      #61                 // Field file:Ljava/io/File;
+     123: invokevirtual #94                 // Method java/io/File.getAbsolutePath:()Ljava/lang/String;
+     126: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     129: ldc           #104                // String , ignore and retry later, maybe multi java process use the file, please config: dubbo.metadata.file=xxx.properties
+     131: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     134: invokevirtual #44                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     137: invokespecial #105                // Method java/io/IOException."<init>":(Ljava/lang/String;)V
+     140: athrow
+     141: aload_0
+     142: getfield      #61                 // Field file:Ljava/io/File;
+     145: invokevirtual #50                 // Method java/io/File.exists:()Z
+     148: ifne          159
+     151: aload_0
+     152: getfield      #61                 // Field file:Ljava/io/File;
+     155: invokevirtual #96                 // Method java/io/File.createNewFile:()Z
+     158: pop
+     159: aload_0
+     160: getfield      #64                 // Field syncReport:Z
+     163: ifne          175
+     166: aload_0
+     167: getfield      #11                 // Field properties:Ljava/util/Properties;
+     170: astore        9
+     172: goto          253
+     175: new           #9                  // class java/util/Properties
+     178: dup
+     179: invokespecial #10                 // Method java/util/Properties."<init>":()V
+     182: astore        9
+     184: aload_0
+     185: getfield      #11                 // Field properties:Ljava/util/Properties;
+     188: invokevirtual #106                // Method java/util/Properties.entrySet:()Ljava/util/Set;
+     191: astore        10
+     193: aload         10
+     195: invokeinterface #107,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     200: astore        11
+     202: aload         11
+     204: invokeinterface #108,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     209: ifeq          253
+     212: aload         11
+     214: invokeinterface #109,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     219: checkcast     #110                // class java/util/Map$Entry
+     222: astore        12
+     224: aload         9
+     226: aload         12
+     228: invokeinterface #111,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     233: checkcast     #112                // class java/lang/String
+     236: aload         12
+     238: invokeinterface #113,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     243: checkcast     #112                // class java/lang/String
+     246: invokevirtual #114                // Method java/util/Properties.setProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+     249: pop
+     250: goto          202
+     253: new           #115                // class java/io/FileOutputStream
+     256: dup
+     257: aload_0
+     258: getfield      #61                 // Field file:Ljava/io/File;
+     261: invokespecial #116                // Method java/io/FileOutputStream."<init>":(Ljava/io/File;)V
+     264: astore        10
+     266: aconst_null
+     267: astore        11
+     269: aload         9
+     271: aload         10
+     273: ldc           #117                // String Dubbo metadataReport Cache
+     275: invokevirtual #118                // Method java/util/Properties.store:(Ljava/io/OutputStream;Ljava/lang/String;)V
+     278: aload         10
+     280: ifnull        365
+     283: aload         11
+     285: ifnull        308
+     288: aload         10
+     290: invokevirtual #119                // Method java/io/FileOutputStream.close:()V
+     293: goto          365
+     296: astore        12
+     298: aload         11
+     300: aload         12
+     302: invokevirtual #121                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     305: goto          365
+     308: aload         10
+     310: invokevirtual #119                // Method java/io/FileOutputStream.close:()V
+     313: goto          365
+     316: astore        12
+     318: aload         12
+     320: astore        11
+     322: aload         12
+     324: athrow
+     325: astore        13
+     327: aload         10
+     329: ifnull        362
+     332: aload         11
+     334: ifnull        357
+     337: aload         10
+     339: invokevirtual #119                // Method java/io/FileOutputStream.close:()V
+     342: goto          362
+     345: astore        14
+     347: aload         11
+     349: aload         14
+     351: invokevirtual #121                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     354: goto          362
+     357: aload         10
+     359: invokevirtual #119                // Method java/io/FileOutputStream.close:()V
+     362: aload         13
+     364: athrow
+     365: aload         8
+     367: invokevirtual #122                // Method java/nio/channels/FileLock.release:()V
+     370: goto          383
+     373: astore        15
+     375: aload         8
+     377: invokevirtual #122                // Method java/nio/channels/FileLock.release:()V
+     380: aload         15
+     382: athrow
+     383: aload         6
+     385: ifnull        470
+     388: aload         7
+     390: ifnull        413
+     393: aload         6
+     395: invokevirtual #123                // Method java/nio/channels/FileChannel.close:()V
+     398: goto          470
+     401: astore        8
+     403: aload         7
+     405: aload         8
+     407: invokevirtual #121                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     410: goto          470
+     413: aload         6
+     415: invokevirtual #123                // Method java/nio/channels/FileChannel.close:()V
+     418: goto          470
+     421: astore        8
+     423: aload         8
+     425: astore        7
+     427: aload         8
+     429: athrow
+     430: astore        16
+     432: aload         6
+     434: ifnull        467
+     437: aload         7
+     439: ifnull        462
+     442: aload         6
+     444: invokevirtual #123                // Method java/nio/channels/FileChannel.close:()V
+     447: goto          467
+     450: astore        17
+     452: aload         7
+     454: aload         17
+     456: invokevirtual #121                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     459: goto          467
+     462: aload         6
+     464: invokevirtual #123                // Method java/nio/channels/FileChannel.close:()V
+     467: aload         16
+     469: athrow
+     470: aload         4
+     472: ifnull        557
+     475: aload         5
+     477: ifnull        500
+     480: aload         4
+     482: invokevirtual #124                // Method java/io/RandomAccessFile.close:()V
+     485: goto          557
+     488: astore        6
+     490: aload         5
+     492: aload         6
+     494: invokevirtual #121                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     497: goto          557
+     500: aload         4
+     502: invokevirtual #124                // Method java/io/RandomAccessFile.close:()V
+     505: goto          557
+     508: astore        6
+     510: aload         6
+     512: astore        5
+     514: aload         6
+     516: athrow
+     517: astore        18
+     519: aload         4
+     521: ifnull        554
+     524: aload         5
+     526: ifnull        549
+     529: aload         4
+     531: invokevirtual #124                // Method java/io/RandomAccessFile.close:()V
+     534: goto          554
+     537: astore        19
+     539: aload         5
+     541: aload         19
+     543: invokevirtual #121                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     546: goto          554
+     549: aload         4
+     551: invokevirtual #124                // Method java/io/RandomAccessFile.close:()V
+     554: aload         18
+     556: athrow
+     557: goto          637
+     560: astore_3
+     561: lload_1
+     562: aload_0
+     563: getfield      #22                 // Field lastCacheChanged:Ljava/util/concurrent/atomic/AtomicLong;
+     566: invokevirtual #93                 // Method java/util/concurrent/atomic/AtomicLong.get:()J
+     569: lcmp
+     570: ifge          574
+     573: return
+     574: aload_0
+     575: getfield      #16                 // Field reportCacheExecutor:Ljava/util/concurrent/ExecutorService;
+     578: new           #125                // class org/apache/dubbo/metadata/report/support/AbstractMetadataReport$SaveProperties
+     581: dup
+     582: aload_0
+     583: aload_0
+     584: getfield      #22                 // Field lastCacheChanged:Ljava/util/concurrent/atomic/AtomicLong;
+     587: invokevirtual #126                // Method java/util/concurrent/atomic/AtomicLong.incrementAndGet:()J
+     590: aconst_null
+     591: invokespecial #127                // Method org/apache/dubbo/metadata/report/support/AbstractMetadataReport$SaveProperties."<init>":(Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport;JLorg/apache/dubbo/metadata/report/support/AbstractMetadataReport$1;)V
+     594: invokeinterface #128,  2          // InterfaceMethod java/util/concurrent/ExecutorService.execute:(Ljava/lang/Runnable;)V
+     599: aload_0
+     600: getfield      #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     603: ldc           #129                // String 0-12
+     605: ldc           #130                // String
+     607: ldc           #130                // String
+     609: new           #32                 // class java/lang/StringBuilder
+     612: dup
+     613: invokespecial #33                 // Method java/lang/StringBuilder."<init>":()V
+     616: ldc           #131                // String Failed to save service store file, cause:
+     618: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     621: aload_3
+     622: invokevirtual #132                // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     625: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     628: invokevirtual #44                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     631: aload_3
+     632: invokeinterface #133,  6          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     637: return
+    Exception table:
+       from    to  target type
+         288   293   296   Class java/lang/Throwable
+         269   278   316   Class java/lang/Throwable
+         269   278   325   any
+         337   342   345   Class java/lang/Throwable
+         316   327   325   any
+         141   365   373   any
+         373   375   373   any
+         393   398   401   Class java/lang/Throwable
+          91   383   421   Class java/lang/Throwable
+          91   383   430   any
+         442   447   450   Class java/lang/Throwable
+         421   432   430   any
+         480   485   488   Class java/lang/Throwable
+          81   470   508   Class java/lang/Throwable
+          81   470   517   any
+         529   534   537   Class java/lang/Throwable
+         508   519   517   any
+          21   557   560   Class java/lang/Throwable
+
+  void loadProperties();
+    Code:
+       0: aload_0
+       1: getfield      #61                 // Field file:Ljava/io/File;
+       4: ifnull        207
+       7: aload_0
+       8: getfield      #61                 // Field file:Ljava/io/File;
+      11: invokevirtual #50                 // Method java/io/File.exists:()Z
+      14: ifeq          207
+      17: new           #134                // class java/io/FileInputStream
+      20: dup
+      21: aload_0
+      22: getfield      #61                 // Field file:Ljava/io/File;
+      25: invokespecial #135                // Method java/io/FileInputStream."<init>":(Ljava/io/File;)V
+      28: astore_1
+      29: aconst_null
+      30: astore_2
+      31: aload_0
+      32: getfield      #11                 // Field properties:Ljava/util/Properties;
+      35: aload_1
+      36: invokevirtual #136                // Method java/util/Properties.load:(Ljava/io/InputStream;)V
+      39: aload_0
+      40: getfield      #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      43: invokeinterface #137,  1          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isInfoEnabled:()Z
+      48: ifeq          94
+      51: aload_0
+      52: getfield      #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      55: new           #32                 // class java/lang/StringBuilder
+      58: dup
+      59: invokespecial #33                 // Method java/lang/StringBuilder."<init>":()V
+      62: ldc           #138                // String Load service store file
+      64: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      67: aload_0
+      68: getfield      #61                 // Field file:Ljava/io/File;
+      71: invokevirtual #55                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      74: ldc           #139                // String , data:
+      76: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      79: aload_0
+      80: getfield      #11                 // Field properties:Ljava/util/Properties;
+      83: invokevirtual #55                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      86: invokevirtual #44                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      89: invokeinterface #140,  2          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      94: aload_1
+      95: ifnull        165
+      98: aload_2
+      99: ifnull        118
+     102: aload_1
+     103: invokevirtual #141                // Method java/io/InputStream.close:()V
+     106: goto          165
+     109: astore_3
+     110: aload_2
+     111: aload_3
+     112: invokevirtual #121                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     115: goto          165
+     118: aload_1
+     119: invokevirtual #141                // Method java/io/InputStream.close:()V
+     122: goto          165
+     125: astore_3
+     126: aload_3
+     127: astore_2
+     128: aload_3
+     129: athrow
+     130: astore        4
+     132: aload_1
+     133: ifnull        162
+     136: aload_2
+     137: ifnull        158
+     140: aload_1
+     141: invokevirtual #141                // Method java/io/InputStream.close:()V
+     144: goto          162
+     147: astore        5
+     149: aload_2
+     150: aload         5
+     152: invokevirtual #121                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     155: goto          162
+     158: aload_1
+     159: invokevirtual #141                // Method java/io/InputStream.close:()V
+     162: aload         4
+     164: athrow
+     165: goto          207
+     168: astore_1
+     169: aload_0
+     170: getfield      #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     173: ldc           #129                // String 0-12
+     175: ldc           #130                // String
+     177: ldc           #130                // String
+     179: new           #32                 // class java/lang/StringBuilder
+     182: dup
+     183: invokespecial #33                 // Method java/lang/StringBuilder."<init>":()V
+     186: ldc           #142                // String Failed to load service store file
+     188: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     191: aload_0
+     192: getfield      #61                 // Field file:Ljava/io/File;
+     195: invokevirtual #55                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     198: invokevirtual #44                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     201: aload_1
+     202: invokeinterface #133,  6          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     207: return
+    Exception table:
+       from    to  target type
+         102   106   109   Class java/lang/Throwable
+          31    94   125   Class java/lang/Throwable
+          31    94   130   any
+         140   144   147   Class java/lang/Throwable
+         125   132   130   any
+          17   165   168   Class java/lang/Throwable
+
+  private void saveProperties(org.apache.dubbo.metadata.report.identifier.MetadataIdentifier, java.lang.String, boolean, boolean);
+    Code:
+       0: aload_0
+       1: getfield      #61                 // Field file:Ljava/io/File;
+       4: ifnonnull     8
+       7: return
+       8: iload_3
+       9: ifeq          31
+      12: aload_0
+      13: getfield      #11                 // Field properties:Ljava/util/Properties;
+      16: aload_1
+      17: getstatic     #143                // Field org/apache/dubbo/metadata/report/identifier/KeyTypeEnum.UNIQUE_KEY:Lorg/apache/dubbo/metadata/report/identifier/KeyTypeEnum;
+      20: invokevirtual #144                // Method org/apache/dubbo/metadata/report/identifier/MetadataIdentifier.getUniqueKey:(Lorg/apache/dubbo/metadata/report/identifier/KeyTypeEnum;)Ljava/lang/String;
+      23: aload_2
+      24: invokevirtual #114                // Method java/util/Properties.setProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+      27: pop
+      28: goto          46
+      31: aload_0
+      32: getfield      #11                 // Field properties:Ljava/util/Properties;
+      35: aload_1
+      36: getstatic     #143                // Field org/apache/dubbo/metadata/report/identifier/KeyTypeEnum.UNIQUE_KEY:Lorg/apache/dubbo/metadata/report/identifier/KeyTypeEnum;
+      39: invokevirtual #144                // Method org/apache/dubbo/metadata/report/identifier/MetadataIdentifier.getUniqueKey:(Lorg/apache/dubbo/metadata/report/identifier/KeyTypeEnum;)Ljava/lang/String;
+      42: invokevirtual #145                // Method java/util/Properties.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      45: pop
+      46: aload_0
+      47: getfield      #22                 // Field lastCacheChanged:Ljava/util/concurrent/atomic/AtomicLong;
+      50: invokevirtual #126                // Method java/util/concurrent/atomic/AtomicLong.incrementAndGet:()J
+      53: lstore        5
+      55: iload         4
+      57: ifeq          77
+      60: new           #125                // class org/apache/dubbo/metadata/report/support/AbstractMetadataReport$SaveProperties
+      63: dup
+      64: aload_0
+      65: lload         5
+      67: aconst_null
+      68: invokespecial #127                // Method org/apache/dubbo/metadata/report/support/AbstractMetadataReport$SaveProperties."<init>":(Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport;JLorg/apache/dubbo/metadata/report/support/AbstractMetadataReport$1;)V
+      71: invokevirtual #146                // Method org/apache/dubbo/metadata/report/support/AbstractMetadataReport$SaveProperties.run:()V
+      74: goto          97
+      77: aload_0
+      78: getfield      #16                 // Field reportCacheExecutor:Ljava/util/concurrent/ExecutorService;
+      81: new           #125                // class org/apache/dubbo/metadata/report/support/AbstractMetadataReport$SaveProperties
+      84: dup
+      85: aload_0
+      86: lload         5
+      88: aconst_null
+      89: invokespecial #127                // Method org/apache/dubbo/metadata/report/support/AbstractMetadataReport$SaveProperties."<init>":(Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport;JLorg/apache/dubbo/metadata/report/support/AbstractMetadataReport$1;)V
+      92: invokeinterface #128,  2          // InterfaceMethod java/util/concurrent/ExecutorService.execute:(Ljava/lang/Runnable;)V
+      97: goto          124
+     100: astore        5
+     102: aload_0
+     103: getfield      #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     106: ldc           #129                // String 0-12
+     108: ldc           #130                // String
+     110: ldc           #130                // String
+     112: aload         5
+     114: invokevirtual #132                // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     117: aload         5
+     119: invokeinterface #133,  6          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     124: return
+    Exception table:
+       from    to  target type
+           8    97   100   Class java/lang/Throwable
+
+  public java.lang.String toString();
+    Code:
+       0: aload_0
+       1: invokevirtual #147                // Method getUrl:()Lorg/apache/dubbo/common/URL;
+       4: invokevirtual #148                // Method org/apache/dubbo/common/URL.toString:()Ljava/lang/String;
+       7: areturn
+
+  public void storeProviderMetadata(org.apache.dubbo.metadata.report.identifier.MetadataIdentifier, org.apache.dubbo.metadata.definition.model.ServiceDefinition);
+    Code:
+       0: aload_0
+       1: getfield      #64                 // Field syncReport:Z
+       4: ifeq          16
+       7: aload_0
+       8: aload_1
+       9: aload_2
+      10: invokespecial #149                // Method storeProviderMetadataTask:(Lorg/apache/dubbo/metadata/report/identifier/MetadataIdentifier;Lorg/apache/dubbo/metadata/definition/model/ServiceDefinition;)V
+      13: goto          33
+      16: aload_0
+      17: getfield      #16                 // Field reportCacheExecutor:Ljava/util/concurrent/ExecutorService;
+      20: aload_0
+      21: aload_1
+      22: aload_2
+      23: invokedynamic #150,  0            // InvokeDynamic #1:run:(Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport;Lorg/apache/dubbo/metadata/report/identifier/MetadataIdentifier;Lorg/apache/dubbo/metadata/definition/model/ServiceDefinition;)Ljava/lang/Runnable;
+      28: invokeinterface #128,  2          // InterfaceMethod java/util/concurrent/ExecutorService.execute:(Ljava/lang/Runnable;)V
+      33: return
+
+  private void storeProviderMetadataTask(org.apache.dubbo.metadata.report.identifier.MetadataIdentifier, org.apache.dubbo.metadata.definition.model.ServiceDefinition);
+    Code:
+       0: aload_0
+       1: getfield      #29                 // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       4: aload_2
+       5: invokevirtual #151                // Method org/apache/dubbo/metadata/definition/model/ServiceDefinition.getCanonicalName:()Ljava/lang/String;
+       8: invokestatic  #152                // Method org/apache/dubbo/metrics/metadata/event/MetadataEvent.toServiceSubscribeEvent:(Lorg/apache/dubbo/rpc/model/ApplicationModel;Ljava/lang/String;)Lorg/apache/dubbo/metrics/metadata/event/MetadataEvent;
+      11: astore_3
+      12: aload_3
+      13: aload_0
+      14: aload_1
+      15: aload_2
+      16: invokedynamic #153,  0            // InvokeDynamic #2:get:(Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport;Lorg/apache/dubbo/metadata/report/identifier/MetadataIdentifier;Lorg/apache/dubbo/metadata/definition/model/ServiceDefinition;)Ljava/util/function/Supplier;
+      21: invokedynamic #154,  0            // InvokeDynamic #3:apply:()Ljava/util/function/Function;
+      26: invokestatic  #155                // Method org/apache/dubbo/metrics/event/MetricsEventBus.post:(Lorg/apache/dubbo/metrics/event/MetricsEvent;Ljava/util/function/Supplier;Ljava/util/function/Function;)Ljava/lang/Object;
+      29: pop
+      30: return
+
+  public void storeConsumerMetadata(org.apache.dubbo.metadata.report.identifier.MetadataIdentifier, java.util.Map<java.lang.String, java.lang.String>);
+    Code:
+       0: aload_0
+       1: getfield      #64                 // Field syncReport:Z
+       4: ifeq          16
+       7: aload_0
+       8: aload_1
+       9: aload_2
+      10: invokevirtual #156                // Method storeConsumerMetadataTask:(Lorg/apache/dubbo/metadata/report/identifier/MetadataIdentifier;Ljava/util/Map;)V
+      13: goto          33
+      16: aload_0
+      17: getfield      #16                 // Field reportCacheExecutor:Ljava/util/concurrent/ExecutorService;
+      20: aload_0
+      21: aload_1
+      22: aload_2
+      23: invokedynamic #157,  0            // InvokeDynamic #4:run:(Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport;Lorg/apache/dubbo/metadata/report/identifier/MetadataIdentifier;Ljava/util/Map;)Ljava/lang/Runnable;
+      28: invokeinterface #128,  2          // InterfaceMethod java/util/concurrent/ExecutorService.execute:(Ljava/lang/Runnable;)V
+      33: return
+
+  protected void storeConsumerMetadataTask(org.apache.dubbo.metadata.report.identifier.MetadataIdentifier, java.util.Map<java.lang.String, java.lang.String>);
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       4: invokeinterface #137,  1          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isInfoEnabled:()Z
+       9: ifeq          49
+      12: aload_0
+      13: getfield      #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      16: new           #32                 // class java/lang/StringBuilder
+      19: dup
+      20: invokespecial #33                 // Method java/lang/StringBuilder."<init>":()V
+      23: ldc           #158                // String store consumer metadata. Identifier :
+      25: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      28: aload_1
+      29: invokevirtual #55                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      32: ldc           #159                // String ; definition:
+      34: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      37: aload_2
+      38: invokevirtual #55                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      41: invokevirtual #44                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      44: invokeinterface #140,  2          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      49: aload_0
+      50: getfield      #19                 // Field allMetadataReports:Ljava/util/Map;
+      53: aload_1
+      54: aload_2
+      55: invokeinterface #160,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      60: pop
+      61: aload_0
+      62: getfield      #23                 // Field failedReports:Ljava/util/Map;
+      65: aload_1
+      66: invokeinterface #161,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      71: pop
+      72: aload_2
+      73: invokestatic  #162                // Method org/apache/dubbo/common/utils/JsonUtils.toJson:(Ljava/lang/Object;)Ljava/lang/String;
+      76: astore_3
+      77: aload_0
+      78: aload_1
+      79: aload_3
+      80: invokevirtual #163                // Method doStoreConsumerMetadata:(Lorg/apache/dubbo/metadata/report/identifier/MetadataIdentifier;Ljava/lang/String;)V
+      83: aload_0
+      84: aload_1
+      85: aload_3
+      86: iconst_1
+      87: aload_0
+      88: getfield      #64                 // Field syncReport:Z
+      91: ifne          98
+      94: iconst_1
+      95: goto          99
+      98: iconst_0
+      99: invokespecial #164                // Method saveProperties:(Lorg/apache/dubbo/metadata/report/identifier/MetadataIdentifier;Ljava/lang/String;ZZ)V
+     102: goto          181
+     105: astore_3
+     106: aload_0
+     107: getfield      #23                 // Field failedReports:Ljava/util/Map;
+     110: aload_1
+     111: aload_2
+     112: invokeinterface #160,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     117: pop
+     118: aload_0
+     119: getfield      #73                 // Field metadataReportRetry:Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport$MetadataReportRetry;
+     122: invokevirtual #166                // Method org/apache/dubbo/metadata/report/support/AbstractMetadataReport$MetadataReportRetry.startRetryTask:()V
+     125: aload_0
+     126: getfield      #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     129: ldc           #167                // String 3-2
+     131: ldc           #130                // String
+     133: ldc           #130                // String
+     135: new           #32                 // class java/lang/StringBuilder
+     138: dup
+     139: invokespecial #33                 // Method java/lang/StringBuilder."<init>":()V
+     142: ldc           #168                // String Failed to put consumer metadata
+     144: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     147: aload_1
+     148: invokevirtual #55                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     151: ldc           #169                // String ;
+     153: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     156: aload_2
+     157: invokevirtual #55                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     160: ldc           #170                // String , cause:
+     162: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     165: aload_3
+     166: invokevirtual #171                // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+     169: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     172: invokevirtual #44                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     175: aload_3
+     176: invokeinterface #172,  6          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     181: return
+    Exception table:
+       from    to  target type
+           0   102   105   Class java/lang/Exception
+
+  public void destroy();
+    Code:
+       0: aload_0
+       1: getfield      #16                 // Field reportCacheExecutor:Ljava/util/concurrent/ExecutorService;
+       4: ifnull        16
+       7: aload_0
+       8: getfield      #16                 // Field reportCacheExecutor:Ljava/util/concurrent/ExecutorService;
+      11: invokeinterface #173,  1          // InterfaceMethod java/util/concurrent/ExecutorService.shutdown:()V
+      16: aload_0
+      17: getfield      #79                 // Field reportTimerScheduler:Ljava/util/concurrent/ScheduledExecutorService;
+      20: ifnull        32
+      23: aload_0
+      24: getfield      #79                 // Field reportTimerScheduler:Ljava/util/concurrent/ScheduledExecutorService;
+      27: invokeinterface #174,  1          // InterfaceMethod java/util/concurrent/ScheduledExecutorService.shutdown:()V
+      32: aload_0
+      33: getfield      #73                 // Field metadataReportRetry:Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport$MetadataReportRetry;
+      36: ifnull        51
+      39: aload_0
+      40: getfield      #73                 // Field metadataReportRetry:Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport$MetadataReportRetry;
+      43: invokevirtual #175                // Method org/apache/dubbo/metadata/report/support/AbstractMetadataReport$MetadataReportRetry.destroy:()V
+      46: aload_0
+      47: aconst_null
+      48: putfield      #73                 // Field metadataReportRetry:Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport$MetadataReportRetry;
+      51: return
+
+  public void saveServiceMetadata(org.apache.dubbo.metadata.report.identifier.ServiceMetadataIdentifier, org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: getfield      #64                 // Field syncReport:Z
+       4: ifeq          16
+       7: aload_0
+       8: aload_1
+       9: aload_2
+      10: invokevirtual #176                // Method doSaveMetadata:(Lorg/apache/dubbo/metadata/report/identifier/ServiceMetadataIdentifier;Lorg/apache/dubbo/common/URL;)V
+      13: goto          33
+      16: aload_0
+      17: getfield      #16                 // Field reportCacheExecutor:Ljava/util/concurrent/ExecutorService;
+      20: aload_0
+      21: aload_1
+      22: aload_2
+      23: invokedynamic #177,  0            // InvokeDynamic #5:run:(Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport;Lorg/apache/dubbo/metadata/report/identifier/ServiceMetadataIdentifier;Lorg/apache/dubbo/common/URL;)Ljava/lang/Runnable;
+      28: invokeinterface #128,  2          // InterfaceMethod java/util/concurrent/ExecutorService.execute:(Ljava/lang/Runnable;)V
+      33: return
+
+  public void removeServiceMetadata(org.apache.dubbo.metadata.report.identifier.ServiceMetadataIdentifier);
+    Code:
+       0: aload_0
+       1: getfield      #64                 // Field syncReport:Z
+       4: ifeq          15
+       7: aload_0
+       8: aload_1
+       9: invokevirtual #178                // Method doRemoveMetadata:(Lorg/apache/dubbo/metadata/report/identifier/ServiceMetadataIdentifier;)V
+      12: goto          31
+      15: aload_0
+      16: getfield      #16                 // Field reportCacheExecutor:Ljava/util/concurrent/ExecutorService;
+      19: aload_0
+      20: aload_1
+      21: invokedynamic #179,  0            // InvokeDynamic #6:run:(Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport;Lorg/apache/dubbo/metadata/report/identifier/ServiceMetadataIdentifier;)Ljava/lang/Runnable;
+      26: invokeinterface #128,  2          // InterfaceMethod java/util/concurrent/ExecutorService.execute:(Ljava/lang/Runnable;)V
+      31: return
+
+  public java.util.List<java.lang.String> getExportedURLs(org.apache.dubbo.metadata.report.identifier.ServiceMetadataIdentifier);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #180                // Method doGetExportedURLs:(Lorg/apache/dubbo/metadata/report/identifier/ServiceMetadataIdentifier;)Ljava/util/List;
+       5: areturn
+
+  public void saveSubscribedData(org.apache.dubbo.metadata.report.identifier.SubscriberMetadataIdentifier, java.util.Set<java.lang.String>);
+    Code:
+       0: aload_0
+       1: getfield      #64                 // Field syncReport:Z
+       4: ifeq          19
+       7: aload_0
+       8: aload_1
+       9: aload_2
+      10: invokestatic  #162                // Method org/apache/dubbo/common/utils/JsonUtils.toJson:(Ljava/lang/Object;)Ljava/lang/String;
+      13: invokevirtual #181                // Method doSaveSubscriberData:(Lorg/apache/dubbo/metadata/report/identifier/SubscriberMetadataIdentifier;Ljava/lang/String;)V
+      16: goto          36
+      19: aload_0
+      20: getfield      #16                 // Field reportCacheExecutor:Ljava/util/concurrent/ExecutorService;
+      23: aload_0
+      24: aload_1
+      25: aload_2
+      26: invokedynamic #182,  0            // InvokeDynamic #7:run:(Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport;Lorg/apache/dubbo/metadata/report/identifier/SubscriberMetadataIdentifier;Ljava/util/Set;)Ljava/lang/Runnable;
+      31: invokeinterface #128,  2          // InterfaceMethod java/util/concurrent/ExecutorService.execute:(Ljava/lang/Runnable;)V
+      36: return
+
+  public java.util.List<java.lang.String> getSubscribedURLs(org.apache.dubbo.metadata.report.identifier.SubscriberMetadataIdentifier);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #183                // Method doGetSubscribedURLs:(Lorg/apache/dubbo/metadata/report/identifier/SubscriberMetadataIdentifier;)Ljava/lang/String;
+       5: astore_2
+       6: aload_2
+       7: ldc           #112                // class java/lang/String
+       9: invokestatic  #184                // Method org/apache/dubbo/common/utils/JsonUtils.toJavaList:(Ljava/lang/String;Ljava/lang/Class;)Ljava/util/List;
+      12: areturn
+
+  java.lang.String getProtocol(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_1
+       1: invokevirtual #185                // Method org/apache/dubbo/common/URL.getSide:()Ljava/lang/String;
+       4: astore_2
+       5: aload_2
+       6: ifnonnull     16
+       9: aload_1
+      10: invokevirtual #186                // Method org/apache/dubbo/common/URL.getProtocol:()Ljava/lang/String;
+      13: goto          17
+      16: aload_2
+      17: astore_2
+      18: aload_2
+      19: areturn
+
+  public boolean retry();
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #23                 // Field failedReports:Ljava/util/Map;
+       5: invokespecial #187                // Method doHandleMetadataCollection:(Ljava/util/Map;)Z
+       8: ireturn
+
+  public boolean shouldReportDefinition();
+    Code:
+       0: aload_0
+       1: getfield      #90                 // Field reportDefinition:Z
+       4: ireturn
+
+  public boolean shouldReportMetadata();
+    Code:
+       0: aload_0
+       1: getfield      #88                 // Field reportMetadata:Z
+       4: ireturn
+
+  private boolean doHandleMetadataCollection(java.util.Map<org.apache.dubbo.metadata.report.identifier.MetadataIdentifier, java.lang.Object>);
+    Code:
+       0: aload_1
+       1: invokeinterface #188,  1          // InterfaceMethod java/util/Map.isEmpty:()Z
+       6: ifeq          11
+       9: iconst_1
+      10: ireturn
+      11: aload_1
+      12: invokeinterface #189,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+      17: invokeinterface #107,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      22: astore_2
+      23: aload_2
+      24: invokeinterface #108,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      29: ifeq          132
+      32: aload_2
+      33: invokeinterface #109,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      38: checkcast     #110                // class java/util/Map$Entry
+      41: astore_3
+      42: ldc           #190                // String provider
+      44: aload_3
+      45: invokeinterface #111,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+      50: checkcast     #191                // class org/apache/dubbo/metadata/report/identifier/MetadataIdentifier
+      53: invokevirtual #192                // Method org/apache/dubbo/metadata/report/identifier/MetadataIdentifier.getSide:()Ljava/lang/String;
+      56: invokevirtual #193                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      59: ifeq          87
+      62: aload_0
+      63: aload_3
+      64: invokeinterface #111,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+      69: checkcast     #191                // class org/apache/dubbo/metadata/report/identifier/MetadataIdentifier
+      72: aload_3
+      73: invokeinterface #113,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+      78: checkcast     #194                // class org/apache/dubbo/metadata/definition/model/FullServiceDefinition
+      81: invokevirtual #195                // Method storeProviderMetadata:(Lorg/apache/dubbo/metadata/report/identifier/MetadataIdentifier;Lorg/apache/dubbo/metadata/definition/model/ServiceDefinition;)V
+      84: goto          129
+      87: ldc           #196                // String consumer
+      89: aload_3
+      90: invokeinterface #111,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+      95: checkcast     #191                // class org/apache/dubbo/metadata/report/identifier/MetadataIdentifier
+      98: invokevirtual #192                // Method org/apache/dubbo/metadata/report/identifier/MetadataIdentifier.getSide:()Ljava/lang/String;
+     101: invokevirtual #193                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     104: ifeq          129
+     107: aload_0
+     108: aload_3
+     109: invokeinterface #111,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     114: checkcast     #191                // class org/apache/dubbo/metadata/report/identifier/MetadataIdentifier
+     117: aload_3
+     118: invokeinterface #113,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     123: checkcast     #197                // class java/util/Map
+     126: invokevirtual #198                // Method storeConsumerMetadata:(Lorg/apache/dubbo/metadata/report/identifier/MetadataIdentifier;Ljava/util/Map;)V
+     129: goto          23
+     132: iconst_0
+     133: ireturn
+
+  void publishAll();
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       4: ldc           #199                // String start to publish all metadata.
+       6: invokeinterface #140,  2          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      11: aload_0
+      12: aload_0
+      13: getfield      #19                 // Field allMetadataReports:Ljava/util/Map;
+      16: invokespecial #187                // Method doHandleMetadataCollection:(Ljava/util/Map;)Z
+      19: pop
+      20: return
+
+  long calculateStartTime();
+    Code:
+       0: invokestatic  #200                // Method java/util/Calendar.getInstance:()Ljava/util/Calendar;
+       3: astore_1
+       4: aload_1
+       5: invokevirtual #201                // Method java/util/Calendar.getTimeInMillis:()J
+       8: lstore_2
+       9: aload_1
+      10: bipush        11
+      12: iconst_0
+      13: invokevirtual #203                // Method java/util/Calendar.set:(II)V
+      16: aload_1
+      17: bipush        12
+      19: iconst_0
+      20: invokevirtual #203                // Method java/util/Calendar.set:(II)V
+      23: aload_1
+      24: bipush        13
+      26: iconst_0
+      27: invokevirtual #203                // Method java/util/Calendar.set:(II)V
+      30: aload_1
+      31: bipush        14
+      33: iconst_0
+      34: invokevirtual #203                // Method java/util/Calendar.set:(II)V
+      37: aload_1
+      38: invokevirtual #201                // Method java/util/Calendar.getTimeInMillis:()J
+      41: ldc2_w        #83                 // long 86400000l
+      44: ladd
+      45: lload_2
+      46: lsub
+      47: lstore        4
+      49: lload         4
+      51: ldc2_w        #204                // long 7200000l
+      54: ladd
+      55: invokestatic  #206                // Method java/util/concurrent/ThreadLocalRandom.current:()Ljava/util/concurrent/ThreadLocalRandom;
+      58: ldc           #207                // int 14400000
+      60: invokevirtual #208                // Method java/util/concurrent/ThreadLocalRandom.nextInt:(I)I
+      63: i2l
+      64: ladd
+      65: lreturn
+
+  private void doSaveSubscriberData(org.apache.dubbo.metadata.report.identifier.SubscriberMetadataIdentifier, java.util.List<java.lang.String>);
+    Code:
+       0: aload_2
+       1: invokestatic  #209                // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+       4: ifeq          8
+       7: return
+       8: new           #210                // class java/util/ArrayList
+      11: dup
+      12: aload_2
+      13: invokeinterface #211,  1          // InterfaceMethod java/util/List.size:()I
+      18: invokespecial #212                // Method java/util/ArrayList."<init>":(I)V
+      21: astore_3
+      22: aload_2
+      23: invokeinterface #213,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      28: astore        4
+      30: aload         4
+      32: invokeinterface #108,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      37: ifeq          67
+      40: aload         4
+      42: invokeinterface #109,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      47: checkcast     #112                // class java/lang/String
+      50: astore        5
+      52: aload_3
+      53: aload         5
+      55: invokestatic  #214                // Method org/apache/dubbo/common/URL.encode:(Ljava/lang/String;)Ljava/lang/String;
+      58: invokeinterface #215,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      63: pop
+      64: goto          30
+      67: aload_0
+      68: aload_1
+      69: aload_3
+      70: invokespecial #216                // Method doSaveSubscriberData:(Lorg/apache/dubbo/metadata/report/identifier/SubscriberMetadataIdentifier;Ljava/util/List;)V
+      73: return
+
+  protected abstract void doStoreProviderMetadata(org.apache.dubbo.metadata.report.identifier.MetadataIdentifier, java.lang.String);
+
+  protected abstract void doStoreConsumerMetadata(org.apache.dubbo.metadata.report.identifier.MetadataIdentifier, java.lang.String);
+
+  protected abstract void doSaveMetadata(org.apache.dubbo.metadata.report.identifier.ServiceMetadataIdentifier, org.apache.dubbo.common.URL);
+
+  protected abstract void doRemoveMetadata(org.apache.dubbo.metadata.report.identifier.ServiceMetadataIdentifier);
+
+  protected abstract java.util.List<java.lang.String> doGetExportedURLs(org.apache.dubbo.metadata.report.identifier.ServiceMetadataIdentifier);
+
+  protected abstract void doSaveSubscriberData(org.apache.dubbo.metadata.report.identifier.SubscriberMetadataIdentifier, java.lang.String);
+
+  protected abstract java.lang.String doGetSubscribedURLs(org.apache.dubbo.metadata.report.identifier.SubscriberMetadataIdentifier);
+
+  protected java.util.concurrent.ExecutorService getReportCacheExecutor();
+    Code:
+       0: aload_0
+       1: getfield      #16                 // Field reportCacheExecutor:Ljava/util/concurrent/ExecutorService;
+       4: areturn
+
+  protected org.apache.dubbo.metadata.report.support.AbstractMetadataReport$MetadataReportRetry getMetadataReportRetry();
+    Code:
+       0: aload_0
+       1: getfield      #73                 // Field metadataReportRetry:Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport$MetadataReportRetry;
+       4: areturn
+
+  private void lambda$saveSubscribedData$6(org.apache.dubbo.metadata.report.identifier.SubscriberMetadataIdentifier, java.util.Set);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokestatic  #162                // Method org/apache/dubbo/common/utils/JsonUtils.toJson:(Ljava/lang/Object;)Ljava/lang/String;
+       6: invokevirtual #181                // Method doSaveSubscriberData:(Lorg/apache/dubbo/metadata/report/identifier/SubscriberMetadataIdentifier;Ljava/lang/String;)V
+       9: return
+
+  private void lambda$removeServiceMetadata$5(org.apache.dubbo.metadata.report.identifier.ServiceMetadataIdentifier);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #178                // Method doRemoveMetadata:(Lorg/apache/dubbo/metadata/report/identifier/ServiceMetadataIdentifier;)V
+       5: return
+
+  private void lambda$saveServiceMetadata$4(org.apache.dubbo.metadata.report.identifier.ServiceMetadataIdentifier, org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokevirtual #176                // Method doSaveMetadata:(Lorg/apache/dubbo/metadata/report/identifier/ServiceMetadataIdentifier;Lorg/apache/dubbo/common/URL;)V
+       6: return
+
+  private void lambda$storeConsumerMetadata$3(org.apache.dubbo.metadata.report.identifier.MetadataIdentifier, java.util.Map);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokevirtual #156                // Method storeConsumerMetadataTask:(Lorg/apache/dubbo/metadata/report/identifier/MetadataIdentifier;Ljava/util/Map;)V
+       6: return
+
+  private static java.lang.Boolean lambda$storeProviderMetadataTask$2(java.lang.Boolean);
+    Code:
+       0: aload_0
+       1: areturn
+
+  private java.lang.Boolean lambda$storeProviderMetadataTask$1(org.apache.dubbo.metadata.report.identifier.MetadataIdentifier, org.apache.dubbo.metadata.definition.model.ServiceDefinition);
+    Code:
+       0: iconst_1
+       1: istore_3
+       2: aload_0
+       3: getfield      #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       6: invokeinterface #137,  1          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isInfoEnabled:()Z
+      11: ifeq          51
+      14: aload_0
+      15: getfield      #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      18: new           #32                 // class java/lang/StringBuilder
+      21: dup
+      22: invokespecial #33                 // Method java/lang/StringBuilder."<init>":()V
+      25: ldc           #217                // String store provider metadata. Identifier :
+      27: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      30: aload_1
+      31: invokevirtual #55                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      34: ldc           #159                // String ; definition:
+      36: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      39: aload_2
+      40: invokevirtual #55                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      43: invokevirtual #44                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      46: invokeinterface #140,  2          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      51: aload_0
+      52: getfield      #19                 // Field allMetadataReports:Ljava/util/Map;
+      55: aload_1
+      56: aload_2
+      57: invokeinterface #160,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      62: pop
+      63: aload_0
+      64: getfield      #23                 // Field failedReports:Ljava/util/Map;
+      67: aload_1
+      68: invokeinterface #161,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      73: pop
+      74: aload_2
+      75: invokestatic  #162                // Method org/apache/dubbo/common/utils/JsonUtils.toJson:(Ljava/lang/Object;)Ljava/lang/String;
+      78: astore        4
+      80: aload_0
+      81: aload_1
+      82: aload         4
+      84: invokevirtual #218                // Method doStoreProviderMetadata:(Lorg/apache/dubbo/metadata/report/identifier/MetadataIdentifier;Ljava/lang/String;)V
+      87: aload_0
+      88: aload_1
+      89: aload         4
+      91: iconst_1
+      92: aload_0
+      93: getfield      #64                 // Field syncReport:Z
+      96: ifne          103
+      99: iconst_1
+     100: goto          104
+     103: iconst_0
+     104: invokespecial #164                // Method saveProperties:(Lorg/apache/dubbo/metadata/report/identifier/MetadataIdentifier;Ljava/lang/String;ZZ)V
+     107: goto          191
+     110: astore        4
+     112: aload_0
+     113: getfield      #23                 // Field failedReports:Ljava/util/Map;
+     116: aload_1
+     117: aload_2
+     118: invokeinterface #160,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     123: pop
+     124: aload_0
+     125: getfield      #73                 // Field metadataReportRetry:Lorg/apache/dubbo/metadata/report/support/AbstractMetadataReport$MetadataReportRetry;
+     128: invokevirtual #166                // Method org/apache/dubbo/metadata/report/support/AbstractMetadataReport$MetadataReportRetry.startRetryTask:()V
+     131: aload_0
+     132: getfield      #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     135: ldc           #167                // String 3-2
+     137: ldc           #130                // String
+     139: ldc           #130                // String
+     141: new           #32                 // class java/lang/StringBuilder
+     144: dup
+     145: invokespecial #33                 // Method java/lang/StringBuilder."<init>":()V
+     148: ldc           #219                // String Failed to put provider metadata
+     150: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     153: aload_1
+     154: invokevirtual #55                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     157: ldc           #220                // String  in
+     159: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     162: aload_2
+     163: invokevirtual #55                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     166: ldc           #170                // String , cause:
+     168: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     171: aload         4
+     173: invokevirtual #171                // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+     176: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     179: invokevirtual #44                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     182: aload         4
+     184: invokeinterface #172,  6          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     189: iconst_0
+     190: istore_3
+     191: iload_3
+     192: invokestatic  #221                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+     195: areturn
+    Exception table:
+       from    to  target type
+           2   107   110   Class java/lang/Exception
+
+  private void lambda$storeProviderMetadata$0(org.apache.dubbo.metadata.report.identifier.MetadataIdentifier, org.apache.dubbo.metadata.definition.model.ServiceDefinition);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #149                // Method storeProviderMetadataTask:(Lorg/apache/dubbo/metadata/report/identifier/MetadataIdentifier;Lorg/apache/dubbo/metadata/definition/model/ServiceDefinition;)V
+       6: return
+
+  static void access$100(org.apache.dubbo.metadata.report.support.AbstractMetadataReport, long);
+    Code:
+       0: aload_0
+       1: lload_1
+       2: invokespecial #4                  // Method doSaveProperties:(J)V
+       5: return
+}

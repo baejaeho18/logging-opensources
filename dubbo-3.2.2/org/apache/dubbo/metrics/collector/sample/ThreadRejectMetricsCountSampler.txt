@@ -1,0 +1,154 @@
+Compiled from "ThreadRejectMetricsCountSampler.java"
+public class org.apache.dubbo.metrics.collector.sample.ThreadRejectMetricsCountSampler extends org.apache.dubbo.metrics.collector.sample.SimpleMetricsCountSampler<java.lang.String, java.lang.String, org.apache.dubbo.metrics.model.ThreadPoolRejectMetric> {
+  private final org.apache.dubbo.metrics.collector.DefaultMetricsCollector collector;
+
+  private final java.util.Set<java.lang.String> metricNames;
+
+  public org.apache.dubbo.metrics.collector.sample.ThreadRejectMetricsCountSampler(org.apache.dubbo.metrics.collector.DefaultMetricsCollector);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method org/apache/dubbo/metrics/collector/sample/SimpleMetricsCountSampler."<init>":()V
+       4: aload_0
+       5: new           #2                  // class org/apache/dubbo/common/utils/ConcurrentHashSet
+       8: dup
+       9: invokespecial #3                  // Method org/apache/dubbo/common/utils/ConcurrentHashSet."<init>":()V
+      12: putfield      #4                  // Field metricNames:Ljava/util/Set;
+      15: aload_0
+      16: aload_1
+      17: putfield      #5                  // Field collector:Lorg/apache/dubbo/metrics/collector/DefaultMetricsCollector;
+      20: aload_0
+      21: getfield      #5                  // Field collector:Lorg/apache/dubbo/metrics/collector/DefaultMetricsCollector;
+      24: aload_0
+      25: invokevirtual #6                  // Method org/apache/dubbo/metrics/collector/DefaultMetricsCollector.addSampler:(Lorg/apache/dubbo/metrics/collector/sample/MetricsSampler;)V
+      28: return
+
+  public void addMetricName(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field metricNames:Ljava/util/Set;
+       4: aload_1
+       5: invokeinterface #7,  2            // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      10: pop
+      11: return
+
+  public java.util.List<org.apache.dubbo.metrics.model.sample.MetricSample> sample();
+    Code:
+       0: new           #8                  // class java/util/ArrayList
+       3: dup
+       4: invokespecial #9                  // Method java/util/ArrayList."<init>":()V
+       7: astore_1
+       8: aload_0
+       9: getfield      #4                  // Field metricNames:Ljava/util/Set;
+      12: invokeinterface #10,  1           // InterfaceMethod java/util/Set.stream:()Ljava/util/stream/Stream;
+      17: aload_0
+      18: aload_1
+      19: invokedynamic #11,  0             // InvokeDynamic #0:accept:(Lorg/apache/dubbo/metrics/collector/sample/ThreadRejectMetricsCountSampler;Ljava/util/List;)Ljava/util/function/Consumer;
+      24: invokeinterface #12,  2           // InterfaceMethod java/util/stream/Stream.forEach:(Ljava/util/function/Consumer;)V
+      29: aload_1
+      30: areturn
+
+  private void collect(java.util.List<org.apache.dubbo.metrics.model.sample.MetricSample>, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: getstatic     #13                 // Field org/apache/dubbo/metrics/model/key/MetricsKey.THREAD_POOL_THREAD_REJECT_COUNT:Lorg/apache/dubbo/metrics/model/key/MetricsKey;
+       6: invokespecial #14                 // Method count:(Ljava/util/List;Ljava/lang/String;Lorg/apache/dubbo/metrics/model/key/MetricsKey;)V
+       9: return
+
+  private <T extends org.apache.dubbo.metrics.model.Metric> void count(java.util.List<org.apache.dubbo.metrics.model.sample.MetricSample>, java.lang.String, org.apache.dubbo.metrics.model.key.MetricsKey);
+    Code:
+       0: aload_0
+       1: aload_2
+       2: invokevirtual #15                 // Method getCount:(Ljava/lang/Object;)Ljava/util/Optional;
+       5: invokedynamic #16,  0             // InvokeDynamic #1:test:()Ljava/util/function/Predicate;
+      10: invokevirtual #17                 // Method java/util/Optional.filter:(Ljava/util/function/Predicate;)Ljava/util/Optional;
+      13: aload_0
+      14: aload_1
+      15: aload_3
+      16: invokedynamic #18,  0             // InvokeDynamic #2:accept:(Lorg/apache/dubbo/metrics/collector/sample/ThreadRejectMetricsCountSampler;Ljava/util/List;Lorg/apache/dubbo/metrics/model/key/MetricsKey;)Ljava/util/function/Consumer;
+      21: invokevirtual #19                 // Method java/util/Optional.ifPresent:(Ljava/util/function/Consumer;)V
+      24: return
+
+  private <T> org.apache.dubbo.metrics.model.sample.GaugeMetricSample<T> getGaugeMetricSample(org.apache.dubbo.metrics.model.key.MetricsKey, org.apache.dubbo.metrics.model.ThreadPoolRejectMetric, org.apache.dubbo.metrics.model.MetricsCategory, T, java.util.function.ToDoubleFunction<T>);
+    Code:
+       0: new           #20                 // class org/apache/dubbo/metrics/model/sample/GaugeMetricSample
+       3: dup
+       4: aload_1
+       5: aload_2
+       6: invokevirtual #21                 // Method org/apache/dubbo/metrics/model/ThreadPoolRejectMetric.getThreadPoolName:()Ljava/lang/String;
+       9: invokevirtual #22                 // Method org/apache/dubbo/metrics/model/key/MetricsKey.getNameByType:(Ljava/lang/String;)Ljava/lang/String;
+      12: aload_1
+      13: invokevirtual #23                 // Method org/apache/dubbo/metrics/model/key/MetricsKey.getDescription:()Ljava/lang/String;
+      16: aload_2
+      17: invokevirtual #24                 // Method org/apache/dubbo/metrics/model/ThreadPoolRejectMetric.getTags:()Ljava/util/Map;
+      20: aload_3
+      21: aload         4
+      23: aload         5
+      25: invokespecial #25                 // Method org/apache/dubbo/metrics/model/sample/GaugeMetricSample."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lorg/apache/dubbo/metrics/model/MetricsCategory;Ljava/lang/Object;Ljava/util/function/ToDoubleFunction;)V
+      28: areturn
+
+  protected void countConfigure(org.apache.dubbo.metrics.collector.sample.MetricsCountSampleConfigurer<java.lang.String, java.lang.String, org.apache.dubbo.metrics.model.ThreadPoolRejectMetric>);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: invokedynamic #26,  0             // InvokeDynamic #3:apply:(Lorg/apache/dubbo/metrics/collector/sample/ThreadRejectMetricsCountSampler;)Ljava/util/function/Function;
+       7: invokevirtual #27                 // Method org/apache/dubbo/metrics/collector/sample/MetricsCountSampleConfigurer.configureMetrics:(Ljava/util/function/Function;)Lorg/apache/dubbo/metrics/collector/sample/MetricsCountSampleConfigurer;
+      10: pop
+      11: return
+
+  private org.apache.dubbo.metrics.model.ThreadPoolRejectMetric lambda$countConfigure$4(org.apache.dubbo.metrics.collector.sample.MetricsCountSampleConfigurer);
+    Code:
+       0: new           #28                 // class org/apache/dubbo/metrics/model/ThreadPoolRejectMetric
+       3: dup
+       4: aload_0
+       5: getfield      #5                  // Field collector:Lorg/apache/dubbo/metrics/collector/DefaultMetricsCollector;
+       8: invokevirtual #29                 // Method org/apache/dubbo/metrics/collector/DefaultMetricsCollector.getApplicationName:()Ljava/lang/String;
+      11: aload_1
+      12: invokevirtual #30                 // Method org/apache/dubbo/metrics/collector/sample/MetricsCountSampleConfigurer.getSource:()Ljava/lang/Object;
+      15: checkcast     #31                 // class java/lang/String
+      18: invokespecial #32                 // Method org/apache/dubbo/metrics/model/ThreadPoolRejectMetric."<init>":(Ljava/lang/String;Ljava/lang/String;)V
+      21: areturn
+
+  private void lambda$count$3(java.util.List, org.apache.dubbo.metrics.model.key.MetricsKey, java.util.concurrent.ConcurrentMap);
+    Code:
+       0: aload_3
+       1: aload_0
+       2: aload_1
+       3: aload_2
+       4: invokedynamic #33,  0             // InvokeDynamic #4:accept:(Lorg/apache/dubbo/metrics/collector/sample/ThreadRejectMetricsCountSampler;Ljava/util/List;Lorg/apache/dubbo/metrics/model/key/MetricsKey;)Ljava/util/function/BiConsumer;
+       9: invokeinterface #34,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.forEach:(Ljava/util/function/BiConsumer;)V
+      14: return
+
+  private void lambda$null$2(java.util.List, org.apache.dubbo.metrics.model.key.MetricsKey, org.apache.dubbo.metrics.model.ThreadPoolRejectMetric, java.util.concurrent.atomic.AtomicLong);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: aload_2
+       3: aload_3
+       4: getstatic     #35                 // Field org/apache/dubbo/metrics/model/MetricsCategory.THREAD_POOL:Lorg/apache/dubbo/metrics/model/MetricsCategory;
+       7: aload         4
+       9: invokedynamic #36,  0             // InvokeDynamic #5:applyAsDouble:()Ljava/util/function/ToDoubleFunction;
+      14: invokespecial #37                 // Method getGaugeMetricSample:(Lorg/apache/dubbo/metrics/model/key/MetricsKey;Lorg/apache/dubbo/metrics/model/ThreadPoolRejectMetric;Lorg/apache/dubbo/metrics/model/MetricsCategory;Ljava/lang/Object;Ljava/util/function/ToDoubleFunction;)Lorg/apache/dubbo/metrics/model/sample/GaugeMetricSample;
+      17: invokeinterface #38,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      22: pop
+      23: return
+
+  private static boolean lambda$count$1(java.util.concurrent.ConcurrentMap);
+    Code:
+       0: aload_0
+       1: invokeinterface #39,  1           // InterfaceMethod java/util/concurrent/ConcurrentMap.isEmpty:()Z
+       6: ifne          13
+       9: iconst_1
+      10: goto          14
+      13: iconst_0
+      14: ireturn
+
+  private void lambda$sample$0(java.util.List, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #40                 // Method collect:(Ljava/util/List;Ljava/lang/String;)V
+       6: return
+}

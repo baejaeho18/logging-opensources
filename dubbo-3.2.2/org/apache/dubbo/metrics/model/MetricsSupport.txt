@@ -1,0 +1,443 @@
+Compiled from "MetricsSupport.java"
+public class org.apache.dubbo.metrics.model.MetricsSupport {
+  private static final java.lang.String version;
+
+  private static final java.lang.String commitId;
+
+  public org.apache.dubbo.metrics.model.MetricsSupport();
+    Code:
+       0: aload_0
+       1: invokespecial #4                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static java.util.Map<java.lang.String, java.lang.String> applicationTags(org.apache.dubbo.rpc.model.ApplicationModel);
+    Code:
+       0: new           #5                  // class java/util/HashMap
+       3: dup
+       4: invokespecial #6                  // Method java/util/HashMap."<init>":()V
+       7: astore_1
+       8: aload_1
+       9: ldc           #7                  // String ip
+      11: invokestatic  #8                  // Method org/apache/dubbo/common/utils/NetUtils.getLocalHost:()Ljava/lang/String;
+      14: invokeinterface #9,  3            // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      19: pop
+      20: aload_1
+      21: ldc           #10                 // String hostname
+      23: invokestatic  #11                 // Method org/apache/dubbo/common/utils/NetUtils.getLocalHostName:()Ljava/lang/String;
+      26: invokeinterface #9,  3            // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      31: pop
+      32: aload_1
+      33: ldc           #12                 // String application.name
+      35: aload_0
+      36: invokevirtual #13                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getApplicationName:()Ljava/lang/String;
+      39: invokeinterface #9,  3            // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      44: pop
+      45: aload_1
+      46: ldc           #14                 // String application.module.id
+      48: aload_0
+      49: invokevirtual #15                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getInternalId:()Ljava/lang/String;
+      52: invokeinterface #9,  3            // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      57: pop
+      58: aload_1
+      59: ldc           #16                 // String application.version
+      61: getstatic     #17                 // Field version:Ljava/lang/String;
+      64: invokeinterface #9,  3            // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      69: pop
+      70: aload_1
+      71: getstatic     #18                 // Field org/apache/dubbo/metrics/model/key/MetricsKey.METADATA_GIT_COMMITID_METRIC:Lorg/apache/dubbo/metrics/model/key/MetricsKey;
+      74: invokevirtual #19                 // Method org/apache/dubbo/metrics/model/key/MetricsKey.getName:()Ljava/lang/String;
+      77: getstatic     #20                 // Field commitId:Ljava/lang/String;
+      80: invokeinterface #9,  3            // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      85: pop
+      86: aload_1
+      87: areturn
+
+  public static java.util.Map<java.lang.String, java.lang.String> serviceTags(org.apache.dubbo.rpc.model.ApplicationModel, java.lang.String);
+    Code:
+       0: aload_0
+       1: invokestatic  #21                 // Method applicationTags:(Lorg/apache/dubbo/rpc/model/ApplicationModel;)Ljava/util/Map;
+       4: astore_2
+       5: aload_2
+       6: ldc           #22                 // String interface
+       8: aload_1
+       9: invokeinterface #9,  3            // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      14: pop
+      15: aload_2
+      16: areturn
+
+  public static java.util.Map<java.lang.String, java.lang.String> methodTags(org.apache.dubbo.rpc.model.ApplicationModel, java.lang.String);
+    Code:
+       0: aload_1
+       1: ldc           #23                 // String _
+       3: invokevirtual #24                 // Method java/lang/String.split:(Ljava/lang/String;)[Ljava/lang/String;
+       6: astore_2
+       7: aload_2
+       8: arraylength
+       9: iconst_2
+      10: if_icmpeq     40
+      13: new           #25                 // class org/apache/dubbo/metrics/exception/MetricsNeverHappenException
+      16: dup
+      17: new           #26                 // class java/lang/StringBuilder
+      20: dup
+      21: invokespecial #27                 // Method java/lang/StringBuilder."<init>":()V
+      24: ldc           #28                 // String Error names:
+      26: invokevirtual #29                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      29: aload_1
+      30: invokevirtual #29                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      33: invokevirtual #30                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      36: invokespecial #31                 // Method org/apache/dubbo/metrics/exception/MetricsNeverHappenException."<init>":(Ljava/lang/String;)V
+      39: athrow
+      40: aload_0
+      41: aload_2
+      42: iconst_0
+      43: aaload
+      44: aload_2
+      45: iconst_1
+      46: aaload
+      47: invokestatic  #32                 // Method methodTags:(Lorg/apache/dubbo/rpc/model/ApplicationModel;Ljava/lang/String;Ljava/lang/String;)Ljava/util/Map;
+      50: areturn
+
+  public static java.util.Map<java.lang.String, java.lang.String> methodTags(org.apache.dubbo.rpc.model.ApplicationModel, java.lang.String, java.lang.String);
+    Code:
+       0: aload_0
+       1: invokestatic  #21                 // Method applicationTags:(Lorg/apache/dubbo/rpc/model/ApplicationModel;)Ljava/util/Map;
+       4: astore_3
+       5: aload_3
+       6: ldc           #22                 // String interface
+       8: aload_1
+       9: invokeinterface #9,  3            // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      14: pop
+      15: aload_3
+      16: ldc           #33                 // String method
+      18: aload_2
+      19: invokeinterface #9,  3            // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      24: pop
+      25: aload_3
+      26: areturn
+
+  public static org.apache.dubbo.metrics.model.key.MetricsKey getMetricsKey(java.lang.Throwable);
+    Code:
+       0: getstatic     #34                 // Field org/apache/dubbo/metrics/model/key/MetricsKey.METRIC_REQUESTS_FAILED:Lorg/apache/dubbo/metrics/model/key/MetricsKey;
+       3: astore_1
+       4: aload_0
+       5: instanceof    #35                 // class org/apache/dubbo/rpc/RpcException
+       8: ifeq          71
+      11: aload_0
+      12: checkcast     #35                 // class org/apache/dubbo/rpc/RpcException
+      15: astore_2
+      16: aload_2
+      17: invokevirtual #36                 // Method org/apache/dubbo/rpc/RpcException.isTimeout:()Z
+      20: ifeq          27
+      23: getstatic     #37                 // Field org/apache/dubbo/metrics/model/key/MetricsKey.METRIC_REQUESTS_TIMEOUT:Lorg/apache/dubbo/metrics/model/key/MetricsKey;
+      26: astore_1
+      27: aload_2
+      28: invokevirtual #38                 // Method org/apache/dubbo/rpc/RpcException.isLimitExceed:()Z
+      31: ifeq          38
+      34: getstatic     #39                 // Field org/apache/dubbo/metrics/model/key/MetricsKey.METRIC_REQUESTS_LIMIT:Lorg/apache/dubbo/metrics/model/key/MetricsKey;
+      37: astore_1
+      38: aload_2
+      39: invokevirtual #40                 // Method org/apache/dubbo/rpc/RpcException.isBiz:()Z
+      42: ifeq          49
+      45: getstatic     #41                 // Field org/apache/dubbo/metrics/model/key/MetricsKey.METRIC_REQUEST_BUSINESS_FAILED:Lorg/apache/dubbo/metrics/model/key/MetricsKey;
+      48: astore_1
+      49: aload_2
+      50: invokevirtual #42                 // Method org/apache/dubbo/rpc/RpcException.isSerialization:()Z
+      53: ifeq          60
+      56: getstatic     #43                 // Field org/apache/dubbo/metrics/model/key/MetricsKey.METRIC_REQUESTS_CODEC_FAILED:Lorg/apache/dubbo/metrics/model/key/MetricsKey;
+      59: astore_1
+      60: aload_2
+      61: invokevirtual #44                 // Method org/apache/dubbo/rpc/RpcException.isNetwork:()Z
+      64: ifeq          71
+      67: getstatic     #45                 // Field org/apache/dubbo/metrics/model/key/MetricsKey.METRIC_REQUESTS_NETWORK_FAILED:Lorg/apache/dubbo/metrics/model/key/MetricsKey;
+      70: astore_1
+      71: aload_1
+      72: areturn
+
+  public static org.apache.dubbo.metrics.model.key.MetricsKey getAggMetricsKey(java.lang.Throwable);
+    Code:
+       0: getstatic     #46                 // Field org/apache/dubbo/metrics/model/key/MetricsKey.METRIC_REQUESTS_FAILED_AGG:Lorg/apache/dubbo/metrics/model/key/MetricsKey;
+       3: astore_1
+       4: aload_0
+       5: instanceof    #35                 // class org/apache/dubbo/rpc/RpcException
+       8: ifeq          71
+      11: aload_0
+      12: checkcast     #35                 // class org/apache/dubbo/rpc/RpcException
+      15: astore_2
+      16: aload_2
+      17: invokevirtual #36                 // Method org/apache/dubbo/rpc/RpcException.isTimeout:()Z
+      20: ifeq          27
+      23: getstatic     #47                 // Field org/apache/dubbo/metrics/model/key/MetricsKey.METRIC_REQUESTS_TIMEOUT_AGG:Lorg/apache/dubbo/metrics/model/key/MetricsKey;
+      26: astore_1
+      27: aload_2
+      28: invokevirtual #38                 // Method org/apache/dubbo/rpc/RpcException.isLimitExceed:()Z
+      31: ifeq          38
+      34: getstatic     #48                 // Field org/apache/dubbo/metrics/model/key/MetricsKey.METRIC_REQUESTS_LIMIT_AGG:Lorg/apache/dubbo/metrics/model/key/MetricsKey;
+      37: astore_1
+      38: aload_2
+      39: invokevirtual #40                 // Method org/apache/dubbo/rpc/RpcException.isBiz:()Z
+      42: ifeq          49
+      45: getstatic     #49                 // Field org/apache/dubbo/metrics/model/key/MetricsKey.METRIC_REQUEST_BUSINESS_FAILED_AGG:Lorg/apache/dubbo/metrics/model/key/MetricsKey;
+      48: astore_1
+      49: aload_2
+      50: invokevirtual #42                 // Method org/apache/dubbo/rpc/RpcException.isSerialization:()Z
+      53: ifeq          60
+      56: getstatic     #50                 // Field org/apache/dubbo/metrics/model/key/MetricsKey.METRIC_REQUESTS_CODEC_FAILED_AGG:Lorg/apache/dubbo/metrics/model/key/MetricsKey;
+      59: astore_1
+      60: aload_2
+      61: invokevirtual #44                 // Method org/apache/dubbo/rpc/RpcException.isNetwork:()Z
+      64: ifeq          71
+      67: getstatic     #51                 // Field org/apache/dubbo/metrics/model/key/MetricsKey.METRIC_REQUESTS_NETWORK_FAILED_AGG:Lorg/apache/dubbo/metrics/model/key/MetricsKey;
+      70: astore_1
+      71: aload_1
+      72: areturn
+
+  public static java.lang.String getSide(org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_0
+       1: invokeinterface #52,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getInvoker:()Lorg/apache/dubbo/rpc/Invoker;
+       6: invokestatic  #53                 // Method java/util/Optional.ofNullable:(Ljava/lang/Object;)Ljava/util/Optional;
+       9: astore_1
+      10: aload_1
+      11: invokevirtual #54                 // Method java/util/Optional.isPresent:()Z
+      14: ifeq          35
+      17: aload_1
+      18: invokevirtual #55                 // Method java/util/Optional.get:()Ljava/lang/Object;
+      21: checkcast     #56                 // class org/apache/dubbo/rpc/Invoker
+      24: invokeinterface #57,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+      29: invokevirtual #58                 // Method org/apache/dubbo/common/URL.getSide:()Ljava/lang/String;
+      32: goto          37
+      35: ldc           #59                 // String provider
+      37: areturn
+
+  public static java.lang.String getInterfaceName(org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_0
+       1: invokeinterface #60,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getTargetServiceUniqueName:()Ljava/lang/String;
+       6: astore_1
+       7: aload_1
+       8: ldc           #61                 // String /
+      10: invokevirtual #24                 // Method java/lang/String.split:(Ljava/lang/String;)[Ljava/lang/String;
+      13: astore_3
+      14: aload_3
+      15: arraylength
+      16: iconst_2
+      17: if_icmpne     27
+      20: aload_3
+      21: iconst_1
+      22: aaload
+      23: astore_2
+      24: goto          31
+      27: aload_3
+      28: iconst_0
+      29: aaload
+      30: astore_2
+      31: aload_2
+      32: ldc           #62                 // String :
+      34: invokevirtual #24                 // Method java/lang/String.split:(Ljava/lang/String;)[Ljava/lang/String;
+      37: astore        4
+      39: aload         4
+      41: iconst_0
+      42: aaload
+      43: areturn
+
+  public static java.lang.String getMethodName(org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_0
+       1: invokeinterface #63,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+       6: astore_1
+       7: aload_0
+       8: instanceof    #64                 // class org/apache/dubbo/rpc/RpcInvocation
+      11: ifeq          63
+      14: aload_0
+      15: checkcast     #64                 // class org/apache/dubbo/rpc/RpcInvocation
+      18: invokevirtual #65                 // Method org/apache/dubbo/rpc/RpcInvocation.getParameterTypesDesc:()Ljava/lang/String;
+      21: aload_1
+      22: invokestatic  #66                 // Method org/apache/dubbo/rpc/support/RpcUtils.isGenericCall:(Ljava/lang/String;Ljava/lang/String;)Z
+      25: ifeq          63
+      28: aload_0
+      29: invokeinterface #67,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getArguments:()[Ljava/lang/Object;
+      34: ifnull        63
+      37: aload_0
+      38: invokeinterface #67,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getArguments:()[Ljava/lang/Object;
+      43: arraylength
+      44: iconst_3
+      45: if_icmpne     63
+      48: aload_0
+      49: invokeinterface #67,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getArguments:()[Ljava/lang/Object;
+      54: iconst_0
+      55: aaload
+      56: checkcast     #68                 // class java/lang/String
+      59: invokevirtual #69                 // Method java/lang/String.trim:()Ljava/lang/String;
+      62: astore_1
+      63: aload_1
+      64: areturn
+
+  public static java.lang.String getGroup(org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_0
+       1: invokeinterface #60,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getTargetServiceUniqueName:()Ljava/lang/String;
+       6: astore_1
+       7: aconst_null
+       8: astore_2
+       9: aload_1
+      10: ldc           #61                 // String /
+      12: invokevirtual #24                 // Method java/lang/String.split:(Ljava/lang/String;)[Ljava/lang/String;
+      15: astore_3
+      16: aload_3
+      17: arraylength
+      18: iconst_2
+      19: if_icmpne     26
+      22: aload_3
+      23: iconst_0
+      24: aaload
+      25: astore_2
+      26: aload_2
+      27: areturn
+
+  public static java.lang.String getVersion(org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_0
+       1: invokeinterface #60,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getTargetServiceUniqueName:()Ljava/lang/String;
+       6: ldc           #61                 // String /
+       8: invokevirtual #24                 // Method java/lang/String.split:(Ljava/lang/String;)[Ljava/lang/String;
+      11: astore_2
+      12: aload_2
+      13: arraylength
+      14: iconst_2
+      15: if_icmpne     25
+      18: aload_2
+      19: iconst_1
+      20: aaload
+      21: astore_1
+      22: goto          29
+      25: aload_2
+      26: iconst_0
+      27: aaload
+      28: astore_1
+      29: aload_1
+      30: ldc           #62                 // String :
+      32: invokevirtual #24                 // Method java/lang/String.split:(Ljava/lang/String;)[Ljava/lang/String;
+      35: astore_3
+      36: aload_3
+      37: arraylength
+      38: iconst_2
+      39: if_icmpne     48
+      42: aload_3
+      43: iconst_1
+      44: aaload
+      45: goto          49
+      48: aconst_null
+      49: areturn
+
+  public static void increment(org.apache.dubbo.metrics.model.key.MetricsKey, org.apache.dubbo.metrics.model.key.MetricsPlaceValue, org.apache.dubbo.metrics.collector.ServiceMetricsCollector<org.apache.dubbo.metrics.event.TimeCounterEvent>, org.apache.dubbo.metrics.event.MetricsEvent);
+    Code:
+       0: aload_2
+       1: aload_3
+       2: ldc           #70                 // String serviceKey
+       4: invokevirtual #71                 // Method org/apache/dubbo/metrics/event/MetricsEvent.getAttachmentValue:(Ljava/lang/String;)Ljava/lang/Object;
+       7: checkcast     #68                 // class java/lang/String
+      10: new           #72                 // class org/apache/dubbo/metrics/model/key/MetricsKeyWrapper
+      13: dup
+      14: aload_0
+      15: aload_1
+      16: invokespecial #73                 // Method org/apache/dubbo/metrics/model/key/MetricsKeyWrapper."<init>":(Lorg/apache/dubbo/metrics/model/key/MetricsKey;Lorg/apache/dubbo/metrics/model/key/MetricsPlaceValue;)V
+      19: iconst_1
+      20: invokeinterface #74,  4           // InterfaceMethod org/apache/dubbo/metrics/collector/ServiceMetricsCollector.increment:(Ljava/lang/String;Lorg/apache/dubbo/metrics/model/key/MetricsKeyWrapper;I)V
+      25: return
+
+  public static void incrAndAddRt(org.apache.dubbo.metrics.model.key.MetricsKey, org.apache.dubbo.metrics.model.key.MetricsPlaceValue, org.apache.dubbo.metrics.collector.ServiceMetricsCollector<org.apache.dubbo.metrics.event.TimeCounterEvent>, org.apache.dubbo.metrics.event.TimeCounterEvent);
+    Code:
+       0: aload_2
+       1: aload_3
+       2: ldc           #70                 // String serviceKey
+       4: invokevirtual #75                 // Method org/apache/dubbo/metrics/event/TimeCounterEvent.getAttachmentValue:(Ljava/lang/String;)Ljava/lang/Object;
+       7: checkcast     #68                 // class java/lang/String
+      10: new           #72                 // class org/apache/dubbo/metrics/model/key/MetricsKeyWrapper
+      13: dup
+      14: aload_0
+      15: aload_1
+      16: invokespecial #73                 // Method org/apache/dubbo/metrics/model/key/MetricsKeyWrapper."<init>":(Lorg/apache/dubbo/metrics/model/key/MetricsKey;Lorg/apache/dubbo/metrics/model/key/MetricsPlaceValue;)V
+      19: iconst_1
+      20: invokeinterface #74,  4           // InterfaceMethod org/apache/dubbo/metrics/collector/ServiceMetricsCollector.increment:(Ljava/lang/String;Lorg/apache/dubbo/metrics/model/key/MetricsKeyWrapper;I)V
+      25: aload_2
+      26: aload_3
+      27: ldc           #70                 // String serviceKey
+      29: invokevirtual #75                 // Method org/apache/dubbo/metrics/event/TimeCounterEvent.getAttachmentValue:(Ljava/lang/String;)Ljava/lang/Object;
+      32: checkcast     #68                 // class java/lang/String
+      35: aload_1
+      36: invokevirtual #76                 // Method org/apache/dubbo/metrics/model/key/MetricsPlaceValue.getType:()Ljava/lang/String;
+      39: aload_3
+      40: invokevirtual #77                 // Method org/apache/dubbo/metrics/event/TimeCounterEvent.getTimePair:()Lorg/apache/dubbo/metrics/model/TimePair;
+      43: invokevirtual #78                 // Method org/apache/dubbo/metrics/model/TimePair.calc:()J
+      46: invokestatic  #79                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+      49: invokeinterface #80,  4           // InterfaceMethod org/apache/dubbo/metrics/collector/ServiceMetricsCollector.addRt:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;)V
+      54: return
+
+  public static void increment(org.apache.dubbo.metrics.model.key.MetricsKey, org.apache.dubbo.metrics.model.key.MetricsPlaceValue, org.apache.dubbo.metrics.collector.MethodMetricsCollector<org.apache.dubbo.metrics.event.TimeCounterEvent>, org.apache.dubbo.metrics.event.MetricsEvent);
+    Code:
+       0: aload_2
+       1: aload_3
+       2: ldc           #81                 // String metric_filter_invocation
+       4: invokevirtual #71                 // Method org/apache/dubbo/metrics/event/MetricsEvent.getAttachmentValue:(Ljava/lang/String;)Ljava/lang/Object;
+       7: checkcast     #82                 // class org/apache/dubbo/rpc/Invocation
+      10: new           #72                 // class org/apache/dubbo/metrics/model/key/MetricsKeyWrapper
+      13: dup
+      14: aload_0
+      15: aload_1
+      16: invokespecial #73                 // Method org/apache/dubbo/metrics/model/key/MetricsKeyWrapper."<init>":(Lorg/apache/dubbo/metrics/model/key/MetricsKey;Lorg/apache/dubbo/metrics/model/key/MetricsPlaceValue;)V
+      19: iconst_1
+      20: invokeinterface #83,  4           // InterfaceMethod org/apache/dubbo/metrics/collector/MethodMetricsCollector.increment:(Lorg/apache/dubbo/rpc/Invocation;Lorg/apache/dubbo/metrics/model/key/MetricsKeyWrapper;I)V
+      25: return
+
+  public static void dec(org.apache.dubbo.metrics.model.key.MetricsKey, org.apache.dubbo.metrics.model.key.MetricsPlaceValue, org.apache.dubbo.metrics.collector.MethodMetricsCollector<org.apache.dubbo.metrics.event.TimeCounterEvent>, org.apache.dubbo.metrics.event.MetricsEvent);
+    Code:
+       0: aload_2
+       1: aload_3
+       2: ldc           #81                 // String metric_filter_invocation
+       4: invokevirtual #71                 // Method org/apache/dubbo/metrics/event/MetricsEvent.getAttachmentValue:(Ljava/lang/String;)Ljava/lang/Object;
+       7: checkcast     #82                 // class org/apache/dubbo/rpc/Invocation
+      10: new           #72                 // class org/apache/dubbo/metrics/model/key/MetricsKeyWrapper
+      13: dup
+      14: aload_0
+      15: aload_1
+      16: invokespecial #73                 // Method org/apache/dubbo/metrics/model/key/MetricsKeyWrapper."<init>":(Lorg/apache/dubbo/metrics/model/key/MetricsKey;Lorg/apache/dubbo/metrics/model/key/MetricsPlaceValue;)V
+      19: iconst_m1
+      20: invokeinterface #83,  4           // InterfaceMethod org/apache/dubbo/metrics/collector/MethodMetricsCollector.increment:(Lorg/apache/dubbo/rpc/Invocation;Lorg/apache/dubbo/metrics/model/key/MetricsKeyWrapper;I)V
+      25: return
+
+  public static void incrAndAddRt(org.apache.dubbo.metrics.model.key.MetricsKey, org.apache.dubbo.metrics.model.key.MetricsPlaceValue, org.apache.dubbo.metrics.collector.MethodMetricsCollector<org.apache.dubbo.metrics.event.TimeCounterEvent>, org.apache.dubbo.metrics.event.TimeCounterEvent);
+    Code:
+       0: aload_2
+       1: aload_3
+       2: ldc           #81                 // String metric_filter_invocation
+       4: invokevirtual #75                 // Method org/apache/dubbo/metrics/event/TimeCounterEvent.getAttachmentValue:(Ljava/lang/String;)Ljava/lang/Object;
+       7: checkcast     #82                 // class org/apache/dubbo/rpc/Invocation
+      10: new           #72                 // class org/apache/dubbo/metrics/model/key/MetricsKeyWrapper
+      13: dup
+      14: aload_0
+      15: aload_1
+      16: invokespecial #73                 // Method org/apache/dubbo/metrics/model/key/MetricsKeyWrapper."<init>":(Lorg/apache/dubbo/metrics/model/key/MetricsKey;Lorg/apache/dubbo/metrics/model/key/MetricsPlaceValue;)V
+      19: iconst_1
+      20: invokeinterface #83,  4           // InterfaceMethod org/apache/dubbo/metrics/collector/MethodMetricsCollector.increment:(Lorg/apache/dubbo/rpc/Invocation;Lorg/apache/dubbo/metrics/model/key/MetricsKeyWrapper;I)V
+      25: aload_2
+      26: aload_3
+      27: ldc           #81                 // String metric_filter_invocation
+      29: invokevirtual #75                 // Method org/apache/dubbo/metrics/event/TimeCounterEvent.getAttachmentValue:(Ljava/lang/String;)Ljava/lang/Object;
+      32: checkcast     #82                 // class org/apache/dubbo/rpc/Invocation
+      35: aload_1
+      36: invokevirtual #76                 // Method org/apache/dubbo/metrics/model/key/MetricsPlaceValue.getType:()Ljava/lang/String;
+      39: aload_3
+      40: invokevirtual #77                 // Method org/apache/dubbo/metrics/event/TimeCounterEvent.getTimePair:()Lorg/apache/dubbo/metrics/model/TimePair;
+      43: invokevirtual #78                 // Method org/apache/dubbo/metrics/model/TimePair.calc:()J
+      46: invokestatic  #79                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+      49: invokeinterface #84,  4           // InterfaceMethod org/apache/dubbo/metrics/collector/MethodMetricsCollector.addRt:(Lorg/apache/dubbo/rpc/Invocation;Ljava/lang/String;Ljava/lang/Long;)V
+      54: return
+
+  static {};
+    Code:
+       0: invokestatic  #85                 // Method org/apache/dubbo/common/Version.getVersion:()Ljava/lang/String;
+       3: putstatic     #17                 // Field version:Ljava/lang/String;
+       6: invokestatic  #86                 // Method org/apache/dubbo/common/Version.getLastCommitId:()Ljava/lang/String;
+       9: putstatic     #20                 // Field commitId:Ljava/lang/String;
+      12: return
+}

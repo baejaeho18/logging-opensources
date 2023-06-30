@@ -1,0 +1,180 @@
+Compiled from "PrometheusMetricsReporter.java"
+public class org.apache.dubbo.metrics.prometheus.PrometheusMetricsReporter extends org.apache.dubbo.metrics.report.AbstractMetricsReporter {
+  private final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final io.micrometer.prometheus.PrometheusMeterRegistry prometheusRegistry;
+
+  private java.util.concurrent.ScheduledExecutorService pushJobExecutor;
+
+  public org.apache.dubbo.metrics.prometheus.PrometheusMetricsReporter(org.apache.dubbo.common.URL, org.apache.dubbo.rpc.model.ApplicationModel);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #3                  // Method org/apache/dubbo/metrics/report/AbstractMetricsReporter."<init>":(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/rpc/model/ApplicationModel;)V
+       6: aload_0
+       7: ldc           #4                  // class org/apache/dubbo/metrics/prometheus/PrometheusMetricsReporter
+       9: invokestatic  #5                  // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      12: putfield      #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      15: aload_0
+      16: new           #7                  // class io/micrometer/prometheus/PrometheusMeterRegistry
+      19: dup
+      20: getstatic     #8                  // Field io/micrometer/prometheus/PrometheusConfig.DEFAULT:Lio/micrometer/prometheus/PrometheusConfig;
+      23: invokespecial #9                  // Method io/micrometer/prometheus/PrometheusMeterRegistry."<init>":(Lio/micrometer/prometheus/PrometheusConfig;)V
+      26: putfield      #10                 // Field prometheusRegistry:Lio/micrometer/prometheus/PrometheusMeterRegistry;
+      29: aload_0
+      30: aconst_null
+      31: putfield      #11                 // Field pushJobExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+      34: return
+
+  public void doInit();
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #10                 // Field prometheusRegistry:Lio/micrometer/prometheus/PrometheusMeterRegistry;
+       5: invokevirtual #12                 // Method addMeterRegistry:(Lio/micrometer/core/instrument/MeterRegistry;)V
+       8: aload_0
+       9: invokespecial #13                 // Method schedulePushJob:()V
+      12: return
+
+  public java.lang.String getResponse();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field prometheusRegistry:Lio/micrometer/prometheus/PrometheusMeterRegistry;
+       4: invokevirtual #14                 // Method io/micrometer/prometheus/PrometheusMeterRegistry.scrape:()Ljava/lang/String;
+       7: areturn
+
+  private void schedulePushJob();
+    Code:
+       0: aload_0
+       1: getfield      #15                 // Field url:Lorg/apache/dubbo/common/URL;
+       4: ldc           #16                 // String prometheus.pushgateway.enabled
+       6: iconst_0
+       7: invokevirtual #17                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+      10: istore_1
+      11: iload_1
+      12: ifeq          156
+      15: aload_0
+      16: getfield      #15                 // Field url:Lorg/apache/dubbo/common/URL;
+      19: ldc           #18                 // String prometheus.pushgateway.base.url
+      21: invokevirtual #19                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;)Ljava/lang/String;
+      24: astore_2
+      25: aload_0
+      26: getfield      #15                 // Field url:Lorg/apache/dubbo/common/URL;
+      29: ldc           #20                 // String prometheus.pushgateway.job
+      31: ldc           #21                 // String default_dubbo_job
+      33: invokevirtual #22                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      36: astore_3
+      37: aload_0
+      38: getfield      #15                 // Field url:Lorg/apache/dubbo/common/URL;
+      41: ldc           #23                 // String prometheus.pushgateway.push.interval
+      43: bipush        30
+      45: invokevirtual #24                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;I)I
+      48: istore        4
+      50: aload_0
+      51: getfield      #15                 // Field url:Lorg/apache/dubbo/common/URL;
+      54: ldc           #25                 // String prometheus.pushgateway.username
+      56: invokevirtual #19                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;)Ljava/lang/String;
+      59: astore        5
+      61: aload_0
+      62: getfield      #15                 // Field url:Lorg/apache/dubbo/common/URL;
+      65: ldc           #26                 // String prometheus.pushgateway.password
+      67: invokevirtual #19                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;)Ljava/lang/String;
+      70: astore        6
+      72: new           #27                 // class org/apache/dubbo/common/utils/NamedThreadFactory
+      75: dup
+      76: ldc           #28                 // String prometheus-push-job
+      78: iconst_1
+      79: invokespecial #29                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;Z)V
+      82: astore        7
+      84: aload_0
+      85: iconst_1
+      86: aload         7
+      88: invokestatic  #30                 // Method java/util/concurrent/Executors.newScheduledThreadPool:(ILjava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ScheduledExecutorService;
+      91: putfield      #11                 // Field pushJobExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+      94: new           #31                 // class io/prometheus/client/exporter/PushGateway
+      97: dup
+      98: aload_2
+      99: invokespecial #32                 // Method io/prometheus/client/exporter/PushGateway."<init>":(Ljava/lang/String;)V
+     102: astore        8
+     104: aload         5
+     106: invokestatic  #33                 // Method org/apache/dubbo/common/utils/StringUtils.isBlank:(Ljava/lang/CharSequence;)Z
+     109: ifne          128
+     112: aload         8
+     114: new           #34                 // class io/prometheus/client/exporter/BasicAuthHttpConnectionFactory
+     117: dup
+     118: aload         5
+     120: aload         6
+     122: invokespecial #35                 // Method io/prometheus/client/exporter/BasicAuthHttpConnectionFactory."<init>":(Ljava/lang/String;Ljava/lang/String;)V
+     125: invokevirtual #36                 // Method io/prometheus/client/exporter/PushGateway.setConnectionFactory:(Lio/prometheus/client/exporter/HttpConnectionFactory;)V
+     128: aload_0
+     129: getfield      #11                 // Field pushJobExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+     132: aload_0
+     133: aload         8
+     135: aload_3
+     136: invokedynamic #37,  0             // InvokeDynamic #0:run:(Lorg/apache/dubbo/metrics/prometheus/PrometheusMetricsReporter;Lio/prometheus/client/exporter/PushGateway;Ljava/lang/String;)Ljava/lang/Runnable;
+     141: iload         4
+     143: i2l
+     144: iload         4
+     146: i2l
+     147: getstatic     #38                 // Field java/util/concurrent/TimeUnit.SECONDS:Ljava/util/concurrent/TimeUnit;
+     150: invokeinterface #39,  7           // InterfaceMethod java/util/concurrent/ScheduledExecutorService.scheduleWithFixedDelay:(Ljava/lang/Runnable;JJLjava/util/concurrent/TimeUnit;)Ljava/util/concurrent/ScheduledFuture;
+     155: pop
+     156: return
+
+  protected void push(io.prometheus.client.exporter.PushGateway, java.lang.String);
+    Code:
+       0: aload_0
+       1: invokevirtual #40                 // Method refreshData:()V
+       4: aload_1
+       5: aload_0
+       6: getfield      #10                 // Field prometheusRegistry:Lio/micrometer/prometheus/PrometheusMeterRegistry;
+       9: invokevirtual #41                 // Method io/micrometer/prometheus/PrometheusMeterRegistry.getPrometheusRegistry:()Lio/prometheus/client/CollectorRegistry;
+      12: aload_2
+      13: invokevirtual #42                 // Method io/prometheus/client/exporter/PushGateway.pushAdd:(Lio/prometheus/client/CollectorRegistry;Ljava/lang/String;)V
+      16: goto          38
+      19: astore_3
+      20: aload_0
+      21: getfield      #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      24: ldc           #44                 // String 0-13
+      26: ldc           #45                 // String
+      28: ldc           #45                 // String
+      30: ldc           #46                 // String Error occurred when pushing metrics to prometheus:
+      32: aload_3
+      33: invokeinterface #47,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      38: return
+    Exception table:
+       from    to  target type
+           0    16    19   Class java/io/IOException
+
+  public void doDestroy();
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field pushJobExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+       4: ifnull        17
+       7: aload_0
+       8: getfield      #11                 // Field pushJobExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+      11: invokeinterface #48,  1           // InterfaceMethod java/util/concurrent/ScheduledExecutorService.shutdownNow:()Ljava/util/List;
+      16: pop
+      17: return
+
+  public java.util.concurrent.ScheduledExecutorService getPushJobExecutor();
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field pushJobExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+       4: areturn
+
+  public io.micrometer.prometheus.PrometheusMeterRegistry getPrometheusRegistry();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field prometheusRegistry:Lio/micrometer/prometheus/PrometheusMeterRegistry;
+       4: areturn
+
+  private void lambda$schedulePushJob$0(io.prometheus.client.exporter.PushGateway, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokevirtual #49                 // Method push:(Lio/prometheus/client/exporter/PushGateway;Ljava/lang/String;)V
+       6: return
+}

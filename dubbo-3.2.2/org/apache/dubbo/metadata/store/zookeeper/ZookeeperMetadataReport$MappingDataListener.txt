@@ -1,0 +1,90 @@
+Compiled from "ZookeeperMetadataReport.java"
+class org.apache.dubbo.metadata.store.zookeeper.ZookeeperMetadataReport$MappingDataListener implements org.apache.dubbo.remoting.zookeeper.DataListener {
+  private java.lang.String serviceKey;
+
+  private java.lang.String path;
+
+  private java.util.Set<org.apache.dubbo.metadata.MappingListener> listeners;
+
+  public org.apache.dubbo.metadata.store.zookeeper.ZookeeperMetadataReport$MappingDataListener(java.lang.String, java.lang.String);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field serviceKey:Ljava/lang/String;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field path:Ljava/lang/String;
+      14: aload_0
+      15: new           #4                  // class java/util/HashSet
+      18: dup
+      19: invokespecial #5                  // Method java/util/HashSet."<init>":()V
+      22: putfield      #6                  // Field listeners:Ljava/util/Set;
+      25: return
+
+  public void addListener(org.apache.dubbo.metadata.MappingListener);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field listeners:Ljava/util/Set;
+       4: aload_1
+       5: invokeinterface #7,  2            // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      10: pop
+      11: return
+
+  public void removeListener(org.apache.dubbo.metadata.MappingListener);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field listeners:Ljava/util/Set;
+       4: aload_1
+       5: invokeinterface #8,  2            // InterfaceMethod java/util/Set.remove:(Ljava/lang/Object;)Z
+      10: pop
+      11: return
+
+  public boolean isEmpty();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field listeners:Ljava/util/Set;
+       4: invokeinterface #9,  1            // InterfaceMethod java/util/Set.isEmpty:()Z
+       9: ireturn
+
+  public void dataChanged(java.lang.String, java.lang.Object, org.apache.dubbo.remoting.zookeeper.EventType);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field path:Ljava/lang/String;
+       4: aload_1
+       5: invokevirtual #10                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       8: ifne          12
+      11: return
+      12: getstatic     #11                 // Field org/apache/dubbo/remoting/zookeeper/EventType.NodeCreated:Lorg/apache/dubbo/remoting/zookeeper/EventType;
+      15: aload_3
+      16: if_acmpeq     27
+      19: getstatic     #12                 // Field org/apache/dubbo/remoting/zookeeper/EventType.NodeDataChanged:Lorg/apache/dubbo/remoting/zookeeper/EventType;
+      22: aload_3
+      23: if_acmpeq     27
+      26: return
+      27: aload_2
+      28: checkcast     #13                 // class java/lang/String
+      31: invokestatic  #14                 // InterfaceMethod org/apache/dubbo/metadata/ServiceNameMapping.getAppNames:(Ljava/lang/String;)Ljava/util/Set;
+      34: astore        4
+      36: new           #15                 // class org/apache/dubbo/metadata/MappingChangedEvent
+      39: dup
+      40: aload_0
+      41: getfield      #2                  // Field serviceKey:Ljava/lang/String;
+      44: aload         4
+      46: invokespecial #16                 // Method org/apache/dubbo/metadata/MappingChangedEvent."<init>":(Ljava/lang/String;Ljava/util/Set;)V
+      49: astore        5
+      51: aload_0
+      52: getfield      #6                  // Field listeners:Ljava/util/Set;
+      55: aload         5
+      57: invokedynamic #17,  0             // InvokeDynamic #0:accept:(Lorg/apache/dubbo/metadata/MappingChangedEvent;)Ljava/util/function/Consumer;
+      62: invokeinterface #18,  2           // InterfaceMethod java/util/Set.forEach:(Ljava/util/function/Consumer;)V
+      67: return
+
+  private static void lambda$dataChanged$0(org.apache.dubbo.metadata.MappingChangedEvent, org.apache.dubbo.metadata.MappingListener);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: invokeinterface #19,  2           // InterfaceMethod org/apache/dubbo/metadata/MappingListener.onEvent:(Lorg/apache/dubbo/metadata/MappingChangedEvent;)V
+       7: return
+}

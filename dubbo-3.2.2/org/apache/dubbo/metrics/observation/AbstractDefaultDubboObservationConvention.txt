@@ -1,0 +1,131 @@
+Compiled from "AbstractDefaultDubboObservationConvention.java"
+class org.apache.dubbo.metrics.observation.AbstractDefaultDubboObservationConvention {
+  org.apache.dubbo.metrics.observation.AbstractDefaultDubboObservationConvention();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  io.micrometer.common.KeyValues getLowCardinalityKeyValues(org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: iconst_1
+       1: anewarray     #2                  // class io/micrometer/common/KeyValue
+       4: dup
+       5: iconst_0
+       6: getstatic     #3                  // Field org/apache/dubbo/metrics/observation/DubboObservationDocumentation$LowCardinalityKeyNames.RPC_SYSTEM:Lorg/apache/dubbo/metrics/observation/DubboObservationDocumentation$LowCardinalityKeyNames;
+       9: ldc           #4                  // String apache_dubbo
+      11: invokevirtual #5                  // Method org/apache/dubbo/metrics/observation/DubboObservationDocumentation$LowCardinalityKeyNames.withValue:(Ljava/lang/String;)Lio/micrometer/common/KeyValue;
+      14: aastore
+      15: invokestatic  #6                  // Method io/micrometer/common/KeyValues.of:([Lio/micrometer/common/KeyValue;)Lio/micrometer/common/KeyValues;
+      18: astore_2
+      19: aload_1
+      20: invokeinterface #7,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getServiceName:()Ljava/lang/String;
+      25: invokestatic  #8                  // Method org/apache/dubbo/common/utils/StringUtils.hasText:(Ljava/lang/CharSequence;)Z
+      28: ifeq          40
+      31: aload_1
+      32: invokeinterface #7,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getServiceName:()Ljava/lang/String;
+      37: goto          50
+      40: aload_0
+      41: aload_1
+      42: invokeinterface #9,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getTargetServiceUniqueName:()Ljava/lang/String;
+      47: invokespecial #10                 // Method readServiceName:(Ljava/lang/String;)Ljava/lang/String;
+      50: astore_3
+      51: aload_0
+      52: aload_2
+      53: getstatic     #11                 // Field org/apache/dubbo/metrics/observation/DubboObservationDocumentation$LowCardinalityKeyNames.RPC_SERVICE:Lorg/apache/dubbo/metrics/observation/DubboObservationDocumentation$LowCardinalityKeyNames;
+      56: aload_3
+      57: invokevirtual #12                 // Method appendNonNull:(Lio/micrometer/common/KeyValues;Lio/micrometer/common/docs/KeyName;Ljava/lang/String;)Lio/micrometer/common/KeyValues;
+      60: astore_2
+      61: aload_0
+      62: aload_2
+      63: getstatic     #13                 // Field org/apache/dubbo/metrics/observation/DubboObservationDocumentation$LowCardinalityKeyNames.RPC_METHOD:Lorg/apache/dubbo/metrics/observation/DubboObservationDocumentation$LowCardinalityKeyNames;
+      66: aload_1
+      67: invokestatic  #14                 // Method org/apache/dubbo/rpc/support/RpcUtils.getMethodName:(Lorg/apache/dubbo/rpc/Invocation;)Ljava/lang/String;
+      70: invokevirtual #12                 // Method appendNonNull:(Lio/micrometer/common/KeyValues;Lio/micrometer/common/docs/KeyName;Ljava/lang/String;)Lio/micrometer/common/KeyValues;
+      73: areturn
+
+  protected io.micrometer.common.KeyValues appendNonNull(io.micrometer.common.KeyValues, io.micrometer.common.docs.KeyName, java.lang.String);
+    Code:
+       0: aload_3
+       1: ifnull        23
+       4: aload_1
+       5: iconst_1
+       6: anewarray     #2                  // class io/micrometer/common/KeyValue
+       9: dup
+      10: iconst_0
+      11: aload_2
+      12: aload_3
+      13: invokeinterface #15,  2           // InterfaceMethod io/micrometer/common/docs/KeyName.withValue:(Ljava/lang/String;)Lio/micrometer/common/KeyValue;
+      18: aastore
+      19: invokevirtual #16                 // Method io/micrometer/common/KeyValues.and:([Lio/micrometer/common/KeyValue;)Lio/micrometer/common/KeyValues;
+      22: areturn
+      23: aload_1
+      24: areturn
+
+  java.lang.String getContextualName(org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_1
+       1: invokeinterface #7,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getServiceName:()Ljava/lang/String;
+       6: invokestatic  #8                  // Method org/apache/dubbo/common/utils/StringUtils.hasText:(Ljava/lang/CharSequence;)Z
+       9: ifeq          21
+      12: aload_1
+      13: invokeinterface #7,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getServiceName:()Ljava/lang/String;
+      18: goto          31
+      21: aload_0
+      22: aload_1
+      23: invokeinterface #9,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getTargetServiceUniqueName:()Ljava/lang/String;
+      28: invokespecial #10                 // Method readServiceName:(Ljava/lang/String;)Ljava/lang/String;
+      31: astore_2
+      32: aload_1
+      33: invokestatic  #14                 // Method org/apache/dubbo/rpc/support/RpcUtils.getMethodName:(Lorg/apache/dubbo/rpc/Invocation;)Ljava/lang/String;
+      36: astore_3
+      37: aload_3
+      38: invokestatic  #8                  // Method org/apache/dubbo/common/utils/StringUtils.hasText:(Ljava/lang/CharSequence;)Z
+      41: ifeq          48
+      44: aload_3
+      45: goto          50
+      48: ldc           #17                 // String
+      50: astore        4
+      52: new           #18                 // class java/lang/StringBuilder
+      55: dup
+      56: invokespecial #19                 // Method java/lang/StringBuilder."<init>":()V
+      59: aload_2
+      60: invokevirtual #20                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      63: ldc           #22                 // String /
+      65: invokevirtual #20                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      68: aload         4
+      70: invokevirtual #20                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      73: invokevirtual #23                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      76: areturn
+
+  private java.lang.String readServiceName(java.lang.String);
+    Code:
+       0: aload_1
+       1: ldc           #22                 // String /
+       3: invokevirtual #24                 // Method java/lang/String.split:(Ljava/lang/String;)[Ljava/lang/String;
+       6: astore_2
+       7: aload_2
+       8: arraylength
+       9: iconst_1
+      10: if_icmpne     17
+      13: aload_1
+      14: goto          20
+      17: aload_2
+      18: iconst_1
+      19: aaload
+      20: astore_3
+      21: aload_3
+      22: ldc           #25                 // String :
+      24: invokevirtual #24                 // Method java/lang/String.split:(Ljava/lang/String;)[Ljava/lang/String;
+      27: astore        4
+      29: aload         4
+      31: arraylength
+      32: iconst_1
+      33: if_icmpne     38
+      36: aload_3
+      37: areturn
+      38: aload         4
+      40: iconst_0
+      41: aaload
+      42: areturn
+}

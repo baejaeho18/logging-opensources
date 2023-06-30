@@ -1,0 +1,1003 @@
+Compiled from "NacosMetadataReport.java"
+public class org.apache.dubbo.metadata.store.nacos.NacosMetadataReport extends org.apache.dubbo.metadata.report.support.AbstractMetadataReport {
+  private org.apache.dubbo.metadata.store.nacos.NacosConfigServiceWrapper configService;
+
+  private java.lang.String group;
+
+  private java.util.Map<java.lang.String, org.apache.dubbo.metadata.store.nacos.NacosMetadataReport$NacosConfigListener> watchListenerMap;
+
+  private java.util.Map<java.lang.String, org.apache.dubbo.metadata.store.nacos.NacosMetadataReport$MappingDataListener> casListenerMap;
+
+  private org.apache.dubbo.common.utils.MD5Utils md5Utils;
+
+  private static final java.lang.String NACOS_RETRY_KEY;
+
+  private static final java.lang.String NACOS_RETRY_WAIT_KEY;
+
+  private static final java.lang.String NACOS_CHECK_KEY;
+
+  public org.apache.dubbo.metadata.store.nacos.NacosMetadataReport(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #9                  // Method org/apache/dubbo/metadata/report/support/AbstractMetadataReport."<init>":(Lorg/apache/dubbo/common/URL;)V
+       5: aload_0
+       6: new           #10                 // class java/util/concurrent/ConcurrentHashMap
+       9: dup
+      10: invokespecial #11                 // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      13: putfield      #12                 // Field watchListenerMap:Ljava/util/Map;
+      16: aload_0
+      17: new           #10                 // class java/util/concurrent/ConcurrentHashMap
+      20: dup
+      21: invokespecial #11                 // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      24: putfield      #13                 // Field casListenerMap:Ljava/util/Map;
+      27: aload_0
+      28: new           #14                 // class org/apache/dubbo/common/utils/MD5Utils
+      31: dup
+      32: invokespecial #15                 // Method org/apache/dubbo/common/utils/MD5Utils."<init>":()V
+      35: putfield      #16                 // Field md5Utils:Lorg/apache/dubbo/common/utils/MD5Utils;
+      38: aload_0
+      39: aload_0
+      40: aload_1
+      41: invokespecial #17                 // Method buildConfigService:(Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper;
+      44: putfield      #18                 // Field configService:Lorg/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper;
+      47: aload_0
+      48: aload_1
+      49: ldc           #19                 // String group
+      51: ldc           #21                 // String dubbo
+      53: invokevirtual #22                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      56: putfield      #23                 // Field group:Ljava/lang/String;
+      59: return
+
+  private org.apache.dubbo.metadata.store.nacos.NacosConfigServiceWrapper buildConfigService(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #24                 // Method buildNacosProperties:(Lorg/apache/dubbo/common/URL;)Ljava/util/Properties;
+       5: astore_2
+       6: aload_1
+       7: ldc           #26                 // String nacos.retry
+       9: bipush        10
+      11: invokevirtual #27                 // Method org/apache/dubbo/common/URL.getPositiveParameter:(Ljava/lang/String;I)I
+      14: istore_3
+      15: aload_1
+      16: ldc           #28                 // String nacos.retry-wait
+      18: sipush        1000
+      21: invokevirtual #27                 // Method org/apache/dubbo/common/URL.getPositiveParameter:(Ljava/lang/String;I)I
+      24: istore        4
+      26: aload_1
+      27: ldc           #29                 // String nacos.check
+      29: iconst_1
+      30: invokevirtual #30                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+      33: istore        5
+      35: aconst_null
+      36: astore        6
+      38: iconst_0
+      39: istore        7
+      41: iload         7
+      43: iload_3
+      44: iconst_1
+      45: iadd
+      46: if_icmpge     190
+      49: aload_2
+      50: invokestatic  #31                 // Method com/alibaba/nacos/api/NacosFactory.createConfigService:(Ljava/util/Properties;)Lcom/alibaba/nacos/api/config/ConfigService;
+      53: astore        6
+      55: iload         5
+      57: ifeq          190
+      60: ldc           #32                 // String UP
+      62: aload         6
+      64: invokeinterface #33,  1           // InterfaceMethod com/alibaba/nacos/api/config/ConfigService.getServerStatus:()Ljava/lang/String;
+      69: invokevirtual #34                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      72: ifeq          87
+      75: aload_0
+      76: aload         6
+      78: invokespecial #35                 // Method testConfigService:(Lcom/alibaba/nacos/api/config/ConfigService;)Z
+      81: ifeq          87
+      84: goto          190
+      87: aload_0
+      88: getfield      #36                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      91: ldc           #37                 // String 5-34
+      93: ldc           #38                 // String
+      95: ldc           #38                 // String
+      97: new           #39                 // class java/lang/StringBuilder
+     100: dup
+     101: invokespecial #40                 // Method java/lang/StringBuilder."<init>":()V
+     104: ldc           #41                 // String Failed to connect to nacos config server.
+     106: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     109: iload         7
+     111: iload_3
+     112: if_icmpge     143
+     115: new           #39                 // class java/lang/StringBuilder
+     118: dup
+     119: invokespecial #40                 // Method java/lang/StringBuilder."<init>":()V
+     122: ldc           #43                 // String Dubbo will try to retry in
+     124: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     127: iload         4
+     129: invokevirtual #44                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     132: ldc           #45                 // String .
+     134: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     137: invokevirtual #46                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     140: goto          145
+     143: ldc           #47                 // String Exceed retry max times.
+     145: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     148: ldc           #48                 // String Try times:
+     150: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     153: iload         7
+     155: iconst_1
+     156: iadd
+     157: invokevirtual #44                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     160: invokevirtual #46                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     163: invokeinterface #49,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     168: aload         6
+     170: invokeinterface #50,  1           // InterfaceMethod com/alibaba/nacos/api/config/ConfigService.shutDown:()V
+     175: aconst_null
+     176: astore        6
+     178: iload         4
+     180: i2l
+     181: invokestatic  #51                 // Method java/lang/Thread.sleep:(J)V
+     184: iinc          7, 1
+     187: goto          41
+     190: goto          264
+     193: astore        7
+     195: aload_0
+     196: getfield      #36                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     199: ldc           #37                 // String 5-34
+     201: ldc           #38                 // String
+     203: ldc           #38                 // String
+     205: aload         7
+     207: invokevirtual #53                 // Method com/alibaba/nacos/api/exception/NacosException.getErrMsg:()Ljava/lang/String;
+     210: aload         7
+     212: invokeinterface #54,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     217: new           #55                 // class java/lang/IllegalStateException
+     220: dup
+     221: aload         7
+     223: invokespecial #56                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/Throwable;)V
+     226: athrow
+     227: astore        7
+     229: aload_0
+     230: getfield      #36                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     233: ldc           #58                 // String 99-1
+     235: ldc           #38                 // String
+     237: ldc           #38                 // String
+     239: ldc           #59                 // String Interrupted when creating nacos config service client.
+     241: aload         7
+     243: invokeinterface #54,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     248: invokestatic  #60                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+     251: invokevirtual #61                 // Method java/lang/Thread.interrupt:()V
+     254: new           #55                 // class java/lang/IllegalStateException
+     257: dup
+     258: aload         7
+     260: invokespecial #56                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/Throwable;)V
+     263: athrow
+     264: aload         6
+     266: ifnonnull     296
+     269: aload_0
+     270: getfield      #36                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     273: ldc           #37                 // String 5-34
+     275: ldc           #38                 // String
+     277: ldc           #38                 // String
+     279: ldc           #62                 // String Failed to create nacos config service client. Reason: server status check failed.
+     281: invokeinterface #63,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     286: new           #55                 // class java/lang/IllegalStateException
+     289: dup
+     290: ldc           #62                 // String Failed to create nacos config service client. Reason: server status check failed.
+     292: invokespecial #64                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     295: athrow
+     296: new           #65                 // class org/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper
+     299: dup
+     300: aload         6
+     302: invokespecial #66                 // Method org/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper."<init>":(Lcom/alibaba/nacos/api/config/ConfigService;)V
+     305: areturn
+    Exception table:
+       from    to  target type
+          38   190   193   Class com/alibaba/nacos/api/exception/NacosException
+          38   190   227   Class java/lang/InterruptedException
+
+  private boolean testConfigService(com.alibaba.nacos.api.config.ConfigService);
+    Code:
+       0: aload_1
+       1: ldc           #67                 // String Dubbo-Nacos-Test
+       3: ldc           #67                 // String Dubbo-Nacos-Test
+       5: ldc2_w        #68                 // long 3000l
+       8: invokeinterface #70,  5           // InterfaceMethod com/alibaba/nacos/api/config/ConfigService.getConfig:(Ljava/lang/String;Ljava/lang/String;J)Ljava/lang/String;
+      13: pop
+      14: iconst_1
+      15: ireturn
+      16: astore_2
+      17: iconst_0
+      18: ireturn
+    Exception table:
+       from    to  target type
+           0    15    16   Class com/alibaba/nacos/api/exception/NacosException
+
+  private java.util.Properties buildNacosProperties(org.apache.dubbo.common.URL);
+    Code:
+       0: new           #71                 // class java/util/Properties
+       3: dup
+       4: invokespecial #72                 // Method java/util/Properties."<init>":()V
+       7: astore_2
+       8: aload_0
+       9: aload_1
+      10: aload_2
+      11: invokespecial #73                 // Method setServerAddr:(Lorg/apache/dubbo/common/URL;Ljava/util/Properties;)V
+      14: aload_1
+      15: aload_2
+      16: invokestatic  #74                 // Method setProperties:(Lorg/apache/dubbo/common/URL;Ljava/util/Properties;)V
+      19: aload_2
+      20: areturn
+
+  private void setServerAddr(org.apache.dubbo.common.URL, java.util.Properties);
+    Code:
+       0: new           #39                 // class java/lang/StringBuilder
+       3: dup
+       4: aload_1
+       5: invokevirtual #75                 // Method org/apache/dubbo/common/URL.getHost:()Ljava/lang/String;
+       8: invokespecial #76                 // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      11: bipush        58
+      13: invokevirtual #77                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      16: aload_1
+      17: invokevirtual #78                 // Method org/apache/dubbo/common/URL.getPort:()I
+      20: invokevirtual #44                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      23: astore_3
+      24: aload_1
+      25: ldc           #79                 // String backup
+      27: invokevirtual #80                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;)Ljava/lang/String;
+      30: astore        4
+      32: aload         4
+      34: ifnull        49
+      37: aload_3
+      38: bipush        44
+      40: invokevirtual #77                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      43: aload         4
+      45: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      48: pop
+      49: aload_3
+      50: invokevirtual #46                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      53: astore        5
+      55: aload_2
+      56: ldc           #81                 // String serverAddr
+      58: aload         5
+      60: invokevirtual #82                 // Method java/util/Properties.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      63: pop
+      64: return
+
+  private static void setProperties(org.apache.dubbo.common.URL, java.util.Properties);
+    Code:
+       0: aload_0
+       1: ldc           #5                  // class com/alibaba/nacos/api/PropertyKeyConst
+       3: invokestatic  #83                 // Method org/apache/dubbo/common/utils/StringConstantFieldValuePredicate.of:(Ljava/lang/Class;)Ljava/util/function/Predicate;
+       6: invokevirtual #84                 // Method org/apache/dubbo/common/URL.getParameters:(Ljava/util/function/Predicate;)Ljava/util/Map;
+       9: astore_2
+      10: aload_1
+      11: aload_2
+      12: invokevirtual #85                 // Method java/util/Properties.putAll:(Ljava/util/Map;)V
+      15: return
+
+  private static void putPropertyIfAbsent(org.apache.dubbo.common.URL, java.util.Properties, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_2
+       2: invokevirtual #80                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;)Ljava/lang/String;
+       5: astore_3
+       6: aload_3
+       7: invokestatic  #86                 // Method org/apache/dubbo/common/utils/StringUtils.isNotEmpty:(Ljava/lang/String;)Z
+      10: ifeq          20
+      13: aload_1
+      14: aload_2
+      15: aload_3
+      16: invokevirtual #87                 // Method java/util/Properties.setProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+      19: pop
+      20: return
+
+  private static void putPropertyIfAbsent(org.apache.dubbo.common.URL, java.util.Properties, java.lang.String, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_2
+       2: invokevirtual #80                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;)Ljava/lang/String;
+       5: astore        4
+       7: aload         4
+       9: invokestatic  #86                 // Method org/apache/dubbo/common/utils/StringUtils.isNotEmpty:(Ljava/lang/String;)Z
+      12: ifeq          26
+      15: aload_1
+      16: aload_2
+      17: aload         4
+      19: invokevirtual #87                 // Method java/util/Properties.setProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+      22: pop
+      23: goto          33
+      26: aload_1
+      27: aload_2
+      28: aload_3
+      29: invokevirtual #87                 // Method java/util/Properties.setProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
+      32: pop
+      33: return
+
+  public void publishAppMetadata(org.apache.dubbo.metadata.report.identifier.SubscriberMetadataIdentifier, org.apache.dubbo.metadata.MetadataInfo);
+    Code:
+       0: aload_2
+       1: invokevirtual #88                 // Method org/apache/dubbo/metadata/MetadataInfo.getContent:()Ljava/lang/String;
+       4: ifnull        27
+       7: aload_0
+       8: getfield      #18                 // Field configService:Lorg/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper;
+      11: aload_1
+      12: invokevirtual #89                 // Method org/apache/dubbo/metadata/report/identifier/SubscriberMetadataIdentifier.getApplication:()Ljava/lang/String;
+      15: aload_1
+      16: invokevirtual #90                 // Method org/apache/dubbo/metadata/report/identifier/SubscriberMetadataIdentifier.getRevision:()Ljava/lang/String;
+      19: aload_2
+      20: invokevirtual #88                 // Method org/apache/dubbo/metadata/MetadataInfo.getContent:()Ljava/lang/String;
+      23: invokevirtual #91                 // Method org/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper.publishConfig:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
+      26: pop
+      27: goto          44
+      30: astore_3
+      31: new           #55                 // class java/lang/IllegalStateException
+      34: dup
+      35: aload_3
+      36: invokevirtual #92                 // Method com/alibaba/nacos/api/exception/NacosException.getMessage:()Ljava/lang/String;
+      39: aload_3
+      40: invokespecial #93                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      43: athrow
+      44: return
+    Exception table:
+       from    to  target type
+           0    27    30   Class com/alibaba/nacos/api/exception/NacosException
+
+  public void unPublishAppMetadata(org.apache.dubbo.metadata.report.identifier.SubscriberMetadataIdentifier, org.apache.dubbo.metadata.MetadataInfo);
+    Code:
+       0: aload_0
+       1: getfield      #18                 // Field configService:Lorg/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper;
+       4: aload_1
+       5: invokevirtual #89                 // Method org/apache/dubbo/metadata/report/identifier/SubscriberMetadataIdentifier.getApplication:()Ljava/lang/String;
+       8: aload_1
+       9: invokevirtual #90                 // Method org/apache/dubbo/metadata/report/identifier/SubscriberMetadataIdentifier.getRevision:()Ljava/lang/String;
+      12: invokevirtual #94                 // Method org/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper.removeConfig:(Ljava/lang/String;Ljava/lang/String;)Z
+      15: pop
+      16: goto          33
+      19: astore_3
+      20: new           #55                 // class java/lang/IllegalStateException
+      23: dup
+      24: aload_3
+      25: invokevirtual #92                 // Method com/alibaba/nacos/api/exception/NacosException.getMessage:()Ljava/lang/String;
+      28: aload_3
+      29: invokespecial #93                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      32: athrow
+      33: return
+    Exception table:
+       from    to  target type
+           0    16    19   Class com/alibaba/nacos/api/exception/NacosException
+
+  public org.apache.dubbo.metadata.MetadataInfo getAppMetadata(org.apache.dubbo.metadata.report.identifier.SubscriberMetadataIdentifier, java.util.Map<java.lang.String, java.lang.String>);
+    Code:
+       0: aload_0
+       1: getfield      #18                 // Field configService:Lorg/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper;
+       4: aload_1
+       5: invokevirtual #89                 // Method org/apache/dubbo/metadata/report/identifier/SubscriberMetadataIdentifier.getApplication:()Ljava/lang/String;
+       8: aload_1
+       9: invokevirtual #90                 // Method org/apache/dubbo/metadata/report/identifier/SubscriberMetadataIdentifier.getRevision:()Ljava/lang/String;
+      12: ldc2_w        #68                 // long 3000l
+      15: invokevirtual #95                 // Method org/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper.getConfig:(Ljava/lang/String;Ljava/lang/String;J)Ljava/lang/String;
+      18: astore_3
+      19: aload_3
+      20: ldc           #96                 // class org/apache/dubbo/metadata/MetadataInfo
+      22: invokestatic  #97                 // Method org/apache/dubbo/common/utils/JsonUtils.toJavaObject:(Ljava/lang/String;Ljava/lang/reflect/Type;)Ljava/lang/Object;
+      25: checkcast     #96                 // class org/apache/dubbo/metadata/MetadataInfo
+      28: areturn
+      29: astore_3
+      30: new           #55                 // class java/lang/IllegalStateException
+      33: dup
+      34: aload_3
+      35: invokevirtual #92                 // Method com/alibaba/nacos/api/exception/NacosException.getMessage:()Ljava/lang/String;
+      38: aload_3
+      39: invokespecial #93                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      42: athrow
+    Exception table:
+       from    to  target type
+           0    28    29   Class com/alibaba/nacos/api/exception/NacosException
+
+  protected void doStoreProviderMetadata(org.apache.dubbo.metadata.report.identifier.MetadataIdentifier, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #98                 // Method storeMetadata:(Lorg/apache/dubbo/metadata/report/identifier/BaseMetadataIdentifier;Ljava/lang/String;)V
+       6: return
+
+  protected void doStoreConsumerMetadata(org.apache.dubbo.metadata.report.identifier.MetadataIdentifier, java.lang.String);
+    Code:
+       0: aload_0
+       1: invokevirtual #99                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+       4: ldc           #100                // String report-consumer-definition
+       6: iconst_0
+       7: invokevirtual #30                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+      10: ifeq          19
+      13: aload_0
+      14: aload_1
+      15: aload_2
+      16: invokespecial #98                 // Method storeMetadata:(Lorg/apache/dubbo/metadata/report/identifier/BaseMetadataIdentifier;Ljava/lang/String;)V
+      19: return
+
+  protected void doSaveMetadata(org.apache.dubbo.metadata.report.identifier.ServiceMetadataIdentifier, org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokevirtual #101                // Method org/apache/dubbo/common/URL.toFullString:()Ljava/lang/String;
+       6: invokestatic  #102                // Method org/apache/dubbo/common/URL.encode:(Ljava/lang/String;)Ljava/lang/String;
+       9: invokespecial #98                 // Method storeMetadata:(Lorg/apache/dubbo/metadata/report/identifier/BaseMetadataIdentifier;Ljava/lang/String;)V
+      12: return
+
+  protected void doRemoveMetadata(org.apache.dubbo.metadata.report.identifier.ServiceMetadataIdentifier);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #103                // Method deleteMetadata:(Lorg/apache/dubbo/metadata/report/identifier/BaseMetadataIdentifier;)V
+       5: return
+
+  protected java.util.List<java.lang.String> doGetExportedURLs(org.apache.dubbo.metadata.report.identifier.ServiceMetadataIdentifier);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #104                // Method getConfig:(Lorg/apache/dubbo/metadata/report/identifier/BaseMetadataIdentifier;)Ljava/lang/String;
+       5: astore_2
+       6: aload_2
+       7: invokestatic  #105                // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+      10: ifeq          17
+      13: invokestatic  #106                // Method java/util/Collections.emptyList:()Ljava/util/List;
+      16: areturn
+      17: new           #107                // class java/util/ArrayList
+      20: dup
+      21: iconst_1
+      22: anewarray     #108                // class java/lang/String
+      25: dup
+      26: iconst_0
+      27: aload_2
+      28: invokestatic  #109                // Method org/apache/dubbo/common/URL.decode:(Ljava/lang/String;)Ljava/lang/String;
+      31: aastore
+      32: invokestatic  #110                // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+      35: invokespecial #111                // Method java/util/ArrayList."<init>":(Ljava/util/Collection;)V
+      38: areturn
+
+  protected void doSaveSubscriberData(org.apache.dubbo.metadata.report.identifier.SubscriberMetadataIdentifier, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #98                 // Method storeMetadata:(Lorg/apache/dubbo/metadata/report/identifier/BaseMetadataIdentifier;Ljava/lang/String;)V
+       6: return
+
+  protected java.lang.String doGetSubscribedURLs(org.apache.dubbo.metadata.report.identifier.SubscriberMetadataIdentifier);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #104                // Method getConfig:(Lorg/apache/dubbo/metadata/report/identifier/BaseMetadataIdentifier;)Ljava/lang/String;
+       5: areturn
+
+  public java.lang.String getServiceDefinition(org.apache.dubbo.metadata.report.identifier.MetadataIdentifier);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #104                // Method getConfig:(Lorg/apache/dubbo/metadata/report/identifier/BaseMetadataIdentifier;)Ljava/lang/String;
+       5: areturn
+
+  public boolean registerServiceAppMapping(java.lang.String, java.lang.String, java.lang.String, java.lang.Object);
+    Code:
+       0: aload         4
+       2: instanceof    #108                // class java/lang/String
+       5: ifne          18
+       8: new           #112                // class java/lang/IllegalArgumentException
+      11: dup
+      12: ldc           #113                // String nacos publishConfigCas requires string type ticket
+      14: invokespecial #114                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      17: athrow
+      18: aload_0
+      19: getfield      #18                 // Field configService:Lorg/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper;
+      22: aload_1
+      23: aload_2
+      24: aload_3
+      25: aload         4
+      27: checkcast     #108                // class java/lang/String
+      30: invokevirtual #115                // Method org/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper.publishConfigCas:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
+      33: ireturn
+      34: astore        5
+      36: aload_0
+      37: getfield      #36                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      40: ldc           #116                // String 1-37
+      42: ldc           #38                 // String
+      44: ldc           #38                 // String
+      46: ldc           #117                // String nacos publishConfigCas failed.
+      48: aload         5
+      50: invokeinterface #118,  6          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      55: iconst_0
+      56: ireturn
+    Exception table:
+       from    to  target type
+           0    33    34   Class com/alibaba/nacos/api/exception/NacosException
+
+  public org.apache.dubbo.common.config.configcenter.ConfigItem getConfigItem(java.lang.String, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #119                // Method getConfig:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+       6: astore_3
+       7: ldc           #120                // String 0
+       9: astore        4
+      11: aload_3
+      12: invokestatic  #86                 // Method org/apache/dubbo/common/utils/StringUtils.isNotEmpty:(Ljava/lang/String;)Z
+      15: ifeq          28
+      18: aload_0
+      19: getfield      #16                 // Field md5Utils:Lorg/apache/dubbo/common/utils/MD5Utils;
+      22: aload_3
+      23: invokevirtual #121                // Method org/apache/dubbo/common/utils/MD5Utils.getMd5:(Ljava/lang/String;)Ljava/lang/String;
+      26: astore        4
+      28: new           #122                // class org/apache/dubbo/common/config/configcenter/ConfigItem
+      31: dup
+      32: aload_3
+      33: aload         4
+      35: invokespecial #123                // Method org/apache/dubbo/common/config/configcenter/ConfigItem."<init>":(Ljava/lang/String;Ljava/lang/Object;)V
+      38: areturn
+
+  public java.util.Set<java.lang.String> getServiceAppMapping(java.lang.String, org.apache.dubbo.metadata.MappingListener, org.apache.dubbo.common.URL);
+    Code:
+       0: ldc           #124                // String mapping
+       2: astore        4
+       4: aconst_null
+       5: aload_0
+       6: getfield      #13                 // Field casListenerMap:Ljava/util/Map;
+       9: aload_0
+      10: aload_1
+      11: aload         4
+      13: invokespecial #125                // Method buildListenerKey:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      16: invokeinterface #126,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      21: if_acmpne     32
+      24: aload_0
+      25: aload_1
+      26: aload         4
+      28: aload_2
+      29: invokespecial #127                // Method addCasServiceMappingListener:(Ljava/lang/String;Ljava/lang/String;Lorg/apache/dubbo/metadata/MappingListener;)V
+      32: aload_0
+      33: aload_1
+      34: aload         4
+      36: invokespecial #119                // Method getConfig:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      39: astore        5
+      41: aload         5
+      43: invokestatic  #128                // InterfaceMethod org/apache/dubbo/metadata/ServiceNameMapping.getAppNames:(Ljava/lang/String;)Ljava/util/Set;
+      46: areturn
+
+  public void removeServiceAppMappingListener(java.lang.String, org.apache.dubbo.metadata.MappingListener);
+    Code:
+       0: ldc           #124                // String mapping
+       2: astore_3
+       3: aload_0
+       4: getfield      #13                 // Field casListenerMap:Ljava/util/Map;
+       7: aload_0
+       8: aload_1
+       9: aload_3
+      10: invokespecial #125                // Method buildListenerKey:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      13: invokeinterface #126,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      18: checkcast     #129                // class org/apache/dubbo/metadata/store/nacos/NacosMetadataReport$MappingDataListener
+      21: astore        4
+      23: aconst_null
+      24: aload         4
+      26: if_acmpeq     36
+      29: aload_0
+      30: aload_1
+      31: aload_3
+      32: aload_2
+      33: invokespecial #130                // Method removeCasServiceMappingListener:(Ljava/lang/String;Ljava/lang/String;Lorg/apache/dubbo/metadata/MappingListener;)V
+      36: return
+
+  public java.util.Set<java.lang.String> getServiceAppMapping(java.lang.String, org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: ldc           #124                // String mapping
+       4: invokespecial #119                // Method getConfig:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+       7: astore_3
+       8: aload_3
+       9: invokestatic  #128                // InterfaceMethod org/apache/dubbo/metadata/ServiceNameMapping.getAppNames:(Ljava/lang/String;)Ljava/util/Set;
+      12: areturn
+
+  private java.lang.String getConfig(java.lang.String, java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #18                 // Field configService:Lorg/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper;
+       4: aload_1
+       5: aload_2
+       6: invokevirtual #131                // Method org/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper.getConfig:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+       9: areturn
+      10: astore_3
+      11: aload_0
+      12: getfield      #36                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      15: ldc           #116                // String 1-37
+      17: ldc           #38                 // String
+      19: ldc           #38                 // String
+      21: aload_3
+      22: invokevirtual #92                 // Method com/alibaba/nacos/api/exception/NacosException.getMessage:()Ljava/lang/String;
+      25: invokeinterface #63,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      30: aconst_null
+      31: areturn
+    Exception table:
+       from    to  target type
+           0     9    10   Class com/alibaba/nacos/api/exception/NacosException
+
+  private void addCasServiceMappingListener(java.lang.String, java.lang.String, org.apache.dubbo.metadata.MappingListener);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field casListenerMap:Ljava/util/Map;
+       4: aload_0
+       5: aload_1
+       6: aload_2
+       7: invokespecial #125                // Method buildListenerKey:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      10: aload_1
+      11: aload_2
+      12: invokedynamic #132,  0            // InvokeDynamic #0:apply:(Ljava/lang/String;Ljava/lang/String;)Ljava/util/function/Function;
+      17: invokeinterface #133,  3          // InterfaceMethod java/util/Map.computeIfAbsent:(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+      22: checkcast     #129                // class org/apache/dubbo/metadata/store/nacos/NacosMetadataReport$MappingDataListener
+      25: astore        4
+      27: aload         4
+      29: aload_3
+      30: invokevirtual #134                // Method org/apache/dubbo/metadata/store/nacos/NacosMetadataReport$MappingDataListener.addListeners:(Lorg/apache/dubbo/metadata/MappingListener;)V
+      33: aload_0
+      34: aload_1
+      35: ldc           #124                // String mapping
+      37: aload         4
+      39: invokevirtual #135                // Method addListener:(Ljava/lang/String;Ljava/lang/String;Lorg/apache/dubbo/common/config/configcenter/ConfigurationListener;)V
+      42: return
+
+  private void removeCasServiceMappingListener(java.lang.String, java.lang.String, org.apache.dubbo.metadata.MappingListener);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field casListenerMap:Ljava/util/Map;
+       4: aload_0
+       5: aload_1
+       6: aload_2
+       7: invokespecial #125                // Method buildListenerKey:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      10: invokeinterface #126,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      15: checkcast     #129                // class org/apache/dubbo/metadata/store/nacos/NacosMetadataReport$MappingDataListener
+      18: astore        4
+      20: aload         4
+      22: ifnull        66
+      25: aload         4
+      27: aload_3
+      28: invokevirtual #136                // Method org/apache/dubbo/metadata/store/nacos/NacosMetadataReport$MappingDataListener.removeListeners:(Lorg/apache/dubbo/metadata/MappingListener;)V
+      31: aload         4
+      33: invokevirtual #137                // Method org/apache/dubbo/metadata/store/nacos/NacosMetadataReport$MappingDataListener.isEmpty:()Z
+      36: ifeq          66
+      39: aload_0
+      40: aload_1
+      41: ldc           #124                // String mapping
+      43: aload         4
+      45: invokevirtual #138                // Method removeListener:(Ljava/lang/String;Ljava/lang/String;Lorg/apache/dubbo/common/config/configcenter/ConfigurationListener;)V
+      48: aload_0
+      49: getfield      #13                 // Field casListenerMap:Ljava/util/Map;
+      52: aload_0
+      53: aload_1
+      54: aload_2
+      55: invokespecial #125                // Method buildListenerKey:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      58: aload         4
+      60: invokeinterface #139,  3          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      65: pop
+      66: return
+
+  public void addListener(java.lang.String, java.lang.String, org.apache.dubbo.common.config.configcenter.ConfigurationListener);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #125                // Method buildListenerKey:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+       6: astore        4
+       8: aload_0
+       9: getfield      #12                 // Field watchListenerMap:Ljava/util/Map;
+      12: aload         4
+      14: aload_0
+      15: aload_1
+      16: aload_2
+      17: invokedynamic #140,  0            // InvokeDynamic #1:apply:(Lorg/apache/dubbo/metadata/store/nacos/NacosMetadataReport;Ljava/lang/String;Ljava/lang/String;)Ljava/util/function/Function;
+      22: invokeinterface #133,  3          // InterfaceMethod java/util/Map.computeIfAbsent:(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+      27: checkcast     #141                // class org/apache/dubbo/metadata/store/nacos/NacosMetadataReport$NacosConfigListener
+      30: astore        5
+      32: aload         5
+      34: aload_3
+      35: invokevirtual #142                // Method org/apache/dubbo/metadata/store/nacos/NacosMetadataReport$NacosConfigListener.addListener:(Lorg/apache/dubbo/common/config/configcenter/ConfigurationListener;)V
+      38: aload_0
+      39: getfield      #18                 // Field configService:Lorg/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper;
+      42: aload_1
+      43: aload_2
+      44: aload         5
+      46: invokevirtual #143                // Method org/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper.addListener:(Ljava/lang/String;Ljava/lang/String;Lcom/alibaba/nacos/api/config/listener/Listener;)V
+      49: goto          74
+      52: astore        6
+      54: aload_0
+      55: getfield      #36                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      58: ldc           #116                // String 1-37
+      60: ldc           #38                 // String
+      62: ldc           #38                 // String
+      64: aload         6
+      66: invokevirtual #92                 // Method com/alibaba/nacos/api/exception/NacosException.getMessage:()Ljava/lang/String;
+      69: invokeinterface #63,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      74: return
+    Exception table:
+       from    to  target type
+          38    49    52   Class com/alibaba/nacos/api/exception/NacosException
+
+  public void removeListener(java.lang.String, java.lang.String, org.apache.dubbo.common.config.configcenter.ConfigurationListener);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #125                // Method buildListenerKey:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+       6: astore        4
+       8: aload_0
+       9: getfield      #12                 // Field watchListenerMap:Ljava/util/Map;
+      12: aload         4
+      14: invokeinterface #126,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      19: checkcast     #141                // class org/apache/dubbo/metadata/store/nacos/NacosMetadataReport$NacosConfigListener
+      22: astore        5
+      24: aload         5
+      26: ifnull        66
+      29: aload         5
+      31: aload_3
+      32: invokevirtual #144                // Method org/apache/dubbo/metadata/store/nacos/NacosMetadataReport$NacosConfigListener.removeListener:(Lorg/apache/dubbo/common/config/configcenter/ConfigurationListener;)V
+      35: aload         5
+      37: invokevirtual #145                // Method org/apache/dubbo/metadata/store/nacos/NacosMetadataReport$NacosConfigListener.isEmpty:()Z
+      40: ifeq          66
+      43: aload_0
+      44: getfield      #18                 // Field configService:Lorg/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper;
+      47: aload_1
+      48: aload_2
+      49: aload         5
+      51: invokevirtual #146                // Method org/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper.removeListener:(Ljava/lang/String;Ljava/lang/String;Lcom/alibaba/nacos/api/config/listener/Listener;)V
+      54: aload_0
+      55: getfield      #12                 // Field watchListenerMap:Ljava/util/Map;
+      58: aload         4
+      60: invokeinterface #147,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      65: pop
+      66: goto          91
+      69: astore        6
+      71: aload_0
+      72: getfield      #36                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      75: ldc           #116                // String 1-37
+      77: ldc           #38                 // String
+      79: ldc           #38                 // String
+      81: aload         6
+      83: invokevirtual #92                 // Method com/alibaba/nacos/api/exception/NacosException.getMessage:()Ljava/lang/String;
+      86: invokeinterface #63,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      91: return
+    Exception table:
+       from    to  target type
+          24    66    69   Class com/alibaba/nacos/api/exception/NacosException
+
+  private org.apache.dubbo.metadata.store.nacos.NacosMetadataReport$NacosConfigListener createTargetListener(java.lang.String, java.lang.String);
+    Code:
+       0: new           #141                // class org/apache/dubbo/metadata/store/nacos/NacosMetadataReport$NacosConfigListener
+       3: dup
+       4: aload_0
+       5: invokespecial #148                // Method org/apache/dubbo/metadata/store/nacos/NacosMetadataReport$NacosConfigListener."<init>":(Lorg/apache/dubbo/metadata/store/nacos/NacosMetadataReport;)V
+       8: astore_3
+       9: aload_3
+      10: aload_1
+      11: aload_2
+      12: invokevirtual #149                // Method org/apache/dubbo/metadata/store/nacos/NacosMetadataReport$NacosConfigListener.fillContext:(Ljava/lang/String;Ljava/lang/String;)V
+      15: aload_3
+      16: areturn
+
+  private java.lang.String buildListenerKey(java.lang.String, java.lang.String);
+    Code:
+       0: new           #39                 // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #40                 // Method java/lang/StringBuilder."<init>":()V
+       7: aload_1
+       8: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      11: bipush        45
+      13: invokevirtual #77                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      16: aload_2
+      17: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      20: invokevirtual #46                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      23: areturn
+
+  private void storeMetadata(org.apache.dubbo.metadata.report.identifier.BaseMetadataIdentifier, java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #18                 // Field configService:Lorg/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper;
+       4: aload_1
+       5: getstatic     #150                // Field org/apache/dubbo/metadata/report/identifier/KeyTypeEnum.UNIQUE_KEY:Lorg/apache/dubbo/metadata/report/identifier/KeyTypeEnum;
+       8: invokeinterface #151,  2          // InterfaceMethod org/apache/dubbo/metadata/report/identifier/BaseMetadataIdentifier.getUniqueKey:(Lorg/apache/dubbo/metadata/report/identifier/KeyTypeEnum;)Ljava/lang/String;
+      13: aload_0
+      14: getfield      #23                 // Field group:Ljava/lang/String;
+      17: aload_2
+      18: invokevirtual #91                 // Method org/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper.publishConfig:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
+      21: istore_3
+      22: iload_3
+      23: ifne          36
+      26: new           #152                // class java/lang/RuntimeException
+      29: dup
+      30: ldc           #153                // String publish nacos metadata failed
+      32: invokespecial #154                // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;)V
+      35: athrow
+      36: goto          145
+      39: astore_3
+      40: aload_0
+      41: getfield      #36                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      44: ldc           #116                // String 1-37
+      46: ldc           #38                 // String
+      48: ldc           #38                 // String
+      50: new           #39                 // class java/lang/StringBuilder
+      53: dup
+      54: invokespecial #40                 // Method java/lang/StringBuilder."<init>":()V
+      57: ldc           #156                // String Failed to put
+      59: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      62: aload_1
+      63: invokevirtual #157                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      66: ldc           #158                // String  to nacos
+      68: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      71: aload_2
+      72: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      75: ldc           #159                // String , cause:
+      77: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      80: aload_3
+      81: invokevirtual #160                // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+      84: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      87: invokevirtual #46                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      90: aload_3
+      91: invokeinterface #54,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      96: new           #152                // class java/lang/RuntimeException
+      99: dup
+     100: new           #39                 // class java/lang/StringBuilder
+     103: dup
+     104: invokespecial #40                 // Method java/lang/StringBuilder."<init>":()V
+     107: ldc           #156                // String Failed to put
+     109: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     112: aload_1
+     113: invokevirtual #157                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     116: ldc           #158                // String  to nacos
+     118: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     121: aload_2
+     122: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     125: ldc           #159                // String , cause:
+     127: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     130: aload_3
+     131: invokevirtual #160                // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     134: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     137: invokevirtual #46                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     140: aload_3
+     141: invokespecial #161                // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     144: athrow
+     145: return
+    Exception table:
+       from    to  target type
+           0    36    39   Class java/lang/Throwable
+
+  private void deleteMetadata(org.apache.dubbo.metadata.report.identifier.BaseMetadataIdentifier);
+    Code:
+       0: aload_0
+       1: getfield      #18                 // Field configService:Lorg/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper;
+       4: aload_1
+       5: getstatic     #150                // Field org/apache/dubbo/metadata/report/identifier/KeyTypeEnum.UNIQUE_KEY:Lorg/apache/dubbo/metadata/report/identifier/KeyTypeEnum;
+       8: invokeinterface #151,  2          // InterfaceMethod org/apache/dubbo/metadata/report/identifier/BaseMetadataIdentifier.getUniqueKey:(Lorg/apache/dubbo/metadata/report/identifier/KeyTypeEnum;)Ljava/lang/String;
+      13: aload_0
+      14: getfield      #23                 // Field group:Ljava/lang/String;
+      17: invokevirtual #94                 // Method org/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper.removeConfig:(Ljava/lang/String;Ljava/lang/String;)Z
+      20: istore_2
+      21: iload_2
+      22: ifne          35
+      25: new           #152                // class java/lang/RuntimeException
+      28: dup
+      29: ldc           #162                // String remove nacos metadata failed
+      31: invokespecial #154                // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;)V
+      34: athrow
+      35: goto          126
+      38: astore_2
+      39: aload_0
+      40: getfield      #36                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      43: ldc           #116                // String 1-37
+      45: ldc           #38                 // String
+      47: ldc           #38                 // String
+      49: new           #39                 // class java/lang/StringBuilder
+      52: dup
+      53: invokespecial #40                 // Method java/lang/StringBuilder."<init>":()V
+      56: ldc           #163                // String Failed to remove
+      58: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      61: aload_1
+      62: invokevirtual #157                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      65: ldc           #164                // String  from nacos , cause:
+      67: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      70: aload_2
+      71: invokevirtual #160                // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+      74: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      77: invokevirtual #46                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      80: aload_2
+      81: invokeinterface #54,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      86: new           #152                // class java/lang/RuntimeException
+      89: dup
+      90: new           #39                 // class java/lang/StringBuilder
+      93: dup
+      94: invokespecial #40                 // Method java/lang/StringBuilder."<init>":()V
+      97: ldc           #163                // String Failed to remove
+      99: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     102: aload_1
+     103: invokevirtual #157                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     106: ldc           #164                // String  from nacos , cause:
+     108: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     111: aload_2
+     112: invokevirtual #160                // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     115: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     118: invokevirtual #46                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     121: aload_2
+     122: invokespecial #161                // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     125: athrow
+     126: return
+    Exception table:
+       from    to  target type
+           0    35    38   Class java/lang/Throwable
+
+  private java.lang.String getConfig(org.apache.dubbo.metadata.report.identifier.BaseMetadataIdentifier);
+    Code:
+       0: aload_0
+       1: getfield      #18                 // Field configService:Lorg/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper;
+       4: aload_1
+       5: getstatic     #150                // Field org/apache/dubbo/metadata/report/identifier/KeyTypeEnum.UNIQUE_KEY:Lorg/apache/dubbo/metadata/report/identifier/KeyTypeEnum;
+       8: invokeinterface #151,  2          // InterfaceMethod org/apache/dubbo/metadata/report/identifier/BaseMetadataIdentifier.getUniqueKey:(Lorg/apache/dubbo/metadata/report/identifier/KeyTypeEnum;)Ljava/lang/String;
+      13: aload_0
+      14: getfield      #23                 // Field group:Ljava/lang/String;
+      17: ldc2_w        #68                 // long 3000l
+      20: invokevirtual #95                 // Method org/apache/dubbo/metadata/store/nacos/NacosConfigServiceWrapper.getConfig:(Ljava/lang/String;Ljava/lang/String;J)Ljava/lang/String;
+      23: areturn
+      24: astore_2
+      25: aload_0
+      26: getfield      #36                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      29: ldc           #116                // String 1-37
+      31: ldc           #38                 // String
+      33: ldc           #38                 // String
+      35: new           #39                 // class java/lang/StringBuilder
+      38: dup
+      39: invokespecial #40                 // Method java/lang/StringBuilder."<init>":()V
+      42: ldc           #165                // String Failed to get
+      44: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      47: aload_1
+      48: invokevirtual #157                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      51: ldc           #164                // String  from nacos , cause:
+      53: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      56: aload_2
+      57: invokevirtual #160                // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+      60: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      63: invokevirtual #46                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      66: aload_2
+      67: invokeinterface #54,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      72: new           #152                // class java/lang/RuntimeException
+      75: dup
+      76: new           #39                 // class java/lang/StringBuilder
+      79: dup
+      80: invokespecial #40                 // Method java/lang/StringBuilder."<init>":()V
+      83: ldc           #165                // String Failed to get
+      85: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      88: aload_1
+      89: invokevirtual #157                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      92: ldc           #164                // String  from nacos , cause:
+      94: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      97: aload_2
+      98: invokevirtual #160                // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     101: invokevirtual #42                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     104: invokevirtual #46                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     107: aload_2
+     108: invokespecial #161                // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     111: athrow
+    Exception table:
+       from    to  target type
+           0    23    24   Class java/lang/Throwable
+
+  private org.apache.dubbo.metadata.store.nacos.NacosMetadataReport$NacosConfigListener lambda$addListener$1(java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #166                // Method createTargetListener:(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/dubbo/metadata/store/nacos/NacosMetadataReport$NacosConfigListener;
+       6: areturn
+
+  private static org.apache.dubbo.metadata.store.nacos.NacosMetadataReport$MappingDataListener lambda$addCasServiceMappingListener$0(java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: new           #129                // class org/apache/dubbo/metadata/store/nacos/NacosMetadataReport$MappingDataListener
+       3: dup
+       4: aload_0
+       5: aload_1
+       6: invokespecial #167                // Method org/apache/dubbo/metadata/store/nacos/NacosMetadataReport$MappingDataListener."<init>":(Ljava/lang/String;Ljava/lang/String;)V
+       9: areturn
+}

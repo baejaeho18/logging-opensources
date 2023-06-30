@@ -1,0 +1,104 @@
+Compiled from "TimeWindowCounter.java"
+public class org.apache.dubbo.metrics.aggregate.TimeWindowCounter {
+  private final org.apache.dubbo.metrics.aggregate.TimeWindowCounter$LongAdderSlidingWindow slidingWindow;
+
+  public org.apache.dubbo.metrics.aggregate.TimeWindowCounter(int, int);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #2                  // class org/apache/dubbo/metrics/aggregate/TimeWindowCounter$LongAdderSlidingWindow
+       8: dup
+       9: iload_1
+      10: getstatic     #3                  // Field java/util/concurrent/TimeUnit.SECONDS:Ljava/util/concurrent/TimeUnit;
+      13: iload_2
+      14: i2l
+      15: invokevirtual #4                  // Method java/util/concurrent/TimeUnit.toMillis:(J)J
+      18: invokespecial #5                  // Method org/apache/dubbo/metrics/aggregate/TimeWindowCounter$LongAdderSlidingWindow."<init>":(IJ)V
+      21: putfield      #6                  // Field slidingWindow:Lorg/apache/dubbo/metrics/aggregate/TimeWindowCounter$LongAdderSlidingWindow;
+      24: return
+
+  public double get();
+    Code:
+       0: dconst_0
+       1: dstore_1
+       2: aload_0
+       3: getfield      #6                  // Field slidingWindow:Lorg/apache/dubbo/metrics/aggregate/TimeWindowCounter$LongAdderSlidingWindow;
+       6: invokevirtual #7                  // Method org/apache/dubbo/metrics/aggregate/TimeWindowCounter$LongAdderSlidingWindow.values:()Ljava/util/List;
+       9: astore_3
+      10: aload_3
+      11: invokeinterface #8,  1            // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      16: astore        4
+      18: aload         4
+      20: invokeinterface #9,  1            // InterfaceMethod java/util/Iterator.hasNext:()Z
+      25: ifeq          52
+      28: aload         4
+      30: invokeinterface #10,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      35: checkcast     #11                 // class java/util/concurrent/atomic/LongAdder
+      38: astore        5
+      40: dload_1
+      41: aload         5
+      43: invokevirtual #12                 // Method java/util/concurrent/atomic/LongAdder.sum:()J
+      46: l2d
+      47: dadd
+      48: dstore_1
+      49: goto          18
+      52: dload_1
+      53: dreturn
+
+  public long bucketLivedSeconds();
+    Code:
+       0: getstatic     #13                 // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+       3: aload_0
+       4: getfield      #6                  // Field slidingWindow:Lorg/apache/dubbo/metrics/aggregate/TimeWindowCounter$LongAdderSlidingWindow;
+       7: invokevirtual #7                  // Method org/apache/dubbo/metrics/aggregate/TimeWindowCounter$LongAdderSlidingWindow.values:()Ljava/util/List;
+      10: invokeinterface #14,  1           // InterfaceMethod java/util/List.size:()I
+      15: i2l
+      16: aload_0
+      17: getfield      #6                  // Field slidingWindow:Lorg/apache/dubbo/metrics/aggregate/TimeWindowCounter$LongAdderSlidingWindow;
+      20: invokevirtual #15                 // Method org/apache/dubbo/metrics/aggregate/TimeWindowCounter$LongAdderSlidingWindow.getPaneIntervalInMs:()J
+      23: lmul
+      24: invokevirtual #16                 // Method java/util/concurrent/TimeUnit.toSeconds:(J)J
+      27: lreturn
+
+  public void increment();
+    Code:
+       0: aload_0
+       1: lconst_1
+       2: invokestatic  #17                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+       5: invokevirtual #18                 // Method increment:(Ljava/lang/Long;)V
+       8: return
+
+  public void increment(java.lang.Long);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field slidingWindow:Lorg/apache/dubbo/metrics/aggregate/TimeWindowCounter$LongAdderSlidingWindow;
+       4: invokevirtual #19                 // Method org/apache/dubbo/metrics/aggregate/TimeWindowCounter$LongAdderSlidingWindow.currentPane:()Lorg/apache/dubbo/metrics/aggregate/Pane;
+       7: invokevirtual #20                 // Method org/apache/dubbo/metrics/aggregate/Pane.getValue:()Ljava/lang/Object;
+      10: checkcast     #11                 // class java/util/concurrent/atomic/LongAdder
+      13: aload_1
+      14: invokevirtual #21                 // Method java/lang/Long.longValue:()J
+      17: invokevirtual #22                 // Method java/util/concurrent/atomic/LongAdder.add:(J)V
+      20: return
+
+  public void decrement();
+    Code:
+       0: aload_0
+       1: lconst_1
+       2: invokestatic  #17                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+       5: invokevirtual #23                 // Method decrement:(Ljava/lang/Long;)V
+       8: return
+
+  public void decrement(java.lang.Long);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field slidingWindow:Lorg/apache/dubbo/metrics/aggregate/TimeWindowCounter$LongAdderSlidingWindow;
+       4: invokevirtual #19                 // Method org/apache/dubbo/metrics/aggregate/TimeWindowCounter$LongAdderSlidingWindow.currentPane:()Lorg/apache/dubbo/metrics/aggregate/Pane;
+       7: invokevirtual #20                 // Method org/apache/dubbo/metrics/aggregate/Pane.getValue:()Ljava/lang/Object;
+      10: checkcast     #11                 // class java/util/concurrent/atomic/LongAdder
+      13: aload_1
+      14: invokevirtual #21                 // Method java/lang/Long.longValue:()J
+      17: lneg
+      18: invokevirtual #22                 // Method java/util/concurrent/atomic/LongAdder.add:(J)V
+      21: return
+}
