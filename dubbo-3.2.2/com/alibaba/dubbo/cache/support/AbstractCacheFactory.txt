@@ -1,0 +1,67 @@
+Compiled from "AbstractCacheFactory.java"
+public abstract class com.alibaba.dubbo.cache.support.AbstractCacheFactory implements com.alibaba.dubbo.cache.CacheFactory {
+  private final java.util.concurrent.ConcurrentMap<java.lang.String, com.alibaba.dubbo.cache.Cache> caches;
+
+  public com.alibaba.dubbo.cache.support.AbstractCacheFactory();
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #3                  // class java/util/concurrent/ConcurrentHashMap
+       8: dup
+       9: invokespecial #4                  // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      12: putfield      #5                  // Field caches:Ljava/util/concurrent/ConcurrentMap;
+      15: return
+
+  public com.alibaba.dubbo.cache.Cache getCache(com.alibaba.dubbo.common.URL, com.alibaba.dubbo.rpc.Invocation);
+    Code:
+       0: aload_1
+       1: ldc           #6                  // String method
+       3: aload_2
+       4: invokeinterface #7,  1            // InterfaceMethod com/alibaba/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+       9: invokevirtual #8                  // Method com/alibaba/dubbo/common/URL.addParameter:(Ljava/lang/String;Ljava/lang/String;)Lcom/alibaba/dubbo/common/URL;
+      12: astore_1
+      13: aload_1
+      14: invokevirtual #9                  // Method com/alibaba/dubbo/common/URL.toFullString:()Ljava/lang/String;
+      17: astore_3
+      18: aload_0
+      19: getfield      #5                  // Field caches:Ljava/util/concurrent/ConcurrentMap;
+      22: aload_3
+      23: invokeinterface #10,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      28: checkcast     #11                 // class com/alibaba/dubbo/cache/Cache
+      31: astore        4
+      33: aload         4
+      35: ifnonnull     69
+      38: aload_0
+      39: getfield      #5                  // Field caches:Ljava/util/concurrent/ConcurrentMap;
+      42: aload_3
+      43: aload_0
+      44: aload_1
+      45: invokevirtual #12                 // Method createCache:(Lcom/alibaba/dubbo/common/URL;)Lcom/alibaba/dubbo/cache/Cache;
+      48: invokeinterface #13,  3           // InterfaceMethod java/util/concurrent/ConcurrentMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      53: pop
+      54: aload_0
+      55: getfield      #5                  // Field caches:Ljava/util/concurrent/ConcurrentMap;
+      58: aload_3
+      59: invokeinterface #10,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      64: checkcast     #11                 // class com/alibaba/dubbo/cache/Cache
+      67: astore        4
+      69: aload         4
+      71: areturn
+
+  protected abstract com.alibaba.dubbo.cache.Cache createCache(com.alibaba.dubbo.common.URL);
+
+  public org.apache.dubbo.cache.Cache getCache(org.apache.dubbo.common.URL, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_0
+       1: new           #14                 // class com/alibaba/dubbo/common/URL
+       4: dup
+       5: aload_1
+       6: invokespecial #15                 // Method com/alibaba/dubbo/common/URL."<init>":(Lorg/apache/dubbo/common/URL;)V
+       9: new           #16                 // class com/alibaba/dubbo/rpc/Invocation$CompatibleInvocation
+      12: dup
+      13: aload_2
+      14: invokespecial #17                 // Method com/alibaba/dubbo/rpc/Invocation$CompatibleInvocation."<init>":(Lorg/apache/dubbo/rpc/Invocation;)V
+      17: invokevirtual #18                 // Method getCache:(Lcom/alibaba/dubbo/common/URL;Lcom/alibaba/dubbo/rpc/Invocation;)Lcom/alibaba/dubbo/cache/Cache;
+      20: areturn
+}

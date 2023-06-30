@@ -1,0 +1,335 @@
+Compiled from "ResourceFilter.java"
+public class com.alibaba.dubbo.container.page.ResourceFilter implements javax.servlet.Filter {
+  private static final java.lang.String CLASSPATH_PREFIX;
+
+  private final long start;
+
+  private final java.util.List<java.lang.String> resources;
+
+  public com.alibaba.dubbo.container.page.ResourceFilter();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: invokestatic  #2                  // Method java/lang/System.currentTimeMillis:()J
+       8: putfield      #3                  // Field start:J
+      11: aload_0
+      12: new           #4                  // class java/util/ArrayList
+      15: dup
+      16: invokespecial #5                  // Method java/util/ArrayList."<init>":()V
+      19: putfield      #6                  // Field resources:Ljava/util/List;
+      22: return
+
+  public void init(javax.servlet.FilterConfig) throws javax.servlet.ServletException;
+    Code:
+       0: aload_1
+       1: ldc           #7                  // String resources
+       3: invokeinterface #8,  2            // InterfaceMethod javax/servlet/FilterConfig.getInitParameter:(Ljava/lang/String;)Ljava/lang/String;
+       8: astore_2
+       9: aload_2
+      10: ifnull        120
+      13: aload_2
+      14: invokevirtual #9                  // Method java/lang/String.length:()I
+      17: ifle          120
+      20: getstatic     #10                 // Field com/alibaba/dubbo/common/Constants.COMMA_SPLIT_PATTERN:Ljava/util/regex/Pattern;
+      23: aload_2
+      24: invokevirtual #11                 // Method java/util/regex/Pattern.split:(Ljava/lang/CharSequence;)[Ljava/lang/String;
+      27: astore_3
+      28: aload_3
+      29: astore        4
+      31: aload         4
+      33: arraylength
+      34: istore        5
+      36: iconst_0
+      37: istore        6
+      39: iload         6
+      41: iload         5
+      43: if_icmpge     120
+      46: aload         4
+      48: iload         6
+      50: aaload
+      51: astore        7
+      53: aload         7
+      55: ifnull        114
+      58: aload         7
+      60: invokevirtual #9                  // Method java/lang/String.length:()I
+      63: ifle          114
+      66: aload         7
+      68: bipush        92
+      70: bipush        47
+      72: invokevirtual #12                 // Method java/lang/String.replace:(CC)Ljava/lang/String;
+      75: astore        7
+      77: aload         7
+      79: ldc           #13                 // String /
+      81: invokevirtual #14                 // Method java/lang/String.endsWith:(Ljava/lang/String;)Z
+      84: ifeq          102
+      87: aload         7
+      89: iconst_0
+      90: aload         7
+      92: invokevirtual #9                  // Method java/lang/String.length:()I
+      95: iconst_1
+      96: isub
+      97: invokevirtual #15                 // Method java/lang/String.substring:(II)Ljava/lang/String;
+     100: astore        7
+     102: aload_0
+     103: getfield      #6                  // Field resources:Ljava/util/List;
+     106: aload         7
+     108: invokeinterface #16,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     113: pop
+     114: iinc          6, 1
+     117: goto          39
+     120: return
+
+  public void destroy();
+    Code:
+       0: return
+
+  public void doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain) throws java.io.IOException, javax.servlet.ServletException;
+    Code:
+       0: aload_1
+       1: checkcast     #17                 // class javax/servlet/http/HttpServletRequest
+       4: astore        4
+       6: aload_2
+       7: checkcast     #18                 // class javax/servlet/http/HttpServletResponse
+      10: astore        5
+      12: aload         5
+      14: invokeinterface #19,  1           // InterfaceMethod javax/servlet/http/HttpServletResponse.isCommitted:()Z
+      19: ifeq          23
+      22: return
+      23: aload         4
+      25: invokeinterface #20,  1           // InterfaceMethod javax/servlet/http/HttpServletRequest.getRequestURI:()Ljava/lang/String;
+      30: astore        6
+      32: aload         4
+      34: invokeinterface #21,  1           // InterfaceMethod javax/servlet/http/HttpServletRequest.getContextPath:()Ljava/lang/String;
+      39: astore        7
+      41: aload         6
+      43: ldc           #22                 // String /favicon.ico
+      45: invokevirtual #14                 // Method java/lang/String.endsWith:(Ljava/lang/String;)Z
+      48: ifeq          58
+      51: ldc           #22                 // String /favicon.ico
+      53: astore        6
+      55: goto          85
+      58: aload         7
+      60: ifnull        85
+      63: ldc           #13                 // String /
+      65: aload         7
+      67: invokevirtual #23                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      70: ifne          85
+      73: aload         6
+      75: aload         7
+      77: invokevirtual #9                  // Method java/lang/String.length:()I
+      80: invokevirtual #24                 // Method java/lang/String.substring:(I)Ljava/lang/String;
+      83: astore        6
+      85: aload         6
+      87: ldc           #13                 // String /
+      89: invokevirtual #25                 // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+      92: ifne          117
+      95: new           #26                 // class java/lang/StringBuilder
+      98: dup
+      99: invokespecial #27                 // Method java/lang/StringBuilder."<init>":()V
+     102: ldc           #13                 // String /
+     104: invokevirtual #28                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     107: aload         6
+     109: invokevirtual #28                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     112: invokevirtual #29                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     115: astore        6
+     117: aload_0
+     118: aload         6
+     120: invokespecial #30                 // Method getLastModified:(Ljava/lang/String;)J
+     123: lstore        8
+     125: aload         4
+     127: ldc           #31                 // String If-Modified-Since
+     129: invokeinterface #32,  2           // InterfaceMethod javax/servlet/http/HttpServletRequest.getDateHeader:(Ljava/lang/String;)J
+     134: lstore        10
+     136: lload         10
+     138: lload         8
+     140: lcmp
+     141: iflt          155
+     144: aload         5
+     146: sipush        304
+     149: invokeinterface #33,  2           // InterfaceMethod javax/servlet/http/HttpServletResponse.sendError:(I)V
+     154: return
+     155: aload_0
+     156: aload         6
+     158: invokespecial #34                 // Method getInputStream:(Ljava/lang/String;)Ljava/io/InputStream;
+     161: astore        13
+     163: aload         13
+     165: ifnonnull     177
+     168: aload_3
+     169: aload_1
+     170: aload_2
+     171: invokeinterface #35,  3           // InterfaceMethod javax/servlet/FilterChain.doFilter:(Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;)V
+     176: return
+     177: new           #36                 // class java/io/ByteArrayOutputStream
+     180: dup
+     181: invokespecial #37                 // Method java/io/ByteArrayOutputStream."<init>":()V
+     184: astore        14
+     186: sipush        8192
+     189: newarray       byte
+     191: astore        15
+     193: iconst_0
+     194: istore        16
+     196: iconst_m1
+     197: aload         13
+     199: aload         15
+     201: invokevirtual #38                 // Method java/io/InputStream.read:([B)I
+     204: dup
+     205: istore        16
+     207: if_icmpeq     223
+     210: aload         14
+     212: aload         15
+     214: iconst_0
+     215: iload         16
+     217: invokevirtual #39                 // Method java/io/ByteArrayOutputStream.write:([BII)V
+     220: goto          196
+     223: aload         14
+     225: invokevirtual #40                 // Method java/io/ByteArrayOutputStream.toByteArray:()[B
+     228: astore        12
+     230: aload         13
+     232: invokevirtual #41                 // Method java/io/InputStream.close:()V
+     235: goto          248
+     238: astore        17
+     240: aload         13
+     242: invokevirtual #41                 // Method java/io/InputStream.close:()V
+     245: aload         17
+     247: athrow
+     248: aload         5
+     250: ldc           #42                 // String Last-Modified
+     252: lload         8
+     254: invokeinterface #43,  4           // InterfaceMethod javax/servlet/http/HttpServletResponse.setDateHeader:(Ljava/lang/String;J)V
+     259: aload         5
+     261: invokeinterface #44,  1           // InterfaceMethod javax/servlet/http/HttpServletResponse.getOutputStream:()Ljavax/servlet/ServletOutputStream;
+     266: astore        14
+     268: aload         14
+     270: aload         12
+     272: invokevirtual #45                 // Method java/io/OutputStream.write:([B)V
+     275: aload         14
+     277: invokevirtual #46                 // Method java/io/OutputStream.flush:()V
+     280: return
+    Exception table:
+       from    to  target type
+         177   230   238   any
+         238   240   238   any
+
+  private boolean isFile(java.lang.String);
+    Code:
+       0: aload_1
+       1: ldc           #13                 // String /
+       3: invokevirtual #25                 // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+       6: ifne          19
+       9: aload_1
+      10: ldc           #47                 // String :
+      12: invokevirtual #48                 // Method java/lang/String.indexOf:(Ljava/lang/String;)I
+      15: iconst_1
+      16: if_icmpgt     23
+      19: iconst_1
+      20: goto          24
+      23: iconst_0
+      24: ireturn
+
+  private long getLastModified(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field resources:Ljava/util/List;
+       4: invokeinterface #49,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       9: astore_2
+      10: aload_2
+      11: invokeinterface #50,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      16: ifeq          97
+      19: aload_2
+      20: invokeinterface #51,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      25: checkcast     #52                 // class java/lang/String
+      28: astore_3
+      29: aload_3
+      30: ifnull        94
+      33: aload_3
+      34: invokevirtual #9                  // Method java/lang/String.length:()I
+      37: ifle          94
+      40: new           #26                 // class java/lang/StringBuilder
+      43: dup
+      44: invokespecial #27                 // Method java/lang/StringBuilder."<init>":()V
+      47: aload_3
+      48: invokevirtual #28                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      51: aload_1
+      52: invokevirtual #28                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      55: invokevirtual #29                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      58: astore        4
+      60: aload_0
+      61: aload         4
+      63: invokespecial #53                 // Method isFile:(Ljava/lang/String;)Z
+      66: ifeq          94
+      69: new           #54                 // class java/io/File
+      72: dup
+      73: aload         4
+      75: invokespecial #55                 // Method java/io/File."<init>":(Ljava/lang/String;)V
+      78: astore        5
+      80: aload         5
+      82: invokevirtual #56                 // Method java/io/File.exists:()Z
+      85: ifeq          94
+      88: aload         5
+      90: invokevirtual #57                 // Method java/io/File.lastModified:()J
+      93: lreturn
+      94: goto          10
+      97: aload_0
+      98: getfield      #3                  // Field start:J
+     101: lreturn
+
+  private java.io.InputStream getInputStream(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field resources:Ljava/util/List;
+       4: invokeinterface #49,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       9: astore_2
+      10: aload_2
+      11: invokeinterface #50,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      16: ifeq          116
+      19: aload_2
+      20: invokeinterface #51,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      25: checkcast     #52                 // class java/lang/String
+      28: astore_3
+      29: new           #26                 // class java/lang/StringBuilder
+      32: dup
+      33: invokespecial #27                 // Method java/lang/StringBuilder."<init>":()V
+      36: aload_3
+      37: invokevirtual #28                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      40: aload_1
+      41: invokevirtual #28                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      44: invokevirtual #29                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      47: astore        4
+      49: aload_0
+      50: aload         4
+      52: invokespecial #53                 // Method isFile:(Ljava/lang/String;)Z
+      55: ifeq          68
+      58: new           #58                 // class java/io/FileInputStream
+      61: dup
+      62: aload         4
+      64: invokespecial #59                 // Method java/io/FileInputStream."<init>":(Ljava/lang/String;)V
+      67: areturn
+      68: aload         4
+      70: ldc           #61                 // String classpath:
+      72: invokevirtual #25                 // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+      75: ifeq          98
+      78: invokestatic  #62                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+      81: invokevirtual #63                 // Method java/lang/Thread.getContextClassLoader:()Ljava/lang/ClassLoader;
+      84: aload         4
+      86: ldc           #61                 // String classpath:
+      88: invokevirtual #9                  // Method java/lang/String.length:()I
+      91: invokevirtual #24                 // Method java/lang/String.substring:(I)Ljava/lang/String;
+      94: invokevirtual #64                 // Method java/lang/ClassLoader.getResourceAsStream:(Ljava/lang/String;)Ljava/io/InputStream;
+      97: areturn
+      98: new           #65                 // class java/net/URL
+     101: dup
+     102: aload         4
+     104: invokespecial #66                 // Method java/net/URL."<init>":(Ljava/lang/String;)V
+     107: invokevirtual #67                 // Method java/net/URL.openStream:()Ljava/io/InputStream;
+     110: areturn
+     111: astore        5
+     113: goto          10
+     116: aconst_null
+     117: areturn
+    Exception table:
+       from    to  target type
+          49    67   111   Class java/io/IOException
+          68    97   111   Class java/io/IOException
+          98   110   111   Class java/io/IOException
+}
