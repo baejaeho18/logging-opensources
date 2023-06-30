@@ -1,0 +1,186 @@
+Compiled from "TempFileCreator.java"
+final class com.google.common.io.TempFileCreator$JavaNioCreator extends com.google.common.io.TempFileCreator {
+  private static final com.google.common.io.TempFileCreator$JavaNioCreator$PermissionSupplier filePermissions;
+
+  private static final com.google.common.io.TempFileCreator$JavaNioCreator$PermissionSupplier directoryPermissions;
+
+  private com.google.common.io.TempFileCreator$JavaNioCreator();
+    Code:
+       0: aload_0
+       1: aconst_null
+       2: invokespecial #2                  // Method com/google/common/io/TempFileCreator."<init>":(Lcom/google/common/io/TempFileCreator$1;)V
+       5: return
+
+  java.io.File createTempDir();
+    Code:
+       0: getstatic     #3                  // Field com/google/common/base/StandardSystemProperty.JAVA_IO_TMPDIR:Lcom/google/common/base/StandardSystemProperty;
+       3: invokevirtual #4                  // Method com/google/common/base/StandardSystemProperty.value:()Ljava/lang/String;
+       6: iconst_0
+       7: anewarray     #5                  // class java/lang/String
+      10: invokestatic  #6                  // Method java/nio/file/Paths.get:(Ljava/lang/String;[Ljava/lang/String;)Ljava/nio/file/Path;
+      13: aconst_null
+      14: iconst_1
+      15: anewarray     #7                  // class java/nio/file/attribute/FileAttribute
+      18: dup
+      19: iconst_0
+      20: getstatic     #8                  // Field directoryPermissions:Lcom/google/common/io/TempFileCreator$JavaNioCreator$PermissionSupplier;
+      23: invokeinterface #9,  1            // InterfaceMethod com/google/common/io/TempFileCreator$JavaNioCreator$PermissionSupplier.get:()Ljava/nio/file/attribute/FileAttribute;
+      28: aastore
+      29: invokestatic  #10                 // Method java/nio/file/Files.createTempDirectory:(Ljava/nio/file/Path;Ljava/lang/String;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/file/Path;
+      32: invokeinterface #11,  1           // InterfaceMethod java/nio/file/Path.toFile:()Ljava/io/File;
+      37: areturn
+      38: astore_1
+      39: new           #13                 // class java/lang/IllegalStateException
+      42: dup
+      43: ldc           #14                 // String Failed to create directory
+      45: aload_1
+      46: invokespecial #15                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      49: athrow
+    Exception table:
+       from    to  target type
+           0    37    38   Class java/io/IOException
+
+  java.io.File createTempFile(java.lang.String) throws java.io.IOException;
+    Code:
+       0: getstatic     #3                  // Field com/google/common/base/StandardSystemProperty.JAVA_IO_TMPDIR:Lcom/google/common/base/StandardSystemProperty;
+       3: invokevirtual #4                  // Method com/google/common/base/StandardSystemProperty.value:()Ljava/lang/String;
+       6: iconst_0
+       7: anewarray     #5                  // class java/lang/String
+      10: invokestatic  #6                  // Method java/nio/file/Paths.get:(Ljava/lang/String;[Ljava/lang/String;)Ljava/nio/file/Path;
+      13: aload_1
+      14: aconst_null
+      15: iconst_1
+      16: anewarray     #7                  // class java/nio/file/attribute/FileAttribute
+      19: dup
+      20: iconst_0
+      21: getstatic     #16                 // Field filePermissions:Lcom/google/common/io/TempFileCreator$JavaNioCreator$PermissionSupplier;
+      24: invokeinterface #9,  1            // InterfaceMethod com/google/common/io/TempFileCreator$JavaNioCreator$PermissionSupplier.get:()Ljava/nio/file/attribute/FileAttribute;
+      29: aastore
+      30: invokestatic  #17                 // Method java/nio/file/Files.createTempFile:(Ljava/nio/file/Path;Ljava/lang/String;Ljava/lang/String;[Ljava/nio/file/attribute/FileAttribute;)Ljava/nio/file/Path;
+      33: invokeinterface #11,  1           // InterfaceMethod java/nio/file/Path.toFile:()Ljava/io/File;
+      38: areturn
+
+  private static com.google.common.io.TempFileCreator$JavaNioCreator$PermissionSupplier userPermissions();
+    Code:
+       0: invokestatic  #18                 // Method java/nio/file/FileSystems.getDefault:()Ljava/nio/file/FileSystem;
+       3: invokevirtual #19                 // Method java/nio/file/FileSystem.getUserPrincipalLookupService:()Ljava/nio/file/attribute/UserPrincipalLookupService;
+       6: getstatic     #20                 // Field com/google/common/base/StandardSystemProperty.USER_NAME:Lcom/google/common/base/StandardSystemProperty;
+       9: invokevirtual #4                  // Method com/google/common/base/StandardSystemProperty.value:()Ljava/lang/String;
+      12: invokevirtual #21                 // Method java/nio/file/attribute/UserPrincipalLookupService.lookupPrincipalByName:(Ljava/lang/String;)Ljava/nio/file/attribute/UserPrincipal;
+      15: astore_0
+      16: invokestatic  #22                 // Method java/nio/file/attribute/AclEntry.newBuilder:()Ljava/nio/file/attribute/AclEntry$Builder;
+      19: getstatic     #23                 // Field java/nio/file/attribute/AclEntryType.ALLOW:Ljava/nio/file/attribute/AclEntryType;
+      22: invokevirtual #24                 // Method java/nio/file/attribute/AclEntry$Builder.setType:(Ljava/nio/file/attribute/AclEntryType;)Ljava/nio/file/attribute/AclEntry$Builder;
+      25: aload_0
+      26: invokevirtual #25                 // Method java/nio/file/attribute/AclEntry$Builder.setPrincipal:(Ljava/nio/file/attribute/UserPrincipal;)Ljava/nio/file/attribute/AclEntry$Builder;
+      29: ldc           #26                 // class java/nio/file/attribute/AclEntryPermission
+      31: invokestatic  #27                 // Method java/util/EnumSet.allOf:(Ljava/lang/Class;)Ljava/util/EnumSet;
+      34: invokevirtual #28                 // Method java/nio/file/attribute/AclEntry$Builder.setPermissions:(Ljava/util/Set;)Ljava/nio/file/attribute/AclEntry$Builder;
+      37: iconst_2
+      38: anewarray     #29                 // class java/nio/file/attribute/AclEntryFlag
+      41: dup
+      42: iconst_0
+      43: getstatic     #30                 // Field java/nio/file/attribute/AclEntryFlag.DIRECTORY_INHERIT:Ljava/nio/file/attribute/AclEntryFlag;
+      46: aastore
+      47: dup
+      48: iconst_1
+      49: getstatic     #31                 // Field java/nio/file/attribute/AclEntryFlag.FILE_INHERIT:Ljava/nio/file/attribute/AclEntryFlag;
+      52: aastore
+      53: invokevirtual #32                 // Method java/nio/file/attribute/AclEntry$Builder.setFlags:([Ljava/nio/file/attribute/AclEntryFlag;)Ljava/nio/file/attribute/AclEntry$Builder;
+      56: invokevirtual #33                 // Method java/nio/file/attribute/AclEntry$Builder.build:()Ljava/nio/file/attribute/AclEntry;
+      59: invokestatic  #34                 // Method com/google/common/collect/ImmutableList.of:(Ljava/lang/Object;)Lcom/google/common/collect/ImmutableList;
+      62: astore_1
+      63: new           #35                 // class com/google/common/io/TempFileCreator$JavaNioCreator$1
+      66: dup
+      67: aload_1
+      68: invokespecial #36                 // Method com/google/common/io/TempFileCreator$JavaNioCreator$1."<init>":(Lcom/google/common/collect/ImmutableList;)V
+      71: astore_2
+      72: aload_2
+      73: invokedynamic #37,  0             // InvokeDynamic #0:get:(Ljava/nio/file/attribute/FileAttribute;)Lcom/google/common/io/TempFileCreator$JavaNioCreator$PermissionSupplier;
+      78: areturn
+      79: astore_0
+      80: aload_0
+      81: invokedynamic #38,  0             // InvokeDynamic #1:get:(Ljava/io/IOException;)Lcom/google/common/io/TempFileCreator$JavaNioCreator$PermissionSupplier;
+      86: areturn
+    Exception table:
+       from    to  target type
+           0    78    79   Class java/io/IOException
+
+  private static java.nio.file.attribute.FileAttribute lambda$userPermissions$4(java.io.IOException) throws java.io.IOException;
+    Code:
+       0: new           #12                 // class java/io/IOException
+       3: dup
+       4: ldc           #39                 // String Could not find user
+       6: aload_0
+       7: invokespecial #40                 // Method java/io/IOException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      10: athrow
+
+  private static java.nio.file.attribute.FileAttribute lambda$userPermissions$3(java.nio.file.attribute.FileAttribute) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: areturn
+
+  private static java.nio.file.attribute.FileAttribute lambda$static$2() throws java.io.IOException;
+    Code:
+       0: new           #12                 // class java/io/IOException
+       3: dup
+       4: new           #41                 // class java/lang/StringBuilder
+       7: dup
+       8: invokespecial #42                 // Method java/lang/StringBuilder."<init>":()V
+      11: ldc           #43                 // String unrecognized FileSystem type
+      13: invokevirtual #44                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      16: invokestatic  #18                 // Method java/nio/file/FileSystems.getDefault:()Ljava/nio/file/FileSystem;
+      19: invokevirtual #45                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      22: invokevirtual #46                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      25: invokespecial #47                 // Method java/io/IOException."<init>":(Ljava/lang/String;)V
+      28: athrow
+
+  private static java.nio.file.attribute.FileAttribute lambda$static$1() throws java.io.IOException;
+    Code:
+       0: ldc           #48                 // String rwx------
+       2: invokestatic  #49                 // Method java/nio/file/attribute/PosixFilePermissions.fromString:(Ljava/lang/String;)Ljava/util/Set;
+       5: invokestatic  #50                 // Method java/nio/file/attribute/PosixFilePermissions.asFileAttribute:(Ljava/util/Set;)Ljava/nio/file/attribute/FileAttribute;
+       8: areturn
+
+  private static java.nio.file.attribute.FileAttribute lambda$static$0() throws java.io.IOException;
+    Code:
+       0: ldc           #51                 // String rw-------
+       2: invokestatic  #49                 // Method java/nio/file/attribute/PosixFilePermissions.fromString:(Ljava/lang/String;)Ljava/util/Set;
+       5: invokestatic  #50                 // Method java/nio/file/attribute/PosixFilePermissions.asFileAttribute:(Ljava/util/Set;)Ljava/nio/file/attribute/FileAttribute;
+       8: areturn
+
+  com.google.common.io.TempFileCreator$JavaNioCreator(com.google.common.io.TempFileCreator$1);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method "<init>":()V
+       4: return
+
+  static {};
+    Code:
+       0: invokestatic  #18                 // Method java/nio/file/FileSystems.getDefault:()Ljava/nio/file/FileSystem;
+       3: invokevirtual #52                 // Method java/nio/file/FileSystem.supportedFileAttributeViews:()Ljava/util/Set;
+       6: astore_0
+       7: aload_0
+       8: ldc           #53                 // String posix
+      10: invokeinterface #54,  2           // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+      15: ifeq          37
+      18: invokedynamic #55,  0             // InvokeDynamic #2:get:()Lcom/google/common/io/TempFileCreator$JavaNioCreator$PermissionSupplier;
+      23: putstatic     #16                 // Field filePermissions:Lcom/google/common/io/TempFileCreator$JavaNioCreator$PermissionSupplier;
+      26: invokedynamic #56,  0             // InvokeDynamic #3:get:()Lcom/google/common/io/TempFileCreator$JavaNioCreator$PermissionSupplier;
+      31: putstatic     #8                  // Field directoryPermissions:Lcom/google/common/io/TempFileCreator$JavaNioCreator$PermissionSupplier;
+      34: goto          73
+      37: aload_0
+      38: ldc           #57                 // String acl
+      40: invokeinterface #54,  2           // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+      45: ifeq          61
+      48: invokestatic  #58                 // Method userPermissions:()Lcom/google/common/io/TempFileCreator$JavaNioCreator$PermissionSupplier;
+      51: dup
+      52: putstatic     #8                  // Field directoryPermissions:Lcom/google/common/io/TempFileCreator$JavaNioCreator$PermissionSupplier;
+      55: putstatic     #16                 // Field filePermissions:Lcom/google/common/io/TempFileCreator$JavaNioCreator$PermissionSupplier;
+      58: goto          73
+      61: invokedynamic #59,  0             // InvokeDynamic #4:get:()Lcom/google/common/io/TempFileCreator$JavaNioCreator$PermissionSupplier;
+      66: dup
+      67: putstatic     #8                  // Field directoryPermissions:Lcom/google/common/io/TempFileCreator$JavaNioCreator$PermissionSupplier;
+      70: putstatic     #16                 // Field filePermissions:Lcom/google/common/io/TempFileCreator$JavaNioCreator$PermissionSupplier;
+      73: return
+}

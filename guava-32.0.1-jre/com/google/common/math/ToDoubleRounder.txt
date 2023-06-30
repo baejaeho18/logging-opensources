@@ -1,0 +1,278 @@
+Compiled from "ToDoubleRounder.java"
+abstract class com.google.common.math.ToDoubleRounder<X extends java.lang.Number & java.lang.Comparable<X>> {
+  com.google.common.math.ToDoubleRounder();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  abstract double roundToDoubleArbitrarily(X);
+
+  abstract int sign(X);
+
+  abstract X toX(double, java.math.RoundingMode);
+
+  abstract X minus(X, X);
+
+  final double roundToDouble(X, java.math.RoundingMode);
+    Code:
+       0: aload_1
+       1: ldc           #2                  // String x
+       3: invokestatic  #3                  // Method com/google/common/base/Preconditions.checkNotNull:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       6: pop
+       7: aload_2
+       8: ldc           #4                  // String mode
+      10: invokestatic  #3                  // Method com/google/common/base/Preconditions.checkNotNull:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      13: pop
+      14: aload_0
+      15: aload_1
+      16: invokevirtual #5                  // Method roundToDoubleArbitrarily:(Ljava/lang/Number;)D
+      19: dstore_3
+      20: dload_3
+      21: invokestatic  #6                  // Method java/lang/Double.isInfinite:(D)Z
+      24: ifeq          156
+      27: getstatic     #7                  // Field com/google/common/math/ToDoubleRounder$1.$SwitchMap$java$math$RoundingMode:[I
+      30: aload_2
+      31: invokevirtual #8                  // Method java/math/RoundingMode.ordinal:()I
+      34: iaload
+      35: tableswitch   { // 1 to 8
+                     1: 80
+                     2: 80
+                     3: 80
+                     4: 80
+                     5: 91
+                     6: 109
+                     7: 127
+                     8: 129
+               default: 156
+          }
+      80: ldc2_w        #10                 // double 1.7976931348623157E308d
+      83: aload_0
+      84: aload_1
+      85: invokevirtual #12                 // Method sign:(Ljava/lang/Number;)I
+      88: i2d
+      89: dmul
+      90: dreturn
+      91: dload_3
+      92: ldc2_w        #13                 // double Infinityd
+      95: dcmpl
+      96: ifne          105
+      99: ldc2_w        #10                 // double 1.7976931348623157E308d
+     102: goto          108
+     105: ldc2_w        #15                 // double -Infinityd
+     108: dreturn
+     109: dload_3
+     110: ldc2_w        #13                 // double Infinityd
+     113: dcmpl
+     114: ifne          123
+     117: ldc2_w        #13                 // double Infinityd
+     120: goto          126
+     123: ldc2_w        #17                 // double -1.7976931348623157E308d
+     126: dreturn
+     127: dload_3
+     128: dreturn
+     129: new           #19                 // class java/lang/ArithmeticException
+     132: dup
+     133: new           #20                 // class java/lang/StringBuilder
+     136: dup
+     137: invokespecial #21                 // Method java/lang/StringBuilder."<init>":()V
+     140: aload_1
+     141: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     144: ldc           #23                 // String  cannot be represented precisely as a double
+     146: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     149: invokevirtual #25                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     152: invokespecial #26                 // Method java/lang/ArithmeticException."<init>":(Ljava/lang/String;)V
+     155: athrow
+     156: aload_0
+     157: dload_3
+     158: getstatic     #27                 // Field java/math/RoundingMode.UNNECESSARY:Ljava/math/RoundingMode;
+     161: invokevirtual #28                 // Method toX:(DLjava/math/RoundingMode;)Ljava/lang/Number;
+     164: astore        5
+     166: aload_1
+     167: checkcast     #29                 // class java/lang/Comparable
+     170: aload         5
+     172: invokeinterface #30,  2           // InterfaceMethod java/lang/Comparable.compareTo:(Ljava/lang/Object;)I
+     177: istore        6
+     179: getstatic     #7                  // Field com/google/common/math/ToDoubleRounder$1.$SwitchMap$java$math$RoundingMode:[I
+     182: aload_2
+     183: invokevirtual #8                  // Method java/math/RoundingMode.ordinal:()I
+     186: iaload
+     187: tableswitch   { // 1 to 8
+                     1: 275
+                     2: 347
+                     3: 347
+                     4: 347
+                     5: 247
+                     6: 261
+                     7: 311
+                     8: 232
+               default: 570
+          }
+     232: iload         6
+     234: ifne          241
+     237: iconst_1
+     238: goto          242
+     241: iconst_0
+     242: invokestatic  #31                 // Method com/google/common/math/MathPreconditions.checkRoundingUnnecessary:(Z)V
+     245: dload_3
+     246: dreturn
+     247: iload         6
+     249: iflt          256
+     252: dload_3
+     253: goto          260
+     256: dload_3
+     257: invokestatic  #32                 // Method com/google/common/math/DoubleUtils.nextDown:(D)D
+     260: dreturn
+     261: iload         6
+     263: ifgt          270
+     266: dload_3
+     267: goto          274
+     270: dload_3
+     271: invokestatic  #33                 // Method java/lang/Math.nextUp:(D)D
+     274: dreturn
+     275: aload_0
+     276: aload_1
+     277: invokevirtual #12                 // Method sign:(Ljava/lang/Number;)I
+     280: iflt          297
+     283: iload         6
+     285: iflt          292
+     288: dload_3
+     289: goto          296
+     292: dload_3
+     293: invokestatic  #32                 // Method com/google/common/math/DoubleUtils.nextDown:(D)D
+     296: dreturn
+     297: iload         6
+     299: ifgt          306
+     302: dload_3
+     303: goto          310
+     306: dload_3
+     307: invokestatic  #33                 // Method java/lang/Math.nextUp:(D)D
+     310: dreturn
+     311: aload_0
+     312: aload_1
+     313: invokevirtual #12                 // Method sign:(Ljava/lang/Number;)I
+     316: iflt          333
+     319: iload         6
+     321: ifgt          328
+     324: dload_3
+     325: goto          332
+     328: dload_3
+     329: invokestatic  #33                 // Method java/lang/Math.nextUp:(D)D
+     332: dreturn
+     333: iload         6
+     335: iflt          342
+     338: dload_3
+     339: goto          346
+     342: dload_3
+     343: invokestatic  #32                 // Method com/google/common/math/DoubleUtils.nextDown:(D)D
+     346: dreturn
+     347: iload         6
+     349: iflt          391
+     352: dload_3
+     353: dstore        8
+     355: aload         5
+     357: astore        7
+     359: dload_3
+     360: invokestatic  #33                 // Method java/lang/Math.nextUp:(D)D
+     363: dstore        11
+     365: dload         11
+     367: ldc2_w        #13                 // double Infinityd
+     370: dcmpl
+     371: ifne          377
+     374: dload         8
+     376: dreturn
+     377: aload_0
+     378: dload         11
+     380: getstatic     #34                 // Field java/math/RoundingMode.CEILING:Ljava/math/RoundingMode;
+     383: invokevirtual #28                 // Method toX:(DLjava/math/RoundingMode;)Ljava/lang/Number;
+     386: astore        10
+     388: goto          427
+     391: dload_3
+     392: dstore        11
+     394: aload         5
+     396: astore        10
+     398: dload_3
+     399: invokestatic  #32                 // Method com/google/common/math/DoubleUtils.nextDown:(D)D
+     402: dstore        8
+     404: dload         8
+     406: ldc2_w        #15                 // double -Infinityd
+     409: dcmpl
+     410: ifne          416
+     413: dload         11
+     415: dreturn
+     416: aload_0
+     417: dload         8
+     419: getstatic     #35                 // Field java/math/RoundingMode.FLOOR:Ljava/math/RoundingMode;
+     422: invokevirtual #28                 // Method toX:(DLjava/math/RoundingMode;)Ljava/lang/Number;
+     425: astore        7
+     427: aload_0
+     428: aload_1
+     429: aload         7
+     431: invokevirtual #36                 // Method minus:(Ljava/lang/Number;Ljava/lang/Number;)Ljava/lang/Number;
+     434: astore        13
+     436: aload_0
+     437: aload         10
+     439: aload_1
+     440: invokevirtual #36                 // Method minus:(Ljava/lang/Number;Ljava/lang/Number;)Ljava/lang/Number;
+     443: astore        14
+     445: aload         13
+     447: checkcast     #29                 // class java/lang/Comparable
+     450: aload         14
+     452: invokeinterface #30,  2           // InterfaceMethod java/lang/Comparable.compareTo:(Ljava/lang/Object;)I
+     457: istore        15
+     459: iload         15
+     461: ifge          467
+     464: dload         8
+     466: dreturn
+     467: iload         15
+     469: ifle          475
+     472: dload         11
+     474: dreturn
+     475: getstatic     #7                  // Field com/google/common/math/ToDoubleRounder$1.$SwitchMap$java$math$RoundingMode:[I
+     478: aload_2
+     479: invokevirtual #8                  // Method java/math/RoundingMode.ordinal:()I
+     482: iaload
+     483: tableswitch   { // 2 to 4
+                     2: 508
+                     3: 528
+                     4: 544
+               default: 560
+          }
+     508: dload         8
+     510: invokestatic  #37                 // Method java/lang/Double.doubleToRawLongBits:(D)J
+     513: lconst_1
+     514: land
+     515: lconst_0
+     516: lcmp
+     517: ifne          525
+     520: dload         8
+     522: goto          527
+     525: dload         11
+     527: dreturn
+     528: aload_0
+     529: aload_1
+     530: invokevirtual #12                 // Method sign:(Ljava/lang/Number;)I
+     533: iflt          541
+     536: dload         8
+     538: goto          543
+     541: dload         11
+     543: dreturn
+     544: aload_0
+     545: aload_1
+     546: invokevirtual #12                 // Method sign:(Ljava/lang/Number;)I
+     549: iflt          557
+     552: dload         11
+     554: goto          559
+     557: dload         8
+     559: dreturn
+     560: new           #38                 // class java/lang/AssertionError
+     563: dup
+     564: ldc           #39                 // String impossible
+     566: invokespecial #40                 // Method java/lang/AssertionError."<init>":(Ljava/lang/Object;)V
+     569: athrow
+     570: new           #38                 // class java/lang/AssertionError
+     573: dup
+     574: ldc           #39                 // String impossible
+     576: invokespecial #40                 // Method java/lang/AssertionError."<init>":(Ljava/lang/Object;)V
+     579: athrow
+}

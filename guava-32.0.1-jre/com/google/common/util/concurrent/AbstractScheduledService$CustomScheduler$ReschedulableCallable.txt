@@ -1,0 +1,166 @@
+Compiled from "AbstractScheduledService.java"
+final class com.google.common.util.concurrent.AbstractScheduledService$CustomScheduler$ReschedulableCallable implements java.util.concurrent.Callable<java.lang.Void> {
+  private final java.lang.Runnable wrappedRunnable;
+
+  private final java.util.concurrent.ScheduledExecutorService executor;
+
+  private final com.google.common.util.concurrent.AbstractService service;
+
+  private final java.util.concurrent.locks.ReentrantLock lock;
+
+  private com.google.common.util.concurrent.AbstractScheduledService$CustomScheduler$SupplantableFuture cancellationDelegate;
+
+  final com.google.common.util.concurrent.AbstractScheduledService$CustomScheduler this$0;
+
+  com.google.common.util.concurrent.AbstractScheduledService$CustomScheduler$ReschedulableCallable(com.google.common.util.concurrent.AbstractScheduledService$CustomScheduler, com.google.common.util.concurrent.AbstractService, java.util.concurrent.ScheduledExecutorService, java.lang.Runnable);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #1                  // Field this$0:Lcom/google/common/util/concurrent/AbstractScheduledService$CustomScheduler;
+       5: aload_0
+       6: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       9: aload_0
+      10: new           #3                  // class java/util/concurrent/locks/ReentrantLock
+      13: dup
+      14: invokespecial #4                  // Method java/util/concurrent/locks/ReentrantLock."<init>":()V
+      17: putfield      #5                  // Field lock:Ljava/util/concurrent/locks/ReentrantLock;
+      20: aload_0
+      21: aload         4
+      23: putfield      #6                  // Field wrappedRunnable:Ljava/lang/Runnable;
+      26: aload_0
+      27: aload_3
+      28: putfield      #7                  // Field executor:Ljava/util/concurrent/ScheduledExecutorService;
+      31: aload_0
+      32: aload_2
+      33: putfield      #8                  // Field service:Lcom/google/common/util/concurrent/AbstractService;
+      36: return
+
+  public java.lang.Void call() throws java.lang.Exception;
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field wrappedRunnable:Ljava/lang/Runnable;
+       4: invokeinterface #9,  1            // InterfaceMethod java/lang/Runnable.run:()V
+       9: aload_0
+      10: invokevirtual #10                 // Method reschedule:()Lcom/google/common/util/concurrent/AbstractScheduledService$Cancellable;
+      13: pop
+      14: aconst_null
+      15: areturn
+
+  public com.google.common.util.concurrent.AbstractScheduledService$Cancellable reschedule();
+    Code:
+       0: aload_0
+       1: getfield      #1                  // Field this$0:Lcom/google/common/util/concurrent/AbstractScheduledService$CustomScheduler;
+       4: invokevirtual #11                 // Method com/google/common/util/concurrent/AbstractScheduledService$CustomScheduler.getNextSchedule:()Lcom/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$Schedule;
+       7: astore_1
+       8: goto          35
+      11: astore_2
+      12: aload_2
+      13: invokestatic  #13                 // Method com/google/common/util/concurrent/Platform.restoreInterruptIfIsInterruptedException:(Ljava/lang/Throwable;)V
+      16: aload_0
+      17: getfield      #8                  // Field service:Lcom/google/common/util/concurrent/AbstractService;
+      20: aload_2
+      21: invokevirtual #14                 // Method com/google/common/util/concurrent/AbstractService.notifyFailed:(Ljava/lang/Throwable;)V
+      24: new           #15                 // class com/google/common/util/concurrent/AbstractScheduledService$FutureAsCancellable
+      27: dup
+      28: invokestatic  #16                 // Method com/google/common/util/concurrent/Futures.immediateCancelledFuture:()Lcom/google/common/util/concurrent/ListenableFuture;
+      31: invokespecial #17                 // Method com/google/common/util/concurrent/AbstractScheduledService$FutureAsCancellable."<init>":(Ljava/util/concurrent/Future;)V
+      34: areturn
+      35: aconst_null
+      36: astore_2
+      37: aload_0
+      38: getfield      #5                  // Field lock:Ljava/util/concurrent/locks/ReentrantLock;
+      41: invokevirtual #18                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+      44: aload_0
+      45: aload_1
+      46: invokespecial #19                 // Method initializeOrUpdateCancellationDelegate:(Lcom/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$Schedule;)Lcom/google/common/util/concurrent/AbstractScheduledService$Cancellable;
+      49: astore_3
+      50: aload_0
+      51: getfield      #5                  // Field lock:Ljava/util/concurrent/locks/ReentrantLock;
+      54: invokevirtual #20                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      57: goto          98
+      60: astore        4
+      62: aload         4
+      64: astore_2
+      65: new           #15                 // class com/google/common/util/concurrent/AbstractScheduledService$FutureAsCancellable
+      68: dup
+      69: invokestatic  #16                 // Method com/google/common/util/concurrent/Futures.immediateCancelledFuture:()Lcom/google/common/util/concurrent/ListenableFuture;
+      72: invokespecial #17                 // Method com/google/common/util/concurrent/AbstractScheduledService$FutureAsCancellable."<init>":(Ljava/util/concurrent/Future;)V
+      75: astore_3
+      76: aload_0
+      77: getfield      #5                  // Field lock:Ljava/util/concurrent/locks/ReentrantLock;
+      80: invokevirtual #20                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      83: goto          98
+      86: astore        5
+      88: aload_0
+      89: getfield      #5                  // Field lock:Ljava/util/concurrent/locks/ReentrantLock;
+      92: invokevirtual #20                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      95: aload         5
+      97: athrow
+      98: aload_2
+      99: ifnull        110
+     102: aload_0
+     103: getfield      #8                  // Field service:Lcom/google/common/util/concurrent/AbstractService;
+     106: aload_2
+     107: invokevirtual #14                 // Method com/google/common/util/concurrent/AbstractService.notifyFailed:(Ljava/lang/Throwable;)V
+     110: aload_3
+     111: areturn
+    Exception table:
+       from    to  target type
+           0     8    11   Class java/lang/Throwable
+          44    50    60   Class java/lang/RuntimeException
+          44    50    60   Class java/lang/Error
+          44    50    86   any
+          60    76    86   any
+          86    88    86   any
+
+  private com.google.common.util.concurrent.AbstractScheduledService$Cancellable initializeOrUpdateCancellationDelegate(com.google.common.util.concurrent.AbstractScheduledService$CustomScheduler$Schedule);
+    Code:
+       0: aload_0
+       1: getfield      #23                 // Field cancellationDelegate:Lcom/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$SupplantableFuture;
+       4: ifnonnull     29
+       7: aload_0
+       8: new           #24                 // class com/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$SupplantableFuture
+      11: dup
+      12: aload_0
+      13: getfield      #5                  // Field lock:Ljava/util/concurrent/locks/ReentrantLock;
+      16: aload_0
+      17: aload_1
+      18: invokespecial #25                 // Method submitToExecutor:(Lcom/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$Schedule;)Ljava/util/concurrent/ScheduledFuture;
+      21: invokespecial #26                 // Method com/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$SupplantableFuture."<init>":(Ljava/util/concurrent/locks/ReentrantLock;Ljava/util/concurrent/Future;)V
+      24: dup_x1
+      25: putfield      #23                 // Field cancellationDelegate:Lcom/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$SupplantableFuture;
+      28: areturn
+      29: aload_0
+      30: getfield      #23                 // Field cancellationDelegate:Lcom/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$SupplantableFuture;
+      33: invokestatic  #27                 // Method com/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$SupplantableFuture.access$600:(Lcom/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$SupplantableFuture;)Ljava/util/concurrent/Future;
+      36: invokeinterface #28,  1           // InterfaceMethod java/util/concurrent/Future.isCancelled:()Z
+      41: ifne          57
+      44: aload_0
+      45: getfield      #23                 // Field cancellationDelegate:Lcom/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$SupplantableFuture;
+      48: aload_0
+      49: aload_1
+      50: invokespecial #25                 // Method submitToExecutor:(Lcom/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$Schedule;)Ljava/util/concurrent/ScheduledFuture;
+      53: invokestatic  #29                 // Method com/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$SupplantableFuture.access$602:(Lcom/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$SupplantableFuture;Ljava/util/concurrent/Future;)Ljava/util/concurrent/Future;
+      56: pop
+      57: aload_0
+      58: getfield      #23                 // Field cancellationDelegate:Lcom/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$SupplantableFuture;
+      61: areturn
+
+  private java.util.concurrent.ScheduledFuture<java.lang.Void> submitToExecutor(com.google.common.util.concurrent.AbstractScheduledService$CustomScheduler$Schedule);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field executor:Ljava/util/concurrent/ScheduledExecutorService;
+       4: aload_0
+       5: aload_1
+       6: invokestatic  #30                 // Method com/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$Schedule.access$700:(Lcom/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$Schedule;)J
+       9: aload_1
+      10: invokestatic  #31                 // Method com/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$Schedule.access$800:(Lcom/google/common/util/concurrent/AbstractScheduledService$CustomScheduler$Schedule;)Ljava/util/concurrent/TimeUnit;
+      13: invokeinterface #32,  5           // InterfaceMethod java/util/concurrent/ScheduledExecutorService.schedule:(Ljava/util/concurrent/Callable;JLjava/util/concurrent/TimeUnit;)Ljava/util/concurrent/ScheduledFuture;
+      18: areturn
+
+  public java.lang.Object call() throws java.lang.Exception;
+    Code:
+       0: aload_0
+       1: invokevirtual #33                 // Method call:()Ljava/lang/Void;
+       4: areturn
+}
