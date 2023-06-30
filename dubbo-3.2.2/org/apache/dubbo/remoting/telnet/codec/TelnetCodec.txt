@@ -1,0 +1,954 @@
+Compiled from "TelnetCodec.java"
+public class org.apache.dubbo.remoting.telnet.codec.TelnetCodec extends org.apache.dubbo.remoting.transport.codec.TransportCodec {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private static final java.lang.String HISTORY_LIST_KEY;
+
+  private static final java.lang.String HISTORY_INDEX_KEY;
+
+  private static final byte[] UP;
+
+  private static final byte[] DOWN;
+
+  private static final java.util.List<?> ENTER;
+
+  private static final java.util.List<?> EXIT;
+
+  public org.apache.dubbo.remoting.telnet.codec.TelnetCodec();
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method org/apache/dubbo/remoting/transport/codec/TransportCodec."<init>":()V
+       4: return
+
+  private static java.nio.charset.Charset getCharset(org.apache.dubbo.remoting.Channel);
+    Code:
+       0: aload_0
+       1: ifnull        116
+       4: aload_0
+       5: ldc           #4                  // String charset
+       7: invokeinterface #5,  2            // InterfaceMethod org/apache/dubbo/remoting/Channel.getAttribute:(Ljava/lang/String;)Ljava/lang/Object;
+      12: astore_1
+      13: aload_1
+      14: instanceof    #6                  // class java/lang/String
+      17: ifeq          51
+      20: aload_1
+      21: checkcast     #6                  // class java/lang/String
+      24: invokestatic  #7                  // Method java/nio/charset/Charset.forName:(Ljava/lang/String;)Ljava/nio/charset/Charset;
+      27: areturn
+      28: astore_2
+      29: getstatic     #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      32: ldc           #10                 // String 6-11
+      34: ldc           #11                 // String
+      36: ldc           #11                 // String
+      38: aload_2
+      39: invokevirtual #12                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+      42: aload_2
+      43: invokeinterface #13,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      48: goto          63
+      51: aload_1
+      52: instanceof    #14                 // class java/nio/charset/Charset
+      55: ifeq          63
+      58: aload_1
+      59: checkcast     #14                 // class java/nio/charset/Charset
+      62: areturn
+      63: aload_0
+      64: invokeinterface #15,  1           // InterfaceMethod org/apache/dubbo/remoting/Channel.getUrl:()Lorg/apache/dubbo/common/URL;
+      69: astore_2
+      70: aload_2
+      71: ifnull        116
+      74: aload_2
+      75: ldc           #4                  // String charset
+      77: invokevirtual #16                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;)Ljava/lang/String;
+      80: astore_3
+      81: aload_3
+      82: invokestatic  #17                 // Method org/apache/dubbo/common/utils/StringUtils.isNotEmpty:(Ljava/lang/String;)Z
+      85: ifeq          116
+      88: aload_3
+      89: invokestatic  #7                  // Method java/nio/charset/Charset.forName:(Ljava/lang/String;)Ljava/nio/charset/Charset;
+      92: areturn
+      93: astore        4
+      95: getstatic     #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      98: ldc           #10                 // String 6-11
+     100: ldc           #11                 // String
+     102: ldc           #11                 // String
+     104: aload         4
+     106: invokevirtual #12                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     109: aload         4
+     111: invokeinterface #13,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     116: ldc           #18                 // String UTF-8
+     118: invokestatic  #7                  // Method java/nio/charset/Charset.forName:(Ljava/lang/String;)Ljava/nio/charset/Charset;
+     121: areturn
+     122: astore_1
+     123: getstatic     #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     126: ldc           #10                 // String 6-11
+     128: ldc           #11                 // String
+     130: ldc           #11                 // String
+     132: aload_1
+     133: invokevirtual #12                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     136: aload_1
+     137: invokeinterface #13,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     142: invokestatic  #19                 // Method java/nio/charset/Charset.defaultCharset:()Ljava/nio/charset/Charset;
+     145: areturn
+    Exception table:
+       from    to  target type
+          20    27    28   Class java/lang/Throwable
+          88    92    93   Class java/lang/Throwable
+         116   121   122   Class java/lang/Throwable
+
+  private static java.lang.String toString(byte[], java.nio.charset.Charset) throws java.io.UnsupportedEncodingException;
+    Code:
+       0: aload_0
+       1: arraylength
+       2: newarray       byte
+       4: astore_2
+       5: iconst_0
+       6: istore_3
+       7: iconst_0
+       8: istore        4
+      10: iload         4
+      12: aload_0
+      13: arraylength
+      14: if_icmpge     207
+      17: aload_0
+      18: iload         4
+      20: baload
+      21: istore        5
+      23: iload         5
+      25: bipush        8
+      27: if_icmpne     62
+      30: iload_3
+      31: ifle          37
+      34: iinc          3, -1
+      37: iload         4
+      39: iconst_2
+      40: if_icmple     201
+      43: aload_0
+      44: iload         4
+      46: iconst_2
+      47: isub
+      48: baload
+      49: ifge          201
+      52: iload_3
+      53: ifle          201
+      56: iinc          3, -1
+      59: goto          201
+      62: iload         5
+      64: bipush        27
+      66: if_icmpne     145
+      69: iload         4
+      71: aload_0
+      72: arraylength
+      73: iconst_4
+      74: isub
+      75: if_icmpge     98
+      78: aload_0
+      79: iload         4
+      81: iconst_4
+      82: iadd
+      83: baload
+      84: bipush        126
+      86: if_icmpne     98
+      89: iload         4
+      91: iconst_4
+      92: iadd
+      93: istore        4
+      95: goto          201
+      98: iload         4
+     100: aload_0
+     101: arraylength
+     102: iconst_3
+     103: isub
+     104: if_icmpge     127
+     107: aload_0
+     108: iload         4
+     110: iconst_3
+     111: iadd
+     112: baload
+     113: bipush        126
+     115: if_icmpne     127
+     118: iload         4
+     120: iconst_3
+     121: iadd
+     122: istore        4
+     124: goto          201
+     127: iload         4
+     129: aload_0
+     130: arraylength
+     131: iconst_2
+     132: isub
+     133: if_icmpge     201
+     136: iload         4
+     138: iconst_2
+     139: iadd
+     140: istore        4
+     142: goto          201
+     145: iload         5
+     147: iconst_m1
+     148: if_icmpne     191
+     151: iload         4
+     153: aload_0
+     154: arraylength
+     155: iconst_2
+     156: isub
+     157: if_icmpge     191
+     160: aload_0
+     161: iload         4
+     163: iconst_1
+     164: iadd
+     165: baload
+     166: bipush        -3
+     168: if_icmpeq     182
+     171: aload_0
+     172: iload         4
+     174: iconst_1
+     175: iadd
+     176: baload
+     177: bipush        -5
+     179: if_icmpne     191
+     182: iload         4
+     184: iconst_2
+     185: iadd
+     186: istore        4
+     188: goto          201
+     191: aload_2
+     192: iload_3
+     193: iinc          3, 1
+     196: aload_0
+     197: iload         4
+     199: baload
+     200: bastore
+     201: iinc          4, 1
+     204: goto          10
+     207: iload_3
+     208: ifne          214
+     211: ldc           #11                 // String
+     213: areturn
+     214: new           #6                  // class java/lang/String
+     217: dup
+     218: aload_2
+     219: iconst_0
+     220: iload_3
+     221: aload_1
+     222: invokevirtual #20                 // Method java/nio/charset/Charset.name:()Ljava/lang/String;
+     225: invokespecial #21                 // Method java/lang/String."<init>":([BIILjava/lang/String;)V
+     228: invokevirtual #22                 // Method java/lang/String.trim:()Ljava/lang/String;
+     231: areturn
+
+  private static boolean isEquals(byte[], byte[]) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: arraylength
+       2: aload_1
+       3: arraylength
+       4: if_icmpne     19
+       7: aload_0
+       8: aload_1
+       9: invokestatic  #23                 // Method endsWith:([B[B)Z
+      12: ifeq          19
+      15: iconst_1
+      16: goto          20
+      19: iconst_0
+      20: ireturn
+
+  private static boolean endsWith(byte[], byte[]) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: arraylength
+       2: aload_1
+       3: arraylength
+       4: if_icmpge     9
+       7: iconst_0
+       8: ireturn
+       9: aload_0
+      10: arraylength
+      11: aload_1
+      12: arraylength
+      13: isub
+      14: istore_2
+      15: aload_1
+      16: arraylength
+      17: iconst_1
+      18: isub
+      19: istore_3
+      20: iload_3
+      21: iflt          43
+      24: aload_0
+      25: iload_2
+      26: iload_3
+      27: iadd
+      28: baload
+      29: aload_1
+      30: iload_3
+      31: baload
+      32: if_icmpeq     37
+      35: iconst_0
+      36: ireturn
+      37: iinc          3, -1
+      40: goto          20
+      43: iconst_1
+      44: ireturn
+
+  public void encode(org.apache.dubbo.remoting.Channel, org.apache.dubbo.remoting.buffer.ChannelBuffer, java.lang.Object) throws java.io.IOException;
+    Code:
+       0: aload_3
+       1: instanceof    #6                  // class java/lang/String
+       4: ifeq          62
+       7: aload_0
+       8: aload_1
+       9: invokevirtual #24                 // Method isClientSide:(Lorg/apache/dubbo/remoting/Channel;)Z
+      12: ifeq          35
+      15: new           #25                 // class java/lang/StringBuilder
+      18: dup
+      19: invokespecial #26                 // Method java/lang/StringBuilder."<init>":()V
+      22: aload_3
+      23: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      26: ldc           #28                 // String \r\n
+      28: invokevirtual #29                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      31: invokevirtual #30                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      34: astore_3
+      35: aload_3
+      36: checkcast     #6                  // class java/lang/String
+      39: aload_1
+      40: invokestatic  #31                 // Method getCharset:(Lorg/apache/dubbo/remoting/Channel;)Ljava/nio/charset/Charset;
+      43: invokevirtual #20                 // Method java/nio/charset/Charset.name:()Ljava/lang/String;
+      46: invokevirtual #32                 // Method java/lang/String.getBytes:(Ljava/lang/String;)[B
+      49: astore        4
+      51: aload_2
+      52: aload         4
+      54: invokeinterface #33,  2           // InterfaceMethod org/apache/dubbo/remoting/buffer/ChannelBuffer.writeBytes:([B)V
+      59: goto          69
+      62: aload_0
+      63: aload_1
+      64: aload_2
+      65: aload_3
+      66: invokespecial #34                 // Method org/apache/dubbo/remoting/transport/codec/TransportCodec.encode:(Lorg/apache/dubbo/remoting/Channel;Lorg/apache/dubbo/remoting/buffer/ChannelBuffer;Ljava/lang/Object;)V
+      69: return
+
+  public java.lang.Object decode(org.apache.dubbo.remoting.Channel, org.apache.dubbo.remoting.buffer.ChannelBuffer) throws java.io.IOException;
+    Code:
+       0: aload_2
+       1: invokeinterface #35,  1           // InterfaceMethod org/apache/dubbo/remoting/buffer/ChannelBuffer.readableBytes:()I
+       6: istore_3
+       7: iload_3
+       8: newarray       byte
+      10: astore        4
+      12: aload_2
+      13: aload         4
+      15: invokeinterface #36,  2           // InterfaceMethod org/apache/dubbo/remoting/buffer/ChannelBuffer.readBytes:([B)V
+      20: aload_0
+      21: aload_1
+      22: aload_2
+      23: iload_3
+      24: aload         4
+      26: invokevirtual #37                 // Method decode:(Lorg/apache/dubbo/remoting/Channel;Lorg/apache/dubbo/remoting/buffer/ChannelBuffer;I[B)Ljava/lang/Object;
+      29: areturn
+
+  protected java.lang.Object decode(org.apache.dubbo.remoting.Channel, org.apache.dubbo.remoting.buffer.ChannelBuffer, int, byte[]) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #24                 // Method isClientSide:(Lorg/apache/dubbo/remoting/Channel;)Z
+       5: ifeq          18
+       8: aload         4
+      10: aload_1
+      11: invokestatic  #31                 // Method getCharset:(Lorg/apache/dubbo/remoting/Channel;)Ljava/nio/charset/Charset;
+      14: invokestatic  #38                 // Method toString:([BLjava/nio/charset/Charset;)Ljava/lang/String;
+      17: areturn
+      18: aload_1
+      19: iload_3
+      20: i2l
+      21: invokestatic  #39                 // Method checkPayload:(Lorg/apache/dubbo/remoting/Channel;J)V
+      24: aload         4
+      26: ifnull        35
+      29: aload         4
+      31: arraylength
+      32: ifne          39
+      35: getstatic     #40                 // Field org/apache/dubbo/remoting/Codec2$DecodeResult.NEED_MORE_INPUT:Lorg/apache/dubbo/remoting/Codec2$DecodeResult;
+      38: areturn
+      39: aload         4
+      41: aload         4
+      43: arraylength
+      44: iconst_1
+      45: isub
+      46: baload
+      47: bipush        8
+      49: if_icmpne     163
+      52: aload         4
+      54: arraylength
+      55: iconst_3
+      56: if_icmplt     74
+      59: aload         4
+      61: aload         4
+      63: arraylength
+      64: iconst_3
+      65: isub
+      66: baload
+      67: ifge          74
+      70: iconst_1
+      71: goto          75
+      74: iconst_0
+      75: istore        5
+      77: aload_1
+      78: new           #6                  // class java/lang/String
+      81: dup
+      82: iload         5
+      84: ifeq          113
+      87: iconst_4
+      88: newarray       byte
+      90: dup
+      91: iconst_0
+      92: bipush        32
+      94: bastore
+      95: dup
+      96: iconst_1
+      97: bipush        32
+      99: bastore
+     100: dup
+     101: iconst_2
+     102: bipush        8
+     104: bastore
+     105: dup
+     106: iconst_3
+     107: bipush        8
+     109: bastore
+     110: goto          126
+     113: iconst_2
+     114: newarray       byte
+     116: dup
+     117: iconst_0
+     118: bipush        32
+     120: bastore
+     121: dup
+     122: iconst_1
+     123: bipush        8
+     125: bastore
+     126: aload_1
+     127: invokestatic  #31                 // Method getCharset:(Lorg/apache/dubbo/remoting/Channel;)Ljava/nio/charset/Charset;
+     130: invokevirtual #20                 // Method java/nio/charset/Charset.name:()Ljava/lang/String;
+     133: invokespecial #41                 // Method java/lang/String."<init>":([BLjava/lang/String;)V
+     136: invokeinterface #42,  2           // InterfaceMethod org/apache/dubbo/remoting/Channel.send:(Ljava/lang/Object;)V
+     141: goto          159
+     144: astore        5
+     146: new           #44                 // class java/io/IOException
+     149: dup
+     150: aload         5
+     152: invokestatic  #45                 // Method org/apache/dubbo/common/utils/StringUtils.toString:(Ljava/lang/Throwable;)Ljava/lang/String;
+     155: invokespecial #46                 // Method java/io/IOException."<init>":(Ljava/lang/String;)V
+     158: athrow
+     159: getstatic     #40                 // Field org/apache/dubbo/remoting/Codec2$DecodeResult.NEED_MORE_INPUT:Lorg/apache/dubbo/remoting/Codec2$DecodeResult;
+     162: areturn
+     163: getstatic     #47                 // Field EXIT:Ljava/util/List;
+     166: invokeinterface #48,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     171: astore        5
+     173: aload         5
+     175: invokeinterface #49,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     180: ifeq          283
+     183: aload         5
+     185: invokeinterface #50,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     190: astore        6
+     192: aload         4
+     194: aload         6
+     196: checkcast     #51                 // class "[B"
+     199: checkcast     #51                 // class "[B"
+     202: invokestatic  #52                 // Method isEquals:([B[B)Z
+     205: ifeq          280
+     208: getstatic     #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     211: invokeinterface #53,  1           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isInfoEnabled:()Z
+     216: ifeq          272
+     219: getstatic     #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     222: new           #54                 // class java/lang/Exception
+     225: dup
+     226: new           #25                 // class java/lang/StringBuilder
+     229: dup
+     230: invokespecial #26                 // Method java/lang/StringBuilder."<init>":()V
+     233: ldc           #55                 // String Close channel
+     235: invokevirtual #29                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     238: aload_1
+     239: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     242: ldc           #56                 // String  on exit command:
+     244: invokevirtual #29                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     247: aload         6
+     249: checkcast     #51                 // class "[B"
+     252: checkcast     #51                 // class "[B"
+     255: invokestatic  #57                 // Method java/util/Arrays.toString:([B)Ljava/lang/String;
+     258: invokevirtual #29                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     261: invokevirtual #30                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     264: invokespecial #58                 // Method java/lang/Exception."<init>":(Ljava/lang/String;)V
+     267: invokeinterface #59,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/Throwable;)V
+     272: aload_1
+     273: invokeinterface #60,  1           // InterfaceMethod org/apache/dubbo/remoting/Channel.close:()V
+     278: aconst_null
+     279: areturn
+     280: goto          173
+     283: aload         4
+     285: getstatic     #61                 // Field UP:[B
+     288: invokestatic  #23                 // Method endsWith:([B[B)Z
+     291: istore        5
+     293: aload         4
+     295: getstatic     #62                 // Field DOWN:[B
+     298: invokestatic  #23                 // Method endsWith:([B[B)Z
+     301: istore        6
+     303: iload         5
+     305: ifne          313
+     308: iload         6
+     310: ifeq          671
+     313: aload_1
+     314: ldc           #64                 // String telnet.history.list
+     316: invokeinterface #5,  2            // InterfaceMethod org/apache/dubbo/remoting/Channel.getAttribute:(Ljava/lang/String;)Ljava/lang/Object;
+     321: checkcast     #65                 // class java/util/LinkedList
+     324: astore        7
+     326: aload         7
+     328: invokestatic  #66                 // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+     331: ifeq          338
+     334: getstatic     #40                 // Field org/apache/dubbo/remoting/Codec2$DecodeResult.NEED_MORE_INPUT:Lorg/apache/dubbo/remoting/Codec2$DecodeResult;
+     337: areturn
+     338: aload_1
+     339: ldc           #67                 // String telnet.history.index
+     341: invokeinterface #5,  2            // InterfaceMethod org/apache/dubbo/remoting/Channel.getAttribute:(Ljava/lang/String;)Ljava/lang/Object;
+     346: checkcast     #68                 // class java/lang/Integer
+     349: astore        8
+     351: aload         8
+     353: astore        9
+     355: aload         8
+     357: ifnonnull     375
+     360: aload         7
+     362: invokevirtual #69                 // Method java/util/LinkedList.size:()I
+     365: iconst_1
+     366: isub
+     367: invokestatic  #70                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     370: astore        8
+     372: goto          448
+     375: iload         5
+     377: ifeq          415
+     380: aload         8
+     382: invokevirtual #71                 // Method java/lang/Integer.intValue:()I
+     385: iconst_1
+     386: isub
+     387: invokestatic  #70                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     390: astore        8
+     392: aload         8
+     394: invokevirtual #71                 // Method java/lang/Integer.intValue:()I
+     397: ifge          448
+     400: aload         7
+     402: invokevirtual #69                 // Method java/util/LinkedList.size:()I
+     405: iconst_1
+     406: isub
+     407: invokestatic  #70                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     410: astore        8
+     412: goto          448
+     415: aload         8
+     417: invokevirtual #71                 // Method java/lang/Integer.intValue:()I
+     420: iconst_1
+     421: iadd
+     422: invokestatic  #70                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     425: astore        8
+     427: aload         8
+     429: invokevirtual #71                 // Method java/lang/Integer.intValue:()I
+     432: aload         7
+     434: invokevirtual #69                 // Method java/util/LinkedList.size:()I
+     437: iconst_1
+     438: isub
+     439: if_icmple     448
+     442: iconst_0
+     443: invokestatic  #70                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     446: astore        8
+     448: aload         9
+     450: ifnull        463
+     453: aload         9
+     455: aload         8
+     457: invokevirtual #72                 // Method java/lang/Integer.equals:(Ljava/lang/Object;)Z
+     460: ifne          667
+     463: aload_1
+     464: ldc           #67                 // String telnet.history.index
+     466: aload         8
+     468: invokeinterface #73,  3           // InterfaceMethod org/apache/dubbo/remoting/Channel.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+     473: aload         7
+     475: aload         8
+     477: invokevirtual #71                 // Method java/lang/Integer.intValue:()I
+     480: invokevirtual #74                 // Method java/util/LinkedList.get:(I)Ljava/lang/Object;
+     483: checkcast     #6                  // class java/lang/String
+     486: astore        10
+     488: aload         9
+     490: ifnull        641
+     493: aload         9
+     495: invokevirtual #71                 // Method java/lang/Integer.intValue:()I
+     498: iflt          641
+     501: aload         9
+     503: invokevirtual #71                 // Method java/lang/Integer.intValue:()I
+     506: aload         7
+     508: invokevirtual #69                 // Method java/util/LinkedList.size:()I
+     511: if_icmpge     641
+     514: aload         7
+     516: aload         9
+     518: invokevirtual #71                 // Method java/lang/Integer.intValue:()I
+     521: invokevirtual #74                 // Method java/util/LinkedList.get:(I)Ljava/lang/Object;
+     524: checkcast     #6                  // class java/lang/String
+     527: astore        11
+     529: new           #25                 // class java/lang/StringBuilder
+     532: dup
+     533: invokespecial #26                 // Method java/lang/StringBuilder."<init>":()V
+     536: astore        12
+     538: iconst_0
+     539: istore        13
+     541: iload         13
+     543: aload         11
+     545: invokevirtual #75                 // Method java/lang/String.length:()I
+     548: if_icmpge     565
+     551: aload         12
+     553: bipush        8
+     555: invokevirtual #76                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     558: pop
+     559: iinc          13, 1
+     562: goto          541
+     565: iconst_0
+     566: istore        13
+     568: iload         13
+     570: aload         11
+     572: invokevirtual #75                 // Method java/lang/String.length:()I
+     575: if_icmpge     592
+     578: aload         12
+     580: bipush        32
+     582: invokevirtual #76                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     585: pop
+     586: iinc          13, 1
+     589: goto          568
+     592: iconst_0
+     593: istore        13
+     595: iload         13
+     597: aload         11
+     599: invokevirtual #75                 // Method java/lang/String.length:()I
+     602: if_icmpge     619
+     605: aload         12
+     607: bipush        8
+     609: invokevirtual #76                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     612: pop
+     613: iinc          13, 1
+     616: goto          595
+     619: new           #25                 // class java/lang/StringBuilder
+     622: dup
+     623: invokespecial #26                 // Method java/lang/StringBuilder."<init>":()V
+     626: aload         12
+     628: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     631: aload         10
+     633: invokevirtual #29                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     636: invokevirtual #30                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     639: astore        10
+     641: aload_1
+     642: aload         10
+     644: invokeinterface #42,  2           // InterfaceMethod org/apache/dubbo/remoting/Channel.send:(Ljava/lang/Object;)V
+     649: goto          667
+     652: astore        11
+     654: new           #44                 // class java/io/IOException
+     657: dup
+     658: aload         11
+     660: invokestatic  #45                 // Method org/apache/dubbo/common/utils/StringUtils.toString:(Ljava/lang/Throwable;)Ljava/lang/String;
+     663: invokespecial #46                 // Method java/io/IOException."<init>":(Ljava/lang/String;)V
+     666: athrow
+     667: getstatic     #40                 // Field org/apache/dubbo/remoting/Codec2$DecodeResult.NEED_MORE_INPUT:Lorg/apache/dubbo/remoting/Codec2$DecodeResult;
+     670: areturn
+     671: getstatic     #47                 // Field EXIT:Ljava/util/List;
+     674: invokeinterface #48,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     679: astore        7
+     681: aload         7
+     683: invokeinterface #49,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     688: ifeq          782
+     691: aload         7
+     693: invokeinterface #50,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     698: astore        8
+     700: aload         4
+     702: aload         8
+     704: checkcast     #51                 // class "[B"
+     707: checkcast     #51                 // class "[B"
+     710: invokestatic  #52                 // Method isEquals:([B[B)Z
+     713: ifeq          779
+     716: getstatic     #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     719: invokeinterface #53,  1           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isInfoEnabled:()Z
+     724: ifeq          771
+     727: getstatic     #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     730: new           #54                 // class java/lang/Exception
+     733: dup
+     734: new           #25                 // class java/lang/StringBuilder
+     737: dup
+     738: invokespecial #26                 // Method java/lang/StringBuilder."<init>":()V
+     741: ldc           #55                 // String Close channel
+     743: invokevirtual #29                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     746: aload_1
+     747: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     750: ldc           #77                 // String  on exit command
+     752: invokevirtual #29                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     755: aload         8
+     757: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     760: invokevirtual #30                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     763: invokespecial #58                 // Method java/lang/Exception."<init>":(Ljava/lang/String;)V
+     766: invokeinterface #59,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/Throwable;)V
+     771: aload_1
+     772: invokeinterface #60,  1           // InterfaceMethod org/apache/dubbo/remoting/Channel.close:()V
+     777: aconst_null
+     778: areturn
+     779: goto          681
+     782: aconst_null
+     783: astore        7
+     785: getstatic     #78                 // Field ENTER:Ljava/util/List;
+     788: invokeinterface #48,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     793: astore        8
+     795: aload         8
+     797: invokeinterface #49,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     802: ifeq          846
+     805: aload         8
+     807: invokeinterface #50,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     812: astore        9
+     814: aload         4
+     816: aload         9
+     818: checkcast     #51                 // class "[B"
+     821: checkcast     #51                 // class "[B"
+     824: invokestatic  #23                 // Method endsWith:([B[B)Z
+     827: ifeq          843
+     830: aload         9
+     832: checkcast     #51                 // class "[B"
+     835: checkcast     #51                 // class "[B"
+     838: astore        7
+     840: goto          846
+     843: goto          795
+     846: aload         7
+     848: ifnonnull     855
+     851: getstatic     #40                 // Field org/apache/dubbo/remoting/Codec2$DecodeResult.NEED_MORE_INPUT:Lorg/apache/dubbo/remoting/Codec2$DecodeResult;
+     854: areturn
+     855: aload_1
+     856: ldc           #64                 // String telnet.history.list
+     858: invokeinterface #5,  2            // InterfaceMethod org/apache/dubbo/remoting/Channel.getAttribute:(Ljava/lang/String;)Ljava/lang/Object;
+     863: checkcast     #65                 // class java/util/LinkedList
+     866: astore        8
+     868: aload_1
+     869: ldc           #67                 // String telnet.history.index
+     871: invokeinterface #5,  2            // InterfaceMethod org/apache/dubbo/remoting/Channel.getAttribute:(Ljava/lang/String;)Ljava/lang/Object;
+     876: checkcast     #68                 // class java/lang/Integer
+     879: astore        9
+     881: aload_1
+     882: ldc           #67                 // String telnet.history.index
+     884: invokeinterface #79,  2           // InterfaceMethod org/apache/dubbo/remoting/Channel.removeAttribute:(Ljava/lang/String;)V
+     889: aload         8
+     891: invokestatic  #80                 // Method org/apache/dubbo/common/utils/CollectionUtils.isNotEmpty:(Ljava/util/Collection;)Z
+     894: ifeq          991
+     897: aload         9
+     899: ifnull        991
+     902: aload         9
+     904: invokevirtual #71                 // Method java/lang/Integer.intValue:()I
+     907: iflt          991
+     910: aload         9
+     912: invokevirtual #71                 // Method java/lang/Integer.intValue:()I
+     915: aload         8
+     917: invokevirtual #69                 // Method java/util/LinkedList.size:()I
+     920: if_icmpge     991
+     923: aload         8
+     925: aload         9
+     927: invokevirtual #71                 // Method java/lang/Integer.intValue:()I
+     930: invokevirtual #74                 // Method java/util/LinkedList.get:(I)Ljava/lang/Object;
+     933: checkcast     #6                  // class java/lang/String
+     936: astore        10
+     938: aload         10
+     940: ifnull        991
+     943: aload         10
+     945: invokevirtual #81                 // Method java/lang/String.getBytes:()[B
+     948: astore        11
+     950: aload         11
+     952: arraylength
+     953: aload         4
+     955: arraylength
+     956: iadd
+     957: newarray       byte
+     959: astore        12
+     961: aload         11
+     963: iconst_0
+     964: aload         12
+     966: iconst_0
+     967: aload         11
+     969: arraylength
+     970: invokestatic  #82                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+     973: aload         4
+     975: iconst_0
+     976: aload         12
+     978: aload         11
+     980: arraylength
+     981: aload         4
+     983: arraylength
+     984: invokestatic  #82                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+     987: aload         12
+     989: astore        4
+     991: aload         4
+     993: aload_1
+     994: invokestatic  #31                 // Method getCharset:(Lorg/apache/dubbo/remoting/Channel;)Ljava/nio/charset/Charset;
+     997: invokestatic  #38                 // Method toString:([BLjava/nio/charset/Charset;)Ljava/lang/String;
+    1000: astore        10
+    1002: aload         10
+    1004: invokevirtual #22                 // Method java/lang/String.trim:()Ljava/lang/String;
+    1007: invokevirtual #75                 // Method java/lang/String.length:()I
+    1010: ifle          1099
+    1013: aload         8
+    1015: ifnonnull     1037
+    1018: new           #65                 // class java/util/LinkedList
+    1021: dup
+    1022: invokespecial #83                 // Method java/util/LinkedList."<init>":()V
+    1025: astore        8
+    1027: aload_1
+    1028: ldc           #64                 // String telnet.history.list
+    1030: aload         8
+    1032: invokeinterface #73,  3           // InterfaceMethod org/apache/dubbo/remoting/Channel.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+    1037: aload         8
+    1039: invokevirtual #84                 // Method java/util/LinkedList.isEmpty:()Z
+    1042: ifeq          1055
+    1045: aload         8
+    1047: aload         10
+    1049: invokevirtual #85                 // Method java/util/LinkedList.addLast:(Ljava/lang/Object;)V
+    1052: goto          1099
+    1055: aload         10
+    1057: aload         8
+    1059: invokevirtual #86                 // Method java/util/LinkedList.getLast:()Ljava/lang/Object;
+    1062: invokevirtual #87                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+    1065: ifne          1099
+    1068: aload         8
+    1070: aload         10
+    1072: invokevirtual #88                 // Method java/util/LinkedList.remove:(Ljava/lang/Object;)Z
+    1075: pop
+    1076: aload         8
+    1078: aload         10
+    1080: invokevirtual #85                 // Method java/util/LinkedList.addLast:(Ljava/lang/Object;)V
+    1083: aload         8
+    1085: invokevirtual #69                 // Method java/util/LinkedList.size:()I
+    1088: bipush        10
+    1090: if_icmple     1099
+    1093: aload         8
+    1095: invokevirtual #89                 // Method java/util/LinkedList.removeFirst:()Ljava/lang/Object;
+    1098: pop
+    1099: aload         10
+    1101: areturn
+    Exception table:
+       from    to  target type
+          52   141   144   Class org/apache/dubbo/remoting/RemotingException
+         641   649   652   Class org/apache/dubbo/remoting/RemotingException
+
+  static {};
+    Code:
+       0: ldc           #63                 // class org/apache/dubbo/remoting/telnet/codec/TelnetCodec
+       2: invokestatic  #90                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: iconst_3
+       9: newarray       byte
+      11: dup
+      12: iconst_0
+      13: bipush        27
+      15: bastore
+      16: dup
+      17: iconst_1
+      18: bipush        91
+      20: bastore
+      21: dup
+      22: iconst_2
+      23: bipush        65
+      25: bastore
+      26: putstatic     #61                 // Field UP:[B
+      29: iconst_3
+      30: newarray       byte
+      32: dup
+      33: iconst_0
+      34: bipush        27
+      36: bastore
+      37: dup
+      38: iconst_1
+      39: bipush        91
+      41: bastore
+      42: dup
+      43: iconst_2
+      44: bipush        66
+      46: bastore
+      47: putstatic     #62                 // Field DOWN:[B
+      50: iconst_2
+      51: anewarray     #51                 // class "[B"
+      54: dup
+      55: iconst_0
+      56: iconst_2
+      57: newarray       byte
+      59: dup
+      60: iconst_0
+      61: bipush        13
+      63: bastore
+      64: dup
+      65: iconst_1
+      66: bipush        10
+      68: bastore
+      69: aastore
+      70: dup
+      71: iconst_1
+      72: iconst_1
+      73: newarray       byte
+      75: dup
+      76: iconst_0
+      77: bipush        10
+      79: bastore
+      80: aastore
+      81: invokestatic  #91                 // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+      84: putstatic     #78                 // Field ENTER:Ljava/util/List;
+      87: iconst_3
+      88: anewarray     #51                 // class "[B"
+      91: dup
+      92: iconst_0
+      93: iconst_1
+      94: newarray       byte
+      96: dup
+      97: iconst_0
+      98: iconst_3
+      99: bastore
+     100: aastore
+     101: dup
+     102: iconst_1
+     103: iconst_5
+     104: newarray       byte
+     106: dup
+     107: iconst_0
+     108: iconst_m1
+     109: bastore
+     110: dup
+     111: iconst_1
+     112: bipush        -12
+     114: bastore
+     115: dup
+     116: iconst_2
+     117: iconst_m1
+     118: bastore
+     119: dup
+     120: iconst_3
+     121: bipush        -3
+     123: bastore
+     124: dup
+     125: iconst_4
+     126: bipush        6
+     128: bastore
+     129: aastore
+     130: dup
+     131: iconst_2
+     132: iconst_5
+     133: newarray       byte
+     135: dup
+     136: iconst_0
+     137: iconst_m1
+     138: bastore
+     139: dup
+     140: iconst_1
+     141: bipush        -19
+     143: bastore
+     144: dup
+     145: iconst_2
+     146: iconst_m1
+     147: bastore
+     148: dup
+     149: iconst_3
+     150: bipush        -3
+     152: bastore
+     153: dup
+     154: iconst_4
+     155: bipush        6
+     157: bastore
+     158: aastore
+     159: invokestatic  #91                 // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+     162: putstatic     #47                 // Field EXIT:Ljava/util/List;
+     165: return
+}

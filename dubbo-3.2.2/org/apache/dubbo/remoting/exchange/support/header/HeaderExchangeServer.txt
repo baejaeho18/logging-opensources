@@ -1,0 +1,509 @@
+Compiled from "HeaderExchangeServer.java"
+public class org.apache.dubbo.remoting.exchange.support.header.HeaderExchangeServer implements org.apache.dubbo.remoting.exchange.ExchangeServer {
+  protected final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final org.apache.dubbo.remoting.RemotingServer server;
+
+  private final java.util.concurrent.atomic.AtomicBoolean closed;
+
+  public static org.apache.dubbo.common.resource.GlobalResourceInitializer<org.apache.dubbo.common.timer.HashedWheelTimer> IDLE_CHECK_TIMER;
+
+  private org.apache.dubbo.remoting.exchange.support.header.CloseTimerTask closeTimer;
+
+  public org.apache.dubbo.remoting.exchange.support.header.HeaderExchangeServer(org.apache.dubbo.remoting.RemotingServer);
+    Code:
+       0: aload_0
+       1: invokespecial #4                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_0
+       6: invokevirtual #5                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       9: invokestatic  #6                  // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      12: putfield      #7                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      15: aload_0
+      16: new           #8                  // class java/util/concurrent/atomic/AtomicBoolean
+      19: dup
+      20: iconst_0
+      21: invokespecial #9                  // Method java/util/concurrent/atomic/AtomicBoolean."<init>":(Z)V
+      24: putfield      #10                 // Field closed:Ljava/util/concurrent/atomic/AtomicBoolean;
+      27: aload_1
+      28: ldc           #11                 // String server == null
+      30: invokestatic  #12                 // Method org/apache/dubbo/common/utils/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      33: aload_0
+      34: aload_1
+      35: putfield      #13                 // Field server:Lorg/apache/dubbo/remoting/RemotingServer;
+      38: aload_0
+      39: aload_0
+      40: invokevirtual #14                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+      43: invokespecial #15                 // Method startIdleCheckTask:(Lorg/apache/dubbo/common/URL;)V
+      46: return
+
+  public org.apache.dubbo.remoting.RemotingServer getServer();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field server:Lorg/apache/dubbo/remoting/RemotingServer;
+       4: areturn
+
+  public boolean isClosed();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field server:Lorg/apache/dubbo/remoting/RemotingServer;
+       4: invokeinterface #16,  1           // InterfaceMethod org/apache/dubbo/remoting/RemotingServer.isClosed:()Z
+       9: ireturn
+
+  private boolean isRunning();
+    Code:
+       0: aload_0
+       1: invokevirtual #17                 // Method getChannels:()Ljava/util/Collection;
+       4: invokeinterface #18,  1           // InterfaceMethod java/util/Collection.stream:()Ljava/util/stream/Stream;
+       9: invokedynamic #19,  0             // InvokeDynamic #0:test:()Ljava/util/function/Predicate;
+      14: invokeinterface #20,  2           // InterfaceMethod java/util/stream/Stream.anyMatch:(Ljava/util/function/Predicate;)Z
+      19: ireturn
+
+  public void close();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field closed:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: iconst_0
+       5: iconst_1
+       6: invokevirtual #21                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+       9: ifne          13
+      12: return
+      13: aload_0
+      14: invokespecial #22                 // Method doClose:()V
+      17: aload_0
+      18: getfield      #13                 // Field server:Lorg/apache/dubbo/remoting/RemotingServer;
+      21: invokeinterface #23,  1           // InterfaceMethod org/apache/dubbo/remoting/RemotingServer.close:()V
+      26: return
+
+  public void close(int);
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field closed:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: iconst_0
+       5: iconst_1
+       6: invokevirtual #21                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+       9: ifne          13
+      12: return
+      13: aload_0
+      14: invokevirtual #24                 // Method startClose:()V
+      17: iload_1
+      18: ifle          96
+      21: invokestatic  #25                 // Method java/lang/System.currentTimeMillis:()J
+      24: lstore_2
+      25: aload_0
+      26: invokevirtual #14                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+      29: ldc           #26                 // String channel.readonly.send
+      31: iconst_1
+      32: invokevirtual #27                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+      35: ifeq          42
+      38: aload_0
+      39: invokespecial #28                 // Method sendChannelReadOnlyEvent:()V
+      42: aload_0
+      43: invokespecial #29                 // Method isRunning:()Z
+      46: ifeq          96
+      49: invokestatic  #25                 // Method java/lang/System.currentTimeMillis:()J
+      52: lload_2
+      53: lsub
+      54: iload_1
+      55: i2l
+      56: lcmp
+      57: ifge          96
+      60: ldc2_w        #30                 // long 10l
+      63: invokestatic  #32                 // Method java/lang/Thread.sleep:(J)V
+      66: goto          42
+      69: astore        4
+      71: aload_0
+      72: getfield      #7                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      75: ldc           #34                 // String 6-3
+      77: ldc           #35                 // String
+      79: ldc           #35                 // String
+      81: aload         4
+      83: invokevirtual #36                 // Method java/lang/InterruptedException.getMessage:()Ljava/lang/String;
+      86: aload         4
+      88: invokeinterface #37,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      93: goto          42
+      96: aload_0
+      97: invokespecial #22                 // Method doClose:()V
+     100: aload_0
+     101: getfield      #13                 // Field server:Lorg/apache/dubbo/remoting/RemotingServer;
+     104: iload_1
+     105: invokeinterface #38,  2           // InterfaceMethod org/apache/dubbo/remoting/RemotingServer.close:(I)V
+     110: return
+    Exception table:
+       from    to  target type
+          60    66    69   Class java/lang/InterruptedException
+
+  public void startClose();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field server:Lorg/apache/dubbo/remoting/RemotingServer;
+       4: invokeinterface #39,  1           // InterfaceMethod org/apache/dubbo/remoting/RemotingServer.startClose:()V
+       9: return
+
+  private void sendChannelReadOnlyEvent();
+    Code:
+       0: new           #40                 // class org/apache/dubbo/remoting/exchange/Request
+       3: dup
+       4: invokespecial #41                 // Method org/apache/dubbo/remoting/exchange/Request."<init>":()V
+       7: astore_1
+       8: aload_1
+       9: ldc           #42                 // String R
+      11: invokevirtual #43                 // Method org/apache/dubbo/remoting/exchange/Request.setEvent:(Ljava/lang/String;)V
+      14: aload_1
+      15: iconst_0
+      16: invokevirtual #44                 // Method org/apache/dubbo/remoting/exchange/Request.setTwoWay:(Z)V
+      19: aload_1
+      20: invokestatic  #45                 // Method org/apache/dubbo/common/Version.getProtocolVersion:()Ljava/lang/String;
+      23: invokevirtual #46                 // Method org/apache/dubbo/remoting/exchange/Request.setVersion:(Ljava/lang/String;)V
+      26: aload_0
+      27: invokevirtual #17                 // Method getChannels:()Ljava/util/Collection;
+      30: astore_2
+      31: aload_2
+      32: invokeinterface #47,  1           // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+      37: astore_3
+      38: aload_3
+      39: invokeinterface #48,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      44: ifeq          137
+      47: aload_3
+      48: invokeinterface #49,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      53: checkcast     #50                 // class org/apache/dubbo/remoting/Channel
+      56: astore        4
+      58: aload         4
+      60: invokeinterface #51,  1           // InterfaceMethod org/apache/dubbo/remoting/Channel.isConnected:()Z
+      65: ifeq          86
+      68: aload         4
+      70: aload_1
+      71: aload_0
+      72: invokevirtual #14                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+      75: ldc           #52                 // String channel.readonly.sent
+      77: iconst_1
+      78: invokevirtual #27                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+      81: invokeinterface #53,  3           // InterfaceMethod org/apache/dubbo/remoting/Channel.send:(Ljava/lang/Object;Z)V
+      86: goto          134
+      89: astore        5
+      91: aload_0
+      92: getfield      #10                 // Field closed:Ljava/util/concurrent/atomic/AtomicBoolean;
+      95: invokevirtual #55                 // Method java/util/concurrent/atomic/AtomicBoolean.get:()Z
+      98: ifeq          115
+     101: aload         5
+     103: invokevirtual #56                 // Method org/apache/dubbo/remoting/RemotingException.getCause:()Ljava/lang/Throwable;
+     106: instanceof    #57                 // class java/nio/channels/ClosedChannelException
+     109: ifeq          115
+     112: goto          38
+     115: aload_0
+     116: getfield      #7                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     119: ldc           #58                 // String 6-14
+     121: ldc           #35                 // String
+     123: ldc           #35                 // String
+     125: ldc           #59                 // String send cannot write message error.
+     127: aload         5
+     129: invokeinterface #37,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     134: goto          38
+     137: return
+    Exception table:
+       from    to  target type
+          58    86    89   Class org/apache/dubbo/remoting/RemotingException
+
+  private void doClose();
+    Code:
+       0: aload_0
+       1: invokespecial #60                 // Method cancelCloseTask:()V
+       4: return
+
+  private void cancelCloseTask();
+    Code:
+       0: aload_0
+       1: getfield      #61                 // Field closeTimer:Lorg/apache/dubbo/remoting/exchange/support/header/CloseTimerTask;
+       4: ifnull        14
+       7: aload_0
+       8: getfield      #61                 // Field closeTimer:Lorg/apache/dubbo/remoting/exchange/support/header/CloseTimerTask;
+      11: invokevirtual #62                 // Method org/apache/dubbo/remoting/exchange/support/header/CloseTimerTask.cancel:()V
+      14: return
+
+  public java.util.Collection<org.apache.dubbo.remoting.exchange.ExchangeChannel> getExchangeChannels();
+    Code:
+       0: new           #63                 // class java/util/ArrayList
+       3: dup
+       4: invokespecial #64                 // Method java/util/ArrayList."<init>":()V
+       7: astore_1
+       8: aload_0
+       9: getfield      #13                 // Field server:Lorg/apache/dubbo/remoting/RemotingServer;
+      12: invokeinterface #65,  1           // InterfaceMethod org/apache/dubbo/remoting/RemotingServer.getChannels:()Ljava/util/Collection;
+      17: astore_2
+      18: aload_2
+      19: invokestatic  #66                 // Method org/apache/dubbo/common/utils/CollectionUtils.isNotEmpty:(Ljava/util/Collection;)Z
+      22: ifeq          67
+      25: aload_2
+      26: invokeinterface #47,  1           // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+      31: astore_3
+      32: aload_3
+      33: invokeinterface #48,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      38: ifeq          67
+      41: aload_3
+      42: invokeinterface #49,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      47: checkcast     #50                 // class org/apache/dubbo/remoting/Channel
+      50: astore        4
+      52: aload_1
+      53: aload         4
+      55: invokestatic  #67                 // Method org/apache/dubbo/remoting/exchange/support/header/HeaderExchangeChannel.getOrAddChannel:(Lorg/apache/dubbo/remoting/Channel;)Lorg/apache/dubbo/remoting/exchange/support/header/HeaderExchangeChannel;
+      58: invokeinterface #68,  2           // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+      63: pop
+      64: goto          32
+      67: aload_1
+      68: areturn
+
+  public org.apache.dubbo.remoting.exchange.ExchangeChannel getExchangeChannel(java.net.InetSocketAddress);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field server:Lorg/apache/dubbo/remoting/RemotingServer;
+       4: aload_1
+       5: invokeinterface #69,  2           // InterfaceMethod org/apache/dubbo/remoting/RemotingServer.getChannel:(Ljava/net/InetSocketAddress;)Lorg/apache/dubbo/remoting/Channel;
+      10: astore_2
+      11: aload_2
+      12: invokestatic  #67                 // Method org/apache/dubbo/remoting/exchange/support/header/HeaderExchangeChannel.getOrAddChannel:(Lorg/apache/dubbo/remoting/Channel;)Lorg/apache/dubbo/remoting/exchange/support/header/HeaderExchangeChannel;
+      15: areturn
+
+  public java.util.Collection<org.apache.dubbo.remoting.Channel> getChannels();
+    Code:
+       0: aload_0
+       1: invokevirtual #70                 // Method getExchangeChannels:()Ljava/util/Collection;
+       4: areturn
+
+  public org.apache.dubbo.remoting.Channel getChannel(java.net.InetSocketAddress);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #71                 // Method getExchangeChannel:(Ljava/net/InetSocketAddress;)Lorg/apache/dubbo/remoting/exchange/ExchangeChannel;
+       5: areturn
+
+  public boolean isBound();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field server:Lorg/apache/dubbo/remoting/RemotingServer;
+       4: invokeinterface #72,  1           // InterfaceMethod org/apache/dubbo/remoting/RemotingServer.isBound:()Z
+       9: ireturn
+
+  public java.net.InetSocketAddress getLocalAddress();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field server:Lorg/apache/dubbo/remoting/RemotingServer;
+       4: invokeinterface #73,  1           // InterfaceMethod org/apache/dubbo/remoting/RemotingServer.getLocalAddress:()Ljava/net/InetSocketAddress;
+       9: areturn
+
+  public org.apache.dubbo.common.URL getUrl();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field server:Lorg/apache/dubbo/remoting/RemotingServer;
+       4: invokeinterface #74,  1           // InterfaceMethod org/apache/dubbo/remoting/RemotingServer.getUrl:()Lorg/apache/dubbo/common/URL;
+       9: areturn
+
+  public org.apache.dubbo.remoting.ChannelHandler getChannelHandler();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field server:Lorg/apache/dubbo/remoting/RemotingServer;
+       4: invokeinterface #75,  1           // InterfaceMethod org/apache/dubbo/remoting/RemotingServer.getChannelHandler:()Lorg/apache/dubbo/remoting/ChannelHandler;
+       9: areturn
+
+  public void reset(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field server:Lorg/apache/dubbo/remoting/RemotingServer;
+       4: aload_1
+       5: invokeinterface #76,  2           // InterfaceMethod org/apache/dubbo/remoting/RemotingServer.reset:(Lorg/apache/dubbo/common/URL;)V
+      10: aload_0
+      11: invokevirtual #14                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+      14: invokestatic  #77                 // Method org/apache/dubbo/remoting/utils/UrlUtils.getHeartbeat:(Lorg/apache/dubbo/common/URL;)I
+      17: istore_2
+      18: aload_0
+      19: invokevirtual #14                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+      22: invokestatic  #78                 // Method org/apache/dubbo/remoting/utils/UrlUtils.getIdleTimeout:(Lorg/apache/dubbo/common/URL;)I
+      25: istore_3
+      26: aload_1
+      27: invokestatic  #77                 // Method org/apache/dubbo/remoting/utils/UrlUtils.getHeartbeat:(Lorg/apache/dubbo/common/URL;)I
+      30: istore        4
+      32: aload_1
+      33: invokestatic  #78                 // Method org/apache/dubbo/remoting/utils/UrlUtils.getIdleTimeout:(Lorg/apache/dubbo/common/URL;)I
+      36: istore        5
+      38: iload_2
+      39: iload         4
+      41: if_icmpne     50
+      44: iload_3
+      45: iload         5
+      47: if_icmpeq     59
+      50: aload_0
+      51: invokespecial #60                 // Method cancelCloseTask:()V
+      54: aload_0
+      55: aload_1
+      56: invokespecial #15                 // Method startIdleCheckTask:(Lorg/apache/dubbo/common/URL;)V
+      59: goto          83
+      62: astore_2
+      63: aload_0
+      64: getfield      #7                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      67: ldc           #80                 // String 99-0
+      69: ldc           #81                 // String unknown error in remoting module
+      71: ldc           #35                 // String
+      73: aload_2
+      74: invokevirtual #82                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+      77: aload_2
+      78: invokeinterface #83,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      83: return
+    Exception table:
+       from    to  target type
+          10    59    62   Class java/lang/Throwable
+
+  public void reset(org.apache.dubbo.common.Parameters);
+    Code:
+       0: aload_0
+       1: aload_0
+       2: invokevirtual #14                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+       5: aload_1
+       6: invokevirtual #84                 // Method org/apache/dubbo/common/Parameters.getParameters:()Ljava/util/Map;
+       9: invokevirtual #85                 // Method org/apache/dubbo/common/URL.addParameters:(Ljava/util/Map;)Lorg/apache/dubbo/common/URL;
+      12: invokevirtual #86                 // Method reset:(Lorg/apache/dubbo/common/URL;)V
+      15: return
+
+  public void send(java.lang.Object) throws org.apache.dubbo.remoting.RemotingException;
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field closed:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: invokevirtual #55                 // Method java/util/concurrent/atomic/AtomicBoolean.get:()Z
+       7: ifeq          59
+      10: new           #54                 // class org/apache/dubbo/remoting/RemotingException
+      13: dup
+      14: aload_0
+      15: invokevirtual #87                 // Method getLocalAddress:()Ljava/net/InetSocketAddress;
+      18: aconst_null
+      19: new           #88                 // class java/lang/StringBuilder
+      22: dup
+      23: invokespecial #89                 // Method java/lang/StringBuilder."<init>":()V
+      26: ldc           #90                 // String Failed to send message
+      28: invokevirtual #91                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      31: aload_1
+      32: invokevirtual #92                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      35: ldc           #93                 // String , cause: The server
+      37: invokevirtual #91                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      40: aload_0
+      41: invokevirtual #87                 // Method getLocalAddress:()Ljava/net/InetSocketAddress;
+      44: invokevirtual #92                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      47: ldc           #94                 // String  is closed!
+      49: invokevirtual #91                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      52: invokevirtual #95                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      55: invokespecial #96                 // Method org/apache/dubbo/remoting/RemotingException."<init>":(Ljava/net/InetSocketAddress;Ljava/net/InetSocketAddress;Ljava/lang/String;)V
+      58: athrow
+      59: aload_0
+      60: getfield      #13                 // Field server:Lorg/apache/dubbo/remoting/RemotingServer;
+      63: aload_1
+      64: invokeinterface #97,  2           // InterfaceMethod org/apache/dubbo/remoting/RemotingServer.send:(Ljava/lang/Object;)V
+      69: return
+
+  public void send(java.lang.Object, boolean) throws org.apache.dubbo.remoting.RemotingException;
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field closed:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: invokevirtual #55                 // Method java/util/concurrent/atomic/AtomicBoolean.get:()Z
+       7: ifeq          59
+      10: new           #54                 // class org/apache/dubbo/remoting/RemotingException
+      13: dup
+      14: aload_0
+      15: invokevirtual #87                 // Method getLocalAddress:()Ljava/net/InetSocketAddress;
+      18: aconst_null
+      19: new           #88                 // class java/lang/StringBuilder
+      22: dup
+      23: invokespecial #89                 // Method java/lang/StringBuilder."<init>":()V
+      26: ldc           #90                 // String Failed to send message
+      28: invokevirtual #91                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      31: aload_1
+      32: invokevirtual #92                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      35: ldc           #93                 // String , cause: The server
+      37: invokevirtual #91                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      40: aload_0
+      41: invokevirtual #87                 // Method getLocalAddress:()Ljava/net/InetSocketAddress;
+      44: invokevirtual #92                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      47: ldc           #94                 // String  is closed!
+      49: invokevirtual #91                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      52: invokevirtual #95                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      55: invokespecial #96                 // Method org/apache/dubbo/remoting/RemotingException."<init>":(Ljava/net/InetSocketAddress;Ljava/net/InetSocketAddress;Ljava/lang/String;)V
+      58: athrow
+      59: aload_0
+      60: getfield      #13                 // Field server:Lorg/apache/dubbo/remoting/RemotingServer;
+      63: aload_1
+      64: iload_2
+      65: invokeinterface #98,  3           // InterfaceMethod org/apache/dubbo/remoting/RemotingServer.send:(Ljava/lang/Object;Z)V
+      70: return
+
+  private long calculateLeastDuration(int);
+    Code:
+       0: iload_1
+       1: iconst_3
+       2: idiv
+       3: ifgt          10
+       6: ldc2_w        #99                 // long 1000l
+       9: lreturn
+      10: iload_1
+      11: iconst_3
+      12: idiv
+      13: i2l
+      14: lreturn
+
+  private void startIdleCheckTask(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field server:Lorg/apache/dubbo/remoting/RemotingServer;
+       4: invokeinterface #101,  1          // InterfaceMethod org/apache/dubbo/remoting/RemotingServer.canHandleIdle:()Z
+       9: ifne          58
+      12: aload_0
+      13: invokedynamic #102,  0            // InvokeDynamic #1:getChannels:(Lorg/apache/dubbo/remoting/exchange/support/header/HeaderExchangeServer;)Lorg/apache/dubbo/remoting/exchange/support/header/AbstractTimerTask$ChannelProvider;
+      18: astore_2
+      19: aload_1
+      20: invokestatic  #78                 // Method org/apache/dubbo/remoting/utils/UrlUtils.getIdleTimeout:(Lorg/apache/dubbo/common/URL;)I
+      23: istore_3
+      24: aload_0
+      25: iload_3
+      26: invokespecial #103                // Method calculateLeastDuration:(I)J
+      29: lstore        4
+      31: aload_0
+      32: new           #104                // class org/apache/dubbo/remoting/exchange/support/header/CloseTimerTask
+      35: dup
+      36: aload_2
+      37: getstatic     #105                // Field IDLE_CHECK_TIMER:Lorg/apache/dubbo/common/resource/GlobalResourceInitializer;
+      40: invokevirtual #106                // Method org/apache/dubbo/common/resource/GlobalResourceInitializer.get:()Ljava/lang/Object;
+      43: checkcast     #107                // class org/apache/dubbo/common/timer/HashedWheelTimer
+      46: lload         4
+      48: invokestatic  #108                // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+      51: iload_3
+      52: invokespecial #109                // Method org/apache/dubbo/remoting/exchange/support/header/CloseTimerTask."<init>":(Lorg/apache/dubbo/remoting/exchange/support/header/AbstractTimerTask$ChannelProvider;Lorg/apache/dubbo/common/timer/HashedWheelTimer;Ljava/lang/Long;I)V
+      55: putfield      #61                 // Field closeTimer:Lorg/apache/dubbo/remoting/exchange/support/header/CloseTimerTask;
+      58: return
+
+  private java.util.Collection lambda$startIdleCheckTask$1();
+    Code:
+       0: aload_0
+       1: invokevirtual #17                 // Method getChannels:()Ljava/util/Collection;
+       4: invokestatic  #110                // Method java/util/Collections.unmodifiableCollection:(Ljava/util/Collection;)Ljava/util/Collection;
+       7: areturn
+
+  private static org.apache.dubbo.common.timer.HashedWheelTimer lambda$static$0() throws java.lang.Exception;
+    Code:
+       0: new           #107                // class org/apache/dubbo/common/timer/HashedWheelTimer
+       3: dup
+       4: new           #111                // class org/apache/dubbo/common/utils/NamedThreadFactory
+       7: dup
+       8: ldc           #112                // String dubbo-server-idleCheck
+      10: iconst_1
+      11: invokespecial #113                // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;Z)V
+      14: lconst_1
+      15: getstatic     #114                // Field java/util/concurrent/TimeUnit.SECONDS:Ljava/util/concurrent/TimeUnit;
+      18: sipush        128
+      21: invokespecial #115                // Method org/apache/dubbo/common/timer/HashedWheelTimer."<init>":(Ljava/util/concurrent/ThreadFactory;JLjava/util/concurrent/TimeUnit;I)V
+      24: areturn
+
+  static {};
+    Code:
+       0: new           #116                // class org/apache/dubbo/common/resource/GlobalResourceInitializer
+       3: dup
+       4: invokedynamic #117,  0            // InvokeDynamic #2:call:()Ljava/util/concurrent/Callable;
+       9: invokedynamic #118,  0            // InvokeDynamic #3:accept:()Ljava/util/function/Consumer;
+      14: invokespecial #119                // Method org/apache/dubbo/common/resource/GlobalResourceInitializer."<init>":(Ljava/util/concurrent/Callable;Ljava/util/function/Consumer;)V
+      17: putstatic     #105                // Field IDLE_CHECK_TIMER:Lorg/apache/dubbo/common/resource/GlobalResourceInitializer;
+      20: return
+}

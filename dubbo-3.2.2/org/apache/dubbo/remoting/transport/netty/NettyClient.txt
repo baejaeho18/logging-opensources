@@ -1,0 +1,405 @@
+Compiled from "NettyClient.java"
+public class org.apache.dubbo.remoting.transport.netty.NettyClient extends org.apache.dubbo.remoting.transport.AbstractClient {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private static final org.jboss.netty.channel.ChannelFactory CHANNEL_FACTORY;
+
+  private org.jboss.netty.bootstrap.ClientBootstrap bootstrap;
+
+  private volatile org.jboss.netty.channel.Channel channel;
+
+  public org.apache.dubbo.remoting.transport.netty.NettyClient(org.apache.dubbo.common.URL, org.apache.dubbo.remoting.ChannelHandler) throws org.apache.dubbo.remoting.RemotingException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_1
+       3: aload_2
+       4: invokestatic  #3                  // Method wrapChannelHandler:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/remoting/ChannelHandler;)Lorg/apache/dubbo/remoting/ChannelHandler;
+       7: invokespecial #4                  // Method org/apache/dubbo/remoting/transport/AbstractClient."<init>":(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/remoting/ChannelHandler;)V
+      10: return
+
+  protected void doOpen() throws java.lang.Throwable;
+    Code:
+       0: invokestatic  #5                  // Method org/apache/dubbo/remoting/transport/netty/NettyHelper.setNettyLoggerFactory:()V
+       3: aload_0
+       4: new           #6                  // class org/jboss/netty/bootstrap/ClientBootstrap
+       7: dup
+       8: getstatic     #7                  // Field CHANNEL_FACTORY:Lorg/jboss/netty/channel/ChannelFactory;
+      11: invokespecial #8                  // Method org/jboss/netty/bootstrap/ClientBootstrap."<init>":(Lorg/jboss/netty/channel/ChannelFactory;)V
+      14: putfield      #9                  // Field bootstrap:Lorg/jboss/netty/bootstrap/ClientBootstrap;
+      17: aload_0
+      18: getfield      #9                  // Field bootstrap:Lorg/jboss/netty/bootstrap/ClientBootstrap;
+      21: ldc           #10                 // String keepAlive
+      23: iconst_1
+      24: invokestatic  #11                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      27: invokevirtual #12                 // Method org/jboss/netty/bootstrap/ClientBootstrap.setOption:(Ljava/lang/String;Ljava/lang/Object;)V
+      30: aload_0
+      31: getfield      #9                  // Field bootstrap:Lorg/jboss/netty/bootstrap/ClientBootstrap;
+      34: ldc           #13                 // String tcpNoDelay
+      36: iconst_1
+      37: invokestatic  #11                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      40: invokevirtual #12                 // Method org/jboss/netty/bootstrap/ClientBootstrap.setOption:(Ljava/lang/String;Ljava/lang/Object;)V
+      43: aload_0
+      44: getfield      #9                  // Field bootstrap:Lorg/jboss/netty/bootstrap/ClientBootstrap;
+      47: ldc           #14                 // String connectTimeoutMillis
+      49: aload_0
+      50: invokevirtual #15                 // Method getConnectTimeout:()I
+      53: invokestatic  #16                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      56: invokevirtual #12                 // Method org/jboss/netty/bootstrap/ClientBootstrap.setOption:(Ljava/lang/String;Ljava/lang/Object;)V
+      59: new           #17                 // class org/apache/dubbo/remoting/transport/netty/NettyHandler
+      62: dup
+      63: aload_0
+      64: invokevirtual #18                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+      67: aload_0
+      68: invokespecial #19                 // Method org/apache/dubbo/remoting/transport/netty/NettyHandler."<init>":(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/remoting/ChannelHandler;)V
+      71: astore_1
+      72: aload_0
+      73: getfield      #9                  // Field bootstrap:Lorg/jboss/netty/bootstrap/ClientBootstrap;
+      76: new           #20                 // class org/apache/dubbo/remoting/transport/netty/NettyClient$1
+      79: dup
+      80: aload_0
+      81: aload_1
+      82: invokespecial #21                 // Method org/apache/dubbo/remoting/transport/netty/NettyClient$1."<init>":(Lorg/apache/dubbo/remoting/transport/netty/NettyClient;Lorg/apache/dubbo/remoting/transport/netty/NettyHandler;)V
+      85: invokevirtual #22                 // Method org/jboss/netty/bootstrap/ClientBootstrap.setPipelineFactory:(Lorg/jboss/netty/channel/ChannelPipelineFactory;)V
+      88: return
+
+  protected void doConnect() throws java.lang.Throwable;
+    Code:
+       0: invokestatic  #23                 // Method java/lang/System.currentTimeMillis:()J
+       3: lstore_1
+       4: aload_0
+       5: getfield      #9                  // Field bootstrap:Lorg/jboss/netty/bootstrap/ClientBootstrap;
+       8: aload_0
+       9: invokevirtual #24                 // Method getConnectAddress:()Ljava/net/InetSocketAddress;
+      12: invokevirtual #25                 // Method org/jboss/netty/bootstrap/ClientBootstrap.connect:(Ljava/net/SocketAddress;)Lorg/jboss/netty/channel/ChannelFuture;
+      15: astore_3
+      16: aload_3
+      17: aload_0
+      18: invokevirtual #15                 // Method getConnectTimeout:()I
+      21: i2l
+      22: getstatic     #26                 // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+      25: invokeinterface #27,  4           // InterfaceMethod org/jboss/netty/channel/ChannelFuture.awaitUninterruptibly:(JLjava/util/concurrent/TimeUnit;)Z
+      30: istore        4
+      32: iload         4
+      34: ifeq          352
+      37: aload_3
+      38: invokeinterface #28,  1           // InterfaceMethod org/jboss/netty/channel/ChannelFuture.isSuccess:()Z
+      43: ifeq          352
+      46: aload_3
+      47: invokeinterface #29,  1           // InterfaceMethod org/jboss/netty/channel/ChannelFuture.getChannel:()Lorg/jboss/netty/channel/Channel;
+      52: astore        5
+      54: aload         5
+      56: iconst_5
+      57: invokeinterface #31,  2           // InterfaceMethod org/jboss/netty/channel/Channel.setInterestOps:(I)Lorg/jboss/netty/channel/ChannelFuture;
+      62: pop
+      63: aload_0
+      64: getfield      #32                 // Field channel:Lorg/jboss/netty/channel/Channel;
+      67: astore        6
+      69: aload         6
+      71: ifnull        149
+      74: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      77: invokeinterface #34,  1           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isInfoEnabled:()Z
+      82: ifeq          123
+      85: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      88: new           #35                 // class java/lang/StringBuilder
+      91: dup
+      92: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+      95: ldc           #37                 // String Close old netty channel
+      97: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     100: aload         6
+     102: invokevirtual #39                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     105: ldc           #40                 // String  on create new netty channel
+     107: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     110: aload         5
+     112: invokevirtual #39                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     115: invokevirtual #41                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     118: invokeinterface #42,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+     123: aload         6
+     125: invokeinterface #43,  1           // InterfaceMethod org/jboss/netty/channel/Channel.close:()Lorg/jboss/netty/channel/ChannelFuture;
+     130: pop
+     131: aload         6
+     133: invokestatic  #44                 // Method org/apache/dubbo/remoting/transport/netty/NettyChannel.removeChannelIfDisconnected:(Lorg/jboss/netty/channel/Channel;)V
+     136: goto          149
+     139: astore        7
+     141: aload         6
+     143: invokestatic  #44                 // Method org/apache/dubbo/remoting/transport/netty/NettyChannel.removeChannelIfDisconnected:(Lorg/jboss/netty/channel/Channel;)V
+     146: aload         7
+     148: athrow
+     149: aload_0
+     150: invokevirtual #45                 // Method isClosed:()Z
+     153: ifeq          239
+     156: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     159: invokeinterface #34,  1           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isInfoEnabled:()Z
+     164: ifeq          200
+     167: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     170: new           #35                 // class java/lang/StringBuilder
+     173: dup
+     174: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+     177: ldc           #46                 // String Close new netty channel
+     179: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     182: aload         5
+     184: invokevirtual #39                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     187: ldc           #47                 // String , because the client closed.
+     189: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     192: invokevirtual #41                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     195: invokeinterface #42,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+     200: aload         5
+     202: invokeinterface #43,  1           // InterfaceMethod org/jboss/netty/channel/Channel.close:()Lorg/jboss/netty/channel/ChannelFuture;
+     207: pop
+     208: aload_0
+     209: aconst_null
+     210: putfield      #32                 // Field channel:Lorg/jboss/netty/channel/Channel;
+     213: aload         5
+     215: invokestatic  #44                 // Method org/apache/dubbo/remoting/transport/netty/NettyChannel.removeChannelIfDisconnected:(Lorg/jboss/netty/channel/Channel;)V
+     218: goto          236
+     221: astore        8
+     223: aload_0
+     224: aconst_null
+     225: putfield      #32                 // Field channel:Lorg/jboss/netty/channel/Channel;
+     228: aload         5
+     230: invokestatic  #44                 // Method org/apache/dubbo/remoting/transport/netty/NettyChannel.removeChannelIfDisconnected:(Lorg/jboss/netty/channel/Channel;)V
+     233: aload         8
+     235: athrow
+     236: goto          349
+     239: aload_0
+     240: aload         5
+     242: putfield      #32                 // Field channel:Lorg/jboss/netty/channel/Channel;
+     245: goto          349
+     248: astore        9
+     250: aload_0
+     251: invokevirtual #45                 // Method isClosed:()Z
+     254: ifeq          340
+     257: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     260: invokeinterface #34,  1           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isInfoEnabled:()Z
+     265: ifeq          301
+     268: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     271: new           #35                 // class java/lang/StringBuilder
+     274: dup
+     275: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+     278: ldc           #46                 // String Close new netty channel
+     280: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     283: aload         5
+     285: invokevirtual #39                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     288: ldc           #47                 // String , because the client closed.
+     290: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     293: invokevirtual #41                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     296: invokeinterface #42,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+     301: aload         5
+     303: invokeinterface #43,  1           // InterfaceMethod org/jboss/netty/channel/Channel.close:()Lorg/jboss/netty/channel/ChannelFuture;
+     308: pop
+     309: aload_0
+     310: aconst_null
+     311: putfield      #32                 // Field channel:Lorg/jboss/netty/channel/Channel;
+     314: aload         5
+     316: invokestatic  #44                 // Method org/apache/dubbo/remoting/transport/netty/NettyChannel.removeChannelIfDisconnected:(Lorg/jboss/netty/channel/Channel;)V
+     319: goto          337
+     322: astore        10
+     324: aload_0
+     325: aconst_null
+     326: putfield      #32                 // Field channel:Lorg/jboss/netty/channel/Channel;
+     329: aload         5
+     331: invokestatic  #44                 // Method org/apache/dubbo/remoting/transport/netty/NettyChannel.removeChannelIfDisconnected:(Lorg/jboss/netty/channel/Channel;)V
+     334: aload         10
+     336: athrow
+     337: goto          346
+     340: aload_0
+     341: aload         5
+     343: putfield      #32                 // Field channel:Lorg/jboss/netty/channel/Channel;
+     346: aload         9
+     348: athrow
+     349: goto          561
+     352: aload_3
+     353: invokeinterface #48,  1           // InterfaceMethod org/jboss/netty/channel/ChannelFuture.getCause:()Ljava/lang/Throwable;
+     358: ifnull        449
+     361: aload_3
+     362: invokeinterface #48,  1           // InterfaceMethod org/jboss/netty/channel/ChannelFuture.getCause:()Ljava/lang/Throwable;
+     367: astore        5
+     369: new           #49                 // class org/apache/dubbo/remoting/RemotingException
+     372: dup
+     373: aload_0
+     374: new           #35                 // class java/lang/StringBuilder
+     377: dup
+     378: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+     381: ldc           #50                 // String client(url:
+     383: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     386: aload_0
+     387: invokevirtual #18                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+     390: invokevirtual #39                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     393: ldc           #51                 // String ) failed to connect to server
+     395: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     398: aload_0
+     399: invokevirtual #52                 // Method getRemoteAddress:()Ljava/net/InetSocketAddress;
+     402: invokevirtual #39                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     405: ldc           #53                 // String , error message is:
+     407: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     410: aload         5
+     412: invokevirtual #54                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     415: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     418: invokevirtual #41                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     421: aload         5
+     423: invokespecial #55                 // Method org/apache/dubbo/remoting/RemotingException."<init>":(Lorg/apache/dubbo/remoting/Channel;Ljava/lang/String;Ljava/lang/Throwable;)V
+     426: astore        6
+     428: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     431: ldc           #56                 // String 6-1
+     433: ldc           #57                 // String network disconnected
+     435: ldc           #58                 // String
+     437: ldc           #59                 // String Failed to connect to provider server by other reason.
+     439: aload         5
+     441: invokeinterface #60,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     446: aload         6
+     448: athrow
+     449: new           #49                 // class org/apache/dubbo/remoting/RemotingException
+     452: dup
+     453: aload_0
+     454: new           #35                 // class java/lang/StringBuilder
+     457: dup
+     458: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+     461: ldc           #50                 // String client(url:
+     463: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     466: aload_0
+     467: invokevirtual #18                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+     470: invokevirtual #39                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     473: ldc           #51                 // String ) failed to connect to server
+     475: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     478: aload_0
+     479: invokevirtual #52                 // Method getRemoteAddress:()Ljava/net/InetSocketAddress;
+     482: invokevirtual #39                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     485: ldc           #61                 // String  client-side timeout
+     487: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     490: aload_0
+     491: invokevirtual #15                 // Method getConnectTimeout:()I
+     494: invokevirtual #62                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     497: ldc           #63                 // String ms (elapsed:
+     499: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     502: invokestatic  #23                 // Method java/lang/System.currentTimeMillis:()J
+     505: lload_1
+     506: lsub
+     507: invokevirtual #64                 // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+     510: ldc           #65                 // String ms) from netty client
+     512: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     515: invokestatic  #66                 // Method org/apache/dubbo/common/utils/NetUtils.getLocalHost:()Ljava/lang/String;
+     518: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     521: ldc           #67                 // String  using dubbo version
+     523: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     526: invokestatic  #68                 // Method org/apache/dubbo/common/Version.getVersion:()Ljava/lang/String;
+     529: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     532: invokevirtual #41                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     535: invokespecial #69                 // Method org/apache/dubbo/remoting/RemotingException."<init>":(Lorg/apache/dubbo/remoting/Channel;Ljava/lang/String;)V
+     538: astore        5
+     540: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     543: ldc           #70                 // String 6-2
+     545: ldc           #71                 // String provider crash
+     547: ldc           #58                 // String
+     549: ldc           #72                 // String Client-side timeout.
+     551: aload         5
+     553: invokeinterface #60,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     558: aload         5
+     560: athrow
+     561: aload_0
+     562: invokevirtual #73                 // Method isConnected:()Z
+     565: ifne          597
+     568: aload_3
+     569: invokeinterface #74,  1           // InterfaceMethod org/jboss/netty/channel/ChannelFuture.cancel:()Z
+     574: pop
+     575: goto          597
+     578: astore        11
+     580: aload_0
+     581: invokevirtual #73                 // Method isConnected:()Z
+     584: ifne          594
+     587: aload_3
+     588: invokeinterface #74,  1           // InterfaceMethod org/jboss/netty/channel/ChannelFuture.cancel:()Z
+     593: pop
+     594: aload         11
+     596: athrow
+     597: return
+    Exception table:
+       from    to  target type
+          74   131   139   any
+         139   141   139   any
+         156   208   221   any
+         221   223   221   any
+          63   149   248   any
+         257   309   322   any
+         322   324   322   any
+         248   250   248   any
+          16   561   578   any
+         578   580   578   any
+
+  protected void doDisConnect() throws java.lang.Throwable;
+    Code:
+       0: aload_0
+       1: getfield      #32                 // Field channel:Lorg/jboss/netty/channel/Channel;
+       4: invokestatic  #44                 // Method org/apache/dubbo/remoting/transport/netty/NettyChannel.removeChannelIfDisconnected:(Lorg/jboss/netty/channel/Channel;)V
+       7: goto          29
+      10: astore_1
+      11: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      14: ldc           #76                 // String 6-5
+      16: ldc           #58                 // String
+      18: ldc           #58                 // String
+      20: aload_1
+      21: invokevirtual #54                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+      24: invokeinterface #77,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      29: return
+    Exception table:
+       from    to  target type
+           0     7    10   Class java/lang/Throwable
+
+  protected void doClose() throws java.lang.Throwable;
+    Code:
+       0: return
+
+  protected org.apache.dubbo.remoting.Channel getChannel();
+    Code:
+       0: aload_0
+       1: getfield      #32                 // Field channel:Lorg/jboss/netty/channel/Channel;
+       4: astore_1
+       5: aload_1
+       6: ifnull        18
+       9: aload_1
+      10: invokeinterface #78,  1           // InterfaceMethod org/jboss/netty/channel/Channel.isConnected:()Z
+      15: ifne          20
+      18: aconst_null
+      19: areturn
+      20: aload_1
+      21: aload_0
+      22: invokevirtual #18                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+      25: aload_0
+      26: invokestatic  #79                 // Method org/apache/dubbo/remoting/transport/netty/NettyChannel.getOrAddChannel:(Lorg/jboss/netty/channel/Channel;Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/remoting/ChannelHandler;)Lorg/apache/dubbo/remoting/transport/netty/NettyChannel;
+      29: areturn
+
+  org.jboss.netty.channel.Channel getNettyChannel();
+    Code:
+       0: aload_0
+       1: getfield      #32                 // Field channel:Lorg/jboss/netty/channel/Channel;
+       4: areturn
+
+  static org.apache.dubbo.remoting.Codec2 access$000(org.apache.dubbo.remoting.transport.netty.NettyClient);
+    Code:
+       0: aload_0
+       1: invokevirtual #2                  // Method getCodec:()Lorg/apache/dubbo/remoting/Codec2;
+       4: areturn
+
+  static {};
+    Code:
+       0: ldc           #80                 // class org/apache/dubbo/remoting/transport/netty/NettyClient
+       2: invokestatic  #81                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: new           #82                 // class org/jboss/netty/channel/socket/nio/NioClientSocketChannelFactory
+      11: dup
+      12: new           #83                 // class org/apache/dubbo/common/utils/NamedThreadFactory
+      15: dup
+      16: ldc           #84                 // String NettyClientBoss
+      18: iconst_1
+      19: invokespecial #85                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;Z)V
+      22: invokestatic  #86                 // Method java/util/concurrent/Executors.newCachedThreadPool:(Ljava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ExecutorService;
+      25: new           #83                 // class org/apache/dubbo/common/utils/NamedThreadFactory
+      28: dup
+      29: ldc           #87                 // String NettyClientWorker
+      31: iconst_1
+      32: invokespecial #85                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;Z)V
+      35: invokestatic  #86                 // Method java/util/concurrent/Executors.newCachedThreadPool:(Ljava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ExecutorService;
+      38: getstatic     #88                 // Field org/apache/dubbo/remoting/Constants.DEFAULT_IO_THREADS:I
+      41: invokespecial #89                 // Method org/jboss/netty/channel/socket/nio/NioClientSocketChannelFactory."<init>":(Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;I)V
+      44: putstatic     #7                  // Field CHANNEL_FACTORY:Lorg/jboss/netty/channel/ChannelFactory;
+      47: return
+}

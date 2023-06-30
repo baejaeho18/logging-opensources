@@ -1,0 +1,219 @@
+Compiled from "HeartbeatHandler.java"
+public class org.apache.dubbo.remoting.exchange.support.header.HeartbeatHandler extends org.apache.dubbo.remoting.transport.AbstractChannelHandlerDelegate {
+  private static final org.apache.dubbo.common.logger.Logger logger;
+
+  public static final java.lang.String KEY_READ_TIMESTAMP;
+
+  public static final java.lang.String KEY_WRITE_TIMESTAMP;
+
+  public org.apache.dubbo.remoting.exchange.support.header.HeartbeatHandler(org.apache.dubbo.remoting.ChannelHandler);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #1                  // Method org/apache/dubbo/remoting/transport/AbstractChannelHandlerDelegate."<init>":(Lorg/apache/dubbo/remoting/ChannelHandler;)V
+       5: return
+
+  public void connected(org.apache.dubbo.remoting.Channel) throws org.apache.dubbo.remoting.RemotingException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #2                  // Method setReadTimestamp:(Lorg/apache/dubbo/remoting/Channel;)V
+       5: aload_0
+       6: aload_1
+       7: invokespecial #3                  // Method setWriteTimestamp:(Lorg/apache/dubbo/remoting/Channel;)V
+      10: aload_0
+      11: getfield      #4                  // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+      14: aload_1
+      15: invokeinterface #5,  2            // InterfaceMethod org/apache/dubbo/remoting/ChannelHandler.connected:(Lorg/apache/dubbo/remoting/Channel;)V
+      20: return
+
+  public void disconnected(org.apache.dubbo.remoting.Channel) throws org.apache.dubbo.remoting.RemotingException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #6                  // Method clearReadTimestamp:(Lorg/apache/dubbo/remoting/Channel;)V
+       5: aload_0
+       6: aload_1
+       7: invokespecial #7                  // Method clearWriteTimestamp:(Lorg/apache/dubbo/remoting/Channel;)V
+      10: aload_0
+      11: getfield      #4                  // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+      14: aload_1
+      15: invokeinterface #8,  2            // InterfaceMethod org/apache/dubbo/remoting/ChannelHandler.disconnected:(Lorg/apache/dubbo/remoting/Channel;)V
+      20: return
+
+  public void sent(org.apache.dubbo.remoting.Channel, java.lang.Object) throws org.apache.dubbo.remoting.RemotingException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #3                  // Method setWriteTimestamp:(Lorg/apache/dubbo/remoting/Channel;)V
+       5: aload_0
+       6: getfield      #4                  // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+       9: aload_1
+      10: aload_2
+      11: invokeinterface #9,  3            // InterfaceMethod org/apache/dubbo/remoting/ChannelHandler.sent:(Lorg/apache/dubbo/remoting/Channel;Ljava/lang/Object;)V
+      16: return
+
+  public void received(org.apache.dubbo.remoting.Channel, java.lang.Object) throws org.apache.dubbo.remoting.RemotingException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #2                  // Method setReadTimestamp:(Lorg/apache/dubbo/remoting/Channel;)V
+       5: aload_0
+       6: aload_2
+       7: invokespecial #10                 // Method isHeartbeatRequest:(Ljava/lang/Object;)Z
+      10: ifeq          168
+      13: aload_2
+      14: checkcast     #11                 // class org/apache/dubbo/remoting/exchange/HeartBeatRequest
+      17: astore_3
+      18: aload_3
+      19: invokevirtual #12                 // Method org/apache/dubbo/remoting/exchange/HeartBeatRequest.isTwoWay:()Z
+      22: ifeq          167
+      25: new           #13                 // class org/apache/dubbo/remoting/exchange/HeartBeatResponse
+      28: dup
+      29: aload_3
+      30: invokevirtual #14                 // Method org/apache/dubbo/remoting/exchange/HeartBeatRequest.getId:()J
+      33: aload_3
+      34: invokevirtual #15                 // Method org/apache/dubbo/remoting/exchange/HeartBeatRequest.getVersion:()Ljava/lang/String;
+      37: invokespecial #16                 // Method org/apache/dubbo/remoting/exchange/HeartBeatResponse."<init>":(JLjava/lang/String;)V
+      40: astore        4
+      42: aload         4
+      44: getstatic     #17                 // Field org/apache/dubbo/common/constants/CommonConstants.HEARTBEAT_EVENT:Ljava/lang/String;
+      47: invokevirtual #18                 // Method org/apache/dubbo/remoting/exchange/HeartBeatResponse.setEvent:(Ljava/lang/String;)V
+      50: aload         4
+      52: aload_3
+      53: invokevirtual #19                 // Method org/apache/dubbo/remoting/exchange/HeartBeatRequest.getProto:()B
+      56: invokevirtual #20                 // Method org/apache/dubbo/remoting/exchange/HeartBeatResponse.setProto:(B)V
+      59: aload_1
+      60: aload         4
+      62: invokeinterface #21,  2           // InterfaceMethod org/apache/dubbo/remoting/Channel.send:(Ljava/lang/Object;)V
+      67: getstatic     #22                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+      70: invokeinterface #23,  1           // InterfaceMethod org/apache/dubbo/common/logger/Logger.isDebugEnabled:()Z
+      75: ifeq          167
+      78: aload_1
+      79: invokeinterface #24,  1           // InterfaceMethod org/apache/dubbo/remoting/Channel.getUrl:()Lorg/apache/dubbo/common/URL;
+      84: ldc           #26                 // String heartbeat
+      86: iconst_0
+      87: invokevirtual #27                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;I)I
+      90: istore        5
+      92: getstatic     #22                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+      95: new           #28                 // class java/lang/StringBuilder
+      98: dup
+      99: invokespecial #29                 // Method java/lang/StringBuilder."<init>":()V
+     102: ldc           #30                 // String Received heartbeat from remote channel
+     104: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     107: aload_1
+     108: invokeinterface #32,  1           // InterfaceMethod org/apache/dubbo/remoting/Channel.getRemoteAddress:()Ljava/net/InetSocketAddress;
+     113: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     116: ldc           #34                 // String , cause: The channel has no data-transmission exceeds a heartbeat period
+     118: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     121: iload         5
+     123: ifle          154
+     126: new           #28                 // class java/lang/StringBuilder
+     129: dup
+     130: invokespecial #29                 // Method java/lang/StringBuilder."<init>":()V
+     133: ldc           #35                 // String :
+     135: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     138: iload         5
+     140: invokevirtual #36                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     143: ldc           #37                 // String ms
+     145: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     148: invokevirtual #38                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     151: goto          156
+     154: ldc           #39                 // String
+     156: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     159: invokevirtual #38                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     162: invokeinterface #40,  2           // InterfaceMethod org/apache/dubbo/common/logger/Logger.debug:(Ljava/lang/String;)V
+     167: return
+     168: aload_0
+     169: aload_2
+     170: invokespecial #41                 // Method isHeartbeatResponse:(Ljava/lang/Object;)Z
+     173: ifeq          220
+     176: getstatic     #22                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+     179: invokeinterface #23,  1           // InterfaceMethod org/apache/dubbo/common/logger/Logger.isDebugEnabled:()Z
+     184: ifeq          219
+     187: getstatic     #22                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+     190: new           #28                 // class java/lang/StringBuilder
+     193: dup
+     194: invokespecial #29                 // Method java/lang/StringBuilder."<init>":()V
+     197: ldc           #42                 // String Receive heartbeat response in thread
+     199: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     202: invokestatic  #43                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+     205: invokevirtual #44                 // Method java/lang/Thread.getName:()Ljava/lang/String;
+     208: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     211: invokevirtual #38                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     214: invokeinterface #40,  2           // InterfaceMethod org/apache/dubbo/common/logger/Logger.debug:(Ljava/lang/String;)V
+     219: return
+     220: aload_0
+     221: getfield      #4                  // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+     224: aload_1
+     225: aload_2
+     226: invokeinterface #45,  3           // InterfaceMethod org/apache/dubbo/remoting/ChannelHandler.received:(Lorg/apache/dubbo/remoting/Channel;Ljava/lang/Object;)V
+     231: return
+
+  private void setReadTimestamp(org.apache.dubbo.remoting.Channel);
+    Code:
+       0: aload_1
+       1: ldc           #47                 // String READ_TIMESTAMP
+       3: invokestatic  #48                 // Method java/lang/System.currentTimeMillis:()J
+       6: invokestatic  #49                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+       9: invokeinterface #50,  3           // InterfaceMethod org/apache/dubbo/remoting/Channel.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+      14: return
+
+  private void setWriteTimestamp(org.apache.dubbo.remoting.Channel);
+    Code:
+       0: aload_1
+       1: ldc           #51                 // String WRITE_TIMESTAMP
+       3: invokestatic  #48                 // Method java/lang/System.currentTimeMillis:()J
+       6: invokestatic  #49                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+       9: invokeinterface #50,  3           // InterfaceMethod org/apache/dubbo/remoting/Channel.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+      14: return
+
+  private void clearReadTimestamp(org.apache.dubbo.remoting.Channel);
+    Code:
+       0: aload_1
+       1: ldc           #47                 // String READ_TIMESTAMP
+       3: invokeinterface #52,  2           // InterfaceMethod org/apache/dubbo/remoting/Channel.removeAttribute:(Ljava/lang/String;)V
+       8: return
+
+  private void clearWriteTimestamp(org.apache.dubbo.remoting.Channel);
+    Code:
+       0: aload_1
+       1: ldc           #51                 // String WRITE_TIMESTAMP
+       3: invokeinterface #52,  2           // InterfaceMethod org/apache/dubbo/remoting/Channel.removeAttribute:(Ljava/lang/String;)V
+       8: return
+
+  private boolean isHeartbeatRequest(java.lang.Object);
+    Code:
+       0: aload_1
+       1: instanceof    #11                 // class org/apache/dubbo/remoting/exchange/HeartBeatRequest
+       4: ifeq          21
+       7: aload_1
+       8: checkcast     #53                 // class org/apache/dubbo/remoting/exchange/Request
+      11: invokevirtual #54                 // Method org/apache/dubbo/remoting/exchange/Request.isHeartbeat:()Z
+      14: ifeq          21
+      17: iconst_1
+      18: goto          22
+      21: iconst_0
+      22: ireturn
+
+  private boolean isHeartbeatResponse(java.lang.Object);
+    Code:
+       0: aload_1
+       1: instanceof    #55                 // class org/apache/dubbo/remoting/exchange/Response
+       4: ifeq          21
+       7: aload_1
+       8: checkcast     #55                 // class org/apache/dubbo/remoting/exchange/Response
+      11: invokevirtual #56                 // Method org/apache/dubbo/remoting/exchange/Response.isHeartbeat:()Z
+      14: ifeq          21
+      17: iconst_1
+      18: goto          22
+      21: iconst_0
+      22: ireturn
+
+  static {};
+    Code:
+       0: ldc           #46                 // class org/apache/dubbo/remoting/exchange/support/header/HeartbeatHandler
+       2: invokestatic  #57                 // Method org/apache/dubbo/common/logger/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/Logger;
+       5: putstatic     #22                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+       8: return
+}

@@ -1,0 +1,292 @@
+Compiled from "LogTelnetHandler.java"
+public class org.apache.dubbo.remoting.telnet.support.command.LogTelnetHandler implements org.apache.dubbo.remoting.telnet.TelnetHandler {
+  public static final java.lang.String SERVICE_KEY;
+
+  public org.apache.dubbo.remoting.telnet.support.command.LogTelnetHandler();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public java.lang.String telnet(org.apache.dubbo.remoting.Channel, java.lang.String);
+    Code:
+       0: lconst_0
+       1: lstore_3
+       2: invokestatic  #2                  // Method org/apache/dubbo/common/logger/LoggerFactory.getFile:()Ljava/io/File;
+       5: astore        5
+       7: new           #3                  // class java/lang/StringBuilder
+      10: dup
+      11: invokespecial #4                  // Method java/lang/StringBuilder."<init>":()V
+      14: astore        6
+      16: aload_2
+      17: ifnull        30
+      20: aload_2
+      21: invokevirtual #5                  // Method java/lang/String.trim:()Ljava/lang/String;
+      24: invokevirtual #6                  // Method java/lang/String.length:()I
+      27: ifne          41
+      30: aload         6
+      32: ldc           #7                  // String EXAMPLE: log error / log 100
+      34: invokevirtual #8                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      37: pop
+      38: goto          525
+      41: aload_2
+      42: ldc           #9                  // String
+      44: invokevirtual #10                 // Method java/lang/String.split:(Ljava/lang/String;)[Ljava/lang/String;
+      47: astore        7
+      49: aload         7
+      51: iconst_0
+      52: aaload
+      53: invokestatic  #11                 // Method org/apache/dubbo/common/utils/StringUtils.isNumber:(Ljava/lang/String;)Z
+      56: ifne          72
+      59: aload_2
+      60: invokevirtual #12                 // Method java/lang/String.toUpperCase:()Ljava/lang/String;
+      63: invokestatic  #13                 // Method org/apache/dubbo/common/logger/Level.valueOf:(Ljava/lang/String;)Lorg/apache/dubbo/common/logger/Level;
+      66: invokestatic  #14                 // Method org/apache/dubbo/common/logger/LoggerFactory.setLevel:(Lorg/apache/dubbo/common/logger/Level;)V
+      69: goto          525
+      72: aload         7
+      74: iconst_0
+      75: aaload
+      76: invokestatic  #15                 // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+      79: istore        8
+      81: aload         5
+      83: ifnull        515
+      86: aload         5
+      88: invokevirtual #16                 // Method java/io/File.exists:()Z
+      91: ifeq          515
+      94: new           #17                 // class java/io/FileInputStream
+      97: dup
+      98: aload         5
+     100: invokespecial #18                 // Method java/io/FileInputStream."<init>":(Ljava/io/File;)V
+     103: astore        9
+     105: aconst_null
+     106: astore        10
+     108: aload         9
+     110: invokevirtual #19                 // Method java/io/FileInputStream.getChannel:()Ljava/nio/channels/FileChannel;
+     113: astore        11
+     115: aconst_null
+     116: astore        12
+     118: aload         11
+     120: invokevirtual #20                 // Method java/nio/channels/FileChannel.size:()J
+     123: lstore_3
+     124: lload_3
+     125: iload         8
+     127: i2l
+     128: lcmp
+     129: ifgt          151
+     132: lload_3
+     133: l2i
+     134: invokestatic  #21                 // Method java/nio/ByteBuffer.allocate:(I)Ljava/nio/ByteBuffer;
+     137: astore        13
+     139: aload         11
+     141: aload         13
+     143: lconst_0
+     144: invokevirtual #22                 // Method java/nio/channels/FileChannel.read:(Ljava/nio/ByteBuffer;J)I
+     147: pop
+     148: goto          177
+     151: lload_3
+     152: iload         8
+     154: i2l
+     155: lsub
+     156: l2i
+     157: istore        14
+     159: iload         8
+     161: invokestatic  #21                 // Method java/nio/ByteBuffer.allocate:(I)Ljava/nio/ByteBuffer;
+     164: astore        13
+     166: aload         11
+     168: aload         13
+     170: iload         14
+     172: i2l
+     173: invokevirtual #22                 // Method java/nio/channels/FileChannel.read:(Ljava/nio/ByteBuffer;J)I
+     176: pop
+     177: aload         13
+     179: invokevirtual #23                 // Method java/nio/ByteBuffer.flip:()Ljava/nio/Buffer;
+     182: pop
+     183: new           #24                 // class java/lang/String
+     186: dup
+     187: aload         13
+     189: invokevirtual #25                 // Method java/nio/ByteBuffer.array:()[B
+     192: invokespecial #26                 // Method java/lang/String."<init>":([B)V
+     195: ldc           #27                 // String <
+     197: ldc           #28                 // String &lt;
+     199: invokevirtual #29                 // Method java/lang/String.replace:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+     202: ldc           #30                 // String >
+     204: ldc           #31                 // String &gt;
+     206: invokevirtual #29                 // Method java/lang/String.replace:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+     209: ldc           #32                 // String \n
+     211: ldc           #33                 // String <br/><br/>
+     213: invokevirtual #29                 // Method java/lang/String.replace:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+     216: astore        14
+     218: aload         6
+     220: new           #3                  // class java/lang/StringBuilder
+     223: dup
+     224: invokespecial #4                  // Method java/lang/StringBuilder."<init>":()V
+     227: ldc           #34                 // String \r\ncontent:
+     229: invokevirtual #8                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     232: aload         14
+     234: invokevirtual #8                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     237: invokevirtual #35                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     240: invokevirtual #8                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     243: pop
+     244: aload         6
+     246: new           #3                  // class java/lang/StringBuilder
+     249: dup
+     250: invokespecial #4                  // Method java/lang/StringBuilder."<init>":()V
+     253: ldc           #36                 // String \r\nmodified:
+     255: invokevirtual #8                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     258: new           #37                 // class java/text/SimpleDateFormat
+     261: dup
+     262: ldc           #38                 // String yyyy-MM-dd HH:mm:ss
+     264: invokespecial #39                 // Method java/text/SimpleDateFormat."<init>":(Ljava/lang/String;)V
+     267: new           #40                 // class java/util/Date
+     270: dup
+     271: aload         5
+     273: invokevirtual #41                 // Method java/io/File.lastModified:()J
+     276: invokespecial #42                 // Method java/util/Date."<init>":(J)V
+     279: invokevirtual #43                 // Method java/text/SimpleDateFormat.format:(Ljava/util/Date;)Ljava/lang/String;
+     282: invokevirtual #8                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     285: invokevirtual #35                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     288: invokevirtual #8                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     291: pop
+     292: aload         6
+     294: new           #3                  // class java/lang/StringBuilder
+     297: dup
+     298: invokespecial #4                  // Method java/lang/StringBuilder."<init>":()V
+     301: ldc           #44                 // String \r\nsize:
+     303: invokevirtual #8                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     306: lload_3
+     307: invokevirtual #45                 // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+     310: ldc           #46                 // String \r\n
+     312: invokevirtual #8                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     315: invokevirtual #35                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     318: invokevirtual #8                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     321: pop
+     322: aload         11
+     324: ifnull        409
+     327: aload         12
+     329: ifnull        352
+     332: aload         11
+     334: invokevirtual #47                 // Method java/nio/channels/FileChannel.close:()V
+     337: goto          409
+     340: astore        13
+     342: aload         12
+     344: aload         13
+     346: invokevirtual #49                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     349: goto          409
+     352: aload         11
+     354: invokevirtual #47                 // Method java/nio/channels/FileChannel.close:()V
+     357: goto          409
+     360: astore        13
+     362: aload         13
+     364: astore        12
+     366: aload         13
+     368: athrow
+     369: astore        15
+     371: aload         11
+     373: ifnull        406
+     376: aload         12
+     378: ifnull        401
+     381: aload         11
+     383: invokevirtual #47                 // Method java/nio/channels/FileChannel.close:()V
+     386: goto          406
+     389: astore        16
+     391: aload         12
+     393: aload         16
+     395: invokevirtual #49                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     398: goto          406
+     401: aload         11
+     403: invokevirtual #47                 // Method java/nio/channels/FileChannel.close:()V
+     406: aload         15
+     408: athrow
+     409: aload         9
+     411: ifnull        496
+     414: aload         10
+     416: ifnull        439
+     419: aload         9
+     421: invokevirtual #50                 // Method java/io/FileInputStream.close:()V
+     424: goto          496
+     427: astore        11
+     429: aload         10
+     431: aload         11
+     433: invokevirtual #49                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     436: goto          496
+     439: aload         9
+     441: invokevirtual #50                 // Method java/io/FileInputStream.close:()V
+     444: goto          496
+     447: astore        11
+     449: aload         11
+     451: astore        10
+     453: aload         11
+     455: athrow
+     456: astore        17
+     458: aload         9
+     460: ifnull        493
+     463: aload         10
+     465: ifnull        488
+     468: aload         9
+     470: invokevirtual #50                 // Method java/io/FileInputStream.close:()V
+     473: goto          493
+     476: astore        18
+     478: aload         10
+     480: aload         18
+     482: invokevirtual #49                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     485: goto          493
+     488: aload         9
+     490: invokevirtual #50                 // Method java/io/FileInputStream.close:()V
+     493: aload         17
+     495: athrow
+     496: goto          525
+     499: astore        9
+     501: aload         6
+     503: aload         9
+     505: invokevirtual #52                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+     508: invokevirtual #8                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     511: pop
+     512: goto          525
+     515: lconst_0
+     516: lstore_3
+     517: aload         6
+     519: ldc           #53                 // String \r\nMESSAGE: log file not exists or log appender is console .
+     521: invokevirtual #8                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     524: pop
+     525: aload         6
+     527: new           #3                  // class java/lang/StringBuilder
+     530: dup
+     531: invokespecial #4                  // Method java/lang/StringBuilder."<init>":()V
+     534: ldc           #54                 // String \r\nCURRENT LOG LEVEL:
+     536: invokevirtual #8                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     539: invokestatic  #55                 // Method org/apache/dubbo/common/logger/LoggerFactory.getLevel:()Lorg/apache/dubbo/common/logger/Level;
+     542: invokevirtual #56                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     545: invokevirtual #35                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     548: invokevirtual #8                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     551: new           #3                  // class java/lang/StringBuilder
+     554: dup
+     555: invokespecial #4                  // Method java/lang/StringBuilder."<init>":()V
+     558: ldc           #57                 // String \r\nCURRENT LOG APPENDER:
+     560: invokevirtual #8                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     563: aload         5
+     565: ifnonnull     573
+     568: ldc           #58                 // String console
+     570: goto          578
+     573: aload         5
+     575: invokevirtual #59                 // Method java/io/File.getAbsolutePath:()Ljava/lang/String;
+     578: invokevirtual #8                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     581: invokevirtual #35                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     584: invokevirtual #8                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     587: pop
+     588: aload         6
+     590: invokevirtual #35                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     593: areturn
+    Exception table:
+       from    to  target type
+         332   337   340   Class java/lang/Throwable
+         118   322   360   Class java/lang/Throwable
+         118   322   369   any
+         381   386   389   Class java/lang/Throwable
+         360   371   369   any
+         419   424   427   Class java/lang/Throwable
+         108   409   447   Class java/lang/Throwable
+         108   409   456   any
+         468   473   476   Class java/lang/Throwable
+         447   458   456   any
+          94   496   499   Class java/lang/Exception
+}

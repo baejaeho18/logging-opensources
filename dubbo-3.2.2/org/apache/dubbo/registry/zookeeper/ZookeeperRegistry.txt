@@ -1,0 +1,1040 @@
+Compiled from "ZookeeperRegistry.java"
+public class org.apache.dubbo.registry.zookeeper.ZookeeperRegistry extends org.apache.dubbo.registry.support.CacheableFailbackRegistry {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private static final java.lang.String DEFAULT_ROOT;
+
+  private final java.lang.String root;
+
+  private final java.util.Set<java.lang.String> anyServices;
+
+  private final java.util.concurrent.ConcurrentMap<org.apache.dubbo.common.URL, java.util.concurrent.ConcurrentMap<org.apache.dubbo.registry.NotifyListener, org.apache.dubbo.remoting.zookeeper.ChildListener>> zkListeners;
+
+  private org.apache.dubbo.remoting.zookeeper.ZookeeperClient zkClient;
+
+  public org.apache.dubbo.registry.zookeeper.ZookeeperRegistry(org.apache.dubbo.common.URL, org.apache.dubbo.remoting.zookeeper.ZookeeperTransporter);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #7                  // Method org/apache/dubbo/registry/support/CacheableFailbackRegistry."<init>":(Lorg/apache/dubbo/common/URL;)V
+       5: aload_0
+       6: new           #8                  // class org/apache/dubbo/common/utils/ConcurrentHashSet
+       9: dup
+      10: invokespecial #9                  // Method org/apache/dubbo/common/utils/ConcurrentHashSet."<init>":()V
+      13: putfield      #10                 // Field anyServices:Ljava/util/Set;
+      16: aload_0
+      17: new           #11                 // class java/util/concurrent/ConcurrentHashMap
+      20: dup
+      21: invokespecial #12                 // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      24: putfield      #13                 // Field zkListeners:Ljava/util/concurrent/ConcurrentMap;
+      27: aload_1
+      28: invokevirtual #14                 // Method org/apache/dubbo/common/URL.isAnyHost:()Z
+      31: ifeq          44
+      34: new           #15                 // class java/lang/IllegalStateException
+      37: dup
+      38: ldc           #16                 // String registry address == null
+      40: invokespecial #17                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      43: athrow
+      44: aload_1
+      45: ldc           #19                 // String dubbo
+      47: invokevirtual #20                 // Method org/apache/dubbo/common/URL.getGroup:(Ljava/lang/String;)Ljava/lang/String;
+      50: astore_3
+      51: aload_3
+      52: ldc           #21                 // String /
+      54: invokevirtual #22                 // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+      57: ifne          80
+      60: new           #23                 // class java/lang/StringBuilder
+      63: dup
+      64: invokespecial #24                 // Method java/lang/StringBuilder."<init>":()V
+      67: ldc           #21                 // String /
+      69: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      72: aload_3
+      73: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      76: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      79: astore_3
+      80: aload_0
+      81: aload_3
+      82: putfield      #27                 // Field root:Ljava/lang/String;
+      85: aload_0
+      86: aload_2
+      87: aload_1
+      88: invokeinterface #28,  2           // InterfaceMethod org/apache/dubbo/remoting/zookeeper/ZookeeperTransporter.connect:(Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+      93: putfield      #29                 // Field zkClient:Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+      96: aload_0
+      97: getfield      #29                 // Field zkClient:Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+     100: aload_0
+     101: invokedynamic #30,  0             // InvokeDynamic #0:stateChanged:(Lorg/apache/dubbo/registry/zookeeper/ZookeeperRegistry;)Lorg/apache/dubbo/remoting/zookeeper/StateListener;
+     106: invokeinterface #31,  2           // InterfaceMethod org/apache/dubbo/remoting/zookeeper/ZookeeperClient.addStateListener:(Lorg/apache/dubbo/remoting/zookeeper/StateListener;)V
+     111: return
+
+  public boolean isAvailable();
+    Code:
+       0: aload_0
+       1: getfield      #29                 // Field zkClient:Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+       4: ifnull        23
+       7: aload_0
+       8: getfield      #29                 // Field zkClient:Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+      11: invokeinterface #32,  1           // InterfaceMethod org/apache/dubbo/remoting/zookeeper/ZookeeperClient.isConnected:()Z
+      16: ifeq          23
+      19: iconst_1
+      20: goto          24
+      23: iconst_0
+      24: ireturn
+
+  public void destroy();
+    Code:
+       0: aload_0
+       1: invokespecial #33                 // Method org/apache/dubbo/registry/support/CacheableFailbackRegistry.destroy:()V
+       4: aload_0
+       5: getfield      #13                 // Field zkListeners:Ljava/util/concurrent/ConcurrentMap;
+       8: invokeinterface #34,  1           // InterfaceMethod java/util/concurrent/ConcurrentMap.keySet:()Ljava/util/Set;
+      13: astore_1
+      14: aload_1
+      15: invokeinterface #35,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      20: astore_2
+      21: aload_2
+      22: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      27: ifeq          185
+      30: aload_2
+      31: invokeinterface #37,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      36: checkcast     #38                 // class org/apache/dubbo/common/URL
+      39: astore_3
+      40: aload_0
+      41: getfield      #13                 // Field zkListeners:Ljava/util/concurrent/ConcurrentMap;
+      44: aload_3
+      45: invokeinterface #39,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      50: checkcast     #40                 // class java/util/concurrent/ConcurrentMap
+      53: astore        4
+      55: aload         4
+      57: invokestatic  #41                 // Method org/apache/dubbo/common/utils/CollectionUtils.isEmptyMap:(Ljava/util/Map;)Z
+      60: ifeq          66
+      63: goto          21
+      66: aload         4
+      68: invokeinterface #42,  1           // InterfaceMethod java/util/concurrent/ConcurrentMap.values:()Ljava/util/Collection;
+      73: astore        5
+      75: aload         5
+      77: invokestatic  #43                 // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+      80: ifeq          86
+      83: goto          21
+      86: ldc           #44                 // String *
+      88: aload_3
+      89: invokevirtual #45                 // Method org/apache/dubbo/common/URL.getServiceInterface:()Ljava/lang/String;
+      92: invokevirtual #46                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      95: ifeq          127
+      98: aload_0
+      99: invokespecial #47                 // Method toRootPath:()Ljava/lang/String;
+     102: astore        6
+     104: aload         5
+     106: invokeinterface #48,  1           // InterfaceMethod java/util/Collection.stream:()Ljava/util/stream/Stream;
+     111: aload_0
+     112: aload         6
+     114: invokedynamic #49,  0             // InvokeDynamic #1:accept:(Lorg/apache/dubbo/registry/zookeeper/ZookeeperRegistry;Ljava/lang/String;)Ljava/util/function/Consumer;
+     119: invokeinterface #50,  2           // InterfaceMethod java/util/stream/Stream.forEach:(Ljava/util/function/Consumer;)V
+     124: goto          182
+     127: aload_0
+     128: aload_3
+     129: invokespecial #51                 // Method toCategoriesPath:(Lorg/apache/dubbo/common/URL;)[Ljava/lang/String;
+     132: astore        6
+     134: aload         6
+     136: arraylength
+     137: istore        7
+     139: iconst_0
+     140: istore        8
+     142: iload         8
+     144: iload         7
+     146: if_icmpge     182
+     149: aload         6
+     151: iload         8
+     153: aaload
+     154: astore        9
+     156: aload         5
+     158: invokeinterface #48,  1           // InterfaceMethod java/util/Collection.stream:()Ljava/util/stream/Stream;
+     163: aload_0
+     164: aload         9
+     166: invokedynamic #52,  0             // InvokeDynamic #2:accept:(Lorg/apache/dubbo/registry/zookeeper/ZookeeperRegistry;Ljava/lang/String;)Ljava/util/function/Consumer;
+     171: invokeinterface #50,  2           // InterfaceMethod java/util/stream/Stream.forEach:(Ljava/util/function/Consumer;)V
+     176: iinc          8, 1
+     179: goto          142
+     182: goto          21
+     185: aload_0
+     186: getfield      #13                 // Field zkListeners:Ljava/util/concurrent/ConcurrentMap;
+     189: invokeinterface #53,  1           // InterfaceMethod java/util/concurrent/ConcurrentMap.clear:()V
+     194: aload_0
+     195: aconst_null
+     196: putfield      #29                 // Field zkClient:Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+     199: return
+
+  private void checkDestroyed();
+    Code:
+       0: aload_0
+       1: getfield      #29                 // Field zkClient:Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+       4: ifnonnull     17
+       7: new           #15                 // class java/lang/IllegalStateException
+      10: dup
+      11: ldc           #54                 // String registry is destroyed
+      13: invokespecial #17                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: return
+
+  public void doRegister(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: invokespecial #55                 // Method checkDestroyed:()V
+       4: aload_0
+       5: getfield      #29                 // Field zkClient:Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+       8: aload_0
+       9: aload_1
+      10: invokespecial #56                 // Method toUrlPath:(Lorg/apache/dubbo/common/URL;)Ljava/lang/String;
+      13: aload_1
+      14: ldc           #57                 // String dynamic
+      16: iconst_1
+      17: invokevirtual #58                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+      20: iconst_0
+      21: invokeinterface #59,  4           // InterfaceMethod org/apache/dubbo/remoting/zookeeper/ZookeeperClient.create:(Ljava/lang/String;ZZ)V
+      26: goto          82
+      29: astore_2
+      30: new           #61                 // class org/apache/dubbo/rpc/RpcException
+      33: dup
+      34: new           #23                 // class java/lang/StringBuilder
+      37: dup
+      38: invokespecial #24                 // Method java/lang/StringBuilder."<init>":()V
+      41: ldc           #62                 // String Failed to register
+      43: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      46: aload_1
+      47: invokevirtual #63                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      50: ldc           #64                 // String  to zookeeper
+      52: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      55: aload_0
+      56: invokevirtual #65                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+      59: invokevirtual #63                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      62: ldc           #66                 // String , cause:
+      64: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      67: aload_2
+      68: invokevirtual #67                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+      71: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      74: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      77: aload_2
+      78: invokespecial #68                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      81: athrow
+      82: return
+    Exception table:
+       from    to  target type
+           0    26    29   Class java/lang/Throwable
+
+  public void doUnregister(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: invokespecial #55                 // Method checkDestroyed:()V
+       4: aload_0
+       5: getfield      #29                 // Field zkClient:Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+       8: aload_0
+       9: aload_1
+      10: invokespecial #56                 // Method toUrlPath:(Lorg/apache/dubbo/common/URL;)Ljava/lang/String;
+      13: invokeinterface #69,  2           // InterfaceMethod org/apache/dubbo/remoting/zookeeper/ZookeeperClient.delete:(Ljava/lang/String;)V
+      18: goto          74
+      21: astore_2
+      22: new           #61                 // class org/apache/dubbo/rpc/RpcException
+      25: dup
+      26: new           #23                 // class java/lang/StringBuilder
+      29: dup
+      30: invokespecial #24                 // Method java/lang/StringBuilder."<init>":()V
+      33: ldc           #70                 // String Failed to unregister
+      35: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      38: aload_1
+      39: invokevirtual #63                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      42: ldc           #64                 // String  to zookeeper
+      44: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      47: aload_0
+      48: invokevirtual #65                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+      51: invokevirtual #63                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      54: ldc           #66                 // String , cause:
+      56: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      59: aload_2
+      60: invokevirtual #67                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+      63: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      66: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      69: aload_2
+      70: invokespecial #68                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      73: athrow
+      74: return
+    Exception table:
+       from    to  target type
+           0    18    21   Class java/lang/Throwable
+
+  public void doSubscribe(org.apache.dubbo.common.URL, org.apache.dubbo.registry.NotifyListener);
+    Code:
+       0: aload_0
+       1: invokespecial #55                 // Method checkDestroyed:()V
+       4: ldc           #44                 // String *
+       6: aload_1
+       7: invokevirtual #45                 // Method org/apache/dubbo/common/URL.getServiceInterface:()Ljava/lang/String;
+      10: invokevirtual #46                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      13: ifeq          199
+      16: aload_0
+      17: invokespecial #47                 // Method toRootPath:()Ljava/lang/String;
+      20: astore_3
+      21: aload_1
+      22: ldc           #71                 // String check
+      24: iconst_0
+      25: invokevirtual #58                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+      28: istore        4
+      30: aload_0
+      31: getfield      #13                 // Field zkListeners:Ljava/util/concurrent/ConcurrentMap;
+      34: aload_1
+      35: invokedynamic #72,  0             // InvokeDynamic #3:apply:()Ljava/util/function/Function;
+      40: invokestatic  #73                 // Method org/apache/dubbo/common/utils/ConcurrentHashMapUtils.computeIfAbsent:(Ljava/util/concurrent/ConcurrentMap;Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+      43: checkcast     #40                 // class java/util/concurrent/ConcurrentMap
+      46: astore        5
+      48: aload         5
+      50: aload_2
+      51: aload_0
+      52: aload_1
+      53: iload         4
+      55: invokedynamic #74,  0             // InvokeDynamic #4:apply:(Lorg/apache/dubbo/registry/zookeeper/ZookeeperRegistry;Lorg/apache/dubbo/common/URL;Z)Ljava/util/function/Function;
+      60: invokestatic  #73                 // Method org/apache/dubbo/common/utils/ConcurrentHashMapUtils.computeIfAbsent:(Ljava/util/concurrent/ConcurrentMap;Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+      63: checkcast     #75                 // class org/apache/dubbo/remoting/zookeeper/ChildListener
+      66: astore        6
+      68: aload_0
+      69: getfield      #29                 // Field zkClient:Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+      72: aload_3
+      73: iconst_0
+      74: iconst_1
+      75: invokeinterface #59,  4           // InterfaceMethod org/apache/dubbo/remoting/zookeeper/ZookeeperClient.create:(Ljava/lang/String;ZZ)V
+      80: aload_0
+      81: getfield      #29                 // Field zkClient:Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+      84: aload_3
+      85: aload         6
+      87: invokeinterface #76,  3           // InterfaceMethod org/apache/dubbo/remoting/zookeeper/ZookeeperClient.addChildListener:(Ljava/lang/String;Lorg/apache/dubbo/remoting/zookeeper/ChildListener;)Ljava/util/List;
+      92: astore        7
+      94: aload         7
+      96: invokestatic  #77                 // Method org/apache/dubbo/common/utils/CollectionUtils.isNotEmpty:(Ljava/util/Collection;)Z
+      99: ifeq          196
+     102: aload         7
+     104: invokeinterface #78,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     109: astore        8
+     111: aload         8
+     113: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     118: ifeq          196
+     121: aload         8
+     123: invokeinterface #37,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     128: checkcast     #79                 // class java/lang/String
+     131: astore        9
+     133: aload         9
+     135: invokestatic  #80                 // Method org/apache/dubbo/common/URL.decode:(Ljava/lang/String;)Ljava/lang/String;
+     138: astore        9
+     140: aload_0
+     141: getfield      #10                 // Field anyServices:Ljava/util/Set;
+     144: aload         9
+     146: invokeinterface #81,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+     151: pop
+     152: aload_0
+     153: aload_1
+     154: aload         9
+     156: invokevirtual #82                 // Method org/apache/dubbo/common/URL.setPath:(Ljava/lang/String;)Lorg/apache/dubbo/common/URL;
+     159: iconst_4
+     160: anewarray     #79                 // class java/lang/String
+     163: dup
+     164: iconst_0
+     165: ldc           #83                 // String interface
+     167: aastore
+     168: dup
+     169: iconst_1
+     170: aload         9
+     172: aastore
+     173: dup
+     174: iconst_2
+     175: ldc           #71                 // String check
+     177: aastore
+     178: dup
+     179: iconst_3
+     180: iload         4
+     182: invokestatic  #85                 // Method java/lang/String.valueOf:(Z)Ljava/lang/String;
+     185: aastore
+     186: invokevirtual #86                 // Method org/apache/dubbo/common/URL.addParameters:([Ljava/lang/String;)Lorg/apache/dubbo/common/URL;
+     189: aload_2
+     190: invokevirtual #87                 // Method subscribe:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/registry/NotifyListener;)V
+     193: goto          111
+     196: goto          380
+     199: new           #88                 // class java/util/concurrent/CountDownLatch
+     202: dup
+     203: iconst_1
+     204: invokespecial #89                 // Method java/util/concurrent/CountDownLatch."<init>":(I)V
+     207: astore_3
+     208: new           #90                 // class java/util/ArrayList
+     211: dup
+     212: invokespecial #91                 // Method java/util/ArrayList."<init>":()V
+     215: astore        4
+     217: aload_0
+     218: aload_1
+     219: invokespecial #51                 // Method toCategoriesPath:(Lorg/apache/dubbo/common/URL;)[Ljava/lang/String;
+     222: astore        5
+     224: aload         5
+     226: arraylength
+     227: istore        6
+     229: iconst_0
+     230: istore        7
+     232: iload         7
+     234: iload         6
+     236: if_icmpge     356
+     239: aload         5
+     241: iload         7
+     243: aaload
+     244: astore        8
+     246: aload_0
+     247: getfield      #13                 // Field zkListeners:Ljava/util/concurrent/ConcurrentMap;
+     250: aload_1
+     251: invokedynamic #92,  0             // InvokeDynamic #5:apply:()Ljava/util/function/Function;
+     256: invokestatic  #73                 // Method org/apache/dubbo/common/utils/ConcurrentHashMapUtils.computeIfAbsent:(Ljava/util/concurrent/ConcurrentMap;Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+     259: checkcast     #40                 // class java/util/concurrent/ConcurrentMap
+     262: astore        9
+     264: aload         9
+     266: aload_2
+     267: aload_0
+     268: aload_1
+     269: aload_3
+     270: invokedynamic #93,  0             // InvokeDynamic #6:apply:(Lorg/apache/dubbo/registry/zookeeper/ZookeeperRegistry;Lorg/apache/dubbo/common/URL;Ljava/util/concurrent/CountDownLatch;)Ljava/util/function/Function;
+     275: invokestatic  #73                 // Method org/apache/dubbo/common/utils/ConcurrentHashMapUtils.computeIfAbsent:(Ljava/util/concurrent/ConcurrentMap;Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+     278: checkcast     #75                 // class org/apache/dubbo/remoting/zookeeper/ChildListener
+     281: astore        10
+     283: aload         10
+     285: instanceof    #94                 // class org/apache/dubbo/registry/zookeeper/ZookeeperRegistry$RegistryChildListenerImpl
+     288: ifeq          300
+     291: aload         10
+     293: checkcast     #94                 // class org/apache/dubbo/registry/zookeeper/ZookeeperRegistry$RegistryChildListenerImpl
+     296: aload_3
+     297: invokevirtual #95                 // Method org/apache/dubbo/registry/zookeeper/ZookeeperRegistry$RegistryChildListenerImpl.setLatch:(Ljava/util/concurrent/CountDownLatch;)V
+     300: aload_0
+     301: getfield      #29                 // Field zkClient:Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+     304: aload         8
+     306: iconst_0
+     307: iconst_1
+     308: invokeinterface #59,  4           // InterfaceMethod org/apache/dubbo/remoting/zookeeper/ZookeeperClient.create:(Ljava/lang/String;ZZ)V
+     313: aload_0
+     314: getfield      #29                 // Field zkClient:Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+     317: aload         8
+     319: aload         10
+     321: invokeinterface #76,  3           // InterfaceMethod org/apache/dubbo/remoting/zookeeper/ZookeeperClient.addChildListener:(Ljava/lang/String;Lorg/apache/dubbo/remoting/zookeeper/ChildListener;)Ljava/util/List;
+     326: astore        11
+     328: aload         11
+     330: ifnull        350
+     333: aload         4
+     335: aload_0
+     336: aload_1
+     337: aload         8
+     339: aload         11
+     341: invokevirtual #5                  // Method toUrlsWithEmpty:(Lorg/apache/dubbo/common/URL;Ljava/lang/String;Ljava/util/Collection;)Ljava/util/List;
+     344: invokeinterface #96,  2           // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+     349: pop
+     350: iinc          7, 1
+     353: goto          232
+     356: aload_0
+     357: aload_1
+     358: aload_2
+     359: aload         4
+     361: invokevirtual #4                  // Method notify:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/registry/NotifyListener;Ljava/util/List;)V
+     364: aload_3
+     365: invokevirtual #97                 // Method java/util/concurrent/CountDownLatch.countDown:()V
+     368: goto          380
+     371: astore        12
+     373: aload_3
+     374: invokevirtual #97                 // Method java/util/concurrent/CountDownLatch.countDown:()V
+     377: aload         12
+     379: athrow
+     380: goto          436
+     383: astore_3
+     384: new           #61                 // class org/apache/dubbo/rpc/RpcException
+     387: dup
+     388: new           #23                 // class java/lang/StringBuilder
+     391: dup
+     392: invokespecial #24                 // Method java/lang/StringBuilder."<init>":()V
+     395: ldc           #98                 // String Failed to subscribe
+     397: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     400: aload_1
+     401: invokevirtual #63                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     404: ldc           #64                 // String  to zookeeper
+     406: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     409: aload_0
+     410: invokevirtual #65                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+     413: invokevirtual #63                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     416: ldc           #66                 // String , cause:
+     418: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     421: aload_3
+     422: invokevirtual #67                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     425: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     428: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     431: aload_3
+     432: invokespecial #68                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     435: athrow
+     436: return
+    Exception table:
+       from    to  target type
+         208   364   371   any
+         371   373   371   any
+           0   380   383   Class java/lang/Throwable
+
+  public void doUnsubscribe(org.apache.dubbo.common.URL, org.apache.dubbo.registry.NotifyListener);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #99                 // Method org/apache/dubbo/registry/support/CacheableFailbackRegistry.doUnsubscribe:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/registry/NotifyListener;)V
+       6: aload_0
+       7: invokespecial #55                 // Method checkDestroyed:()V
+      10: aload_0
+      11: getfield      #13                 // Field zkListeners:Ljava/util/concurrent/ConcurrentMap;
+      14: aload_1
+      15: invokeinterface #39,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      20: checkcast     #40                 // class java/util/concurrent/ConcurrentMap
+      23: astore_3
+      24: aload_3
+      25: ifnull        147
+      28: aload_3
+      29: aload_2
+      30: invokeinterface #100,  2          // InterfaceMethod java/util/concurrent/ConcurrentMap.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      35: checkcast     #75                 // class org/apache/dubbo/remoting/zookeeper/ChildListener
+      38: astore        4
+      40: aload         4
+      42: ifnull        127
+      45: ldc           #44                 // String *
+      47: aload_1
+      48: invokevirtual #45                 // Method org/apache/dubbo/common/URL.getServiceInterface:()Ljava/lang/String;
+      51: invokevirtual #46                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      54: ifeq          79
+      57: aload_0
+      58: invokespecial #47                 // Method toRootPath:()Ljava/lang/String;
+      61: astore        5
+      63: aload_0
+      64: getfield      #29                 // Field zkClient:Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+      67: aload         5
+      69: aload         4
+      71: invokeinterface #101,  3          // InterfaceMethod org/apache/dubbo/remoting/zookeeper/ZookeeperClient.removeChildListener:(Ljava/lang/String;Lorg/apache/dubbo/remoting/zookeeper/ChildListener;)V
+      76: goto          127
+      79: aload_0
+      80: aload_1
+      81: invokespecial #51                 // Method toCategoriesPath:(Lorg/apache/dubbo/common/URL;)[Ljava/lang/String;
+      84: astore        5
+      86: aload         5
+      88: arraylength
+      89: istore        6
+      91: iconst_0
+      92: istore        7
+      94: iload         7
+      96: iload         6
+      98: if_icmpge     127
+     101: aload         5
+     103: iload         7
+     105: aaload
+     106: astore        8
+     108: aload_0
+     109: getfield      #29                 // Field zkClient:Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+     112: aload         8
+     114: aload         4
+     116: invokeinterface #101,  3          // InterfaceMethod org/apache/dubbo/remoting/zookeeper/ZookeeperClient.removeChildListener:(Ljava/lang/String;Lorg/apache/dubbo/remoting/zookeeper/ChildListener;)V
+     121: iinc          7, 1
+     124: goto          94
+     127: aload_3
+     128: invokeinterface #102,  1          // InterfaceMethod java/util/concurrent/ConcurrentMap.isEmpty:()Z
+     133: ifeq          147
+     136: aload_0
+     137: getfield      #13                 // Field zkListeners:Ljava/util/concurrent/ConcurrentMap;
+     140: aload_1
+     141: invokeinterface #100,  2          // InterfaceMethod java/util/concurrent/ConcurrentMap.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+     146: pop
+     147: return
+
+  public java.util.List<org.apache.dubbo.common.URL> lookup(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_1
+       1: ifnonnull     14
+       4: new           #103                // class java/lang/IllegalArgumentException
+       7: dup
+       8: ldc           #104                // String lookup url == null
+      10: invokespecial #105                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      13: athrow
+      14: aload_0
+      15: invokespecial #55                 // Method checkDestroyed:()V
+      18: new           #90                 // class java/util/ArrayList
+      21: dup
+      22: invokespecial #91                 // Method java/util/ArrayList."<init>":()V
+      25: astore_2
+      26: aload_0
+      27: aload_1
+      28: invokespecial #51                 // Method toCategoriesPath:(Lorg/apache/dubbo/common/URL;)[Ljava/lang/String;
+      31: astore_3
+      32: aload_3
+      33: arraylength
+      34: istore        4
+      36: iconst_0
+      37: istore        5
+      39: iload         5
+      41: iload         4
+      43: if_icmpge     85
+      46: aload_3
+      47: iload         5
+      49: aaload
+      50: astore        6
+      52: aload_0
+      53: getfield      #29                 // Field zkClient:Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+      56: aload         6
+      58: invokeinterface #106,  2          // InterfaceMethod org/apache/dubbo/remoting/zookeeper/ZookeeperClient.getChildren:(Ljava/lang/String;)Ljava/util/List;
+      63: astore        7
+      65: aload         7
+      67: ifnull        79
+      70: aload_2
+      71: aload         7
+      73: invokeinterface #96,  2           // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+      78: pop
+      79: iinc          5, 1
+      82: goto          39
+      85: aload_0
+      86: aload_1
+      87: aload_2
+      88: invokevirtual #107                // Method toUrlsWithoutEmpty:(Lorg/apache/dubbo/common/URL;Ljava/util/Collection;)Ljava/util/List;
+      91: areturn
+      92: astore_2
+      93: new           #61                 // class org/apache/dubbo/rpc/RpcException
+      96: dup
+      97: new           #23                 // class java/lang/StringBuilder
+     100: dup
+     101: invokespecial #24                 // Method java/lang/StringBuilder."<init>":()V
+     104: ldc           #108                // String Failed to lookup
+     106: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     109: aload_1
+     110: invokevirtual #63                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     113: ldc           #109                // String  from zookeeper
+     115: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     118: aload_0
+     119: invokevirtual #65                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+     122: invokevirtual #63                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     125: ldc           #66                 // String , cause:
+     127: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     130: aload_2
+     131: invokevirtual #67                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     134: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     137: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     140: aload_2
+     141: invokespecial #68                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     144: athrow
+    Exception table:
+       from    to  target type
+          14    91    92   Class java/lang/Throwable
+
+  private java.lang.String toRootDir();
+    Code:
+       0: aload_0
+       1: getfield      #27                 // Field root:Ljava/lang/String;
+       4: ldc           #21                 // String /
+       6: invokevirtual #46                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       9: ifeq          17
+      12: aload_0
+      13: getfield      #27                 // Field root:Ljava/lang/String;
+      16: areturn
+      17: new           #23                 // class java/lang/StringBuilder
+      20: dup
+      21: invokespecial #24                 // Method java/lang/StringBuilder."<init>":()V
+      24: aload_0
+      25: getfield      #27                 // Field root:Ljava/lang/String;
+      28: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      31: ldc           #21                 // String /
+      33: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      36: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      39: areturn
+
+  private java.lang.String toRootPath();
+    Code:
+       0: aload_0
+       1: getfield      #27                 // Field root:Ljava/lang/String;
+       4: areturn
+
+  private java.lang.String toServicePath(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_1
+       1: invokevirtual #45                 // Method org/apache/dubbo/common/URL.getServiceInterface:()Ljava/lang/String;
+       4: astore_2
+       5: ldc           #44                 // String *
+       7: aload_2
+       8: invokevirtual #46                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      11: ifeq          19
+      14: aload_0
+      15: invokespecial #47                 // Method toRootPath:()Ljava/lang/String;
+      18: areturn
+      19: new           #23                 // class java/lang/StringBuilder
+      22: dup
+      23: invokespecial #24                 // Method java/lang/StringBuilder."<init>":()V
+      26: aload_0
+      27: invokespecial #110                // Method toRootDir:()Ljava/lang/String;
+      30: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      33: aload_2
+      34: invokestatic  #111                // Method org/apache/dubbo/common/URL.encode:(Ljava/lang/String;)Ljava/lang/String;
+      37: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      40: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      43: areturn
+
+  private java.lang.String[] toCategoriesPath(org.apache.dubbo.common.URL);
+    Code:
+       0: ldc           #44                 // String *
+       2: aload_1
+       3: invokevirtual #112                // Method org/apache/dubbo/common/URL.getCategory:()Ljava/lang/String;
+       6: invokevirtual #46                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       9: ifeq          40
+      12: iconst_4
+      13: anewarray     #79                 // class java/lang/String
+      16: dup
+      17: iconst_0
+      18: ldc           #113                // String providers
+      20: aastore
+      21: dup
+      22: iconst_1
+      23: ldc           #114                // String consumers
+      25: aastore
+      26: dup
+      27: iconst_2
+      28: ldc           #115                // String routers
+      30: aastore
+      31: dup
+      32: iconst_3
+      33: ldc           #116                // String configurators
+      35: aastore
+      36: astore_2
+      37: goto          54
+      40: aload_1
+      41: iconst_1
+      42: anewarray     #79                 // class java/lang/String
+      45: dup
+      46: iconst_0
+      47: ldc           #113                // String providers
+      49: aastore
+      50: invokevirtual #117                // Method org/apache/dubbo/common/URL.getCategory:([Ljava/lang/String;)[Ljava/lang/String;
+      53: astore_2
+      54: aload_2
+      55: arraylength
+      56: anewarray     #79                 // class java/lang/String
+      59: astore_3
+      60: iconst_0
+      61: istore        4
+      63: iload         4
+      65: aload_2
+      66: arraylength
+      67: if_icmpge     110
+      70: aload_3
+      71: iload         4
+      73: new           #23                 // class java/lang/StringBuilder
+      76: dup
+      77: invokespecial #24                 // Method java/lang/StringBuilder."<init>":()V
+      80: aload_0
+      81: aload_1
+      82: invokespecial #118                // Method toServicePath:(Lorg/apache/dubbo/common/URL;)Ljava/lang/String;
+      85: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      88: ldc           #21                 // String /
+      90: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      93: aload_2
+      94: iload         4
+      96: aaload
+      97: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     100: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     103: aastore
+     104: iinc          4, 1
+     107: goto          63
+     110: aload_3
+     111: areturn
+
+  private java.lang.String toCategoryPath(org.apache.dubbo.common.URL);
+    Code:
+       0: new           #23                 // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #24                 // Method java/lang/StringBuilder."<init>":()V
+       7: aload_0
+       8: aload_1
+       9: invokespecial #118                // Method toServicePath:(Lorg/apache/dubbo/common/URL;)Ljava/lang/String;
+      12: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      15: ldc           #21                 // String /
+      17: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      20: aload_1
+      21: ldc           #113                // String providers
+      23: invokevirtual #119                // Method org/apache/dubbo/common/URL.getCategory:(Ljava/lang/String;)Ljava/lang/String;
+      26: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      29: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      32: areturn
+
+  private java.lang.String toUrlPath(org.apache.dubbo.common.URL);
+    Code:
+       0: new           #23                 // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #24                 // Method java/lang/StringBuilder."<init>":()V
+       7: aload_0
+       8: aload_1
+       9: invokespecial #120                // Method toCategoryPath:(Lorg/apache/dubbo/common/URL;)Ljava/lang/String;
+      12: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      15: ldc           #21                 // String /
+      17: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      20: aload_1
+      21: invokevirtual #121                // Method org/apache/dubbo/common/URL.toFullString:()Ljava/lang/String;
+      24: invokestatic  #111                // Method org/apache/dubbo/common/URL.encode:(Ljava/lang/String;)Ljava/lang/String;
+      27: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      30: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      33: areturn
+
+  private void fetchLatestAddresses();
+    Code:
+       0: new           #122                // class java/util/HashMap
+       3: dup
+       4: aload_0
+       5: invokevirtual #123                // Method getSubscribed:()Ljava/util/Map;
+       8: invokespecial #124                // Method java/util/HashMap."<init>":(Ljava/util/Map;)V
+      11: astore_1
+      12: aload_1
+      13: invokeinterface #125,  1          // InterfaceMethod java/util/Map.isEmpty:()Z
+      18: ifne          166
+      21: getstatic     #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      24: invokeinterface #126,  1          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isInfoEnabled:()Z
+      29: ifeq          64
+      32: getstatic     #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      35: new           #23                 // class java/lang/StringBuilder
+      38: dup
+      39: invokespecial #24                 // Method java/lang/StringBuilder."<init>":()V
+      42: ldc           #127                // String Fetching the latest urls of
+      44: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      47: aload_1
+      48: invokeinterface #128,  1          // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+      53: invokevirtual #63                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      56: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      59: invokeinterface #129,  2          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      64: aload_1
+      65: invokeinterface #130,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+      70: invokeinterface #35,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      75: astore_2
+      76: aload_2
+      77: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      82: ifeq          166
+      85: aload_2
+      86: invokeinterface #37,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      91: checkcast     #131                // class java/util/Map$Entry
+      94: astore_3
+      95: aload_3
+      96: invokeinterface #132,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     101: checkcast     #38                 // class org/apache/dubbo/common/URL
+     104: astore        4
+     106: aload_3
+     107: invokeinterface #133,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     112: checkcast     #134                // class java/util/Set
+     115: invokeinterface #35,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     120: astore        5
+     122: aload         5
+     124: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     129: ifeq          163
+     132: aload         5
+     134: invokeinterface #37,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     139: checkcast     #135                // class org/apache/dubbo/registry/NotifyListener
+     142: astore        6
+     144: aload_0
+     145: aload         4
+     147: aload         6
+     149: invokevirtual #136                // Method removeFailedSubscribed:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/registry/NotifyListener;)V
+     152: aload_0
+     153: aload         4
+     155: aload         6
+     157: invokevirtual #137                // Method addFailedSubscribed:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/registry/NotifyListener;)V
+     160: goto          122
+     163: goto          76
+     166: return
+
+  protected boolean isMatch(org.apache.dubbo.common.URL, org.apache.dubbo.common.URL);
+    Code:
+       0: aload_1
+       1: aload_2
+       2: invokestatic  #138                // Method org/apache/dubbo/common/utils/UrlUtils.isMatch:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/common/URL;)Z
+       5: ireturn
+
+  private org.apache.dubbo.remoting.zookeeper.ChildListener lambda$doSubscribe$7(org.apache.dubbo.common.URL, java.util.concurrent.CountDownLatch, org.apache.dubbo.registry.NotifyListener);
+    Code:
+       0: new           #94                 // class org/apache/dubbo/registry/zookeeper/ZookeeperRegistry$RegistryChildListenerImpl
+       3: dup
+       4: aload_0
+       5: aload_1
+       6: aload_3
+       7: aload_2
+       8: invokespecial #139                // Method org/apache/dubbo/registry/zookeeper/ZookeeperRegistry$RegistryChildListenerImpl."<init>":(Lorg/apache/dubbo/registry/zookeeper/ZookeeperRegistry;Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/registry/NotifyListener;Ljava/util/concurrent/CountDownLatch;)V
+      11: areturn
+
+  private static java.util.concurrent.ConcurrentMap lambda$doSubscribe$6(org.apache.dubbo.common.URL);
+    Code:
+       0: new           #11                 // class java/util/concurrent/ConcurrentHashMap
+       3: dup
+       4: invokespecial #12                 // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+       7: areturn
+
+  private org.apache.dubbo.remoting.zookeeper.ChildListener lambda$doSubscribe$5(org.apache.dubbo.common.URL, boolean, org.apache.dubbo.registry.NotifyListener);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iload_2
+       3: aload_3
+       4: invokedynamic #140,  0            // InvokeDynamic #7:childChanged:(Lorg/apache/dubbo/registry/zookeeper/ZookeeperRegistry;Lorg/apache/dubbo/common/URL;ZLorg/apache/dubbo/registry/NotifyListener;)Lorg/apache/dubbo/remoting/zookeeper/ChildListener;
+       9: areturn
+
+  private void lambda$null$4(org.apache.dubbo.common.URL, boolean, org.apache.dubbo.registry.NotifyListener, java.lang.String, java.util.List);
+    Code:
+       0: aload         5
+       2: invokeinterface #78,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       7: astore        6
+       9: aload         6
+      11: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      16: ifeq          107
+      19: aload         6
+      21: invokeinterface #37,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      26: checkcast     #79                 // class java/lang/String
+      29: astore        7
+      31: aload         7
+      33: invokestatic  #80                 // Method org/apache/dubbo/common/URL.decode:(Ljava/lang/String;)Ljava/lang/String;
+      36: astore        7
+      38: aload_0
+      39: getfield      #10                 // Field anyServices:Ljava/util/Set;
+      42: aload         7
+      44: invokeinterface #141,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+      49: ifne          104
+      52: aload_0
+      53: getfield      #10                 // Field anyServices:Ljava/util/Set;
+      56: aload         7
+      58: invokeinterface #81,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      63: pop
+      64: aload_0
+      65: aload_1
+      66: aload         7
+      68: invokevirtual #82                 // Method org/apache/dubbo/common/URL.setPath:(Ljava/lang/String;)Lorg/apache/dubbo/common/URL;
+      71: iconst_4
+      72: anewarray     #79                 // class java/lang/String
+      75: dup
+      76: iconst_0
+      77: ldc           #83                 // String interface
+      79: aastore
+      80: dup
+      81: iconst_1
+      82: aload         7
+      84: aastore
+      85: dup
+      86: iconst_2
+      87: ldc           #71                 // String check
+      89: aastore
+      90: dup
+      91: iconst_3
+      92: iload_2
+      93: invokestatic  #85                 // Method java/lang/String.valueOf:(Z)Ljava/lang/String;
+      96: aastore
+      97: invokevirtual #86                 // Method org/apache/dubbo/common/URL.addParameters:([Ljava/lang/String;)Lorg/apache/dubbo/common/URL;
+     100: aload_3
+     101: invokevirtual #87                 // Method subscribe:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/registry/NotifyListener;)V
+     104: goto          9
+     107: return
+
+  private static java.util.concurrent.ConcurrentMap lambda$doSubscribe$3(org.apache.dubbo.common.URL);
+    Code:
+       0: new           #11                 // class java/util/concurrent/ConcurrentHashMap
+       3: dup
+       4: invokespecial #12                 // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+       7: areturn
+
+  private void lambda$destroy$2(java.lang.String, org.apache.dubbo.remoting.zookeeper.ChildListener);
+    Code:
+       0: aload_0
+       1: getfield      #29                 // Field zkClient:Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+       4: aload_1
+       5: aload_2
+       6: invokeinterface #101,  3          // InterfaceMethod org/apache/dubbo/remoting/zookeeper/ZookeeperClient.removeChildListener:(Ljava/lang/String;Lorg/apache/dubbo/remoting/zookeeper/ChildListener;)V
+      11: return
+
+  private void lambda$destroy$1(java.lang.String, org.apache.dubbo.remoting.zookeeper.ChildListener);
+    Code:
+       0: aload_0
+       1: getfield      #29                 // Field zkClient:Lorg/apache/dubbo/remoting/zookeeper/ZookeeperClient;
+       4: aload_1
+       5: aload_2
+       6: invokeinterface #101,  3          // InterfaceMethod org/apache/dubbo/remoting/zookeeper/ZookeeperClient.removeChildListener:(Ljava/lang/String;Lorg/apache/dubbo/remoting/zookeeper/ChildListener;)V
+      11: return
+
+  private void lambda$new$0(int);
+    Code:
+       0: iload_1
+       1: iconst_2
+       2: if_icmpne     28
+       5: getstatic     #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: ldc           #143                // String 1-35
+      10: ldc           #144                // String
+      12: ldc           #144                // String
+      14: ldc           #145                // String Trying to fetch the latest urls, in case there are provider changes during connection loss.\n Since ephemeral ZNode will not get deleted for a connection lose, there\'s no need to re-register url of this instance.
+      16: invokeinterface #146,  5          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      21: aload_0
+      22: invokespecial #147                // Method fetchLatestAddresses:()V
+      25: goto          115
+      28: iload_1
+      29: iconst_4
+      30: if_icmpne     79
+      33: getstatic     #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      36: ldc           #143                // String 1-35
+      38: ldc           #144                // String
+      40: ldc           #144                // String
+      42: ldc           #148                // String Trying to re-register urls and re-subscribe listeners of this instance to registry...
+      44: invokeinterface #146,  5          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      49: aload_0
+      50: invokevirtual #149                // Method recover:()V
+      53: goto          115
+      56: astore_2
+      57: getstatic     #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      60: ldc           #143                // String 1-35
+      62: ldc           #144                // String
+      64: ldc           #144                // String
+      66: aload_2
+      67: invokevirtual #151                // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      70: aload_2
+      71: invokeinterface #152,  6          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      76: goto          115
+      79: iload_1
+      80: ifne          102
+      83: getstatic     #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      86: ldc           #143                // String 1-35
+      88: ldc           #144                // String
+      90: ldc           #144                // String
+      92: ldc           #153                // String Url of this instance will be deleted from registry soon. Dubbo client will try to re-register once a new session is created.
+      94: invokeinterface #146,  5          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      99: goto          115
+     102: iload_1
+     103: iconst_3
+     104: if_icmpne     110
+     107: goto          115
+     110: iload_1
+     111: iconst_1
+     112: if_icmpne     115
+     115: return
+    Exception table:
+       from    to  target type
+          49    53    56   Class java/lang/Exception
+
+  static org.apache.dubbo.common.logger.ErrorTypeAwareLogger access$000();
+    Code:
+       0: getstatic     #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       3: areturn
+
+  static java.util.List access$100(org.apache.dubbo.registry.zookeeper.ZookeeperRegistry, org.apache.dubbo.common.URL, java.lang.String, java.util.Collection);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: aload_3
+       4: invokevirtual #5                  // Method toUrlsWithEmpty:(Lorg/apache/dubbo/common/URL;Ljava/lang/String;Ljava/util/Collection;)Ljava/util/List;
+       7: areturn
+
+  static void access$200(org.apache.dubbo.registry.zookeeper.ZookeeperRegistry, org.apache.dubbo.common.URL, org.apache.dubbo.registry.NotifyListener, java.util.List);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: aload_3
+       4: invokevirtual #4                  // Method notify:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/registry/NotifyListener;Ljava/util/List;)V
+       7: return
+
+  static {};
+    Code:
+       0: ldc           #18                 // class org/apache/dubbo/registry/zookeeper/ZookeeperRegistry
+       2: invokestatic  #154                // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

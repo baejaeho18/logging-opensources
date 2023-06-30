@@ -1,0 +1,116 @@
+Compiled from "ZookeeperServiceDiscoveryChangeWatcher.java"
+public class org.apache.dubbo.registry.zookeeper.ZookeeperServiceDiscoveryChangeWatcher implements org.apache.curator.x.discovery.details.ServiceCacheListener {
+  private final java.util.Set<org.apache.dubbo.registry.client.event.listener.ServiceInstancesChangedListener> listeners;
+
+  private final org.apache.curator.x.discovery.ServiceCache<org.apache.dubbo.registry.zookeeper.ZookeeperInstance> cacheInstance;
+
+  private final org.apache.dubbo.registry.zookeeper.ZookeeperServiceDiscovery zookeeperServiceDiscovery;
+
+  private final org.apache.dubbo.registry.RegistryNotifier notifier;
+
+  private final java.lang.String serviceName;
+
+  private final java.util.concurrent.CountDownLatch latch;
+
+  public org.apache.dubbo.registry.zookeeper.ZookeeperServiceDiscoveryChangeWatcher(org.apache.dubbo.registry.zookeeper.ZookeeperServiceDiscovery, org.apache.curator.x.discovery.ServiceCache<org.apache.dubbo.registry.zookeeper.ZookeeperInstance>, java.lang.String, java.util.concurrent.CountDownLatch);
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #3                  // class org/apache/dubbo/common/utils/ConcurrentHashSet
+       8: dup
+       9: invokespecial #4                  // Method org/apache/dubbo/common/utils/ConcurrentHashSet."<init>":()V
+      12: putfield      #1                  // Field listeners:Ljava/util/Set;
+      15: aload_0
+      16: aload_1
+      17: putfield      #5                  // Field zookeeperServiceDiscovery:Lorg/apache/dubbo/registry/zookeeper/ZookeeperServiceDiscovery;
+      20: aload_0
+      21: aload_2
+      22: putfield      #6                  // Field cacheInstance:Lorg/apache/curator/x/discovery/ServiceCache;
+      25: aload_0
+      26: aload_3
+      27: putfield      #7                  // Field serviceName:Ljava/lang/String;
+      30: aload_0
+      31: new           #8                  // class org/apache/dubbo/registry/zookeeper/ZookeeperServiceDiscoveryChangeWatcher$1
+      34: dup
+      35: aload_0
+      36: aload_1
+      37: invokevirtual #9                  // Method org/apache/dubbo/registry/zookeeper/ZookeeperServiceDiscovery.getUrl:()Lorg/apache/dubbo/common/URL;
+      40: aload_1
+      41: invokevirtual #10                 // Method org/apache/dubbo/registry/zookeeper/ZookeeperServiceDiscovery.getDelay:()J
+      44: aload_1
+      45: invokevirtual #9                  // Method org/apache/dubbo/registry/zookeeper/ZookeeperServiceDiscovery.getUrl:()Lorg/apache/dubbo/common/URL;
+      48: invokevirtual #11                 // Method org/apache/dubbo/common/URL.getScopeModel:()Lorg/apache/dubbo/rpc/model/ScopeModel;
+      51: invokestatic  #12                 // Method org/apache/dubbo/rpc/model/ScopeModelUtil.getFrameworkModel:(Lorg/apache/dubbo/rpc/model/ScopeModel;)Lorg/apache/dubbo/rpc/model/FrameworkModel;
+      54: invokevirtual #13                 // Method org/apache/dubbo/rpc/model/FrameworkModel.getBeanFactory:()Lorg/apache/dubbo/common/beans/factory/ScopeBeanFactory;
+      57: ldc           #14                 // class org/apache/dubbo/common/threadpool/manager/FrameworkExecutorRepository
+      59: invokevirtual #15                 // Method org/apache/dubbo/common/beans/factory/ScopeBeanFactory.getBean:(Ljava/lang/Class;)Ljava/lang/Object;
+      62: checkcast     #14                 // class org/apache/dubbo/common/threadpool/manager/FrameworkExecutorRepository
+      65: invokevirtual #16                 // Method org/apache/dubbo/common/threadpool/manager/FrameworkExecutorRepository.getServiceDiscoveryAddressNotificationExecutor:()Ljava/util/concurrent/ScheduledExecutorService;
+      68: invokespecial #17                 // Method org/apache/dubbo/registry/zookeeper/ZookeeperServiceDiscoveryChangeWatcher$1."<init>":(Lorg/apache/dubbo/registry/zookeeper/ZookeeperServiceDiscoveryChangeWatcher;Lorg/apache/dubbo/common/URL;JLjava/util/concurrent/ScheduledExecutorService;)V
+      71: putfield      #18                 // Field notifier:Lorg/apache/dubbo/registry/RegistryNotifier;
+      74: aload_0
+      75: aload         4
+      77: putfield      #19                 // Field latch:Ljava/util/concurrent/CountDownLatch;
+      80: return
+
+  public void cacheChanged();
+    Code:
+       0: aload_0
+       1: getfield      #19                 // Field latch:Ljava/util/concurrent/CountDownLatch;
+       4: invokevirtual #20                 // Method java/util/concurrent/CountDownLatch.await:()V
+       7: goto          17
+      10: astore_1
+      11: invokestatic  #22                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+      14: invokevirtual #23                 // Method java/lang/Thread.interrupt:()V
+      17: aload_0
+      18: getfield      #5                  // Field zookeeperServiceDiscovery:Lorg/apache/dubbo/registry/zookeeper/ZookeeperServiceDiscovery;
+      21: aload_0
+      22: getfield      #7                  // Field serviceName:Ljava/lang/String;
+      25: invokevirtual #24                 // Method org/apache/dubbo/registry/zookeeper/ZookeeperServiceDiscovery.getInstances:(Ljava/lang/String;)Ljava/util/List;
+      28: astore_1
+      29: aload_0
+      30: getfield      #18                 // Field notifier:Lorg/apache/dubbo/registry/RegistryNotifier;
+      33: new           #25                 // class org/apache/dubbo/registry/client/event/ServiceInstancesChangedEvent
+      36: dup
+      37: aload_0
+      38: getfield      #7                  // Field serviceName:Ljava/lang/String;
+      41: aload_1
+      42: invokespecial #26                 // Method org/apache/dubbo/registry/client/event/ServiceInstancesChangedEvent."<init>":(Ljava/lang/String;Ljava/util/List;)V
+      45: invokevirtual #27                 // Method org/apache/dubbo/registry/RegistryNotifier.notify:(Ljava/lang/Object;)V
+      48: return
+    Exception table:
+       from    to  target type
+           0     7    10   Class java/lang/InterruptedException
+
+  public void stateChanged(org.apache.curator.framework.CuratorFramework, org.apache.curator.framework.state.ConnectionState);
+    Code:
+       0: return
+
+  public org.apache.curator.x.discovery.ServiceCache<org.apache.dubbo.registry.zookeeper.ZookeeperInstance> getCacheInstance();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field cacheInstance:Lorg/apache/curator/x/discovery/ServiceCache;
+       4: areturn
+
+  public java.util.Set<org.apache.dubbo.registry.client.event.listener.ServiceInstancesChangedListener> getListeners();
+    Code:
+       0: aload_0
+       1: getfield      #1                  // Field listeners:Ljava/util/Set;
+       4: areturn
+
+  public void addListener(org.apache.dubbo.registry.client.event.listener.ServiceInstancesChangedListener);
+    Code:
+       0: aload_0
+       1: getfield      #1                  // Field listeners:Ljava/util/Set;
+       4: aload_1
+       5: invokeinterface #28,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      10: pop
+      11: return
+
+  static java.util.Set access$000(org.apache.dubbo.registry.zookeeper.ZookeeperServiceDiscoveryChangeWatcher);
+    Code:
+       0: aload_0
+       1: getfield      #1                  // Field listeners:Ljava/util/Set;
+       4: areturn
+}

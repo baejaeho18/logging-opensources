@@ -1,0 +1,92 @@
+Compiled from "HttpClientRestClient.java"
+class org.apache.dubbo.remoting.http.restclient.HttpClientRestClient$1 implements org.apache.dubbo.remoting.http.RestResult {
+  final org.apache.http.client.methods.CloseableHttpResponse val$response;
+
+  final org.apache.dubbo.remoting.http.restclient.HttpClientRestClient this$0;
+
+  org.apache.dubbo.remoting.http.restclient.HttpClientRestClient$1(org.apache.dubbo.remoting.http.restclient.HttpClientRestClient, org.apache.http.client.methods.CloseableHttpResponse);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #1                  // Field this$0:Lorg/apache/dubbo/remoting/http/restclient/HttpClientRestClient;
+       5: aload_0
+       6: aload_2
+       7: putfield      #2                  // Field val$response:Lorg/apache/http/client/methods/CloseableHttpResponse;
+      10: aload_0
+      11: invokespecial #3                  // Method java/lang/Object."<init>":()V
+      14: return
+
+  public java.lang.String getContentType();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field val$response:Lorg/apache/http/client/methods/CloseableHttpResponse;
+       4: ldc           #4                  // String Content-Type
+       6: invokeinterface #5,  2            // InterfaceMethod org/apache/http/client/methods/CloseableHttpResponse.getFirstHeader:(Ljava/lang/String;)Lorg/apache/http/Header;
+      11: invokeinterface #6,  1            // InterfaceMethod org/apache/http/Header.getValue:()Ljava/lang/String;
+      16: areturn
+
+  public byte[] getBody() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field val$response:Lorg/apache/http/client/methods/CloseableHttpResponse;
+       4: invokeinterface #7,  1            // InterfaceMethod org/apache/http/client/methods/CloseableHttpResponse.getEntity:()Lorg/apache/http/HttpEntity;
+       9: ifnonnull     16
+      12: iconst_0
+      13: newarray       byte
+      15: areturn
+      16: aload_0
+      17: getfield      #2                  // Field val$response:Lorg/apache/http/client/methods/CloseableHttpResponse;
+      20: invokeinterface #7,  1            // InterfaceMethod org/apache/http/client/methods/CloseableHttpResponse.getEntity:()Lorg/apache/http/HttpEntity;
+      25: invokeinterface #8,  1            // InterfaceMethod org/apache/http/HttpEntity.getContent:()Ljava/io/InputStream;
+      30: invokestatic  #9                  // Method org/apache/commons/io/IOUtils.toByteArray:(Ljava/io/InputStream;)[B
+      33: areturn
+
+  public java.util.Map<java.lang.String, java.util.List<java.lang.String>> headers();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field val$response:Lorg/apache/http/client/methods/CloseableHttpResponse;
+       4: invokeinterface #10,  1           // InterfaceMethod org/apache/http/client/methods/CloseableHttpResponse.getAllHeaders:()[Lorg/apache/http/Header;
+       9: invokestatic  #11                 // Method java/util/Arrays.stream:([Ljava/lang/Object;)Ljava/util/stream/Stream;
+      12: invokedynamic #12,  0             // InvokeDynamic #0:apply:()Ljava/util/function/Function;
+      17: invokedynamic #13,  0             // InvokeDynamic #1:apply:()Ljava/util/function/Function;
+      22: invokestatic  #14                 // Method java/util/stream/Collectors.toMap:(Ljava/util/function/Function;Ljava/util/function/Function;)Ljava/util/stream/Collector;
+      25: invokeinterface #15,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+      30: checkcast     #16                 // class java/util/Map
+      33: areturn
+
+  public byte[] getErrorResponse() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: invokevirtual #17                 // Method getBody:()[B
+       4: areturn
+
+  public int getResponseCode();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field val$response:Lorg/apache/http/client/methods/CloseableHttpResponse;
+       4: invokeinterface #18,  1           // InterfaceMethod org/apache/http/client/methods/CloseableHttpResponse.getStatusLine:()Lorg/apache/http/StatusLine;
+       9: invokeinterface #19,  1           // InterfaceMethod org/apache/http/StatusLine.getStatusCode:()I
+      14: ireturn
+
+  public java.lang.String getMessage() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #2                  // Field val$response:Lorg/apache/http/client/methods/CloseableHttpResponse;
+       5: invokeinterface #18,  1           // InterfaceMethod org/apache/http/client/methods/CloseableHttpResponse.getStatusLine:()Lorg/apache/http/StatusLine;
+      10: invokeinterface #20,  1           // InterfaceMethod org/apache/http/StatusLine.getReasonPhrase:()Ljava/lang/String;
+      15: new           #21                 // class java/lang/String
+      18: dup
+      19: aload_0
+      20: invokevirtual #22                 // Method getErrorResponse:()[B
+      23: invokespecial #23                 // Method java/lang/String."<init>":([B)V
+      26: invokevirtual #24                 // Method appendErrorMessage:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      29: areturn
+
+  private static java.util.List lambda$headers$0(org.apache.http.Header);
+    Code:
+       0: aload_0
+       1: invokeinterface #6,  1            // InterfaceMethod org/apache/http/Header.getValue:()Ljava/lang/String;
+       6: invokestatic  #25                 // Method java/util/Collections.singletonList:(Ljava/lang/Object;)Ljava/util/List;
+       9: areturn
+}

@@ -1,0 +1,257 @@
+Compiled from "HttpClientRestClient.java"
+public class org.apache.dubbo.remoting.http.restclient.HttpClientRestClient implements org.apache.dubbo.remoting.http.RestClient {
+  private final org.apache.http.impl.client.CloseableHttpClient closeableHttpClient;
+
+  private final org.apache.dubbo.remoting.http.config.HttpClientConfig httpClientConfig;
+
+  public org.apache.dubbo.remoting.http.restclient.HttpClientRestClient(org.apache.dubbo.remoting.http.config.HttpClientConfig);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_0
+       6: invokevirtual #2                  // Method createHttpClient:()Lorg/apache/http/impl/client/CloseableHttpClient;
+       9: putfield      #3                  // Field closeableHttpClient:Lorg/apache/http/impl/client/CloseableHttpClient;
+      12: aload_0
+      13: aload_1
+      14: putfield      #4                  // Field httpClientConfig:Lorg/apache/dubbo/remoting/http/config/HttpClientConfig;
+      17: return
+
+  public java.util.concurrent.CompletableFuture<org.apache.dubbo.remoting.http.RestResult> send(org.apache.dubbo.remoting.http.RequestTemplate);
+    Code:
+       0: aconst_null
+       1: astore_2
+       2: aload_1
+       3: invokevirtual #5                  // Method org/apache/dubbo/remoting/http/RequestTemplate.getHttpMethod:()Ljava/lang/String;
+       6: astore_3
+       7: aload_0
+       8: aload_3
+       9: aload_1
+      10: invokevirtual #6                  // Method createHttpUriRequest:(Ljava/lang/String;Lorg/apache/dubbo/remoting/http/RequestTemplate;)Lorg/apache/http/client/methods/HttpRequestBase;
+      13: astore_2
+      14: aload_2
+      15: instanceof    #7                  // class org/apache/http/HttpEntityEnclosingRequest
+      18: ifeq          39
+      21: aload_2
+      22: checkcast     #8                  // class org/apache/http/client/methods/HttpEntityEnclosingRequestBase
+      25: new           #9                  // class org/apache/http/entity/ByteArrayEntity
+      28: dup
+      29: aload_1
+      30: invokevirtual #10                 // Method org/apache/dubbo/remoting/http/RequestTemplate.getSerializedBody:()[B
+      33: invokespecial #11                 // Method org/apache/http/entity/ByteArrayEntity."<init>":([B)V
+      36: invokevirtual #12                 // Method org/apache/http/client/methods/HttpEntityEnclosingRequestBase.setEntity:(Lorg/apache/http/HttpEntity;)V
+      39: aload_1
+      40: invokevirtual #13                 // Method org/apache/dubbo/remoting/http/RequestTemplate.getAllHeaders:()Ljava/util/Map;
+      43: astore        4
+      45: aload         4
+      47: ldc           #14                 // String Content-Length
+      49: invokeinterface #15,  2           // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      54: pop
+      55: aload         4
+      57: invokeinterface #16,  1           // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+      62: invokeinterface #17,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      67: astore        5
+      69: aload         5
+      71: invokeinterface #18,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      76: ifeq          150
+      79: aload         5
+      81: invokeinterface #19,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      86: checkcast     #20                 // class java/lang/String
+      89: astore        6
+      91: aload         4
+      93: aload         6
+      95: invokeinterface #21,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     100: checkcast     #22                 // class java/util/Collection
+     103: astore        7
+     105: aload         7
+     107: invokeinterface #23,  1           // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+     112: astore        8
+     114: aload         8
+     116: invokeinterface #18,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     121: ifeq          147
+     124: aload         8
+     126: invokeinterface #19,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     131: checkcast     #20                 // class java/lang/String
+     134: astore        9
+     136: aload_2
+     137: aload         6
+     139: aload         9
+     141: invokevirtual #24                 // Method org/apache/http/client/methods/HttpRequestBase.addHeader:(Ljava/lang/String;Ljava/lang/String;)V
+     144: goto          114
+     147: goto          69
+     150: aload_2
+     151: aload_0
+     152: aload_0
+     153: getfield      #4                  // Field httpClientConfig:Lorg/apache/dubbo/remoting/http/config/HttpClientConfig;
+     156: invokespecial #25                 // Method getRequestConfig:(Lorg/apache/dubbo/remoting/http/config/HttpClientConfig;)Lorg/apache/http/client/config/RequestConfig;
+     159: invokevirtual #26                 // Method org/apache/http/client/methods/HttpRequestBase.setConfig:(Lorg/apache/http/client/config/RequestConfig;)V
+     162: new           #27                 // class java/util/concurrent/CompletableFuture
+     165: dup
+     166: invokespecial #28                 // Method java/util/concurrent/CompletableFuture."<init>":()V
+     169: astore        5
+     171: aload_0
+     172: getfield      #3                  // Field closeableHttpClient:Lorg/apache/http/impl/client/CloseableHttpClient;
+     175: aload_2
+     176: invokevirtual #29                 // Method org/apache/http/impl/client/CloseableHttpClient.execute:(Lorg/apache/http/client/methods/HttpUriRequest;)Lorg/apache/http/client/methods/CloseableHttpResponse;
+     179: astore        6
+     181: aload         5
+     183: new           #30                 // class org/apache/dubbo/remoting/http/restclient/HttpClientRestClient$1
+     186: dup
+     187: aload_0
+     188: aload         6
+     190: invokespecial #31                 // Method org/apache/dubbo/remoting/http/restclient/HttpClientRestClient$1."<init>":(Lorg/apache/dubbo/remoting/http/restclient/HttpClientRestClient;Lorg/apache/http/client/methods/CloseableHttpResponse;)V
+     193: invokevirtual #32                 // Method java/util/concurrent/CompletableFuture.complete:(Ljava/lang/Object;)Z
+     196: pop
+     197: goto          210
+     200: astore        6
+     202: aload         5
+     204: aload         6
+     206: invokevirtual #34                 // Method java/util/concurrent/CompletableFuture.completeExceptionally:(Ljava/lang/Throwable;)Z
+     209: pop
+     210: aload         5
+     212: areturn
+    Exception table:
+       from    to  target type
+         171   197   200   Class java/io/IOException
+
+  private org.apache.http.client.config.RequestConfig getRequestConfig(org.apache.dubbo.remoting.http.config.HttpClientConfig);
+    Code:
+       0: invokestatic  #35                 // Method org/apache/http/client/config/RequestConfig.custom:()Lorg/apache/http/client/config/RequestConfig$Builder;
+       3: invokevirtual #36                 // Method org/apache/http/client/config/RequestConfig$Builder.build:()Lorg/apache/http/client/config/RequestConfig;
+       6: areturn
+
+  public void close();
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field closeableHttpClient:Lorg/apache/http/impl/client/CloseableHttpClient;
+       4: invokevirtual #37                 // Method org/apache/http/impl/client/CloseableHttpClient.close:()V
+       7: goto          11
+      10: astore_1
+      11: return
+    Exception table:
+       from    to  target type
+           0     7    10   Class java/io/IOException
+
+  public void close(int);
+    Code:
+       0: return
+
+  public boolean isClosed();
+    Code:
+       0: iconst_1
+       1: ireturn
+
+  public org.apache.http.impl.client.CloseableHttpClient createHttpClient();
+    Code:
+       0: new           #38                 // class org/apache/http/impl/conn/PoolingHttpClientConnectionManager
+       3: dup
+       4: invokespecial #39                 // Method org/apache/http/impl/conn/PoolingHttpClientConnectionManager."<init>":()V
+       7: astore_1
+       8: invokestatic  #40                 // Method org/apache/http/impl/client/HttpClients.custom:()Lorg/apache/http/impl/client/HttpClientBuilder;
+      11: aload_1
+      12: invokevirtual #41                 // Method org/apache/http/impl/client/HttpClientBuilder.setConnectionManager:(Lorg/apache/http/conn/HttpClientConnectionManager;)Lorg/apache/http/impl/client/HttpClientBuilder;
+      15: invokevirtual #42                 // Method org/apache/http/impl/client/HttpClientBuilder.build:()Lorg/apache/http/impl/client/CloseableHttpClient;
+      18: areturn
+
+  protected org.apache.http.client.methods.HttpRequestBase createHttpUriRequest(java.lang.String, org.apache.dubbo.remoting.http.RequestTemplate);
+    Code:
+       0: aload_2
+       1: invokevirtual #43                 // Method org/apache/dubbo/remoting/http/RequestTemplate.getURL:()Ljava/lang/String;
+       4: astore_3
+       5: aconst_null
+       6: astore        4
+       8: ldc           #45                 // String GET
+      10: aload_1
+      11: invokevirtual #46                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      14: ifeq          30
+      17: new           #44                 // class org/apache/http/client/methods/HttpGet
+      20: dup
+      21: aload_3
+      22: invokespecial #47                 // Method org/apache/http/client/methods/HttpGet."<init>":(Ljava/lang/String;)V
+      25: astore        4
+      27: goto          211
+      30: ldc           #49                 // String HEAD
+      32: aload_1
+      33: invokevirtual #46                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      36: ifeq          52
+      39: new           #48                 // class org/apache/http/client/methods/HttpHead
+      42: dup
+      43: aload_3
+      44: invokespecial #50                 // Method org/apache/http/client/methods/HttpHead."<init>":(Ljava/lang/String;)V
+      47: astore        4
+      49: goto          211
+      52: ldc           #52                 // String POST
+      54: aload_1
+      55: invokevirtual #46                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      58: ifeq          74
+      61: new           #51                 // class org/apache/http/client/methods/HttpPost
+      64: dup
+      65: aload_3
+      66: invokespecial #53                 // Method org/apache/http/client/methods/HttpPost."<init>":(Ljava/lang/String;)V
+      69: astore        4
+      71: goto          211
+      74: ldc           #55                 // String PUT
+      76: aload_1
+      77: invokevirtual #46                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      80: ifeq          96
+      83: new           #54                 // class org/apache/http/client/methods/HttpPut
+      86: dup
+      87: aload_3
+      88: invokespecial #56                 // Method org/apache/http/client/methods/HttpPut."<init>":(Ljava/lang/String;)V
+      91: astore        4
+      93: goto          211
+      96: ldc           #58                 // String PATCH
+      98: aload_1
+      99: invokevirtual #46                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     102: ifeq          118
+     105: new           #57                 // class org/apache/http/client/methods/HttpPatch
+     108: dup
+     109: aload_3
+     110: invokespecial #59                 // Method org/apache/http/client/methods/HttpPatch."<init>":(Ljava/lang/String;)V
+     113: astore        4
+     115: goto          211
+     118: ldc           #61                 // String DELETE
+     120: aload_1
+     121: invokevirtual #46                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     124: ifeq          140
+     127: new           #60                 // class org/apache/http/client/methods/HttpDelete
+     130: dup
+     131: aload_3
+     132: invokespecial #62                 // Method org/apache/http/client/methods/HttpDelete."<init>":(Ljava/lang/String;)V
+     135: astore        4
+     137: goto          211
+     140: ldc           #64                 // String OPTIONS
+     142: aload_1
+     143: invokevirtual #46                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     146: ifeq          162
+     149: new           #63                 // class org/apache/http/client/methods/HttpOptions
+     152: dup
+     153: aload_3
+     154: invokespecial #65                 // Method org/apache/http/client/methods/HttpOptions."<init>":(Ljava/lang/String;)V
+     157: astore        4
+     159: goto          211
+     162: ldc           #67                 // String TRACE
+     164: aload_1
+     165: invokevirtual #46                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     168: ifeq          184
+     171: new           #66                 // class org/apache/http/client/methods/HttpTrace
+     174: dup
+     175: aload_3
+     176: invokespecial #68                 // Method org/apache/http/client/methods/HttpTrace."<init>":(Ljava/lang/String;)V
+     179: astore        4
+     181: goto          211
+     184: new           #69                 // class java/lang/IllegalArgumentException
+     187: dup
+     188: new           #70                 // class java/lang/StringBuilder
+     191: dup
+     192: invokespecial #71                 // Method java/lang/StringBuilder."<init>":()V
+     195: ldc           #72                 // String Invalid HTTP method:
+     197: invokevirtual #73                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     200: aload_1
+     201: invokevirtual #73                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     204: invokevirtual #74                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     207: invokespecial #75                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     210: athrow
+     211: aload         4
+     213: areturn
+}

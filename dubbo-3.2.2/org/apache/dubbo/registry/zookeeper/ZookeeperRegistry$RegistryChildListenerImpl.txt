@@ -1,0 +1,61 @@
+Compiled from "ZookeeperRegistry.java"
+class org.apache.dubbo.registry.zookeeper.ZookeeperRegistry$RegistryChildListenerImpl implements org.apache.dubbo.remoting.zookeeper.ChildListener {
+  private final org.apache.dubbo.registry.zookeeper.ZookeeperRegistry$ZookeeperRegistryNotifier notifier;
+
+  private volatile java.util.concurrent.CountDownLatch latch;
+
+  final org.apache.dubbo.registry.zookeeper.ZookeeperRegistry this$0;
+
+  public org.apache.dubbo.registry.zookeeper.ZookeeperRegistry$RegistryChildListenerImpl(org.apache.dubbo.registry.zookeeper.ZookeeperRegistry, org.apache.dubbo.common.URL, org.apache.dubbo.registry.NotifyListener, java.util.concurrent.CountDownLatch);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #2                  // Field this$0:Lorg/apache/dubbo/registry/zookeeper/ZookeeperRegistry;
+       5: aload_0
+       6: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       9: aload_0
+      10: aload         4
+      12: putfield      #4                  // Field latch:Ljava/util/concurrent/CountDownLatch;
+      15: aload_0
+      16: new           #5                  // class org/apache/dubbo/registry/zookeeper/ZookeeperRegistry$ZookeeperRegistryNotifier
+      19: dup
+      20: aload_1
+      21: aload_2
+      22: aload_3
+      23: aload_1
+      24: invokevirtual #6                  // Method org/apache/dubbo/registry/zookeeper/ZookeeperRegistry.getDelay:()I
+      27: i2l
+      28: invokespecial #7                  // Method org/apache/dubbo/registry/zookeeper/ZookeeperRegistry$ZookeeperRegistryNotifier."<init>":(Lorg/apache/dubbo/registry/zookeeper/ZookeeperRegistry;Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/registry/NotifyListener;J)V
+      31: putfield      #8                  // Field notifier:Lorg/apache/dubbo/registry/zookeeper/ZookeeperRegistry$ZookeeperRegistryNotifier;
+      34: return
+
+  public void setLatch(java.util.concurrent.CountDownLatch);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #4                  // Field latch:Ljava/util/concurrent/CountDownLatch;
+       5: return
+
+  public void childChanged(java.lang.String, java.util.List<java.lang.String>);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field latch:Ljava/util/concurrent/CountDownLatch;
+       4: invokevirtual #9                  // Method java/util/concurrent/CountDownLatch.await:()V
+       7: goto          27
+      10: astore_3
+      11: invokestatic  #11                 // Method org/apache/dubbo/registry/zookeeper/ZookeeperRegistry.access$000:()Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      14: ldc           #12                 // String 1-35
+      16: ldc           #13                 // String
+      18: ldc           #13                 // String
+      20: ldc           #14                 // String Zookeeper children listener thread was interrupted unexpectedly, may cause race condition with the main thread.
+      22: invokeinterface #15,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      27: aload_0
+      28: getfield      #8                  // Field notifier:Lorg/apache/dubbo/registry/zookeeper/ZookeeperRegistry$ZookeeperRegistryNotifier;
+      31: aload_1
+      32: aload_2
+      33: invokevirtual #16                 // Method org/apache/dubbo/registry/zookeeper/ZookeeperRegistry$ZookeeperRegistryNotifier.notify:(Ljava/lang/String;Ljava/lang/Object;)V
+      36: return
+    Exception table:
+       from    to  target type
+           0     7    10   Class java/lang/InterruptedException
+}

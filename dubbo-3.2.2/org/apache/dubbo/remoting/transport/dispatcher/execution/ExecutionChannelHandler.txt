@@ -1,0 +1,80 @@
+Compiled from "ExecutionChannelHandler.java"
+public class org.apache.dubbo.remoting.transport.dispatcher.execution.ExecutionChannelHandler extends org.apache.dubbo.remoting.transport.dispatcher.WrappedChannelHandler {
+  public org.apache.dubbo.remoting.transport.dispatcher.execution.ExecutionChannelHandler(org.apache.dubbo.remoting.ChannelHandler, org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #1                  // Method org/apache/dubbo/remoting/transport/dispatcher/WrappedChannelHandler."<init>":(Lorg/apache/dubbo/remoting/ChannelHandler;Lorg/apache/dubbo/common/URL;)V
+       6: return
+
+  public void received(org.apache.dubbo.remoting.Channel, java.lang.Object) throws org.apache.dubbo.remoting.RemotingException;
+    Code:
+       0: aload_0
+       1: aload_2
+       2: invokevirtual #2                  // Method getPreferredExecutorService:(Ljava/lang/Object;)Ljava/util/concurrent/ExecutorService;
+       5: astore_3
+       6: aload_2
+       7: instanceof    #3                  // class org/apache/dubbo/remoting/exchange/Request
+      10: ifeq          93
+      13: aload_3
+      14: new           #4                  // class org/apache/dubbo/remoting/transport/dispatcher/ChannelEventRunnable
+      17: dup
+      18: aload_1
+      19: aload_0
+      20: getfield      #5                  // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+      23: getstatic     #6                  // Field org/apache/dubbo/remoting/transport/dispatcher/ChannelEventRunnable$ChannelState.RECEIVED:Lorg/apache/dubbo/remoting/transport/dispatcher/ChannelEventRunnable$ChannelState;
+      26: aload_2
+      27: invokespecial #7                  // Method org/apache/dubbo/remoting/transport/dispatcher/ChannelEventRunnable."<init>":(Lorg/apache/dubbo/remoting/Channel;Lorg/apache/dubbo/remoting/ChannelHandler;Lorg/apache/dubbo/remoting/transport/dispatcher/ChannelEventRunnable$ChannelState;Ljava/lang/Object;)V
+      30: invokeinterface #8,  2            // InterfaceMethod java/util/concurrent/ExecutorService.execute:(Ljava/lang/Runnable;)V
+      35: goto          136
+      38: astore        4
+      40: aload         4
+      42: instanceof    #10                 // class java/util/concurrent/RejectedExecutionException
+      45: ifeq          59
+      48: aload_0
+      49: aload_1
+      50: aload_2
+      51: checkcast     #3                  // class org/apache/dubbo/remoting/exchange/Request
+      54: aload         4
+      56: invokevirtual #11                 // Method sendFeedback:(Lorg/apache/dubbo/remoting/Channel;Lorg/apache/dubbo/remoting/exchange/Request;Ljava/lang/Throwable;)V
+      59: new           #12                 // class org/apache/dubbo/remoting/ExecutionException
+      62: dup
+      63: aload_2
+      64: aload_1
+      65: new           #13                 // class java/lang/StringBuilder
+      68: dup
+      69: invokespecial #14                 // Method java/lang/StringBuilder."<init>":()V
+      72: aload_0
+      73: invokevirtual #15                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      76: invokevirtual #16                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      79: ldc           #17                 // String  error when process received event.
+      81: invokevirtual #18                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      84: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      87: aload         4
+      89: invokespecial #20                 // Method org/apache/dubbo/remoting/ExecutionException."<init>":(Ljava/lang/Object;Lorg/apache/dubbo/remoting/Channel;Ljava/lang/String;Ljava/lang/Throwable;)V
+      92: athrow
+      93: aload_3
+      94: instanceof    #21                 // class org/apache/dubbo/common/threadpool/ThreadlessExecutor
+      97: ifeq          125
+     100: aload_3
+     101: new           #4                  // class org/apache/dubbo/remoting/transport/dispatcher/ChannelEventRunnable
+     104: dup
+     105: aload_1
+     106: aload_0
+     107: getfield      #5                  // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+     110: getstatic     #6                  // Field org/apache/dubbo/remoting/transport/dispatcher/ChannelEventRunnable$ChannelState.RECEIVED:Lorg/apache/dubbo/remoting/transport/dispatcher/ChannelEventRunnable$ChannelState;
+     113: aload_2
+     114: invokespecial #7                  // Method org/apache/dubbo/remoting/transport/dispatcher/ChannelEventRunnable."<init>":(Lorg/apache/dubbo/remoting/Channel;Lorg/apache/dubbo/remoting/ChannelHandler;Lorg/apache/dubbo/remoting/transport/dispatcher/ChannelEventRunnable$ChannelState;Ljava/lang/Object;)V
+     117: invokeinterface #8,  2            // InterfaceMethod java/util/concurrent/ExecutorService.execute:(Ljava/lang/Runnable;)V
+     122: goto          136
+     125: aload_0
+     126: getfield      #5                  // Field handler:Lorg/apache/dubbo/remoting/ChannelHandler;
+     129: aload_1
+     130: aload_2
+     131: invokeinterface #22,  3           // InterfaceMethod org/apache/dubbo/remoting/ChannelHandler.received:(Lorg/apache/dubbo/remoting/Channel;Ljava/lang/Object;)V
+     136: return
+    Exception table:
+       from    to  target type
+          13    35    38   Class java/lang/Throwable
+}
