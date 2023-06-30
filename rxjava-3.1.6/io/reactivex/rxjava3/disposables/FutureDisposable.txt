@@ -1,0 +1,48 @@
+Compiled from "FutureDisposable.java"
+final class io.reactivex.rxjava3.disposables.FutureDisposable extends java.util.concurrent.atomic.AtomicReference<java.util.concurrent.Future<?>> implements io.reactivex.rxjava3.disposables.Disposable {
+  private static final long serialVersionUID;
+
+  private final boolean allowInterrupt;
+
+  io.reactivex.rxjava3.disposables.FutureDisposable(java.util.concurrent.Future<?>, boolean);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicReference."<init>":(Ljava/lang/Object;)V
+       5: aload_0
+       6: iload_2
+       7: putfield      #2                  // Field allowInterrupt:Z
+      10: return
+
+  public boolean isDisposed();
+    Code:
+       0: aload_0
+       1: invokevirtual #3                  // Method get:()Ljava/lang/Object;
+       4: checkcast     #4                  // class java/util/concurrent/Future
+       7: astore_1
+       8: aload_1
+       9: ifnull        21
+      12: aload_1
+      13: invokeinterface #5,  1            // InterfaceMethod java/util/concurrent/Future.isDone:()Z
+      18: ifeq          25
+      21: iconst_1
+      22: goto          26
+      25: iconst_0
+      26: ireturn
+
+  public void dispose();
+    Code:
+       0: aload_0
+       1: aconst_null
+       2: invokevirtual #6                  // Method getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;
+       5: checkcast     #4                  // class java/util/concurrent/Future
+       8: astore_1
+       9: aload_1
+      10: ifnull        24
+      13: aload_1
+      14: aload_0
+      15: getfield      #2                  // Field allowInterrupt:Z
+      18: invokeinterface #7,  2            // InterfaceMethod java/util/concurrent/Future.cancel:(Z)Z
+      23: pop
+      24: return
+}

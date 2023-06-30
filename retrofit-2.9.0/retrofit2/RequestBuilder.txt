@@ -1,0 +1,635 @@
+Compiled from "RequestBuilder.java"
+final class retrofit2.RequestBuilder {
+  private static final char[] HEX_DIGITS;
+
+  private static final java.lang.String PATH_SEGMENT_ALWAYS_ENCODE_SET;
+
+  private static final java.util.regex.Pattern PATH_TRAVERSAL;
+
+  private final java.lang.String method;
+
+  private final okhttp3.HttpUrl baseUrl;
+
+  private java.lang.String relativeUrl;
+
+  private okhttp3.HttpUrl$Builder urlBuilder;
+
+  private final okhttp3.Request$Builder requestBuilder;
+
+  private final okhttp3.Headers$Builder headersBuilder;
+
+  private okhttp3.MediaType contentType;
+
+  private final boolean hasBody;
+
+  private okhttp3.MultipartBody$Builder multipartBuilder;
+
+  private okhttp3.FormBody$Builder formBuilder;
+
+  private okhttp3.RequestBody body;
+
+  retrofit2.RequestBuilder(java.lang.String, okhttp3.HttpUrl, java.lang.String, okhttp3.Headers, okhttp3.MediaType, boolean, boolean, boolean);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #7                  // Field method:Ljava/lang/String;
+       9: aload_0
+      10: aload_2
+      11: putfield      #13                 // Field baseUrl:Lokhttp3/HttpUrl;
+      14: aload_0
+      15: aload_3
+      16: putfield      #17                 // Field relativeUrl:Ljava/lang/String;
+      19: aload_0
+      20: new           #20                 // class okhttp3/Request$Builder
+      23: dup
+      24: invokespecial #22                 // Method okhttp3/Request$Builder."<init>":()V
+      27: putfield      #23                 // Field requestBuilder:Lokhttp3/Request$Builder;
+      30: aload_0
+      31: aload         5
+      33: putfield      #27                 // Field contentType:Lokhttp3/MediaType;
+      36: aload_0
+      37: iload         6
+      39: putfield      #31                 // Field hasBody:Z
+      42: aload         4
+      44: ifnull        59
+      47: aload_0
+      48: aload         4
+      50: invokevirtual #35                 // Method okhttp3/Headers.newBuilder:()Lokhttp3/Headers$Builder;
+      53: putfield      #41                 // Field headersBuilder:Lokhttp3/Headers$Builder;
+      56: goto          70
+      59: aload_0
+      60: new           #45                 // class okhttp3/Headers$Builder
+      63: dup
+      64: invokespecial #47                 // Method okhttp3/Headers$Builder."<init>":()V
+      67: putfield      #41                 // Field headersBuilder:Lokhttp3/Headers$Builder;
+      70: iload         7
+      72: ifeq          89
+      75: aload_0
+      76: new           #48                 // class okhttp3/FormBody$Builder
+      79: dup
+      80: invokespecial #50                 // Method okhttp3/FormBody$Builder."<init>":()V
+      83: putfield      #51                 // Field formBuilder:Lokhttp3/FormBody$Builder;
+      86: goto          116
+      89: iload         8
+      91: ifeq          116
+      94: aload_0
+      95: new           #55                 // class okhttp3/MultipartBody$Builder
+      98: dup
+      99: invokespecial #57                 // Method okhttp3/MultipartBody$Builder."<init>":()V
+     102: putfield      #58                 // Field multipartBuilder:Lokhttp3/MultipartBody$Builder;
+     105: aload_0
+     106: getfield      #58                 // Field multipartBuilder:Lokhttp3/MultipartBody$Builder;
+     109: getstatic     #62                 // Field okhttp3/MultipartBody.FORM:Lokhttp3/MediaType;
+     112: invokevirtual #67                 // Method okhttp3/MultipartBody$Builder.setType:(Lokhttp3/MediaType;)Lokhttp3/MultipartBody$Builder;
+     115: pop
+     116: return
+
+  void setRelativeUrl(java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #71                 // Method java/lang/Object.toString:()Ljava/lang/String;
+       5: putfield      #17                 // Field relativeUrl:Ljava/lang/String;
+       8: return
+
+  void addHeader(java.lang.String, java.lang.String);
+    Code:
+       0: ldc           #75                 // String Content-Type
+       2: aload_1
+       3: invokevirtual #77                 // Method java/lang/String.equalsIgnoreCase:(Ljava/lang/String;)Z
+       6: ifeq          49
+       9: aload_0
+      10: aload_2
+      11: invokestatic  #83                 // Method okhttp3/MediaType.get:(Ljava/lang/String;)Lokhttp3/MediaType;
+      14: putfield      #27                 // Field contentType:Lokhttp3/MediaType;
+      17: goto          59
+      20: astore_3
+      21: new           #89                 // class java/lang/IllegalArgumentException
+      24: dup
+      25: new           #91                 // class java/lang/StringBuilder
+      28: dup
+      29: invokespecial #93                 // Method java/lang/StringBuilder."<init>":()V
+      32: ldc           #94                 // String Malformed content type:
+      34: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      37: aload_2
+      38: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      41: invokevirtual #100                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      44: aload_3
+      45: invokespecial #101                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      48: athrow
+      49: aload_0
+      50: getfield      #41                 // Field headersBuilder:Lokhttp3/Headers$Builder;
+      53: aload_1
+      54: aload_2
+      55: invokevirtual #104                // Method okhttp3/Headers$Builder.add:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/Headers$Builder;
+      58: pop
+      59: return
+    Exception table:
+       from    to  target type
+           9    17    20   Class java/lang/IllegalArgumentException
+
+  void addHeaders(okhttp3.Headers);
+    Code:
+       0: aload_0
+       1: getfield      #41                 // Field headersBuilder:Lokhttp3/Headers$Builder;
+       4: aload_1
+       5: invokevirtual #108                // Method okhttp3/Headers$Builder.addAll:(Lokhttp3/Headers;)Lokhttp3/Headers$Builder;
+       8: pop
+       9: return
+
+  void addPathParam(java.lang.String, java.lang.String, boolean);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field relativeUrl:Ljava/lang/String;
+       4: ifnonnull     15
+       7: new           #112                // class java/lang/AssertionError
+      10: dup
+      11: invokespecial #114                // Method java/lang/AssertionError."<init>":()V
+      14: athrow
+      15: aload_2
+      16: iload_3
+      17: invokestatic  #115                // Method canonicalizeForPath:(Ljava/lang/String;Z)Ljava/lang/String;
+      20: astore        4
+      22: aload_0
+      23: getfield      #17                 // Field relativeUrl:Ljava/lang/String;
+      26: new           #91                 // class java/lang/StringBuilder
+      29: dup
+      30: invokespecial #93                 // Method java/lang/StringBuilder."<init>":()V
+      33: ldc           #119                // String {
+      35: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      38: aload_1
+      39: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      42: ldc           #121                // String }
+      44: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      47: invokevirtual #100                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      50: aload         4
+      52: invokevirtual #123                // Method java/lang/String.replace:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+      55: astore        5
+      57: getstatic     #127                // Field PATH_TRAVERSAL:Ljava/util/regex/Pattern;
+      60: aload         5
+      62: invokevirtual #131                // Method java/util/regex/Pattern.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+      65: invokevirtual #137                // Method java/util/regex/Matcher.matches:()Z
+      68: ifeq          98
+      71: new           #89                 // class java/lang/IllegalArgumentException
+      74: dup
+      75: new           #91                 // class java/lang/StringBuilder
+      78: dup
+      79: invokespecial #93                 // Method java/lang/StringBuilder."<init>":()V
+      82: ldc           #143                // String @Path parameters shouldn\'t perform path traversal (\'.\' or \'..\'):
+      84: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      87: aload_2
+      88: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      91: invokevirtual #100                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      94: invokespecial #145                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      97: athrow
+      98: aload_0
+      99: aload         5
+     101: putfield      #17                 // Field relativeUrl:Ljava/lang/String;
+     104: return
+
+  private static java.lang.String canonicalizeForPath(java.lang.String, boolean);
+    Code:
+       0: iconst_0
+       1: istore_3
+       2: aload_0
+       3: invokevirtual #148                // Method java/lang/String.length:()I
+       6: istore        4
+       8: iload_3
+       9: iload         4
+      11: if_icmpge     102
+      14: aload_0
+      15: iload_3
+      16: invokevirtual #152                // Method java/lang/String.codePointAt:(I)I
+      19: istore_2
+      20: iload_2
+      21: bipush        32
+      23: if_icmplt     58
+      26: iload_2
+      27: bipush        127
+      29: if_icmpge     58
+      32: ldc           #156                // String  \"<>^`{}|\\?#
+      34: iload_2
+      35: invokevirtual #158                // Method java/lang/String.indexOf:(I)I
+      38: iconst_m1
+      39: if_icmpne     58
+      42: iload_1
+      43: ifne          92
+      46: iload_2
+      47: bipush        47
+      49: if_icmpeq     58
+      52: iload_2
+      53: bipush        37
+      55: if_icmpne     92
+      58: new           #161                // class okio/Buffer
+      61: dup
+      62: invokespecial #163                // Method okio/Buffer."<init>":()V
+      65: astore        5
+      67: aload         5
+      69: aload_0
+      70: iconst_0
+      71: iload_3
+      72: invokevirtual #164                // Method okio/Buffer.writeUtf8:(Ljava/lang/String;II)Lokio/Buffer;
+      75: pop
+      76: aload         5
+      78: aload_0
+      79: iload_3
+      80: iload         4
+      82: iload_1
+      83: invokestatic  #168                // Method canonicalizeForPath:(Lokio/Buffer;Ljava/lang/String;IIZ)V
+      86: aload         5
+      88: invokevirtual #171                // Method okio/Buffer.readUtf8:()Ljava/lang/String;
+      91: areturn
+      92: iload_3
+      93: iload_2
+      94: invokestatic  #174                // Method java/lang/Character.charCount:(I)I
+      97: iadd
+      98: istore_3
+      99: goto          8
+     102: aload_0
+     103: areturn
+
+  private static void canonicalizeForPath(okio.Buffer, java.lang.String, int, int, boolean);
+    Code:
+       0: aconst_null
+       1: astore        5
+       3: iload_2
+       4: istore        7
+       6: iload         7
+       8: iload_3
+       9: if_icmpge     201
+      12: aload_1
+      13: iload         7
+      15: invokevirtual #152                // Method java/lang/String.codePointAt:(I)I
+      18: istore        6
+      20: iload         4
+      22: ifeq          56
+      25: iload         6
+      27: bipush        9
+      29: if_icmpeq     188
+      32: iload         6
+      34: bipush        10
+      36: if_icmpeq     188
+      39: iload         6
+      41: bipush        12
+      43: if_icmpeq     188
+      46: iload         6
+      48: bipush        13
+      50: if_icmpne     56
+      53: goto          188
+      56: iload         6
+      58: bipush        32
+      60: if_icmplt     100
+      63: iload         6
+      65: bipush        127
+      67: if_icmpge     100
+      70: ldc           #156                // String  \"<>^`{}|\\?#
+      72: iload         6
+      74: invokevirtual #158                // Method java/lang/String.indexOf:(I)I
+      77: iconst_m1
+      78: if_icmpne     100
+      81: iload         4
+      83: ifne          181
+      86: iload         6
+      88: bipush        47
+      90: if_icmpeq     100
+      93: iload         6
+      95: bipush        37
+      97: if_icmpne     181
+     100: aload         5
+     102: ifnonnull     114
+     105: new           #161                // class okio/Buffer
+     108: dup
+     109: invokespecial #163                // Method okio/Buffer."<init>":()V
+     112: astore        5
+     114: aload         5
+     116: iload         6
+     118: invokevirtual #179                // Method okio/Buffer.writeUtf8CodePoint:(I)Lokio/Buffer;
+     121: pop
+     122: aload         5
+     124: invokevirtual #183                // Method okio/Buffer.exhausted:()Z
+     127: ifne          188
+     130: aload         5
+     132: invokevirtual #186                // Method okio/Buffer.readByte:()B
+     135: sipush        255
+     138: iand
+     139: istore        8
+     141: aload_0
+     142: bipush        37
+     144: invokevirtual #190                // Method okio/Buffer.writeByte:(I)Lokio/Buffer;
+     147: pop
+     148: aload_0
+     149: getstatic     #193                // Field HEX_DIGITS:[C
+     152: iload         8
+     154: iconst_4
+     155: ishr
+     156: bipush        15
+     158: iand
+     159: caload
+     160: invokevirtual #190                // Method okio/Buffer.writeByte:(I)Lokio/Buffer;
+     163: pop
+     164: aload_0
+     165: getstatic     #193                // Field HEX_DIGITS:[C
+     168: iload         8
+     170: bipush        15
+     172: iand
+     173: caload
+     174: invokevirtual #190                // Method okio/Buffer.writeByte:(I)Lokio/Buffer;
+     177: pop
+     178: goto          122
+     181: aload_0
+     182: iload         6
+     184: invokevirtual #179                // Method okio/Buffer.writeUtf8CodePoint:(I)Lokio/Buffer;
+     187: pop
+     188: iload         7
+     190: iload         6
+     192: invokestatic  #174                // Method java/lang/Character.charCount:(I)I
+     195: iadd
+     196: istore        7
+     198: goto          6
+     201: return
+
+  void addQueryParam(java.lang.String, java.lang.String, boolean);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field relativeUrl:Ljava/lang/String;
+       4: ifnull        76
+       7: aload_0
+       8: aload_0
+       9: getfield      #13                 // Field baseUrl:Lokhttp3/HttpUrl;
+      12: aload_0
+      13: getfield      #17                 // Field relativeUrl:Ljava/lang/String;
+      16: invokevirtual #197                // Method okhttp3/HttpUrl.newBuilder:(Ljava/lang/String;)Lokhttp3/HttpUrl$Builder;
+      19: putfield      #202                // Field urlBuilder:Lokhttp3/HttpUrl$Builder;
+      22: aload_0
+      23: getfield      #202                // Field urlBuilder:Lokhttp3/HttpUrl$Builder;
+      26: ifnonnull     71
+      29: new           #89                 // class java/lang/IllegalArgumentException
+      32: dup
+      33: new           #91                 // class java/lang/StringBuilder
+      36: dup
+      37: invokespecial #93                 // Method java/lang/StringBuilder."<init>":()V
+      40: ldc           #206                // String Malformed URL. Base:
+      42: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      45: aload_0
+      46: getfield      #13                 // Field baseUrl:Lokhttp3/HttpUrl;
+      49: invokevirtual #208                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      52: ldc           #211                // String , Relative:
+      54: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      57: aload_0
+      58: getfield      #17                 // Field relativeUrl:Ljava/lang/String;
+      61: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      64: invokevirtual #100                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      67: invokespecial #145                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      70: athrow
+      71: aload_0
+      72: aconst_null
+      73: putfield      #17                 // Field relativeUrl:Ljava/lang/String;
+      76: iload_3
+      77: ifeq          93
+      80: aload_0
+      81: getfield      #202                // Field urlBuilder:Lokhttp3/HttpUrl$Builder;
+      84: aload_1
+      85: aload_2
+      86: invokevirtual #213                // Method okhttp3/HttpUrl$Builder.addEncodedQueryParameter:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/HttpUrl$Builder;
+      89: pop
+      90: goto          103
+      93: aload_0
+      94: getfield      #202                // Field urlBuilder:Lokhttp3/HttpUrl$Builder;
+      97: aload_1
+      98: aload_2
+      99: invokevirtual #219                // Method okhttp3/HttpUrl$Builder.addQueryParameter:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/HttpUrl$Builder;
+     102: pop
+     103: return
+
+  void addFormField(java.lang.String, java.lang.String, boolean);
+    Code:
+       0: iload_3
+       1: ifeq          17
+       4: aload_0
+       5: getfield      #51                 // Field formBuilder:Lokhttp3/FormBody$Builder;
+       8: aload_1
+       9: aload_2
+      10: invokevirtual #222                // Method okhttp3/FormBody$Builder.addEncoded:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/FormBody$Builder;
+      13: pop
+      14: goto          27
+      17: aload_0
+      18: getfield      #51                 // Field formBuilder:Lokhttp3/FormBody$Builder;
+      21: aload_1
+      22: aload_2
+      23: invokevirtual #226                // Method okhttp3/FormBody$Builder.add:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/FormBody$Builder;
+      26: pop
+      27: return
+
+  void addPart(okhttp3.Headers, okhttp3.RequestBody);
+    Code:
+       0: aload_0
+       1: getfield      #58                 // Field multipartBuilder:Lokhttp3/MultipartBody$Builder;
+       4: aload_1
+       5: aload_2
+       6: invokevirtual #228                // Method okhttp3/MultipartBody$Builder.addPart:(Lokhttp3/Headers;Lokhttp3/RequestBody;)Lokhttp3/MultipartBody$Builder;
+       9: pop
+      10: return
+
+  void addPart(okhttp3.MultipartBody$Part);
+    Code:
+       0: aload_0
+       1: getfield      #58                 // Field multipartBuilder:Lokhttp3/MultipartBody$Builder;
+       4: aload_1
+       5: invokevirtual #232                // Method okhttp3/MultipartBody$Builder.addPart:(Lokhttp3/MultipartBody$Part;)Lokhttp3/MultipartBody$Builder;
+       8: pop
+       9: return
+
+  void setBody(okhttp3.RequestBody);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #235                // Field body:Lokhttp3/RequestBody;
+       5: return
+
+  <T> void addTag(java.lang.Class<T>, T);
+    Code:
+       0: aload_0
+       1: getfield      #23                 // Field requestBuilder:Lokhttp3/Request$Builder;
+       4: aload_1
+       5: aload_2
+       6: invokevirtual #239                // Method okhttp3/Request$Builder.tag:(Ljava/lang/Class;Ljava/lang/Object;)Lokhttp3/Request$Builder;
+       9: pop
+      10: return
+
+  okhttp3.Request$Builder get();
+    Code:
+       0: aload_0
+       1: getfield      #202                // Field urlBuilder:Lokhttp3/HttpUrl$Builder;
+       4: astore_2
+       5: aload_2
+       6: ifnull        17
+       9: aload_2
+      10: invokevirtual #243                // Method okhttp3/HttpUrl$Builder.build:()Lokhttp3/HttpUrl;
+      13: astore_1
+      14: goto          75
+      17: aload_0
+      18: getfield      #13                 // Field baseUrl:Lokhttp3/HttpUrl;
+      21: aload_0
+      22: getfield      #17                 // Field relativeUrl:Ljava/lang/String;
+      25: invokevirtual #247                // Method okhttp3/HttpUrl.resolve:(Ljava/lang/String;)Lokhttp3/HttpUrl;
+      28: astore_1
+      29: aload_1
+      30: ifnonnull     75
+      33: new           #89                 // class java/lang/IllegalArgumentException
+      36: dup
+      37: new           #91                 // class java/lang/StringBuilder
+      40: dup
+      41: invokespecial #93                 // Method java/lang/StringBuilder."<init>":()V
+      44: ldc           #206                // String Malformed URL. Base:
+      46: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      49: aload_0
+      50: getfield      #13                 // Field baseUrl:Lokhttp3/HttpUrl;
+      53: invokevirtual #208                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      56: ldc           #211                // String , Relative:
+      58: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      61: aload_0
+      62: getfield      #17                 // Field relativeUrl:Ljava/lang/String;
+      65: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      68: invokevirtual #100                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      71: invokespecial #145                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      74: athrow
+      75: aload_0
+      76: getfield      #235                // Field body:Lokhttp3/RequestBody;
+      79: astore_3
+      80: aload_3
+      81: ifnonnull     135
+      84: aload_0
+      85: getfield      #51                 // Field formBuilder:Lokhttp3/FormBody$Builder;
+      88: ifnull        102
+      91: aload_0
+      92: getfield      #51                 // Field formBuilder:Lokhttp3/FormBody$Builder;
+      95: invokevirtual #251                // Method okhttp3/FormBody$Builder.build:()Lokhttp3/FormBody;
+      98: astore_3
+      99: goto          135
+     102: aload_0
+     103: getfield      #58                 // Field multipartBuilder:Lokhttp3/MultipartBody$Builder;
+     106: ifnull        120
+     109: aload_0
+     110: getfield      #58                 // Field multipartBuilder:Lokhttp3/MultipartBody$Builder;
+     113: invokevirtual #254                // Method okhttp3/MultipartBody$Builder.build:()Lokhttp3/MultipartBody;
+     116: astore_3
+     117: goto          135
+     120: aload_0
+     121: getfield      #31                 // Field hasBody:Z
+     124: ifeq          135
+     127: aconst_null
+     128: iconst_0
+     129: newarray       byte
+     131: invokestatic  #257                // Method okhttp3/RequestBody.create:(Lokhttp3/MediaType;[B)Lokhttp3/RequestBody;
+     134: astore_3
+     135: aload_0
+     136: getfield      #27                 // Field contentType:Lokhttp3/MediaType;
+     139: astore        4
+     141: aload         4
+     143: ifnull        179
+     146: aload_3
+     147: ifnull        164
+     150: new           #263                // class retrofit2/RequestBuilder$ContentTypeOverridingRequestBody
+     153: dup
+     154: aload_3
+     155: aload         4
+     157: invokespecial #265                // Method retrofit2/RequestBuilder$ContentTypeOverridingRequestBody."<init>":(Lokhttp3/RequestBody;Lokhttp3/MediaType;)V
+     160: astore_3
+     161: goto          179
+     164: aload_0
+     165: getfield      #41                 // Field headersBuilder:Lokhttp3/Headers$Builder;
+     168: ldc           #75                 // String Content-Type
+     170: aload         4
+     172: invokevirtual #268                // Method okhttp3/MediaType.toString:()Ljava/lang/String;
+     175: invokevirtual #104                // Method okhttp3/Headers$Builder.add:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/Headers$Builder;
+     178: pop
+     179: aload_0
+     180: getfield      #23                 // Field requestBuilder:Lokhttp3/Request$Builder;
+     183: aload_1
+     184: invokevirtual #269                // Method okhttp3/Request$Builder.url:(Lokhttp3/HttpUrl;)Lokhttp3/Request$Builder;
+     187: aload_0
+     188: getfield      #41                 // Field headersBuilder:Lokhttp3/Headers$Builder;
+     191: invokevirtual #273                // Method okhttp3/Headers$Builder.build:()Lokhttp3/Headers;
+     194: invokevirtual #276                // Method okhttp3/Request$Builder.headers:(Lokhttp3/Headers;)Lokhttp3/Request$Builder;
+     197: aload_0
+     198: getfield      #7                  // Field method:Ljava/lang/String;
+     201: aload_3
+     202: invokevirtual #280                // Method okhttp3/Request$Builder.method:(Ljava/lang/String;Lokhttp3/RequestBody;)Lokhttp3/Request$Builder;
+     205: areturn
+
+  static {};
+    Code:
+       0: bipush        16
+       2: newarray       char
+       4: dup
+       5: iconst_0
+       6: bipush        48
+       8: castore
+       9: dup
+      10: iconst_1
+      11: bipush        49
+      13: castore
+      14: dup
+      15: iconst_2
+      16: bipush        50
+      18: castore
+      19: dup
+      20: iconst_3
+      21: bipush        51
+      23: castore
+      24: dup
+      25: iconst_4
+      26: bipush        52
+      28: castore
+      29: dup
+      30: iconst_5
+      31: bipush        53
+      33: castore
+      34: dup
+      35: bipush        6
+      37: bipush        54
+      39: castore
+      40: dup
+      41: bipush        7
+      43: bipush        55
+      45: castore
+      46: dup
+      47: bipush        8
+      49: bipush        56
+      51: castore
+      52: dup
+      53: bipush        9
+      55: bipush        57
+      57: castore
+      58: dup
+      59: bipush        10
+      61: bipush        65
+      63: castore
+      64: dup
+      65: bipush        11
+      67: bipush        66
+      69: castore
+      70: dup
+      71: bipush        12
+      73: bipush        67
+      75: castore
+      76: dup
+      77: bipush        13
+      79: bipush        68
+      81: castore
+      82: dup
+      83: bipush        14
+      85: bipush        69
+      87: castore
+      88: dup
+      89: bipush        15
+      91: bipush        70
+      93: castore
+      94: putstatic     #193                // Field HEX_DIGITS:[C
+      97: ldc_w         #283                // String (.*/)?(\\.|%2e|%2E){1,2}(/.*)?
+     100: invokestatic  #285                // Method java/util/regex/Pattern.compile:(Ljava/lang/String;)Ljava/util/regex/Pattern;
+     103: putstatic     #127                // Field PATH_TRAVERSAL:Ljava/util/regex/Pattern;
+     106: return
+}

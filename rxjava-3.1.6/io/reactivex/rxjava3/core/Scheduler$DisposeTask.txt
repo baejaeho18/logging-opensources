@@ -1,0 +1,87 @@
+Compiled from "Scheduler.java"
+final class io.reactivex.rxjava3.core.Scheduler$DisposeTask implements io.reactivex.rxjava3.disposables.Disposable,java.lang.Runnable,io.reactivex.rxjava3.schedulers.SchedulerRunnableIntrospection {
+  final java.lang.Runnable decoratedRun;
+
+  final io.reactivex.rxjava3.core.Scheduler$Worker w;
+
+  java.lang.Thread runner;
+
+  io.reactivex.rxjava3.core.Scheduler$DisposeTask(java.lang.Runnable, io.reactivex.rxjava3.core.Scheduler$Worker);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field decoratedRun:Ljava/lang/Runnable;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field w:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      14: return
+
+  public void run();
+    Code:
+       0: aload_0
+       1: invokestatic  #4                  // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+       4: putfield      #5                  // Field runner:Ljava/lang/Thread;
+       7: aload_0
+       8: getfield      #2                  // Field decoratedRun:Ljava/lang/Runnable;
+      11: invokeinterface #6,  1            // InterfaceMethod java/lang/Runnable.run:()V
+      16: goto          26
+      19: astore_1
+      20: aload_1
+      21: invokestatic  #8                  // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      24: aload_1
+      25: athrow
+      26: aload_0
+      27: invokevirtual #9                  // Method dispose:()V
+      30: aload_0
+      31: aconst_null
+      32: putfield      #5                  // Field runner:Ljava/lang/Thread;
+      35: goto          50
+      38: astore_2
+      39: aload_0
+      40: invokevirtual #9                  // Method dispose:()V
+      43: aload_0
+      44: aconst_null
+      45: putfield      #5                  // Field runner:Ljava/lang/Thread;
+      48: aload_2
+      49: athrow
+      50: return
+    Exception table:
+       from    to  target type
+           7    16    19   Class java/lang/Throwable
+           7    26    38   any
+
+  public void dispose();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field runner:Ljava/lang/Thread;
+       4: invokestatic  #4                  // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+       7: if_acmpne     33
+      10: aload_0
+      11: getfield      #3                  // Field w:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      14: instanceof    #10                 // class io/reactivex/rxjava3/internal/schedulers/NewThreadWorker
+      17: ifeq          33
+      20: aload_0
+      21: getfield      #3                  // Field w:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      24: checkcast     #10                 // class io/reactivex/rxjava3/internal/schedulers/NewThreadWorker
+      27: invokevirtual #11                 // Method io/reactivex/rxjava3/internal/schedulers/NewThreadWorker.shutdown:()V
+      30: goto          40
+      33: aload_0
+      34: getfield      #3                  // Field w:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      37: invokevirtual #12                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+      40: return
+
+  public boolean isDisposed();
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field w:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+       4: invokevirtual #13                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.isDisposed:()Z
+       7: ireturn
+
+  public java.lang.Runnable getWrappedRunnable();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field decoratedRun:Ljava/lang/Runnable;
+       4: areturn
+}

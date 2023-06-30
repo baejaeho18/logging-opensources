@@ -1,0 +1,93 @@
+Compiled from "LimitedInputStream.java"
+public class jadx.api.plugins.utils.LimitedInputStream extends java.io.FilterInputStream {
+  private final long maxSize;
+
+  private long currentPos;
+
+  protected jadx.api.plugins.utils.LimitedInputStream(java.io.InputStream, long);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #1                  // Method java/io/FilterInputStream."<init>":(Ljava/io/InputStream;)V
+       5: aload_0
+       6: lload_2
+       7: putfield      #2                  // Field maxSize:J
+      10: return
+
+  private void checkPos();
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field currentPos:J
+       4: aload_0
+       5: getfield      #2                  // Field maxSize:J
+       8: lcmp
+       9: ifle          22
+      12: new           #4                  // class java/lang/IllegalStateException
+      15: dup
+      16: ldc           #5                  // String Read limit exceeded
+      18: invokespecial #6                  // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      21: athrow
+      22: return
+
+  public int read() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: invokespecial #7                  // Method java/io/FilterInputStream.read:()I
+       4: istore_1
+       5: iload_1
+       6: iconst_m1
+       7: if_icmpeq     24
+      10: aload_0
+      11: dup
+      12: getfield      #3                  // Field currentPos:J
+      15: lconst_1
+      16: ladd
+      17: putfield      #3                  // Field currentPos:J
+      20: aload_0
+      21: invokespecial #8                  // Method checkPos:()V
+      24: iload_1
+      25: ireturn
+
+  public int read(byte[], int, int) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iload_2
+       3: iload_3
+       4: invokespecial #9                  // Method java/io/FilterInputStream.read:([BII)I
+       7: istore        4
+       9: iload         4
+      11: ifle          30
+      14: aload_0
+      15: dup
+      16: getfield      #3                  // Field currentPos:J
+      19: iload         4
+      21: i2l
+      22: ladd
+      23: putfield      #3                  // Field currentPos:J
+      26: aload_0
+      27: invokespecial #8                  // Method checkPos:()V
+      30: iload         4
+      32: ireturn
+
+  public long skip(long) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: lload_1
+       2: invokespecial #10                 // Method java/io/FilterInputStream.skip:(J)J
+       5: lstore_3
+       6: lload_3
+       7: lconst_0
+       8: lcmp
+       9: ifeq          26
+      12: aload_0
+      13: dup
+      14: getfield      #3                  // Field currentPos:J
+      17: lload_3
+      18: ladd
+      19: putfield      #3                  // Field currentPos:J
+      22: aload_0
+      23: invokespecial #8                  // Method checkPos:()V
+      26: lload_3
+      27: lreturn
+}

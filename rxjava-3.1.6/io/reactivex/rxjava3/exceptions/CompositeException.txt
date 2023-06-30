@@ -1,0 +1,516 @@
+Compiled from "CompositeException.java"
+public final class io.reactivex.rxjava3.exceptions.CompositeException extends java.lang.RuntimeException {
+  private static final long serialVersionUID;
+
+  private final java.util.List<java.lang.Throwable> exceptions;
+
+  private final java.lang.String message;
+
+  private java.lang.Throwable cause;
+
+  public io.reactivex.rxjava3.exceptions.CompositeException(java.lang.Throwable...);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: ifnonnull     20
+       5: new           #1                  // class java/lang/NullPointerException
+       8: dup
+       9: ldc           #2                  // String exceptions was null
+      11: invokespecial #3                  // Method java/lang/NullPointerException."<init>":(Ljava/lang/String;)V
+      14: invokestatic  #4                  // Method java/util/Collections.singletonList:(Ljava/lang/Object;)Ljava/util/List;
+      17: goto          24
+      20: aload_1
+      21: invokestatic  #5                  // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+      24: invokespecial #6                  // Method "<init>":(Ljava/lang/Iterable;)V
+      27: return
+
+  public io.reactivex.rxjava3.exceptions.CompositeException(java.lang.Iterable<? extends java.lang.Throwable>);
+    Code:
+       0: aload_0
+       1: invokespecial #7                  // Method java/lang/RuntimeException."<init>":()V
+       4: new           #8                  // class java/util/LinkedHashSet
+       7: dup
+       8: invokespecial #9                  // Method java/util/LinkedHashSet."<init>":()V
+      11: astore_2
+      12: aload_1
+      13: ifnull        108
+      16: aload_1
+      17: invokeinterface #10,  1           // InterfaceMethod java/lang/Iterable.iterator:()Ljava/util/Iterator;
+      22: astore_3
+      23: aload_3
+      24: invokeinterface #11,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      29: ifeq          105
+      32: aload_3
+      33: invokeinterface #12,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      38: checkcast     #13                 // class java/lang/Throwable
+      41: astore        4
+      43: aload         4
+      45: instanceof    #14                 // class io/reactivex/rxjava3/exceptions/CompositeException
+      48: ifeq          69
+      51: aload_2
+      52: aload         4
+      54: checkcast     #14                 // class io/reactivex/rxjava3/exceptions/CompositeException
+      57: invokevirtual #15                 // Method getExceptions:()Ljava/util/List;
+      60: invokeinterface #16,  2           // InterfaceMethod java/util/Set.addAll:(Ljava/util/Collection;)Z
+      65: pop
+      66: goto          102
+      69: aload         4
+      71: ifnull        86
+      74: aload_2
+      75: aload         4
+      77: invokeinterface #17,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      82: pop
+      83: goto          102
+      86: aload_2
+      87: new           #1                  // class java/lang/NullPointerException
+      90: dup
+      91: ldc           #18                 // String Throwable was null!
+      93: invokespecial #3                  // Method java/lang/NullPointerException."<init>":(Ljava/lang/String;)V
+      96: invokeinterface #17,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+     101: pop
+     102: goto          23
+     105: goto          124
+     108: aload_2
+     109: new           #1                  // class java/lang/NullPointerException
+     112: dup
+     113: ldc           #19                 // String errors was null
+     115: invokespecial #3                  // Method java/lang/NullPointerException."<init>":(Ljava/lang/String;)V
+     118: invokeinterface #17,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+     123: pop
+     124: aload_2
+     125: invokeinterface #20,  1           // InterfaceMethod java/util/Set.isEmpty:()Z
+     130: ifeq          143
+     133: new           #21                 // class java/lang/IllegalArgumentException
+     136: dup
+     137: ldc           #22                 // String errors is empty
+     139: invokespecial #23                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     142: athrow
+     143: new           #24                 // class java/util/ArrayList
+     146: dup
+     147: aload_2
+     148: invokespecial #25                 // Method java/util/ArrayList."<init>":(Ljava/util/Collection;)V
+     151: astore_3
+     152: aload_0
+     153: aload_3
+     154: invokestatic  #26                 // Method java/util/Collections.unmodifiableList:(Ljava/util/List;)Ljava/util/List;
+     157: putfield      #27                 // Field exceptions:Ljava/util/List;
+     160: aload_0
+     161: new           #28                 // class java/lang/StringBuilder
+     164: dup
+     165: invokespecial #29                 // Method java/lang/StringBuilder."<init>":()V
+     168: aload_0
+     169: getfield      #27                 // Field exceptions:Ljava/util/List;
+     172: invokeinterface #30,  1           // InterfaceMethod java/util/List.size:()I
+     177: invokevirtual #31                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     180: ldc           #32                 // String  exceptions occurred.
+     182: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     185: invokevirtual #34                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     188: putfield      #35                 // Field message:Ljava/lang/String;
+     191: return
+
+  public java.util.List<java.lang.Throwable> getExceptions();
+    Code:
+       0: aload_0
+       1: getfield      #27                 // Field exceptions:Ljava/util/List;
+       4: areturn
+
+  public java.lang.String getMessage();
+    Code:
+       0: aload_0
+       1: getfield      #35                 // Field message:Ljava/lang/String;
+       4: areturn
+
+  public synchronized java.lang.Throwable getCause();
+    Code:
+       0: aload_0
+       1: getfield      #36                 // Field cause:Ljava/lang/Throwable;
+       4: ifnonnull     499
+       7: ldc           #37                 // String line.separator
+       9: invokestatic  #38                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      12: astore_1
+      13: aload_0
+      14: getfield      #27                 // Field exceptions:Ljava/util/List;
+      17: invokeinterface #30,  1           // InterfaceMethod java/util/List.size:()I
+      22: iconst_1
+      23: if_icmple     482
+      26: new           #39                 // class java/util/IdentityHashMap
+      29: dup
+      30: invokespecial #40                 // Method java/util/IdentityHashMap."<init>":()V
+      33: astore_2
+      34: new           #28                 // class java/lang/StringBuilder
+      37: dup
+      38: invokespecial #29                 // Method java/lang/StringBuilder."<init>":()V
+      41: astore_3
+      42: aload_3
+      43: ldc           #41                 // String Multiple exceptions (
+      45: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      48: aload_0
+      49: getfield      #27                 // Field exceptions:Ljava/util/List;
+      52: invokeinterface #30,  1           // InterfaceMethod java/util/List.size:()I
+      57: invokevirtual #31                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      60: ldc           #42                 // String )
+      62: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      65: aload_1
+      66: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      69: pop
+      70: aload_0
+      71: getfield      #27                 // Field exceptions:Ljava/util/List;
+      74: invokeinterface #43,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      79: astore        4
+      81: aload         4
+      83: invokeinterface #11,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      88: ifeq          461
+      91: aload         4
+      93: invokeinterface #12,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      98: checkcast     #13                 // class java/lang/Throwable
+     101: astore        5
+     103: iconst_0
+     104: istore        6
+     106: aload         5
+     108: ifnull        458
+     111: iconst_0
+     112: istore        7
+     114: iload         7
+     116: iload         6
+     118: if_icmpge     134
+     121: aload_3
+     122: ldc           #44                 // String
+     124: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     127: pop
+     128: iinc          7, 1
+     131: goto          114
+     134: aload_3
+     135: ldc           #45                 // String |--
+     137: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     140: pop
+     141: aload_3
+     142: aload         5
+     144: invokevirtual #46                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     147: invokevirtual #47                 // Method java/lang/Class.getCanonicalName:()Ljava/lang/String;
+     150: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     153: ldc           #48                 // String :
+     155: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     158: pop
+     159: aload         5
+     161: invokevirtual #49                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     164: astore        7
+     166: aload         7
+     168: ifnull        261
+     171: aload         7
+     173: aload_1
+     174: invokevirtual #50                 // Method java/lang/String.contains:(Ljava/lang/CharSequence;)Z
+     177: ifeq          261
+     180: aload_3
+     181: aload_1
+     182: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     185: pop
+     186: aload         7
+     188: aload_1
+     189: invokevirtual #51                 // Method java/lang/String.split:(Ljava/lang/String;)[Ljava/lang/String;
+     192: astore        8
+     194: aload         8
+     196: arraylength
+     197: istore        9
+     199: iconst_0
+     200: istore        10
+     202: iload         10
+     204: iload         9
+     206: if_icmpge     258
+     209: aload         8
+     211: iload         10
+     213: aaload
+     214: astore        11
+     216: iconst_0
+     217: istore        12
+     219: iload         12
+     221: iload         6
+     223: iconst_2
+     224: iadd
+     225: if_icmpge     241
+     228: aload_3
+     229: ldc           #44                 // String
+     231: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     234: pop
+     235: iinc          12, 1
+     238: goto          219
+     241: aload_3
+     242: aload         11
+     244: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     247: aload_1
+     248: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     251: pop
+     252: iinc          10, 1
+     255: goto          202
+     258: goto          274
+     261: aload_3
+     262: aload         7
+     264: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     267: pop
+     268: aload_3
+     269: aload_1
+     270: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     273: pop
+     274: iconst_0
+     275: istore        8
+     277: iload         8
+     279: iload         6
+     281: iconst_2
+     282: iadd
+     283: if_icmpge     299
+     286: aload_3
+     287: ldc           #44                 // String
+     289: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     292: pop
+     293: iinc          8, 1
+     296: goto          277
+     299: aload         5
+     301: invokevirtual #52                 // Method java/lang/Throwable.getStackTrace:()[Ljava/lang/StackTraceElement;
+     304: astore        8
+     306: aload         8
+     308: arraylength
+     309: ifle          330
+     312: aload_3
+     313: ldc           #53                 // String at
+     315: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     318: aload         8
+     320: iconst_0
+     321: aaload
+     322: invokevirtual #54                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     325: aload_1
+     326: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     329: pop
+     330: aload_2
+     331: aload         5
+     333: invokeinterface #55,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+     338: ifne          367
+     341: aload_2
+     342: aload         5
+     344: iconst_1
+     345: invokestatic  #56                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+     348: invokeinterface #57,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     353: pop
+     354: aload         5
+     356: invokevirtual #58                 // Method java/lang/Throwable.getCause:()Ljava/lang/Throwable;
+     359: astore        5
+     361: iinc          6, 1
+     364: goto          455
+     367: aload         5
+     369: invokevirtual #58                 // Method java/lang/Throwable.getCause:()Ljava/lang/Throwable;
+     372: astore        5
+     374: aload         5
+     376: ifnull        458
+     379: iconst_0
+     380: istore        9
+     382: iload         9
+     384: iload         6
+     386: iconst_2
+     387: iadd
+     388: if_icmpge     404
+     391: aload_3
+     392: ldc           #44                 // String
+     394: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     397: pop
+     398: iinc          9, 1
+     401: goto          382
+     404: aload_3
+     405: ldc           #45                 // String |--
+     407: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     410: pop
+     411: aload_3
+     412: ldc           #59                 // String (cause not expanded again)
+     414: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     417: pop
+     418: aload_3
+     419: aload         5
+     421: invokevirtual #46                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     424: invokevirtual #47                 // Method java/lang/Class.getCanonicalName:()Ljava/lang/String;
+     427: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     430: ldc           #48                 // String :
+     432: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     435: pop
+     436: aload_3
+     437: aload         5
+     439: invokevirtual #49                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     442: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     445: pop
+     446: aload_3
+     447: aload_1
+     448: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     451: pop
+     452: goto          458
+     455: goto          106
+     458: goto          81
+     461: aload_0
+     462: new           #60                 // class io/reactivex/rxjava3/exceptions/CompositeException$ExceptionOverview
+     465: dup
+     466: aload_3
+     467: invokevirtual #34                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     470: invokevirtual #61                 // Method java/lang/String.trim:()Ljava/lang/String;
+     473: invokespecial #62                 // Method io/reactivex/rxjava3/exceptions/CompositeException$ExceptionOverview."<init>":(Ljava/lang/String;)V
+     476: putfield      #36                 // Field cause:Ljava/lang/Throwable;
+     479: goto          499
+     482: aload_0
+     483: aload_0
+     484: getfield      #27                 // Field exceptions:Ljava/util/List;
+     487: iconst_0
+     488: invokeinterface #63,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     493: checkcast     #13                 // class java/lang/Throwable
+     496: putfield      #36                 // Field cause:Ljava/lang/Throwable;
+     499: aload_0
+     500: getfield      #36                 // Field cause:Ljava/lang/Throwable;
+     503: areturn
+
+  public void printStackTrace();
+    Code:
+       0: aload_0
+       1: getstatic     #64                 // Field java/lang/System.err:Ljava/io/PrintStream;
+       4: invokevirtual #65                 // Method printStackTrace:(Ljava/io/PrintStream;)V
+       7: return
+
+  public void printStackTrace(java.io.PrintStream);
+    Code:
+       0: aload_0
+       1: new           #66                 // class io/reactivex/rxjava3/exceptions/CompositeException$WrappedPrintStream
+       4: dup
+       5: aload_1
+       6: invokespecial #67                 // Method io/reactivex/rxjava3/exceptions/CompositeException$WrappedPrintStream."<init>":(Ljava/io/PrintStream;)V
+       9: invokespecial #68                 // Method printStackTrace:(Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;)V
+      12: return
+
+  public void printStackTrace(java.io.PrintWriter);
+    Code:
+       0: aload_0
+       1: new           #69                 // class io/reactivex/rxjava3/exceptions/CompositeException$WrappedPrintWriter
+       4: dup
+       5: aload_1
+       6: invokespecial #70                 // Method io/reactivex/rxjava3/exceptions/CompositeException$WrappedPrintWriter."<init>":(Ljava/io/PrintWriter;)V
+       9: invokespecial #68                 // Method printStackTrace:(Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;)V
+      12: return
+
+  private void printStackTrace(io.reactivex.rxjava3.exceptions.CompositeException$PrintStreamOrWriter);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: invokevirtual #71                 // Method io/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter.append:(Ljava/lang/Object;)Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;
+       5: ldc           #72                 // String \n
+       7: invokevirtual #71                 // Method io/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter.append:(Ljava/lang/Object;)Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;
+      10: pop
+      11: aload_0
+      12: invokevirtual #73                 // Method getStackTrace:()[Ljava/lang/StackTraceElement;
+      15: astore_2
+      16: aload_2
+      17: arraylength
+      18: istore_3
+      19: iconst_0
+      20: istore        4
+      22: iload         4
+      24: iload_3
+      25: if_icmpge     57
+      28: aload_2
+      29: iload         4
+      31: aaload
+      32: astore        5
+      34: aload_1
+      35: ldc           #74                 // String \tat
+      37: invokevirtual #71                 // Method io/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter.append:(Ljava/lang/Object;)Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;
+      40: aload         5
+      42: invokevirtual #71                 // Method io/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter.append:(Ljava/lang/Object;)Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;
+      45: ldc           #72                 // String \n
+      47: invokevirtual #71                 // Method io/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter.append:(Ljava/lang/Object;)Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;
+      50: pop
+      51: iinc          4, 1
+      54: goto          22
+      57: iconst_1
+      58: istore_2
+      59: aload_0
+      60: getfield      #27                 // Field exceptions:Ljava/util/List;
+      63: invokeinterface #43,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      68: astore_3
+      69: aload_3
+      70: invokeinterface #11,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      75: ifeq          123
+      78: aload_3
+      79: invokeinterface #12,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      84: checkcast     #13                 // class java/lang/Throwable
+      87: astore        4
+      89: aload_1
+      90: ldc           #75                 // String   ComposedException
+      92: invokevirtual #71                 // Method io/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter.append:(Ljava/lang/Object;)Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;
+      95: iload_2
+      96: invokestatic  #76                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      99: invokevirtual #71                 // Method io/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter.append:(Ljava/lang/Object;)Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;
+     102: ldc           #77                 // String  :\n
+     104: invokevirtual #71                 // Method io/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter.append:(Ljava/lang/Object;)Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;
+     107: pop
+     108: aload_0
+     109: aload_1
+     110: aload         4
+     112: ldc           #78                 // String \t
+     114: invokespecial #79                 // Method appendStackTrace:(Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;Ljava/lang/Throwable;Ljava/lang/String;)V
+     117: iinc          2, 1
+     120: goto          69
+     123: aload_1
+     124: ldc           #72                 // String \n
+     126: invokevirtual #71                 // Method io/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter.append:(Ljava/lang/Object;)Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;
+     129: pop
+     130: return
+
+  private void appendStackTrace(io.reactivex.rxjava3.exceptions.CompositeException$PrintStreamOrWriter, java.lang.Throwable, java.lang.String);
+    Code:
+       0: aload_1
+       1: aload_3
+       2: invokevirtual #71                 // Method io/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter.append:(Ljava/lang/Object;)Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;
+       5: aload_2
+       6: invokevirtual #71                 // Method io/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter.append:(Ljava/lang/Object;)Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;
+       9: bipush        10
+      11: invokestatic  #80                 // Method java/lang/Character.valueOf:(C)Ljava/lang/Character;
+      14: invokevirtual #71                 // Method io/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter.append:(Ljava/lang/Object;)Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;
+      17: pop
+      18: aload_2
+      19: invokevirtual #52                 // Method java/lang/Throwable.getStackTrace:()[Ljava/lang/StackTraceElement;
+      22: astore        4
+      24: aload         4
+      26: arraylength
+      27: istore        5
+      29: iconst_0
+      30: istore        6
+      32: iload         6
+      34: iload         5
+      36: if_icmpge     72
+      39: aload         4
+      41: iload         6
+      43: aaload
+      44: astore        7
+      46: aload_1
+      47: ldc           #81                 // String \t\tat
+      49: invokevirtual #71                 // Method io/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter.append:(Ljava/lang/Object;)Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;
+      52: aload         7
+      54: invokevirtual #71                 // Method io/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter.append:(Ljava/lang/Object;)Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;
+      57: bipush        10
+      59: invokestatic  #80                 // Method java/lang/Character.valueOf:(C)Ljava/lang/Character;
+      62: invokevirtual #71                 // Method io/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter.append:(Ljava/lang/Object;)Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;
+      65: pop
+      66: iinc          6, 1
+      69: goto          32
+      72: aload_2
+      73: invokevirtual #58                 // Method java/lang/Throwable.getCause:()Ljava/lang/Throwable;
+      76: ifnull        97
+      79: aload_1
+      80: ldc           #82                 // String \tCaused by:
+      82: invokevirtual #71                 // Method io/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter.append:(Ljava/lang/Object;)Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;
+      85: pop
+      86: aload_0
+      87: aload_1
+      88: aload_2
+      89: invokevirtual #58                 // Method java/lang/Throwable.getCause:()Ljava/lang/Throwable;
+      92: ldc           #83                 // String
+      94: invokespecial #79                 // Method appendStackTrace:(Lio/reactivex/rxjava3/exceptions/CompositeException$PrintStreamOrWriter;Ljava/lang/Throwable;Ljava/lang/String;)V
+      97: return
+
+  public int size();
+    Code:
+       0: aload_0
+       1: getfield      #27                 // Field exceptions:Ljava/util/List;
+       4: invokeinterface #30,  1           // InterfaceMethod java/util/List.size:()I
+       9: ireturn
+}
