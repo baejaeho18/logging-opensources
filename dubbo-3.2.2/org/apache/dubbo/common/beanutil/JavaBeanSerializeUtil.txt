@@ -1,0 +1,1323 @@
+Compiled from "JavaBeanSerializeUtil.java"
+public final class org.apache.dubbo.common.beanutil.JavaBeanSerializeUtil {
+  private static final org.apache.dubbo.common.logger.Logger logger;
+
+  private static final java.util.Map<java.lang.String, java.lang.Class<?>> TYPES;
+
+  private static final java.lang.String ARRAY_PREFIX;
+
+  private static final java.lang.String REFERENCE_TYPE_PREFIX;
+
+  private static final java.lang.String REFERENCE_TYPE_SUFFIX;
+
+  private org.apache.dubbo.common.beanutil.JavaBeanSerializeUtil();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static org.apache.dubbo.common.beanutil.JavaBeanDescriptor serialize(java.lang.Object);
+    Code:
+       0: aload_0
+       1: getstatic     #2                  // Field org/apache/dubbo/common/beanutil/JavaBeanAccessor.FIELD:Lorg/apache/dubbo/common/beanutil/JavaBeanAccessor;
+       4: invokestatic  #3                  // Method serialize:(Ljava/lang/Object;Lorg/apache/dubbo/common/beanutil/JavaBeanAccessor;)Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;
+       7: areturn
+
+  public static org.apache.dubbo.common.beanutil.JavaBeanDescriptor serialize(java.lang.Object, org.apache.dubbo.common.beanutil.JavaBeanAccessor);
+    Code:
+       0: aload_0
+       1: ifnonnull     6
+       4: aconst_null
+       5: areturn
+       6: aload_0
+       7: instanceof    #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+      10: ifeq          18
+      13: aload_0
+      14: checkcast     #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+      17: areturn
+      18: new           #5                  // class java/util/IdentityHashMap
+      21: dup
+      22: invokespecial #6                  // Method java/util/IdentityHashMap."<init>":()V
+      25: astore_2
+      26: aload_0
+      27: aload_1
+      28: aload_2
+      29: invokestatic  #7                  // Method createDescriptorIfAbsent:(Ljava/lang/Object;Lorg/apache/dubbo/common/beanutil/JavaBeanAccessor;Ljava/util/IdentityHashMap;)Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;
+      32: areturn
+
+  private static org.apache.dubbo.common.beanutil.JavaBeanDescriptor createDescriptorForSerialize(java.lang.Class<?>);
+    Code:
+       0: aload_0
+       1: invokevirtual #8                  // Method java/lang/Class.isEnum:()Z
+       4: ifeq          20
+       7: new           #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+      10: dup
+      11: aload_0
+      12: invokevirtual #9                  // Method java/lang/Class.getName:()Ljava/lang/String;
+      15: iconst_2
+      16: invokespecial #10                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor."<init>":(Ljava/lang/String;I)V
+      19: areturn
+      20: aload_0
+      21: invokevirtual #11                 // Method java/lang/Class.isArray:()Z
+      24: ifeq          43
+      27: new           #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+      30: dup
+      31: aload_0
+      32: invokevirtual #12                 // Method java/lang/Class.getComponentType:()Ljava/lang/Class;
+      35: invokevirtual #9                  // Method java/lang/Class.getName:()Ljava/lang/String;
+      38: iconst_5
+      39: invokespecial #10                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor."<init>":(Ljava/lang/String;I)V
+      42: areturn
+      43: aload_0
+      44: invokestatic  #13                 // Method org/apache/dubbo/common/utils/ReflectUtils.isPrimitive:(Ljava/lang/Class;)Z
+      47: ifeq          64
+      50: new           #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+      53: dup
+      54: aload_0
+      55: invokevirtual #9                  // Method java/lang/Class.getName:()Ljava/lang/String;
+      58: bipush        6
+      60: invokespecial #10                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor."<init>":(Ljava/lang/String;I)V
+      63: areturn
+      64: ldc           #14                 // class java/lang/Class
+      66: aload_0
+      67: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+      70: ifeq          87
+      73: new           #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+      76: dup
+      77: ldc           #14                 // class java/lang/Class
+      79: invokevirtual #9                  // Method java/lang/Class.getName:()Ljava/lang/String;
+      82: iconst_1
+      83: invokespecial #10                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor."<init>":(Ljava/lang/String;I)V
+      86: areturn
+      87: ldc           #16                 // class java/util/Collection
+      89: aload_0
+      90: invokevirtual #17                 // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+      93: ifeq          109
+      96: new           #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+      99: dup
+     100: aload_0
+     101: invokevirtual #9                  // Method java/lang/Class.getName:()Ljava/lang/String;
+     104: iconst_3
+     105: invokespecial #10                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor."<init>":(Ljava/lang/String;I)V
+     108: areturn
+     109: ldc           #18                 // class java/util/Map
+     111: aload_0
+     112: invokevirtual #17                 // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+     115: ifeq          131
+     118: new           #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+     121: dup
+     122: aload_0
+     123: invokevirtual #9                  // Method java/lang/Class.getName:()Ljava/lang/String;
+     126: iconst_4
+     127: invokespecial #10                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor."<init>":(Ljava/lang/String;I)V
+     130: areturn
+     131: new           #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+     134: dup
+     135: aload_0
+     136: invokevirtual #9                  // Method java/lang/Class.getName:()Ljava/lang/String;
+     139: bipush        7
+     141: invokespecial #10                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor."<init>":(Ljava/lang/String;I)V
+     144: areturn
+
+  private static org.apache.dubbo.common.beanutil.JavaBeanDescriptor createDescriptorIfAbsent(java.lang.Object, org.apache.dubbo.common.beanutil.JavaBeanAccessor, java.util.IdentityHashMap<java.lang.Object, org.apache.dubbo.common.beanutil.JavaBeanDescriptor>);
+    Code:
+       0: aload_2
+       1: aload_0
+       2: invokevirtual #19                 // Method java/util/IdentityHashMap.containsKey:(Ljava/lang/Object;)Z
+       5: ifeq          17
+       8: aload_2
+       9: aload_0
+      10: invokevirtual #20                 // Method java/util/IdentityHashMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      13: checkcast     #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+      16: areturn
+      17: aload_0
+      18: instanceof    #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+      21: ifeq          29
+      24: aload_0
+      25: checkcast     #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+      28: areturn
+      29: aload_0
+      30: invokevirtual #21                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      33: invokestatic  #22                 // Method createDescriptorForSerialize:(Ljava/lang/Class;)Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;
+      36: astore_3
+      37: aload_2
+      38: aload_0
+      39: aload_3
+      40: invokevirtual #23                 // Method java/util/IdentityHashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      43: pop
+      44: aload_3
+      45: aload_0
+      46: aload_1
+      47: aload_2
+      48: invokestatic  #24                 // Method serializeInternal:(Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;Ljava/lang/Object;Lorg/apache/dubbo/common/beanutil/JavaBeanAccessor;Ljava/util/IdentityHashMap;)V
+      51: aload_3
+      52: areturn
+
+  private static void serializeInternal(org.apache.dubbo.common.beanutil.JavaBeanDescriptor, java.lang.Object, org.apache.dubbo.common.beanutil.JavaBeanAccessor, java.util.IdentityHashMap<java.lang.Object, org.apache.dubbo.common.beanutil.JavaBeanDescriptor>);
+    Code:
+       0: aload_1
+       1: ifnull        8
+       4: aload_0
+       5: ifnonnull     9
+       8: return
+       9: aload_1
+      10: invokevirtual #21                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      13: invokevirtual #8                  // Method java/lang/Class.isEnum:()Z
+      16: ifeq          34
+      19: aload_0
+      20: aload_1
+      21: checkcast     #25                 // class java/lang/Enum
+      24: invokevirtual #26                 // Method java/lang/Enum.name:()Ljava/lang/String;
+      27: invokevirtual #27                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.setEnumNameProperty:(Ljava/lang/String;)Ljava/lang/String;
+      30: pop
+      31: goto          552
+      34: aload_1
+      35: invokevirtual #21                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      38: invokestatic  #13                 // Method org/apache/dubbo/common/utils/ReflectUtils.isPrimitive:(Ljava/lang/Class;)Z
+      41: ifeq          53
+      44: aload_0
+      45: aload_1
+      46: invokevirtual #28                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.setPrimitiveProperty:(Ljava/lang/Object;)Ljava/lang/Object;
+      49: pop
+      50: goto          552
+      53: ldc           #14                 // class java/lang/Class
+      55: aload_1
+      56: invokevirtual #21                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      59: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+      62: ifeq          80
+      65: aload_0
+      66: aload_1
+      67: checkcast     #14                 // class java/lang/Class
+      70: invokevirtual #9                  // Method java/lang/Class.getName:()Ljava/lang/String;
+      73: invokevirtual #29                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.setClassNameProperty:(Ljava/lang/String;)Ljava/lang/String;
+      76: pop
+      77: goto          552
+      80: aload_1
+      81: invokevirtual #21                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      84: invokevirtual #11                 // Method java/lang/Class.isArray:()Z
+      87: ifeq          163
+      90: aload_1
+      91: invokestatic  #30                 // Method java/lang/reflect/Array.getLength:(Ljava/lang/Object;)I
+      94: istore        4
+      96: iconst_0
+      97: istore        5
+      99: iload         5
+     101: iload         4
+     103: if_icmpge     160
+     106: aload_1
+     107: iload         5
+     109: invokestatic  #31                 // Method java/lang/reflect/Array.get:(Ljava/lang/Object;I)Ljava/lang/Object;
+     112: astore        6
+     114: aload         6
+     116: ifnonnull     133
+     119: aload_0
+     120: iload         5
+     122: invokestatic  #32                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     125: aconst_null
+     126: invokevirtual #33                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.setProperty:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     129: pop
+     130: goto          154
+     133: aload         6
+     135: aload_2
+     136: aload_3
+     137: invokestatic  #7                  // Method createDescriptorIfAbsent:(Ljava/lang/Object;Lorg/apache/dubbo/common/beanutil/JavaBeanAccessor;Ljava/util/IdentityHashMap;)Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;
+     140: astore        7
+     142: aload_0
+     143: iload         5
+     145: invokestatic  #32                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     148: aload         7
+     150: invokevirtual #33                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.setProperty:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     153: pop
+     154: iinc          5, 1
+     157: goto          99
+     160: goto          552
+     163: aload_1
+     164: instanceof    #16                 // class java/util/Collection
+     167: ifeq          259
+     170: aload_1
+     171: checkcast     #16                 // class java/util/Collection
+     174: astore        4
+     176: iconst_0
+     177: istore        5
+     179: aload         4
+     181: invokeinterface #34,  1           // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+     186: astore        6
+     188: aload         6
+     190: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     195: ifeq          256
+     198: aload         6
+     200: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     205: astore        7
+     207: aload         7
+     209: ifnonnull     229
+     212: aload_0
+     213: iload         5
+     215: iinc          5, 1
+     218: invokestatic  #32                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     221: aconst_null
+     222: invokevirtual #33                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.setProperty:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     225: pop
+     226: goto          253
+     229: aload         7
+     231: aload_2
+     232: aload_3
+     233: invokestatic  #7                  // Method createDescriptorIfAbsent:(Ljava/lang/Object;Lorg/apache/dubbo/common/beanutil/JavaBeanAccessor;Ljava/util/IdentityHashMap;)Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;
+     236: astore        8
+     238: aload_0
+     239: iload         5
+     241: iinc          5, 1
+     244: invokestatic  #32                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     247: aload         8
+     249: invokevirtual #33                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.setProperty:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     252: pop
+     253: goto          188
+     256: goto          552
+     259: aload_1
+     260: instanceof    #18                 // class java/util/Map
+     263: ifeq          290
+     266: aload_1
+     267: checkcast     #18                 // class java/util/Map
+     270: astore        4
+     272: aload         4
+     274: aload_2
+     275: aload_3
+     276: aload_0
+     277: invokedynamic #37,  0             // InvokeDynamic #0:accept:(Lorg/apache/dubbo/common/beanutil/JavaBeanAccessor;Ljava/util/IdentityHashMap;Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;)Ljava/util/function/BiConsumer;
+     282: invokeinterface #38,  2           // InterfaceMethod java/util/Map.forEach:(Ljava/util/function/BiConsumer;)V
+     287: goto          552
+     290: aload_2
+     291: invokestatic  #39                 // Method org/apache/dubbo/common/beanutil/JavaBeanAccessor.isAccessByMethod:(Lorg/apache/dubbo/common/beanutil/JavaBeanAccessor;)Z
+     294: ifeq          416
+     297: aload_1
+     298: invokevirtual #21                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     301: invokestatic  #40                 // Method org/apache/dubbo/common/utils/ReflectUtils.getBeanPropertyReadMethods:(Ljava/lang/Class;)Ljava/util/Map;
+     304: astore        4
+     306: aload         4
+     308: invokeinterface #41,  1           // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+     313: invokeinterface #42,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     318: astore        5
+     320: aload         5
+     322: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     327: ifeq          416
+     330: aload         5
+     332: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     337: checkcast     #43                 // class java/util/Map$Entry
+     340: astore        6
+     342: aload         6
+     344: invokeinterface #44,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     349: checkcast     #45                 // class java/lang/reflect/Method
+     352: aload_1
+     353: iconst_0
+     354: anewarray     #46                 // class java/lang/Object
+     357: invokevirtual #47                 // Method java/lang/reflect/Method.invoke:(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+     360: astore        7
+     362: aload         7
+     364: ifnonnull     370
+     367: goto          320
+     370: aload         7
+     372: aload_2
+     373: aload_3
+     374: invokestatic  #7                  // Method createDescriptorIfAbsent:(Ljava/lang/Object;Lorg/apache/dubbo/common/beanutil/JavaBeanAccessor;Ljava/util/IdentityHashMap;)Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;
+     377: astore        8
+     379: aload_0
+     380: aload         6
+     382: invokeinterface #48,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     387: aload         8
+     389: invokevirtual #33                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.setProperty:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     392: pop
+     393: goto          413
+     396: astore        7
+     398: new           #50                 // class java/lang/RuntimeException
+     401: dup
+     402: aload         7
+     404: invokevirtual #51                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+     407: aload         7
+     409: invokespecial #52                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     412: athrow
+     413: goto          320
+     416: aload_2
+     417: invokestatic  #53                 // Method org/apache/dubbo/common/beanutil/JavaBeanAccessor.isAccessByField:(Lorg/apache/dubbo/common/beanutil/JavaBeanAccessor;)Z
+     420: ifeq          552
+     423: aload_1
+     424: invokevirtual #21                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     427: invokestatic  #54                 // Method org/apache/dubbo/common/utils/ReflectUtils.getBeanPropertyFields:(Ljava/lang/Class;)Ljava/util/Map;
+     430: astore        4
+     432: aload         4
+     434: invokeinterface #41,  1           // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+     439: invokeinterface #42,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     444: astore        5
+     446: aload         5
+     448: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     453: ifeq          552
+     456: aload         5
+     458: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     463: checkcast     #43                 // class java/util/Map$Entry
+     466: astore        6
+     468: aload_0
+     469: aload         6
+     471: invokeinterface #48,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     476: invokevirtual #55                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.containsProperty:(Ljava/lang/Object;)Z
+     479: ifne          549
+     482: aload         6
+     484: invokeinterface #44,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     489: checkcast     #56                 // class java/lang/reflect/Field
+     492: aload_1
+     493: invokevirtual #57                 // Method java/lang/reflect/Field.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     496: astore        7
+     498: aload         7
+     500: ifnonnull     506
+     503: goto          446
+     506: aload         7
+     508: aload_2
+     509: aload_3
+     510: invokestatic  #7                  // Method createDescriptorIfAbsent:(Ljava/lang/Object;Lorg/apache/dubbo/common/beanutil/JavaBeanAccessor;Ljava/util/IdentityHashMap;)Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;
+     513: astore        8
+     515: aload_0
+     516: aload         6
+     518: invokeinterface #48,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     523: aload         8
+     525: invokevirtual #33                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.setProperty:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     528: pop
+     529: goto          549
+     532: astore        7
+     534: new           #50                 // class java/lang/RuntimeException
+     537: dup
+     538: aload         7
+     540: invokevirtual #51                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+     543: aload         7
+     545: invokespecial #52                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     548: athrow
+     549: goto          446
+     552: return
+    Exception table:
+       from    to  target type
+         342   367   396   Class java/lang/Exception
+         370   393   396   Class java/lang/Exception
+         482   503   532   Class java/lang/Exception
+         506   529   532   Class java/lang/Exception
+
+  public static java.lang.Object deserialize(org.apache.dubbo.common.beanutil.JavaBeanDescriptor);
+    Code:
+       0: aload_0
+       1: invokestatic  #58                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+       4: invokevirtual #59                 // Method java/lang/Thread.getContextClassLoader:()Ljava/lang/ClassLoader;
+       7: invokestatic  #60                 // Method deserialize:(Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;Ljava/lang/ClassLoader;)Ljava/lang/Object;
+      10: areturn
+
+  public static java.lang.Object deserialize(org.apache.dubbo.common.beanutil.JavaBeanDescriptor, java.lang.ClassLoader);
+    Code:
+       0: aload_0
+       1: ifnonnull     6
+       4: aconst_null
+       5: areturn
+       6: new           #5                  // class java/util/IdentityHashMap
+       9: dup
+      10: invokespecial #6                  // Method java/util/IdentityHashMap."<init>":()V
+      13: astore_2
+      14: aload_0
+      15: aload_1
+      16: aload_2
+      17: invokestatic  #61                 // Method instantiateForDeserialize:(Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;Ljava/lang/ClassLoader;Ljava/util/IdentityHashMap;)Ljava/lang/Object;
+      20: astore_3
+      21: aload_3
+      22: aload_0
+      23: aload_1
+      24: aload_2
+      25: invokestatic  #62                 // Method deserializeInternal:(Ljava/lang/Object;Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;Ljava/lang/ClassLoader;Ljava/util/IdentityHashMap;)V
+      28: aload_3
+      29: areturn
+
+  private static void deserializeInternal(java.lang.Object, org.apache.dubbo.common.beanutil.JavaBeanDescriptor, java.lang.ClassLoader, java.util.IdentityHashMap<org.apache.dubbo.common.beanutil.JavaBeanDescriptor, java.lang.Object>);
+    Code:
+       0: aload_1
+       1: invokevirtual #63                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.isEnumType:()Z
+       4: ifne          21
+       7: aload_1
+       8: invokevirtual #64                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.isClassType:()Z
+      11: ifne          21
+      14: aload_1
+      15: invokevirtual #65                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.isPrimitiveType:()Z
+      18: ifeq          22
+      21: return
+      22: aload_1
+      23: invokevirtual #66                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.isArrayType:()Z
+      26: ifeq          124
+      29: iconst_0
+      30: istore        4
+      32: aload_1
+      33: invokevirtual #67                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.iterator:()Ljava/util/Iterator;
+      36: astore        5
+      38: aload         5
+      40: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      45: ifeq          121
+      48: aload         5
+      50: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      55: checkcast     #43                 // class java/util/Map$Entry
+      58: astore        6
+      60: aload         6
+      62: invokeinterface #44,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+      67: astore        7
+      69: aload         7
+      71: instanceof    #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+      74: ifeq          107
+      77: aload         6
+      79: invokeinterface #44,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+      84: checkcast     #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+      87: astore        8
+      89: aload         8
+      91: aload_2
+      92: aload_3
+      93: invokestatic  #61                 // Method instantiateForDeserialize:(Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;Ljava/lang/ClassLoader;Ljava/util/IdentityHashMap;)Ljava/lang/Object;
+      96: astore        7
+      98: aload         7
+     100: aload         8
+     102: aload_2
+     103: aload_3
+     104: invokestatic  #62                 // Method deserializeInternal:(Ljava/lang/Object;Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;Ljava/lang/ClassLoader;Ljava/util/IdentityHashMap;)V
+     107: aload_0
+     108: iload         4
+     110: iinc          4, 1
+     113: aload         7
+     115: invokestatic  #68                 // Method java/lang/reflect/Array.set:(Ljava/lang/Object;ILjava/lang/Object;)V
+     118: goto          38
+     121: goto          651
+     124: aload_1
+     125: invokevirtual #69                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.isCollectionType:()Z
+     128: ifeq          228
+     131: aload_0
+     132: checkcast     #16                 // class java/util/Collection
+     135: astore        4
+     137: aload_1
+     138: invokevirtual #67                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.iterator:()Ljava/util/Iterator;
+     141: astore        5
+     143: aload         5
+     145: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     150: ifeq          225
+     153: aload         5
+     155: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     160: checkcast     #43                 // class java/util/Map$Entry
+     163: astore        6
+     165: aload         6
+     167: invokeinterface #44,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     172: astore        7
+     174: aload         7
+     176: instanceof    #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+     179: ifeq          212
+     182: aload         6
+     184: invokeinterface #44,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     189: checkcast     #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+     192: astore        8
+     194: aload         8
+     196: aload_2
+     197: aload_3
+     198: invokestatic  #61                 // Method instantiateForDeserialize:(Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;Ljava/lang/ClassLoader;Ljava/util/IdentityHashMap;)Ljava/lang/Object;
+     201: astore        7
+     203: aload         7
+     205: aload         8
+     207: aload_2
+     208: aload_3
+     209: invokestatic  #62                 // Method deserializeInternal:(Ljava/lang/Object;Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;Ljava/lang/ClassLoader;Ljava/util/IdentityHashMap;)V
+     212: aload         4
+     214: aload         7
+     216: invokeinterface #70,  2           // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+     221: pop
+     222: goto          143
+     225: goto          651
+     228: aload_1
+     229: invokevirtual #71                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.isMapType:()Z
+     232: ifeq          381
+     235: aload_0
+     236: checkcast     #18                 // class java/util/Map
+     239: astore        4
+     241: aload_1
+     242: invokevirtual #67                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.iterator:()Ljava/util/Iterator;
+     245: astore        5
+     247: aload         5
+     249: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     254: ifeq          378
+     257: aload         5
+     259: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     264: checkcast     #43                 // class java/util/Map$Entry
+     267: astore        6
+     269: aload         6
+     271: invokeinterface #48,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     276: astore        7
+     278: aload         6
+     280: invokeinterface #44,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     285: astore        8
+     287: aload         7
+     289: instanceof    #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+     292: ifeq          325
+     295: aload         6
+     297: invokeinterface #48,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     302: checkcast     #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+     305: astore        9
+     307: aload         9
+     309: aload_2
+     310: aload_3
+     311: invokestatic  #61                 // Method instantiateForDeserialize:(Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;Ljava/lang/ClassLoader;Ljava/util/IdentityHashMap;)Ljava/lang/Object;
+     314: astore        7
+     316: aload         7
+     318: aload         9
+     320: aload_2
+     321: aload_3
+     322: invokestatic  #62                 // Method deserializeInternal:(Ljava/lang/Object;Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;Ljava/lang/ClassLoader;Ljava/util/IdentityHashMap;)V
+     325: aload         8
+     327: instanceof    #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+     330: ifeq          363
+     333: aload         6
+     335: invokeinterface #44,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     340: checkcast     #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+     343: astore        9
+     345: aload         9
+     347: aload_2
+     348: aload_3
+     349: invokestatic  #61                 // Method instantiateForDeserialize:(Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;Ljava/lang/ClassLoader;Ljava/util/IdentityHashMap;)Ljava/lang/Object;
+     352: astore        8
+     354: aload         8
+     356: aload         9
+     358: aload_2
+     359: aload_3
+     360: invokestatic  #62                 // Method deserializeInternal:(Ljava/lang/Object;Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;Ljava/lang/ClassLoader;Ljava/util/IdentityHashMap;)V
+     363: aload         4
+     365: aload         7
+     367: aload         8
+     369: invokeinterface #72,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     374: pop
+     375: goto          247
+     378: goto          651
+     381: aload_1
+     382: invokevirtual #73                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.isBeanType:()Z
+     385: ifeq          609
+     388: aload_1
+     389: invokevirtual #67                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.iterator:()Ljava/util/Iterator;
+     392: astore        4
+     394: aload         4
+     396: invokeinterface #35,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     401: ifeq          606
+     404: aload         4
+     406: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     411: checkcast     #43                 // class java/util/Map$Entry
+     414: astore        5
+     416: aload         5
+     418: invokeinterface #48,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     423: invokevirtual #74                 // Method java/lang/Object.toString:()Ljava/lang/String;
+     426: astore        6
+     428: aload         5
+     430: invokeinterface #44,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     435: astore        7
+     437: aload         7
+     439: ifnonnull     445
+     442: goto          394
+     445: aload         7
+     447: instanceof    #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+     450: ifeq          483
+     453: aload         5
+     455: invokeinterface #44,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     460: checkcast     #4                  // class org/apache/dubbo/common/beanutil/JavaBeanDescriptor
+     463: astore        8
+     465: aload         8
+     467: aload_2
+     468: aload_3
+     469: invokestatic  #61                 // Method instantiateForDeserialize:(Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;Ljava/lang/ClassLoader;Ljava/util/IdentityHashMap;)Ljava/lang/Object;
+     472: astore        7
+     474: aload         7
+     476: aload         8
+     478: aload_2
+     479: aload_3
+     480: invokestatic  #62                 // Method deserializeInternal:(Ljava/lang/Object;Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;Ljava/lang/ClassLoader;Ljava/util/IdentityHashMap;)V
+     483: aload_0
+     484: invokevirtual #21                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     487: aload         6
+     489: aload         7
+     491: invokevirtual #21                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     494: invokestatic  #75                 // Method getSetterMethod:(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/reflect/Method;
+     497: astore        8
+     499: iconst_0
+     500: istore        9
+     502: aload         8
+     504: ifnull        526
+     507: aload         8
+     509: aload_0
+     510: iconst_1
+     511: anewarray     #46                 // class java/lang/Object
+     514: dup
+     515: iconst_0
+     516: aload         7
+     518: aastore
+     519: invokevirtual #47                 // Method java/lang/reflect/Method.invoke:(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+     522: pop
+     523: iconst_1
+     524: istore        9
+     526: goto          559
+     529: astore        10
+     531: getstatic     #76                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+     534: new           #77                 // class java/lang/StringBuilder
+     537: dup
+     538: invokespecial #78                 // Method java/lang/StringBuilder."<init>":()V
+     541: ldc           #79                 // String Failed to set property through method
+     543: invokevirtual #80                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     546: aload         8
+     548: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     551: invokevirtual #82                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     554: aload         10
+     556: invokestatic  #83                 // Method org/apache/dubbo/common/utils/LogHelper.warn:(Lorg/apache/dubbo/common/logger/Logger;Ljava/lang/String;Ljava/lang/Throwable;)V
+     559: iload         9
+     561: ifne          603
+     564: aload_0
+     565: invokevirtual #21                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     568: aload         6
+     570: invokevirtual #84                 // Method java/lang/Class.getField:(Ljava/lang/String;)Ljava/lang/reflect/Field;
+     573: astore        10
+     575: aload         10
+     577: ifnull        588
+     580: aload         10
+     582: aload_0
+     583: aload         7
+     585: invokevirtual #85                 // Method java/lang/reflect/Field.set:(Ljava/lang/Object;Ljava/lang/Object;)V
+     588: goto          603
+     591: astore        10
+     593: getstatic     #76                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+     596: ldc           #88                 // String Failed to set field value
+     598: aload         10
+     600: invokestatic  #83                 // Method org/apache/dubbo/common/utils/LogHelper.warn:(Lorg/apache/dubbo/common/logger/Logger;Ljava/lang/String;Ljava/lang/Throwable;)V
+     603: goto          394
+     606: goto          651
+     609: new           #89                 // class java/lang/IllegalArgumentException
+     612: dup
+     613: new           #77                 // class java/lang/StringBuilder
+     616: dup
+     617: invokespecial #78                 // Method java/lang/StringBuilder."<init>":()V
+     620: ldc           #90                 // String Unsupported type
+     622: invokevirtual #80                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     625: aload_1
+     626: invokevirtual #91                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.getClassName:()Ljava/lang/String;
+     629: invokevirtual #80                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     632: ldc           #92                 // String :
+     634: invokevirtual #80                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     637: aload_1
+     638: invokevirtual #93                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.getType:()I
+     641: invokevirtual #94                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     644: invokevirtual #82                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     647: invokespecial #95                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     650: athrow
+     651: return
+    Exception table:
+       from    to  target type
+         502   526   529   Class java/lang/Exception
+         564   588   591   Class java/lang/NoSuchFieldException
+         564   588   591   Class java/lang/IllegalAccessException
+
+  private static java.lang.reflect.Method getSetterMethod(java.lang.Class<?>, java.lang.String, java.lang.Class<?>);
+    Code:
+       0: new           #77                 // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #78                 // Method java/lang/StringBuilder."<init>":()V
+       7: ldc           #96                 // String set
+       9: invokevirtual #80                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      12: aload_1
+      13: iconst_0
+      14: iconst_1
+      15: invokevirtual #97                 // Method java/lang/String.substring:(II)Ljava/lang/String;
+      18: invokevirtual #98                 // Method java/lang/String.toUpperCase:()Ljava/lang/String;
+      21: invokevirtual #80                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      24: aload_1
+      25: iconst_1
+      26: invokevirtual #99                 // Method java/lang/String.substring:(I)Ljava/lang/String;
+      29: invokevirtual #80                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      32: invokevirtual #82                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      35: astore_3
+      36: aconst_null
+      37: astore        4
+      39: aload_0
+      40: aload_3
+      41: iconst_1
+      42: anewarray     #14                 // class java/lang/Class
+      45: dup
+      46: iconst_0
+      47: aload_2
+      48: aastore
+      49: invokevirtual #100                // Method java/lang/Class.getMethod:(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+      52: astore        4
+      54: goto          117
+      57: astore        5
+      59: aload_0
+      60: invokevirtual #102                // Method java/lang/Class.getMethods:()[Ljava/lang/reflect/Method;
+      63: astore        6
+      65: aload         6
+      67: arraylength
+      68: istore        7
+      70: iconst_0
+      71: istore        8
+      73: iload         8
+      75: iload         7
+      77: if_icmpge     117
+      80: aload         6
+      82: iload         8
+      84: aaload
+      85: astore        9
+      87: aload         9
+      89: invokestatic  #103                // Method org/apache/dubbo/common/utils/ReflectUtils.isBeanPropertyWriteMethod:(Ljava/lang/reflect/Method;)Z
+      92: ifeq          111
+      95: aload         9
+      97: invokevirtual #104                // Method java/lang/reflect/Method.getName:()Ljava/lang/String;
+     100: aload_3
+     101: invokevirtual #105                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     104: ifeq          111
+     107: aload         9
+     109: astore        4
+     111: iinc          8, 1
+     114: goto          73
+     117: aload         4
+     119: ifnull        128
+     122: aload         4
+     124: iconst_1
+     125: invokevirtual #106                // Method java/lang/reflect/Method.setAccessible:(Z)V
+     128: aload         4
+     130: areturn
+    Exception table:
+       from    to  target type
+          39    54    57   Class java/lang/NoSuchMethodException
+
+  private static java.lang.Object instantiate(java.lang.Class<?>) throws java.lang.Exception;
+    Code:
+       0: aload_0
+       1: invokevirtual #107                // Method java/lang/Class.getDeclaredConstructors:()[Ljava/lang/reflect/Constructor;
+       4: astore_1
+       5: aconst_null
+       6: astore_2
+       7: ldc           #109                // int 2147483647
+       9: istore_3
+      10: aload_1
+      11: astore        4
+      13: aload         4
+      15: arraylength
+      16: istore        5
+      18: iconst_0
+      19: istore        6
+      21: iload         6
+      23: iload         5
+      25: if_icmpge     61
+      28: aload         4
+      30: iload         6
+      32: aaload
+      33: astore        7
+      35: aload         7
+      37: invokevirtual #110                // Method java/lang/reflect/Constructor.getParameterTypes:()[Ljava/lang/Class;
+      40: arraylength
+      41: iload_3
+      42: if_icmpge     55
+      45: aload         7
+      47: invokevirtual #110                // Method java/lang/reflect/Constructor.getParameterTypes:()[Ljava/lang/Class;
+      50: arraylength
+      51: istore_3
+      52: aload         7
+      54: astore_2
+      55: iinc          6, 1
+      58: goto          21
+      61: aload_2
+      62: ifnull        136
+      65: aload_2
+      66: invokevirtual #110                // Method java/lang/reflect/Constructor.getParameterTypes:()[Ljava/lang/Class;
+      69: astore        4
+      71: aload         4
+      73: arraylength
+      74: anewarray     #46                 // class java/lang/Object
+      77: astore        5
+      79: iconst_0
+      80: istore        6
+      82: iload         6
+      84: aload         5
+      86: arraylength
+      87: if_icmpge     109
+      90: aload         5
+      92: iload         6
+      94: aload         4
+      96: iload         6
+      98: aaload
+      99: invokestatic  #111                // Method getConstructorArg:(Ljava/lang/Class;)Ljava/lang/Object;
+     102: aastore
+     103: iinc          6, 1
+     106: goto          82
+     109: aload_2
+     110: iconst_1
+     111: invokevirtual #112                // Method java/lang/reflect/Constructor.setAccessible:(Z)V
+     114: aload_2
+     115: aload         5
+     117: invokevirtual #113                // Method java/lang/reflect/Constructor.newInstance:([Ljava/lang/Object;)Ljava/lang/Object;
+     120: areturn
+     121: astore        6
+     123: getstatic     #76                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+     126: aload         6
+     128: invokevirtual #116                // Method java/lang/ReflectiveOperationException.getMessage:()Ljava/lang/String;
+     131: aload         6
+     133: invokestatic  #83                 // Method org/apache/dubbo/common/utils/LogHelper.warn:(Lorg/apache/dubbo/common/logger/Logger;Ljava/lang/String;Ljava/lang/Throwable;)V
+     136: aload_0
+     137: iconst_0
+     138: anewarray     #14                 // class java/lang/Class
+     141: invokevirtual #117                // Method java/lang/Class.getDeclaredConstructor:([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;
+     144: iconst_0
+     145: anewarray     #46                 // class java/lang/Object
+     148: invokevirtual #113                // Method java/lang/reflect/Constructor.newInstance:([Ljava/lang/Object;)Ljava/lang/Object;
+     151: areturn
+    Exception table:
+       from    to  target type
+         109   120   121   Class java/lang/InstantiationException
+         109   120   121   Class java/lang/IllegalAccessException
+         109   120   121   Class java/lang/reflect/InvocationTargetException
+
+  public static java.lang.Object getConstructorArg(java.lang.Class<?>);
+    Code:
+       0: getstatic     #118                // Field java/lang/Boolean.TYPE:Ljava/lang/Class;
+       3: aload_0
+       4: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+       7: ifne          19
+      10: ldc           #119                // class java/lang/Boolean
+      12: aload_0
+      13: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+      16: ifeq          23
+      19: getstatic     #120                // Field java/lang/Boolean.FALSE:Ljava/lang/Boolean;
+      22: areturn
+      23: getstatic     #121                // Field java/lang/Byte.TYPE:Ljava/lang/Class;
+      26: aload_0
+      27: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+      30: ifne          42
+      33: ldc           #122                // class java/lang/Byte
+      35: aload_0
+      36: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+      39: ifeq          47
+      42: iconst_0
+      43: invokestatic  #123                // Method java/lang/Byte.valueOf:(B)Ljava/lang/Byte;
+      46: areturn
+      47: getstatic     #124                // Field java/lang/Short.TYPE:Ljava/lang/Class;
+      50: aload_0
+      51: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+      54: ifne          66
+      57: ldc           #125                // class java/lang/Short
+      59: aload_0
+      60: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+      63: ifeq          71
+      66: iconst_0
+      67: invokestatic  #126                // Method java/lang/Short.valueOf:(S)Ljava/lang/Short;
+      70: areturn
+      71: getstatic     #127                // Field java/lang/Integer.TYPE:Ljava/lang/Class;
+      74: aload_0
+      75: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+      78: ifne          90
+      81: ldc           #108                // class java/lang/Integer
+      83: aload_0
+      84: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+      87: ifeq          95
+      90: iconst_0
+      91: invokestatic  #32                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      94: areturn
+      95: getstatic     #128                // Field java/lang/Long.TYPE:Ljava/lang/Class;
+      98: aload_0
+      99: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+     102: ifne          114
+     105: ldc           #129                // class java/lang/Long
+     107: aload_0
+     108: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+     111: ifeq          119
+     114: lconst_0
+     115: invokestatic  #130                // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+     118: areturn
+     119: getstatic     #131                // Field java/lang/Float.TYPE:Ljava/lang/Class;
+     122: aload_0
+     123: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+     126: ifne          138
+     129: ldc           #132                // class java/lang/Float
+     131: aload_0
+     132: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+     135: ifeq          143
+     138: fconst_0
+     139: invokestatic  #133                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+     142: areturn
+     143: getstatic     #134                // Field java/lang/Double.TYPE:Ljava/lang/Class;
+     146: aload_0
+     147: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+     150: ifne          162
+     153: ldc           #135                // class java/lang/Double
+     155: aload_0
+     156: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+     159: ifeq          167
+     162: dconst_0
+     163: invokestatic  #136                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+     166: areturn
+     167: getstatic     #137                // Field java/lang/Character.TYPE:Ljava/lang/Class;
+     170: aload_0
+     171: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+     174: ifne          186
+     177: ldc           #138                // class java/lang/Character
+     179: aload_0
+     180: invokevirtual #15                 // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+     183: ifeq          191
+     186: iconst_0
+     187: invokestatic  #139                // Method java/lang/Character.valueOf:(C)Ljava/lang/Character;
+     190: areturn
+     191: aconst_null
+     192: areturn
+
+  private static java.lang.Object instantiateForDeserialize(org.apache.dubbo.common.beanutil.JavaBeanDescriptor, java.lang.ClassLoader, java.util.IdentityHashMap<org.apache.dubbo.common.beanutil.JavaBeanDescriptor, java.lang.Object>);
+    Code:
+       0: aload_2
+       1: aload_0
+       2: invokevirtual #19                 // Method java/util/IdentityHashMap.containsKey:(Ljava/lang/Object;)Z
+       5: ifeq          14
+       8: aload_2
+       9: aload_0
+      10: invokevirtual #20                 // Method java/util/IdentityHashMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      13: areturn
+      14: aload_0
+      15: invokevirtual #64                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.isClassType:()Z
+      18: ifeq          44
+      21: aload_1
+      22: aload_0
+      23: invokevirtual #140                // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.getClassNameProperty:()Ljava/lang/String;
+      26: invokestatic  #141                // Method name2Class:(Ljava/lang/ClassLoader;Ljava/lang/String;)Ljava/lang/Class;
+      29: areturn
+      30: astore_3
+      31: new           #50                 // class java/lang/RuntimeException
+      34: dup
+      35: aload_3
+      36: invokevirtual #143                // Method java/lang/ClassNotFoundException.getMessage:()Ljava/lang/String;
+      39: aload_3
+      40: invokespecial #52                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      43: athrow
+      44: aload_0
+      45: invokevirtual #63                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.isEnumType:()Z
+      48: ifeq          102
+      51: aload_1
+      52: aload_0
+      53: invokevirtual #91                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.getClassName:()Ljava/lang/String;
+      56: invokestatic  #141                // Method name2Class:(Ljava/lang/ClassLoader;Ljava/lang/String;)Ljava/lang/Class;
+      59: astore_3
+      60: aload_3
+      61: invokestatic  #144                // Method getEnumValueOfMethod:(Ljava/lang/Class;)Ljava/lang/reflect/Method;
+      64: astore        4
+      66: aload         4
+      68: aconst_null
+      69: iconst_2
+      70: anewarray     #46                 // class java/lang/Object
+      73: dup
+      74: iconst_0
+      75: aload_3
+      76: aastore
+      77: dup
+      78: iconst_1
+      79: aload_0
+      80: invokevirtual #145                // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.getEnumPropertyName:()Ljava/lang/String;
+      83: aastore
+      84: invokevirtual #47                 // Method java/lang/reflect/Method.invoke:(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+      87: areturn
+      88: astore_3
+      89: new           #50                 // class java/lang/RuntimeException
+      92: dup
+      93: aload_3
+      94: invokevirtual #51                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      97: aload_3
+      98: invokespecial #52                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     101: athrow
+     102: aload_0
+     103: invokevirtual #65                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.isPrimitiveType:()Z
+     106: ifeq          114
+     109: aload_0
+     110: invokevirtual #146                // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.getPrimitiveProperty:()Ljava/lang/Object;
+     113: areturn
+     114: aload_0
+     115: invokevirtual #66                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.isArrayType:()Z
+     118: ifeq          171
+     121: aload_1
+     122: aload_0
+     123: invokevirtual #91                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.getClassName:()Ljava/lang/String;
+     126: invokestatic  #141                // Method name2Class:(Ljava/lang/ClassLoader;Ljava/lang/String;)Ljava/lang/Class;
+     129: astore        4
+     131: goto          151
+     134: astore        5
+     136: new           #50                 // class java/lang/RuntimeException
+     139: dup
+     140: aload         5
+     142: invokevirtual #143                // Method java/lang/ClassNotFoundException.getMessage:()Ljava/lang/String;
+     145: aload         5
+     147: invokespecial #52                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     150: athrow
+     151: aload         4
+     153: aload_0
+     154: invokevirtual #147                // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.propertySize:()I
+     157: invokestatic  #148                // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;
+     160: astore_3
+     161: aload_2
+     162: aload_0
+     163: aload_3
+     164: invokevirtual #23                 // Method java/util/IdentityHashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     167: pop
+     168: goto          214
+     171: aload_1
+     172: aload_0
+     173: invokevirtual #91                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.getClassName:()Ljava/lang/String;
+     176: invokestatic  #141                // Method name2Class:(Ljava/lang/ClassLoader;Ljava/lang/String;)Ljava/lang/Class;
+     179: astore        4
+     181: aload         4
+     183: invokestatic  #149                // Method instantiate:(Ljava/lang/Class;)Ljava/lang/Object;
+     186: astore_3
+     187: aload_2
+     188: aload_0
+     189: aload_3
+     190: invokevirtual #23                 // Method java/util/IdentityHashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     193: pop
+     194: goto          214
+     197: astore        4
+     199: new           #50                 // class java/lang/RuntimeException
+     202: dup
+     203: aload         4
+     205: invokevirtual #51                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+     208: aload         4
+     210: invokespecial #52                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     213: athrow
+     214: aload_3
+     215: areturn
+    Exception table:
+       from    to  target type
+          21    29    30   Class java/lang/ClassNotFoundException
+          51    87    88   Class java/lang/Exception
+         121   131   134   Class java/lang/ClassNotFoundException
+         171   194   197   Class java/lang/Exception
+
+  public static java.lang.Class<?> name2Class(java.lang.ClassLoader, java.lang.String) throws java.lang.ClassNotFoundException;
+    Code:
+       0: getstatic     #150                // Field TYPES:Ljava/util/Map;
+       3: aload_1
+       4: invokeinterface #151,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+       9: ifeq          25
+      12: getstatic     #150                // Field TYPES:Ljava/util/Map;
+      15: aload_1
+      16: invokeinterface #152,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      21: checkcast     #14                 // class java/lang/Class
+      24: areturn
+      25: aload_1
+      26: invokestatic  #153                // Method isArray:(Ljava/lang/String;)Z
+      29: ifeq          95
+      32: iconst_0
+      33: istore_2
+      34: aload_1
+      35: invokestatic  #153                // Method isArray:(Ljava/lang/String;)Z
+      38: ifeq          53
+      41: iinc          2, 1
+      44: aload_1
+      45: iconst_1
+      46: invokevirtual #99                 // Method java/lang/String.substring:(I)Ljava/lang/String;
+      49: astore_1
+      50: goto          34
+      53: aload_0
+      54: aload_1
+      55: invokestatic  #141                // Method name2Class:(Ljava/lang/ClassLoader;Ljava/lang/String;)Ljava/lang/Class;
+      58: astore_3
+      59: iload_2
+      60: newarray       int
+      62: astore        4
+      64: iconst_0
+      65: istore        5
+      67: iload         5
+      69: iload_2
+      70: if_icmpge     85
+      73: aload         4
+      75: iload         5
+      77: iconst_0
+      78: iastore
+      79: iinc          5, 1
+      82: goto          67
+      85: aload_3
+      86: aload         4
+      88: invokestatic  #154                // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;[I)Ljava/lang/Object;
+      91: invokevirtual #21                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      94: areturn
+      95: aload_1
+      96: invokestatic  #155                // Method isReferenceType:(Ljava/lang/String;)Z
+      99: ifeq          114
+     102: aload_1
+     103: iconst_1
+     104: aload_1
+     105: invokevirtual #156                // Method java/lang/String.length:()I
+     108: iconst_1
+     109: isub
+     110: invokevirtual #97                 // Method java/lang/String.substring:(II)Ljava/lang/String;
+     113: astore_1
+     114: invokestatic  #157                // Method org/apache/dubbo/common/utils/DefaultSerializeClassChecker.getInstance:()Lorg/apache/dubbo/common/utils/DefaultSerializeClassChecker;
+     117: aload_0
+     118: aload_1
+     119: invokevirtual #158                // Method org/apache/dubbo/common/utils/DefaultSerializeClassChecker.loadClass:(Ljava/lang/ClassLoader;Ljava/lang/String;)Ljava/lang/Class;
+     122: areturn
+
+  private static boolean isArray(java.lang.String);
+    Code:
+       0: aload_0
+       1: ifnull        17
+       4: aload_0
+       5: ldc           #160                // String [
+       7: invokevirtual #161                // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+      10: ifeq          17
+      13: iconst_1
+      14: goto          18
+      17: iconst_0
+      18: ireturn
+
+  private static boolean isReferenceType(java.lang.String);
+    Code:
+       0: aload_0
+       1: ifnull        26
+       4: aload_0
+       5: ldc           #162                // String L
+       7: invokevirtual #161                // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+      10: ifeq          26
+      13: aload_0
+      14: ldc           #163                // String ;
+      16: invokevirtual #164                // Method java/lang/String.endsWith:(Ljava/lang/String;)Z
+      19: ifeq          26
+      22: iconst_1
+      23: goto          27
+      26: iconst_0
+      27: ireturn
+
+  private static java.lang.reflect.Method getEnumValueOfMethod(java.lang.Class) throws java.lang.NoSuchMethodException;
+    Code:
+       0: aload_0
+       1: ldc           #165                // String valueOf
+       3: iconst_2
+       4: anewarray     #14                 // class java/lang/Class
+       7: dup
+       8: iconst_0
+       9: ldc           #14                 // class java/lang/Class
+      11: aastore
+      12: dup
+      13: iconst_1
+      14: ldc           #166                // class java/lang/String
+      16: aastore
+      17: invokevirtual #100                // Method java/lang/Class.getMethod:(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+      20: areturn
+
+  private static void lambda$serializeInternal$0(org.apache.dubbo.common.beanutil.JavaBeanAccessor, java.util.IdentityHashMap, org.apache.dubbo.common.beanutil.JavaBeanDescriptor, java.lang.Object, java.lang.Object);
+    Code:
+       0: aload_3
+       1: ifnonnull     8
+       4: aconst_null
+       5: goto          14
+       8: aload_3
+       9: aload_0
+      10: aload_1
+      11: invokestatic  #7                  // Method createDescriptorIfAbsent:(Ljava/lang/Object;Lorg/apache/dubbo/common/beanutil/JavaBeanAccessor;Ljava/util/IdentityHashMap;)Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;
+      14: astore        5
+      16: aload         4
+      18: ifnonnull     25
+      21: aconst_null
+      22: goto          32
+      25: aload         4
+      27: aload_0
+      28: aload_1
+      29: invokestatic  #7                  // Method createDescriptorIfAbsent:(Ljava/lang/Object;Lorg/apache/dubbo/common/beanutil/JavaBeanAccessor;Ljava/util/IdentityHashMap;)Lorg/apache/dubbo/common/beanutil/JavaBeanDescriptor;
+      32: astore        6
+      34: aload_2
+      35: aload         5
+      37: aload         6
+      39: invokevirtual #33                 // Method org/apache/dubbo/common/beanutil/JavaBeanDescriptor.setProperty:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      42: pop
+      43: return
+
+  static {};
+    Code:
+       0: ldc           #159                // class org/apache/dubbo/common/beanutil/JavaBeanSerializeUtil
+       2: invokestatic  #167                // Method org/apache/dubbo/common/logger/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/Logger;
+       5: putstatic     #76                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+       8: new           #168                // class java/util/HashMap
+      11: dup
+      12: invokespecial #169                // Method java/util/HashMap."<init>":()V
+      15: putstatic     #150                // Field TYPES:Ljava/util/Map;
+      18: getstatic     #150                // Field TYPES:Ljava/util/Map;
+      21: getstatic     #118                // Field java/lang/Boolean.TYPE:Ljava/lang/Class;
+      24: invokevirtual #9                  // Method java/lang/Class.getName:()Ljava/lang/String;
+      27: getstatic     #118                // Field java/lang/Boolean.TYPE:Ljava/lang/Class;
+      30: invokeinterface #72,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      35: pop
+      36: getstatic     #150                // Field TYPES:Ljava/util/Map;
+      39: getstatic     #121                // Field java/lang/Byte.TYPE:Ljava/lang/Class;
+      42: invokevirtual #9                  // Method java/lang/Class.getName:()Ljava/lang/String;
+      45: getstatic     #121                // Field java/lang/Byte.TYPE:Ljava/lang/Class;
+      48: invokeinterface #72,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      53: pop
+      54: getstatic     #150                // Field TYPES:Ljava/util/Map;
+      57: getstatic     #124                // Field java/lang/Short.TYPE:Ljava/lang/Class;
+      60: invokevirtual #9                  // Method java/lang/Class.getName:()Ljava/lang/String;
+      63: getstatic     #124                // Field java/lang/Short.TYPE:Ljava/lang/Class;
+      66: invokeinterface #72,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      71: pop
+      72: getstatic     #150                // Field TYPES:Ljava/util/Map;
+      75: getstatic     #127                // Field java/lang/Integer.TYPE:Ljava/lang/Class;
+      78: invokevirtual #9                  // Method java/lang/Class.getName:()Ljava/lang/String;
+      81: getstatic     #127                // Field java/lang/Integer.TYPE:Ljava/lang/Class;
+      84: invokeinterface #72,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      89: pop
+      90: getstatic     #150                // Field TYPES:Ljava/util/Map;
+      93: getstatic     #128                // Field java/lang/Long.TYPE:Ljava/lang/Class;
+      96: invokevirtual #9                  // Method java/lang/Class.getName:()Ljava/lang/String;
+      99: getstatic     #128                // Field java/lang/Long.TYPE:Ljava/lang/Class;
+     102: invokeinterface #72,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     107: pop
+     108: getstatic     #150                // Field TYPES:Ljava/util/Map;
+     111: getstatic     #131                // Field java/lang/Float.TYPE:Ljava/lang/Class;
+     114: invokevirtual #9                  // Method java/lang/Class.getName:()Ljava/lang/String;
+     117: getstatic     #131                // Field java/lang/Float.TYPE:Ljava/lang/Class;
+     120: invokeinterface #72,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     125: pop
+     126: getstatic     #150                // Field TYPES:Ljava/util/Map;
+     129: getstatic     #134                // Field java/lang/Double.TYPE:Ljava/lang/Class;
+     132: invokevirtual #9                  // Method java/lang/Class.getName:()Ljava/lang/String;
+     135: getstatic     #134                // Field java/lang/Double.TYPE:Ljava/lang/Class;
+     138: invokeinterface #72,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     143: pop
+     144: getstatic     #150                // Field TYPES:Ljava/util/Map;
+     147: getstatic     #170                // Field java/lang/Void.TYPE:Ljava/lang/Class;
+     150: invokevirtual #9                  // Method java/lang/Class.getName:()Ljava/lang/String;
+     153: getstatic     #170                // Field java/lang/Void.TYPE:Ljava/lang/Class;
+     156: invokeinterface #72,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     161: pop
+     162: getstatic     #150                // Field TYPES:Ljava/util/Map;
+     165: ldc           #171                // String Z
+     167: getstatic     #118                // Field java/lang/Boolean.TYPE:Ljava/lang/Class;
+     170: invokeinterface #72,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     175: pop
+     176: getstatic     #150                // Field TYPES:Ljava/util/Map;
+     179: ldc           #172                // String B
+     181: getstatic     #121                // Field java/lang/Byte.TYPE:Ljava/lang/Class;
+     184: invokeinterface #72,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     189: pop
+     190: getstatic     #150                // Field TYPES:Ljava/util/Map;
+     193: ldc           #173                // String C
+     195: getstatic     #137                // Field java/lang/Character.TYPE:Ljava/lang/Class;
+     198: invokeinterface #72,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     203: pop
+     204: getstatic     #150                // Field TYPES:Ljava/util/Map;
+     207: ldc           #174                // String D
+     209: getstatic     #134                // Field java/lang/Double.TYPE:Ljava/lang/Class;
+     212: invokeinterface #72,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     217: pop
+     218: getstatic     #150                // Field TYPES:Ljava/util/Map;
+     221: ldc           #175                // String F
+     223: getstatic     #131                // Field java/lang/Float.TYPE:Ljava/lang/Class;
+     226: invokeinterface #72,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     231: pop
+     232: getstatic     #150                // Field TYPES:Ljava/util/Map;
+     235: ldc           #176                // String I
+     237: getstatic     #127                // Field java/lang/Integer.TYPE:Ljava/lang/Class;
+     240: invokeinterface #72,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     245: pop
+     246: getstatic     #150                // Field TYPES:Ljava/util/Map;
+     249: ldc           #177                // String J
+     251: getstatic     #128                // Field java/lang/Long.TYPE:Ljava/lang/Class;
+     254: invokeinterface #72,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     259: pop
+     260: getstatic     #150                // Field TYPES:Ljava/util/Map;
+     263: ldc           #178                // String S
+     265: getstatic     #124                // Field java/lang/Short.TYPE:Ljava/lang/Class;
+     268: invokeinterface #72,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     273: pop
+     274: return
+}

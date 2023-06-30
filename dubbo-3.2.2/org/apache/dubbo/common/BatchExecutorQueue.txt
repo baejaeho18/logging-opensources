@@ -1,0 +1,167 @@
+Compiled from "BatchExecutorQueue.java"
+public class org.apache.dubbo.common.BatchExecutorQueue<T> {
+  static final int DEFAULT_QUEUE_SIZE;
+
+  private final java.util.Queue<T> queue;
+
+  private final java.util.concurrent.atomic.AtomicBoolean scheduled;
+
+  private final int chunkSize;
+
+  public org.apache.dubbo.common.BatchExecutorQueue();
+    Code:
+       0: aload_0
+       1: sipush        128
+       4: invokespecial #2                  // Method "<init>":(I)V
+       7: return
+
+  public org.apache.dubbo.common.BatchExecutorQueue(int);
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #4                  // class java/util/concurrent/ConcurrentLinkedQueue
+       8: dup
+       9: invokespecial #5                  // Method java/util/concurrent/ConcurrentLinkedQueue."<init>":()V
+      12: putfield      #6                  // Field queue:Ljava/util/Queue;
+      15: aload_0
+      16: new           #7                  // class java/util/concurrent/atomic/AtomicBoolean
+      19: dup
+      20: iconst_0
+      21: invokespecial #8                  // Method java/util/concurrent/atomic/AtomicBoolean."<init>":(Z)V
+      24: putfield      #9                  // Field scheduled:Ljava/util/concurrent/atomic/AtomicBoolean;
+      27: aload_0
+      28: iload_1
+      29: putfield      #10                 // Field chunkSize:I
+      32: return
+
+  public void enqueue(T, java.util.concurrent.Executor);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field queue:Ljava/util/Queue;
+       4: aload_1
+       5: invokeinterface #11,  2           // InterfaceMethod java/util/Queue.add:(Ljava/lang/Object;)Z
+      10: pop
+      11: aload_0
+      12: aload_2
+      13: invokevirtual #12                 // Method scheduleFlush:(Ljava/util/concurrent/Executor;)V
+      16: return
+
+  protected void scheduleFlush(java.util.concurrent.Executor);
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field scheduled:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: iconst_0
+       5: iconst_1
+       6: invokevirtual #13                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+       9: ifeq          25
+      12: aload_1
+      13: aload_0
+      14: aload_1
+      15: invokedynamic #14,  0             // InvokeDynamic #0:run:(Lorg/apache/dubbo/common/BatchExecutorQueue;Ljava/util/concurrent/Executor;)Ljava/lang/Runnable;
+      20: invokeinterface #15,  2           // InterfaceMethod java/util/concurrent/Executor.execute:(Ljava/lang/Runnable;)V
+      25: return
+
+  private void run(java.util.concurrent.Executor);
+    Code:
+       0: new           #16                 // class java/util/LinkedList
+       3: dup
+       4: invokespecial #17                 // Method java/util/LinkedList."<init>":()V
+       7: astore_2
+       8: aload_0
+       9: getfield      #6                  // Field queue:Ljava/util/Queue;
+      12: invokeinterface #18,  1           // InterfaceMethod java/util/Queue.poll:()Ljava/lang/Object;
+      17: dup
+      18: astore_3
+      19: ifnull        33
+      22: aload_2
+      23: aload_3
+      24: invokeinterface #11,  2           // InterfaceMethod java/util/Queue.add:(Ljava/lang/Object;)Z
+      29: pop
+      30: goto          8
+      33: iconst_0
+      34: istore        4
+      36: iconst_0
+      37: istore        5
+      39: aload_2
+      40: invokeinterface #18,  1           // InterfaceMethod java/util/Queue.poll:()Ljava/lang/Object;
+      45: dup
+      46: astore_3
+      47: ifnull        99
+      50: aload_2
+      51: invokeinterface #19,  1           // InterfaceMethod java/util/Queue.size:()I
+      56: ifne          65
+      59: iconst_0
+      60: istore        5
+      62: goto          99
+      65: iload         4
+      67: aload_0
+      68: getfield      #10                 // Field chunkSize:I
+      71: if_icmpne     88
+      74: iconst_0
+      75: istore        4
+      77: aload_0
+      78: aload_3
+      79: invokevirtual #20                 // Method flush:(Ljava/lang/Object;)V
+      82: iconst_1
+      83: istore        5
+      85: goto          39
+      88: aload_0
+      89: aload_3
+      90: invokevirtual #21                 // Method prepare:(Ljava/lang/Object;)V
+      93: iinc          4, 1
+      96: goto          39
+      99: iload         5
+     101: ifne          113
+     104: aload_3
+     105: ifnull        113
+     108: aload_0
+     109: aload_3
+     110: invokevirtual #20                 // Method flush:(Ljava/lang/Object;)V
+     113: aload_0
+     114: getfield      #9                  // Field scheduled:Ljava/util/concurrent/atomic/AtomicBoolean;
+     117: iconst_0
+     118: invokevirtual #22                 // Method java/util/concurrent/atomic/AtomicBoolean.set:(Z)V
+     121: aload_0
+     122: getfield      #6                  // Field queue:Ljava/util/Queue;
+     125: invokeinterface #23,  1           // InterfaceMethod java/util/Queue.isEmpty:()Z
+     130: ifne          171
+     133: aload_0
+     134: aload_1
+     135: invokevirtual #12                 // Method scheduleFlush:(Ljava/util/concurrent/Executor;)V
+     138: goto          171
+     141: astore        6
+     143: aload_0
+     144: getfield      #9                  // Field scheduled:Ljava/util/concurrent/atomic/AtomicBoolean;
+     147: iconst_0
+     148: invokevirtual #22                 // Method java/util/concurrent/atomic/AtomicBoolean.set:(Z)V
+     151: aload_0
+     152: getfield      #6                  // Field queue:Ljava/util/Queue;
+     155: invokeinterface #23,  1           // InterfaceMethod java/util/Queue.isEmpty:()Z
+     160: ifne          168
+     163: aload_0
+     164: aload_1
+     165: invokevirtual #12                 // Method scheduleFlush:(Ljava/util/concurrent/Executor;)V
+     168: aload         6
+     170: athrow
+     171: return
+    Exception table:
+       from    to  target type
+           0   113   141   any
+         141   143   141   any
+
+  protected void prepare(T);
+    Code:
+       0: return
+
+  protected void flush(T);
+    Code:
+       0: return
+
+  private void lambda$scheduleFlush$0(java.util.concurrent.Executor);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #24                 // Method run:(Ljava/util/concurrent/Executor;)V
+       5: return
+}

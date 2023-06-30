@@ -1,0 +1,302 @@
+Compiled from "ExtensionDirector.java"
+public class org.apache.dubbo.common.extension.ExtensionDirector implements org.apache.dubbo.common.extension.ExtensionAccessor {
+  private final java.util.concurrent.ConcurrentMap<java.lang.Class<?>, org.apache.dubbo.common.extension.ExtensionLoader<?>> extensionLoadersMap;
+
+  private final java.util.concurrent.ConcurrentMap<java.lang.Class<?>, org.apache.dubbo.common.extension.ExtensionScope> extensionScopeMap;
+
+  private final org.apache.dubbo.common.extension.ExtensionDirector parent;
+
+  private final org.apache.dubbo.common.extension.ExtensionScope scope;
+
+  private final java.util.List<org.apache.dubbo.common.extension.ExtensionPostProcessor> extensionPostProcessors;
+
+  private final org.apache.dubbo.rpc.model.ScopeModel scopeModel;
+
+  private final java.util.concurrent.atomic.AtomicBoolean destroyed;
+
+  public org.apache.dubbo.common.extension.ExtensionDirector(org.apache.dubbo.common.extension.ExtensionDirector, org.apache.dubbo.common.extension.ExtensionScope, org.apache.dubbo.rpc.model.ScopeModel);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #2                  // class java/util/concurrent/ConcurrentHashMap
+       8: dup
+       9: bipush        64
+      11: invokespecial #3                  // Method java/util/concurrent/ConcurrentHashMap."<init>":(I)V
+      14: putfield      #4                  // Field extensionLoadersMap:Ljava/util/concurrent/ConcurrentMap;
+      17: aload_0
+      18: new           #2                  // class java/util/concurrent/ConcurrentHashMap
+      21: dup
+      22: bipush        64
+      24: invokespecial #3                  // Method java/util/concurrent/ConcurrentHashMap."<init>":(I)V
+      27: putfield      #5                  // Field extensionScopeMap:Ljava/util/concurrent/ConcurrentMap;
+      30: aload_0
+      31: new           #6                  // class java/util/ArrayList
+      34: dup
+      35: invokespecial #7                  // Method java/util/ArrayList."<init>":()V
+      38: putfield      #8                  // Field extensionPostProcessors:Ljava/util/List;
+      41: aload_0
+      42: new           #9                  // class java/util/concurrent/atomic/AtomicBoolean
+      45: dup
+      46: invokespecial #10                 // Method java/util/concurrent/atomic/AtomicBoolean."<init>":()V
+      49: putfield      #11                 // Field destroyed:Ljava/util/concurrent/atomic/AtomicBoolean;
+      52: aload_0
+      53: aload_1
+      54: putfield      #12                 // Field parent:Lorg/apache/dubbo/common/extension/ExtensionDirector;
+      57: aload_0
+      58: aload_2
+      59: putfield      #13                 // Field scope:Lorg/apache/dubbo/common/extension/ExtensionScope;
+      62: aload_0
+      63: aload_3
+      64: putfield      #14                 // Field scopeModel:Lorg/apache/dubbo/rpc/model/ScopeModel;
+      67: return
+
+  public void addExtensionPostProcessor(org.apache.dubbo.common.extension.ExtensionPostProcessor);
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field extensionPostProcessors:Ljava/util/List;
+       4: aload_1
+       5: invokeinterface #15,  2           // InterfaceMethod java/util/List.contains:(Ljava/lang/Object;)Z
+      10: ifne          24
+      13: aload_0
+      14: getfield      #8                  // Field extensionPostProcessors:Ljava/util/List;
+      17: aload_1
+      18: invokeinterface #16,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      23: pop
+      24: return
+
+  public java.util.List<org.apache.dubbo.common.extension.ExtensionPostProcessor> getExtensionPostProcessors();
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field extensionPostProcessors:Ljava/util/List;
+       4: areturn
+
+  public org.apache.dubbo.common.extension.ExtensionDirector getExtensionDirector();
+    Code:
+       0: aload_0
+       1: areturn
+
+  public <T> org.apache.dubbo.common.extension.ExtensionLoader<T> getExtensionLoader(java.lang.Class<T>);
+    Code:
+       0: aload_0
+       1: invokespecial #17                 // Method checkDestroyed:()V
+       4: aload_1
+       5: ifnonnull     18
+       8: new           #18                 // class java/lang/IllegalArgumentException
+      11: dup
+      12: ldc           #19                 // String Extension type == null
+      14: invokespecial #20                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      17: athrow
+      18: aload_1
+      19: invokevirtual #21                 // Method java/lang/Class.isInterface:()Z
+      22: ifne          57
+      25: new           #18                 // class java/lang/IllegalArgumentException
+      28: dup
+      29: new           #22                 // class java/lang/StringBuilder
+      32: dup
+      33: invokespecial #23                 // Method java/lang/StringBuilder."<init>":()V
+      36: ldc           #24                 // String Extension type (
+      38: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      41: aload_1
+      42: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      45: ldc           #27                 // String ) is not an interface!
+      47: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      50: invokevirtual #28                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      53: invokespecial #20                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      56: athrow
+      57: aload_1
+      58: invokestatic  #29                 // Method withExtensionAnnotation:(Ljava/lang/Class;)Z
+      61: ifne          109
+      64: new           #18                 // class java/lang/IllegalArgumentException
+      67: dup
+      68: new           #22                 // class java/lang/StringBuilder
+      71: dup
+      72: invokespecial #23                 // Method java/lang/StringBuilder."<init>":()V
+      75: ldc           #24                 // String Extension type (
+      77: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      80: aload_1
+      81: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      84: ldc           #30                 // String ) is not an extension, because it is NOT annotated with @
+      86: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      89: ldc           #31                 // class org/apache/dubbo/common/extension/SPI
+      91: invokevirtual #32                 // Method java/lang/Class.getSimpleName:()Ljava/lang/String;
+      94: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      97: ldc           #33                 // String !
+      99: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     102: invokevirtual #28                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     105: invokespecial #20                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     108: athrow
+     109: aload_0
+     110: getfield      #4                  // Field extensionLoadersMap:Ljava/util/concurrent/ConcurrentMap;
+     113: aload_1
+     114: invokeinterface #34,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     119: checkcast     #35                 // class org/apache/dubbo/common/extension/ExtensionLoader
+     122: astore_2
+     123: aload_0
+     124: getfield      #5                  // Field extensionScopeMap:Ljava/util/concurrent/ConcurrentMap;
+     127: aload_1
+     128: invokeinterface #34,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     133: checkcast     #36                 // class org/apache/dubbo/common/extension/ExtensionScope
+     136: astore_3
+     137: aload_3
+     138: ifnonnull     172
+     141: aload_1
+     142: ldc           #31                 // class org/apache/dubbo/common/extension/SPI
+     144: invokevirtual #37                 // Method java/lang/Class.getAnnotation:(Ljava/lang/Class;)Ljava/lang/annotation/Annotation;
+     147: checkcast     #31                 // class org/apache/dubbo/common/extension/SPI
+     150: astore        4
+     152: aload         4
+     154: invokeinterface #38,  1           // InterfaceMethod org/apache/dubbo/common/extension/SPI.scope:()Lorg/apache/dubbo/common/extension/ExtensionScope;
+     159: astore_3
+     160: aload_0
+     161: getfield      #5                  // Field extensionScopeMap:Ljava/util/concurrent/ConcurrentMap;
+     164: aload_1
+     165: aload_3
+     166: invokeinterface #39,  3           // InterfaceMethod java/util/concurrent/ConcurrentMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     171: pop
+     172: aload_2
+     173: ifnonnull     189
+     176: aload_3
+     177: getstatic     #40                 // Field org/apache/dubbo/common/extension/ExtensionScope.SELF:Lorg/apache/dubbo/common/extension/ExtensionScope;
+     180: if_acmpne     189
+     183: aload_0
+     184: aload_1
+     185: invokespecial #41                 // Method createExtensionLoader0:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+     188: astore_2
+     189: aload_2
+     190: ifnonnull     209
+     193: aload_0
+     194: getfield      #12                 // Field parent:Lorg/apache/dubbo/common/extension/ExtensionDirector;
+     197: ifnull        209
+     200: aload_0
+     201: getfield      #12                 // Field parent:Lorg/apache/dubbo/common/extension/ExtensionDirector;
+     204: aload_1
+     205: invokevirtual #42                 // Method getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+     208: astore_2
+     209: aload_2
+     210: ifnonnull     219
+     213: aload_0
+     214: aload_1
+     215: invokespecial #43                 // Method createExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+     218: astore_2
+     219: aload_2
+     220: areturn
+
+  private <T> org.apache.dubbo.common.extension.ExtensionLoader<T> createExtensionLoader(java.lang.Class<T>);
+    Code:
+       0: aconst_null
+       1: astore_2
+       2: aload_0
+       3: aload_1
+       4: invokespecial #44                 // Method isScopeMatched:(Ljava/lang/Class;)Z
+       7: ifeq          16
+      10: aload_0
+      11: aload_1
+      12: invokespecial #41                 // Method createExtensionLoader0:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      15: astore_2
+      16: aload_2
+      17: areturn
+
+  private <T> org.apache.dubbo.common.extension.ExtensionLoader<T> createExtensionLoader0(java.lang.Class<T>);
+    Code:
+       0: aload_0
+       1: invokespecial #17                 // Method checkDestroyed:()V
+       4: aload_0
+       5: getfield      #4                  // Field extensionLoadersMap:Ljava/util/concurrent/ConcurrentMap;
+       8: aload_1
+       9: new           #35                 // class org/apache/dubbo/common/extension/ExtensionLoader
+      12: dup
+      13: aload_1
+      14: aload_0
+      15: aload_0
+      16: getfield      #14                 // Field scopeModel:Lorg/apache/dubbo/rpc/model/ScopeModel;
+      19: invokespecial #45                 // Method org/apache/dubbo/common/extension/ExtensionLoader."<init>":(Ljava/lang/Class;Lorg/apache/dubbo/common/extension/ExtensionDirector;Lorg/apache/dubbo/rpc/model/ScopeModel;)V
+      22: invokeinterface #46,  3           // InterfaceMethod java/util/concurrent/ConcurrentMap.putIfAbsent:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      27: pop
+      28: aload_0
+      29: getfield      #4                  // Field extensionLoadersMap:Ljava/util/concurrent/ConcurrentMap;
+      32: aload_1
+      33: invokeinterface #34,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      38: checkcast     #35                 // class org/apache/dubbo/common/extension/ExtensionLoader
+      41: astore_2
+      42: aload_2
+      43: areturn
+
+  private boolean isScopeMatched(java.lang.Class<?>);
+    Code:
+       0: aload_1
+       1: ldc           #31                 // class org/apache/dubbo/common/extension/SPI
+       3: invokevirtual #37                 // Method java/lang/Class.getAnnotation:(Ljava/lang/Class;)Ljava/lang/annotation/Annotation;
+       6: checkcast     #31                 // class org/apache/dubbo/common/extension/SPI
+       9: astore_2
+      10: aload_2
+      11: invokeinterface #38,  1           // InterfaceMethod org/apache/dubbo/common/extension/SPI.scope:()Lorg/apache/dubbo/common/extension/ExtensionScope;
+      16: aload_0
+      17: getfield      #13                 // Field scope:Lorg/apache/dubbo/common/extension/ExtensionScope;
+      20: invokevirtual #47                 // Method org/apache/dubbo/common/extension/ExtensionScope.equals:(Ljava/lang/Object;)Z
+      23: ireturn
+
+  private static boolean withExtensionAnnotation(java.lang.Class<?>);
+    Code:
+       0: aload_0
+       1: ldc           #31                 // class org/apache/dubbo/common/extension/SPI
+       3: invokevirtual #48                 // Method java/lang/Class.isAnnotationPresent:(Ljava/lang/Class;)Z
+       6: ireturn
+
+  public org.apache.dubbo.common.extension.ExtensionDirector getParent();
+    Code:
+       0: aload_0
+       1: getfield      #12                 // Field parent:Lorg/apache/dubbo/common/extension/ExtensionDirector;
+       4: areturn
+
+  public void removeAllCachedLoader();
+    Code:
+       0: return
+
+  public void destroy();
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field destroyed:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: iconst_0
+       5: iconst_1
+       6: invokevirtual #49                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+       9: ifeq          80
+      12: aload_0
+      13: getfield      #4                  // Field extensionLoadersMap:Ljava/util/concurrent/ConcurrentMap;
+      16: invokeinterface #50,  1           // InterfaceMethod java/util/concurrent/ConcurrentMap.values:()Ljava/util/Collection;
+      21: invokeinterface #51,  1           // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+      26: astore_1
+      27: aload_1
+      28: invokeinterface #52,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      33: ifeq          53
+      36: aload_1
+      37: invokeinterface #53,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      42: checkcast     #35                 // class org/apache/dubbo/common/extension/ExtensionLoader
+      45: astore_2
+      46: aload_2
+      47: invokevirtual #54                 // Method org/apache/dubbo/common/extension/ExtensionLoader.destroy:()V
+      50: goto          27
+      53: aload_0
+      54: getfield      #4                  // Field extensionLoadersMap:Ljava/util/concurrent/ConcurrentMap;
+      57: invokeinterface #55,  1           // InterfaceMethod java/util/concurrent/ConcurrentMap.clear:()V
+      62: aload_0
+      63: getfield      #5                  // Field extensionScopeMap:Ljava/util/concurrent/ConcurrentMap;
+      66: invokeinterface #55,  1           // InterfaceMethod java/util/concurrent/ConcurrentMap.clear:()V
+      71: aload_0
+      72: getfield      #8                  // Field extensionPostProcessors:Ljava/util/List;
+      75: invokeinterface #56,  1           // InterfaceMethod java/util/List.clear:()V
+      80: return
+
+  private void checkDestroyed();
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field destroyed:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: invokevirtual #57                 // Method java/util/concurrent/atomic/AtomicBoolean.get:()Z
+       7: ifeq          20
+      10: new           #58                 // class java/lang/IllegalStateException
+      13: dup
+      14: ldc           #59                 // String ExtensionDirector is destroyed
+      16: invokespecial #60                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      19: athrow
+      20: return
+}

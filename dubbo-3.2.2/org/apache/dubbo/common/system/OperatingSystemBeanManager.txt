@@ -1,0 +1,123 @@
+Compiled from "OperatingSystemBeanManager.java"
+public class org.apache.dubbo.common.system.OperatingSystemBeanManager {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger LOGGER;
+
+  private static final java.util.List<java.lang.String> OPERATING_SYSTEM_BEAN_CLASS_NAMES;
+
+  private static final java.lang.management.OperatingSystemMXBean OPERATING_SYSTEM_BEAN;
+
+  private static final java.lang.Class<?> OPERATING_SYSTEM_BEAN_CLASS;
+
+  private static final java.lang.reflect.Method SYSTEM_CPU_USAGE_METHOD;
+
+  private static final java.lang.reflect.Method PROCESS_CPU_USAGE_METHOD;
+
+  private org.apache.dubbo.common.system.OperatingSystemBeanManager();
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static java.lang.management.OperatingSystemMXBean getOperatingSystemBean();
+    Code:
+       0: getstatic     #3                  // Field OPERATING_SYSTEM_BEAN:Ljava/lang/management/OperatingSystemMXBean;
+       3: areturn
+
+  public static double getSystemCpuUsage();
+    Code:
+       0: getstatic     #4                  // Field SYSTEM_CPU_USAGE_METHOD:Ljava/lang/reflect/Method;
+       3: getstatic     #3                  // Field OPERATING_SYSTEM_BEAN:Ljava/lang/management/OperatingSystemMXBean;
+       6: invokestatic  #5                  // InterfaceMethod org/apache/dubbo/common/utils/MethodUtils.invokeAndReturnDouble:(Ljava/lang/reflect/Method;Ljava/lang/Object;)D
+       9: dreturn
+
+  public static double getProcessCpuUsage();
+    Code:
+       0: getstatic     #6                  // Field PROCESS_CPU_USAGE_METHOD:Ljava/lang/reflect/Method;
+       3: getstatic     #3                  // Field OPERATING_SYSTEM_BEAN:Ljava/lang/management/OperatingSystemMXBean;
+       6: invokestatic  #5                  // InterfaceMethod org/apache/dubbo/common/utils/MethodUtils.invokeAndReturnDouble:(Ljava/lang/reflect/Method;Ljava/lang/Object;)D
+       9: dreturn
+
+  private static java.lang.Class<?> loadOne(java.util.List<java.lang.String>);
+    Code:
+       0: aload_0
+       1: invokeinterface #7,  1            // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       6: astore_1
+       7: aload_1
+       8: invokeinterface #8,  1            // InterfaceMethod java/util/Iterator.hasNext:()Z
+      13: ifeq          52
+      16: aload_1
+      17: invokeinterface #9,  1            // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      22: checkcast     #10                 // class java/lang/String
+      25: astore_2
+      26: aload_2
+      27: invokestatic  #11                 // Method java/lang/Class.forName:(Ljava/lang/String;)Ljava/lang/Class;
+      30: areturn
+      31: astore_3
+      32: getstatic     #13                 // Field LOGGER:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      35: ldc           #14                 // String 0-7
+      37: ldc           #15                 // String
+      39: ldc           #15                 // String
+      41: ldc           #16                 // String [OperatingSystemBeanManager] Failed to load operating system bean class.
+      43: aload_3
+      44: invokeinterface #17,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      49: goto          7
+      52: aconst_null
+      53: areturn
+    Exception table:
+       from    to  target type
+          26    30    31   Class java/lang/ClassNotFoundException
+
+  private static java.lang.reflect.Method deduceMethod(java.lang.String);
+    Code:
+       0: getstatic     #18                 // Field OPERATING_SYSTEM_BEAN_CLASS:Ljava/lang/Class;
+       3: invokestatic  #19                 // Method java/util/Objects.isNull:(Ljava/lang/Object;)Z
+       6: ifeq          11
+       9: aconst_null
+      10: areturn
+      11: getstatic     #18                 // Field OPERATING_SYSTEM_BEAN_CLASS:Ljava/lang/Class;
+      14: getstatic     #3                  // Field OPERATING_SYSTEM_BEAN:Ljava/lang/management/OperatingSystemMXBean;
+      17: invokevirtual #20                 // Method java/lang/Class.cast:(Ljava/lang/Object;)Ljava/lang/Object;
+      20: pop
+      21: getstatic     #18                 // Field OPERATING_SYSTEM_BEAN_CLASS:Ljava/lang/Class;
+      24: aload_0
+      25: iconst_0
+      26: anewarray     #21                 // class java/lang/Class
+      29: invokevirtual #22                 // Method java/lang/Class.getDeclaredMethod:(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+      32: areturn
+      33: astore_1
+      34: aconst_null
+      35: areturn
+    Exception table:
+       from    to  target type
+          11    32    33   Class java/lang/Exception
+
+  static {};
+    Code:
+       0: ldc           #24                 // class org/apache/dubbo/common/system/OperatingSystemBeanManager
+       2: invokestatic  #25                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #13                 // Field LOGGER:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: iconst_2
+       9: anewarray     #10                 // class java/lang/String
+      12: dup
+      13: iconst_0
+      14: ldc           #26                 // String com.sun.management.OperatingSystemMXBean
+      16: aastore
+      17: dup
+      18: iconst_1
+      19: ldc           #27                 // String com.ibm.lang.management.OperatingSystemMXBean
+      21: aastore
+      22: invokestatic  #28                 // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+      25: putstatic     #29                 // Field OPERATING_SYSTEM_BEAN_CLASS_NAMES:Ljava/util/List;
+      28: invokestatic  #30                 // Method java/lang/management/ManagementFactory.getOperatingSystemMXBean:()Ljava/lang/management/OperatingSystemMXBean;
+      31: putstatic     #3                  // Field OPERATING_SYSTEM_BEAN:Ljava/lang/management/OperatingSystemMXBean;
+      34: getstatic     #29                 // Field OPERATING_SYSTEM_BEAN_CLASS_NAMES:Ljava/util/List;
+      37: invokestatic  #31                 // Method loadOne:(Ljava/util/List;)Ljava/lang/Class;
+      40: putstatic     #18                 // Field OPERATING_SYSTEM_BEAN_CLASS:Ljava/lang/Class;
+      43: ldc           #32                 // String getSystemCpuLoad
+      45: invokestatic  #33                 // Method deduceMethod:(Ljava/lang/String;)Ljava/lang/reflect/Method;
+      48: putstatic     #4                  // Field SYSTEM_CPU_USAGE_METHOD:Ljava/lang/reflect/Method;
+      51: ldc           #34                 // String getProcessCpuLoad
+      53: invokestatic  #33                 // Method deduceMethod:(Ljava/lang/String;)Ljava/lang/reflect/Method;
+      56: putstatic     #6                  // Field PROCESS_CPU_USAGE_METHOD:Ljava/lang/reflect/Method;
+      59: return
+}

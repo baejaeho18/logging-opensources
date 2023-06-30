@@ -1,0 +1,76 @@
+Compiled from "CompactedObjectInputStream.java"
+public class org.apache.dubbo.common.serialize.java.CompactedObjectInputStream extends java.io.ObjectInputStream {
+  private java.lang.ClassLoader mClassLoader;
+
+  public org.apache.dubbo.common.serialize.java.CompactedObjectInputStream(java.io.InputStream) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #1                  // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+       5: invokevirtual #2                  // Method java/lang/Thread.getContextClassLoader:()Ljava/lang/ClassLoader;
+       8: invokespecial #3                  // Method "<init>":(Ljava/io/InputStream;Ljava/lang/ClassLoader;)V
+      11: return
+
+  public org.apache.dubbo.common.serialize.java.CompactedObjectInputStream(java.io.InputStream, java.lang.ClassLoader) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #4                  // Method java/io/ObjectInputStream."<init>":(Ljava/io/InputStream;)V
+       5: aload_0
+       6: aload_2
+       7: ifnonnull     16
+      10: invokestatic  #5                  // Method org/apache/dubbo/common/utils/ClassUtils.getClassLoader:()Ljava/lang/ClassLoader;
+      13: goto          17
+      16: aload_2
+      17: putfield      #6                  // Field mClassLoader:Ljava/lang/ClassLoader;
+      20: return
+
+  protected java.io.ObjectStreamClass readClassDescriptor() throws java.io.IOException, java.lang.ClassNotFoundException;
+    Code:
+       0: aload_0
+       1: invokevirtual #7                  // Method read:()I
+       4: istore_1
+       5: iload_1
+       6: ifge          17
+       9: new           #8                  // class java/io/EOFException
+      12: dup
+      13: invokespecial #9                  // Method java/io/EOFException."<init>":()V
+      16: athrow
+      17: iload_1
+      18: lookupswitch  { // 2
+                     0: 44
+                     1: 49
+               default: 63
+          }
+      44: aload_0
+      45: invokespecial #10                 // Method java/io/ObjectInputStream.readClassDescriptor:()Ljava/io/ObjectStreamClass;
+      48: areturn
+      49: aload_0
+      50: aload_0
+      51: invokevirtual #11                 // Method readUTF:()Ljava/lang/String;
+      54: invokespecial #12                 // Method loadClass:(Ljava/lang/String;)Ljava/lang/Class;
+      57: astore_2
+      58: aload_2
+      59: invokestatic  #13                 // Method java/io/ObjectStreamClass.lookup:(Ljava/lang/Class;)Ljava/io/ObjectStreamClass;
+      62: areturn
+      63: new           #14                 // class java/io/StreamCorruptedException
+      66: dup
+      67: new           #15                 // class java/lang/StringBuilder
+      70: dup
+      71: invokespecial #16                 // Method java/lang/StringBuilder."<init>":()V
+      74: ldc           #17                 // String Unexpected class descriptor type:
+      76: invokevirtual #18                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      79: iload_1
+      80: invokevirtual #19                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      83: invokevirtual #20                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      86: invokespecial #21                 // Method java/io/StreamCorruptedException."<init>":(Ljava/lang/String;)V
+      89: athrow
+
+  private java.lang.Class<?> loadClass(java.lang.String) throws java.lang.ClassNotFoundException;
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field mClassLoader:Ljava/lang/ClassLoader;
+       4: aload_1
+       5: invokevirtual #22                 // Method java/lang/ClassLoader.loadClass:(Ljava/lang/String;)Ljava/lang/Class;
+       8: areturn
+}

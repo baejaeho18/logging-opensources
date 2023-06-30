@@ -1,0 +1,235 @@
+Compiled from "FrameworkStatusReportService.java"
+public class org.apache.dubbo.common.status.reporter.FrameworkStatusReportService implements org.apache.dubbo.rpc.model.ScopeModelAware {
+  private static final org.apache.dubbo.common.logger.Logger logger;
+
+  public static final java.lang.String REGISTRATION_STATUS;
+
+  public static final java.lang.String ADDRESS_CONSUMPTION_STATUS;
+
+  public static final java.lang.String MIGRATION_STEP_STATUS;
+
+  private org.apache.dubbo.rpc.model.ApplicationModel applicationModel;
+
+  private java.util.Set<org.apache.dubbo.common.status.reporter.FrameworkStatusReporter> reporters;
+
+  public org.apache.dubbo.common.status.reporter.FrameworkStatusReportService();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public void setApplicationModel(org.apache.dubbo.rpc.model.ApplicationModel);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #2                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       5: aload_0
+       6: aload_1
+       7: ldc           #3                  // class org/apache/dubbo/common/status/reporter/FrameworkStatusReporter
+       9: invokevirtual #4                  // Method org/apache/dubbo/rpc/model/ApplicationModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      12: invokevirtual #5                  // Method org/apache/dubbo/common/extension/ExtensionLoader.getSupportedExtensionInstances:()Ljava/util/Set;
+      15: putfield      #6                  // Field reporters:Ljava/util/Set;
+      18: return
+
+  public void reportRegistrationStatus(java.lang.Object);
+    Code:
+       0: aload_0
+       1: ldc           #8                  // String registration
+       3: aload_1
+       4: invokespecial #9                  // Method doReport:(Ljava/lang/String;Ljava/lang/Object;)V
+       7: return
+
+  public void reportConsumptionStatus(java.lang.Object);
+    Code:
+       0: aload_0
+       1: ldc           #10                 // String consumption
+       3: aload_1
+       4: invokespecial #9                  // Method doReport:(Ljava/lang/String;Ljava/lang/Object;)V
+       7: return
+
+  public void reportMigrationStepStatus(java.lang.Object);
+    Code:
+       0: aload_0
+       1: ldc           #11                 // String migrationStepStatus
+       3: aload_1
+       4: invokespecial #9                  // Method doReport:(Ljava/lang/String;Ljava/lang/Object;)V
+       7: return
+
+  public boolean hasReporter();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field reporters:Ljava/util/Set;
+       4: invokeinterface #12,  1           // InterfaceMethod java/util/Set.size:()I
+       9: ifle          16
+      12: iconst_1
+      13: goto          17
+      16: iconst_0
+      17: ireturn
+
+  private void doReport(java.lang.String, java.lang.Object);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field reporters:Ljava/util/Set;
+       4: invokestatic  #13                 // Method org/apache/dubbo/common/utils/CollectionUtils.isNotEmpty:(Ljava/util/Collection;)Z
+       7: ifeq          52
+      10: aload_0
+      11: getfield      #6                  // Field reporters:Ljava/util/Set;
+      14: invokeinterface #14,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      19: astore_3
+      20: aload_3
+      21: invokeinterface #15,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      26: ifeq          52
+      29: aload_3
+      30: invokeinterface #16,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      35: checkcast     #3                  // class org/apache/dubbo/common/status/reporter/FrameworkStatusReporter
+      38: astore        4
+      40: aload         4
+      42: aload_1
+      43: aload_2
+      44: invokeinterface #17,  3           // InterfaceMethod org/apache/dubbo/common/status/reporter/FrameworkStatusReporter.report:(Ljava/lang/String;Ljava/lang/Object;)V
+      49: goto          20
+      52: goto          95
+      55: astore_3
+      56: getstatic     #19                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+      59: new           #20                 // class java/lang/StringBuilder
+      62: dup
+      63: invokespecial #21                 // Method java/lang/StringBuilder."<init>":()V
+      66: ldc           #22                 // String Report
+      68: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      71: aload_1
+      72: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      75: ldc           #24                 // String  status failed because of
+      77: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      80: aload_3
+      81: invokevirtual #25                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      84: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      87: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      90: invokeinterface #27,  2           // InterfaceMethod org/apache/dubbo/common/logger/Logger.info:(Ljava/lang/String;)V
+      95: return
+    Exception table:
+       from    to  target type
+           0    52    55   Class java/lang/Exception
+
+  public java.lang.String createRegistrationReport(java.lang.String);
+    Code:
+       0: new           #28                 // class java/util/HashMap
+       3: dup
+       4: invokespecial #29                 // Method java/util/HashMap."<init>":()V
+       7: astore_2
+       8: aload_2
+       9: ldc           #30                 // String application
+      11: aload_0
+      12: getfield      #2                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      15: invokevirtual #31                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getApplicationName:()Ljava/lang/String;
+      18: invokevirtual #32                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      21: pop
+      22: aload_2
+      23: ldc           #33                 // String status
+      25: aload_1
+      26: invokevirtual #32                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      29: pop
+      30: aload_2
+      31: invokestatic  #34                 // Method org/apache/dubbo/common/utils/JsonUtils.toJson:(Ljava/lang/Object;)Ljava/lang/String;
+      34: areturn
+
+  public java.lang.String createConsumptionReport(java.lang.String, java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: new           #28                 // class java/util/HashMap
+       3: dup
+       4: invokespecial #29                 // Method java/util/HashMap."<init>":()V
+       7: astore        5
+       9: aload         5
+      11: ldc           #35                 // String type
+      13: ldc           #10                 // String consumption
+      15: invokevirtual #32                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      18: pop
+      19: aload         5
+      21: ldc           #30                 // String application
+      23: aload_0
+      24: getfield      #2                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      27: invokevirtual #31                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getApplicationName:()Ljava/lang/String;
+      30: invokevirtual #32                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      33: pop
+      34: aload         5
+      36: ldc           #36                 // String service
+      38: aload_1
+      39: invokevirtual #32                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      42: pop
+      43: aload         5
+      45: ldc           #37                 // String version
+      47: aload_2
+      48: invokevirtual #32                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      51: pop
+      52: aload         5
+      54: ldc           #38                 // String group
+      56: aload_3
+      57: invokevirtual #32                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      60: pop
+      61: aload         5
+      63: ldc           #33                 // String status
+      65: aload         4
+      67: invokevirtual #32                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      70: pop
+      71: aload         5
+      73: invokestatic  #34                 // Method org/apache/dubbo/common/utils/JsonUtils.toJson:(Ljava/lang/Object;)Ljava/lang/String;
+      76: areturn
+
+  public java.lang.String createMigrationStepReport(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: new           #28                 // class java/util/HashMap
+       3: dup
+       4: invokespecial #29                 // Method java/util/HashMap."<init>":()V
+       7: astore        7
+       9: aload         7
+      11: ldc           #35                 // String type
+      13: ldc           #11                 // String migrationStepStatus
+      15: invokevirtual #32                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      18: pop
+      19: aload         7
+      21: ldc           #30                 // String application
+      23: aload_0
+      24: getfield      #2                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      27: invokevirtual #31                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getApplicationName:()Ljava/lang/String;
+      30: invokevirtual #32                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      33: pop
+      34: aload         7
+      36: ldc           #36                 // String service
+      38: aload_1
+      39: invokevirtual #32                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      42: pop
+      43: aload         7
+      45: ldc           #37                 // String version
+      47: aload_2
+      48: invokevirtual #32                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      51: pop
+      52: aload         7
+      54: ldc           #38                 // String group
+      56: aload_3
+      57: invokevirtual #32                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      60: pop
+      61: aload         7
+      63: ldc           #39                 // String originStep
+      65: aload         4
+      67: invokevirtual #32                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      70: pop
+      71: aload         7
+      73: ldc           #40                 // String newStep
+      75: aload         5
+      77: invokevirtual #32                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      80: pop
+      81: aload         7
+      83: ldc           #41                 // String success
+      85: aload         6
+      87: invokevirtual #32                 // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      90: pop
+      91: aload         7
+      93: invokestatic  #34                 // Method org/apache/dubbo/common/utils/JsonUtils.toJson:(Ljava/lang/Object;)Ljava/lang/String;
+      96: areturn
+
+  static {};
+    Code:
+       0: ldc           #3                  // class org/apache/dubbo/common/status/reporter/FrameworkStatusReporter
+       2: invokestatic  #42                 // Method org/apache/dubbo/common/logger/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/Logger;
+       5: putstatic     #19                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+       8: return
+}

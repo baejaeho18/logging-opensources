@@ -1,0 +1,252 @@
+Compiled from "JdkCompiler.java"
+public class org.apache.dubbo.common.compiler.support.JdkCompiler extends org.apache.dubbo.common.compiler.support.AbstractCompiler {
+  private final javax.tools.JavaCompiler compiler;
+
+  private final javax.tools.DiagnosticCollector<javax.tools.JavaFileObject> diagnosticCollector;
+
+  private final org.apache.dubbo.common.compiler.support.JdkCompiler$ClassLoaderImpl classLoader;
+
+  private final org.apache.dubbo.common.compiler.support.JdkCompiler$JavaFileManagerImpl javaFileManager;
+
+  private final java.util.List<java.lang.String> options;
+
+  private static final java.lang.String DEFAULT_JAVA_VERSION;
+
+  private static java.util.List<java.lang.String> buildDefaultOptions(java.lang.String);
+    Code:
+       0: iconst_4
+       1: anewarray     #1                  // class java/lang/String
+       4: dup
+       5: iconst_0
+       6: ldc           #2                  // String -source
+       8: aastore
+       9: dup
+      10: iconst_1
+      11: aload_0
+      12: aastore
+      13: dup
+      14: iconst_2
+      15: ldc           #3                  // String -target
+      17: aastore
+      18: dup
+      19: iconst_3
+      20: aload_0
+      21: aastore
+      22: invokestatic  #4                  // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+      25: areturn
+
+  private static java.util.List<java.lang.String> buildDefaultOptions();
+    Code:
+       0: ldc           #6                  // String 1.8
+       2: invokestatic  #7                  // Method buildDefaultOptions:(Ljava/lang/String;)Ljava/util/List;
+       5: areturn
+
+  public org.apache.dubbo.common.compiler.support.JdkCompiler(java.util.List<java.lang.String>);
+    Code:
+       0: aload_0
+       1: invokespecial #8                  // Method org/apache/dubbo/common/compiler/support/AbstractCompiler."<init>":()V
+       4: aload_0
+       5: invokestatic  #9                  // Method javax/tools/ToolProvider.getSystemJavaCompiler:()Ljavax/tools/JavaCompiler;
+       8: putfield      #10                 // Field compiler:Ljavax/tools/JavaCompiler;
+      11: aload_0
+      12: new           #11                 // class javax/tools/DiagnosticCollector
+      15: dup
+      16: invokespecial #12                 // Method javax/tools/DiagnosticCollector."<init>":()V
+      19: putfield      #13                 // Field diagnosticCollector:Ljavax/tools/DiagnosticCollector;
+      22: aload_0
+      23: new           #14                 // class java/util/ArrayList
+      26: dup
+      27: aload_1
+      28: invokespecial #15                 // Method java/util/ArrayList."<init>":(Ljava/util/Collection;)V
+      31: putfield      #16                 // Field options:Ljava/util/List;
+      34: aload_0
+      35: getfield      #10                 // Field compiler:Ljavax/tools/JavaCompiler;
+      38: aload_0
+      39: getfield      #13                 // Field diagnosticCollector:Ljavax/tools/DiagnosticCollector;
+      42: aconst_null
+      43: aconst_null
+      44: invokeinterface #17,  4           // InterfaceMethod javax/tools/JavaCompiler.getStandardFileManager:(Ljavax/tools/DiagnosticListener;Ljava/util/Locale;Ljava/nio/charset/Charset;)Ljavax/tools/StandardJavaFileManager;
+      49: astore_2
+      50: invokestatic  #18                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+      53: invokevirtual #19                 // Method java/lang/Thread.getContextClassLoader:()Ljava/lang/ClassLoader;
+      56: astore_3
+      57: aload_3
+      58: instanceof    #20                 // class java/net/URLClassLoader
+      61: ifeq          180
+      64: ldc           #21                 // String sun.misc.Launcher$AppClassLoader
+      66: aload_3
+      67: invokevirtual #22                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      70: invokevirtual #23                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      73: invokevirtual #24                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      76: ifne          180
+      79: aload_3
+      80: checkcast     #20                 // class java/net/URLClassLoader
+      83: astore        4
+      85: new           #14                 // class java/util/ArrayList
+      88: dup
+      89: invokespecial #25                 // Method java/util/ArrayList."<init>":()V
+      92: astore        5
+      94: aload         4
+      96: invokevirtual #26                 // Method java/net/URLClassLoader.getURLs:()[Ljava/net/URL;
+      99: astore        6
+     101: aload         6
+     103: arraylength
+     104: istore        7
+     106: iconst_0
+     107: istore        8
+     109: iload         8
+     111: iload         7
+     113: if_icmpge     149
+     116: aload         6
+     118: iload         8
+     120: aaload
+     121: astore        9
+     123: aload         5
+     125: new           #27                 // class java/io/File
+     128: dup
+     129: aload         9
+     131: invokevirtual #28                 // Method java/net/URL.getFile:()Ljava/lang/String;
+     134: invokespecial #29                 // Method java/io/File."<init>":(Ljava/lang/String;)V
+     137: invokeinterface #30,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     142: pop
+     143: iinc          8, 1
+     146: goto          109
+     149: aload_2
+     150: getstatic     #31                 // Field javax/tools/StandardLocation.CLASS_PATH:Ljavax/tools/StandardLocation;
+     153: aload         5
+     155: invokeinterface #32,  3           // InterfaceMethod javax/tools/StandardJavaFileManager.setLocation:(Ljavax/tools/JavaFileManager$Location;Ljava/lang/Iterable;)V
+     160: goto          180
+     163: astore        4
+     165: new           #34                 // class java/lang/IllegalStateException
+     168: dup
+     169: aload         4
+     171: invokevirtual #35                 // Method java/io/IOException.getMessage:()Ljava/lang/String;
+     174: aload         4
+     176: invokespecial #36                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     179: athrow
+     180: aload_0
+     181: new           #37                 // class org/apache/dubbo/common/compiler/support/JdkCompiler$1
+     184: dup
+     185: aload_0
+     186: aload_3
+     187: invokespecial #38                 // Method org/apache/dubbo/common/compiler/support/JdkCompiler$1."<init>":(Lorg/apache/dubbo/common/compiler/support/JdkCompiler;Ljava/lang/ClassLoader;)V
+     190: invokestatic  #39                 // Method java/security/AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;
+     193: checkcast     #40                 // class org/apache/dubbo/common/compiler/support/JdkCompiler$ClassLoaderImpl
+     196: putfield      #41                 // Field classLoader:Lorg/apache/dubbo/common/compiler/support/JdkCompiler$ClassLoaderImpl;
+     199: aload_0
+     200: new           #42                 // class org/apache/dubbo/common/compiler/support/JdkCompiler$JavaFileManagerImpl
+     203: dup
+     204: aload_2
+     205: aload_0
+     206: getfield      #41                 // Field classLoader:Lorg/apache/dubbo/common/compiler/support/JdkCompiler$ClassLoaderImpl;
+     209: invokespecial #43                 // Method org/apache/dubbo/common/compiler/support/JdkCompiler$JavaFileManagerImpl."<init>":(Ljavax/tools/JavaFileManager;Lorg/apache/dubbo/common/compiler/support/JdkCompiler$ClassLoaderImpl;)V
+     212: putfield      #44                 // Field javaFileManager:Lorg/apache/dubbo/common/compiler/support/JdkCompiler$JavaFileManagerImpl;
+     215: return
+    Exception table:
+       from    to  target type
+          79   160   163   Class java/io/IOException
+
+  public org.apache.dubbo.common.compiler.support.JdkCompiler();
+    Code:
+       0: aload_0
+       1: invokestatic  #45                 // Method buildDefaultOptions:()Ljava/util/List;
+       4: invokespecial #46                 // Method "<init>":(Ljava/util/List;)V
+       7: return
+
+  public org.apache.dubbo.common.compiler.support.JdkCompiler(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #7                  // Method buildDefaultOptions:(Ljava/lang/String;)Ljava/util/List;
+       5: invokespecial #46                 // Method "<init>":(Ljava/util/List;)V
+       8: return
+
+  public java.lang.Class<?> doCompile(java.lang.ClassLoader, java.lang.String, java.lang.String) throws java.lang.Throwable;
+    Code:
+       0: aload_2
+       1: bipush        46
+       3: invokevirtual #47                 // Method java/lang/String.lastIndexOf:(I)I
+       6: istore        4
+       8: iload         4
+      10: ifge          18
+      13: ldc           #48                 // String
+      15: goto          25
+      18: aload_2
+      19: iconst_0
+      20: iload         4
+      22: invokevirtual #49                 // Method java/lang/String.substring:(II)Ljava/lang/String;
+      25: astore        5
+      27: iload         4
+      29: ifge          36
+      32: aload_2
+      33: goto          44
+      36: aload_2
+      37: iload         4
+      39: iconst_1
+      40: iadd
+      41: invokevirtual #50                 // Method java/lang/String.substring:(I)Ljava/lang/String;
+      44: astore        6
+      46: new           #51                 // class org/apache/dubbo/common/compiler/support/JdkCompiler$JavaFileObjectImpl
+      49: dup
+      50: aload         6
+      52: aload_3
+      53: invokespecial #52                 // Method org/apache/dubbo/common/compiler/support/JdkCompiler$JavaFileObjectImpl."<init>":(Ljava/lang/String;Ljava/lang/CharSequence;)V
+      56: astore        7
+      58: aload_0
+      59: getfield      #44                 // Field javaFileManager:Lorg/apache/dubbo/common/compiler/support/JdkCompiler$JavaFileManagerImpl;
+      62: getstatic     #53                 // Field javax/tools/StandardLocation.SOURCE_PATH:Ljavax/tools/StandardLocation;
+      65: aload         5
+      67: new           #54                 // class java/lang/StringBuilder
+      70: dup
+      71: invokespecial #55                 // Method java/lang/StringBuilder."<init>":()V
+      74: aload         6
+      76: invokevirtual #56                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      79: ldc           #58                 // String .java
+      81: invokevirtual #56                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      84: invokevirtual #59                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      87: aload         7
+      89: invokevirtual #60                 // Method org/apache/dubbo/common/compiler/support/JdkCompiler$JavaFileManagerImpl.putFileForInput:(Ljavax/tools/StandardLocation;Ljava/lang/String;Ljava/lang/String;Ljavax/tools/JavaFileObject;)V
+      92: aload_0
+      93: getfield      #10                 // Field compiler:Ljavax/tools/JavaCompiler;
+      96: aconst_null
+      97: aload_0
+      98: getfield      #44                 // Field javaFileManager:Lorg/apache/dubbo/common/compiler/support/JdkCompiler$JavaFileManagerImpl;
+     101: aload_0
+     102: getfield      #13                 // Field diagnosticCollector:Ljavax/tools/DiagnosticCollector;
+     105: aload_0
+     106: getfield      #16                 // Field options:Ljava/util/List;
+     109: aconst_null
+     110: aload         7
+     112: invokestatic  #61                 // Method java/util/Collections.singletonList:(Ljava/lang/Object;)Ljava/util/List;
+     115: invokeinterface #62,  7           // InterfaceMethod javax/tools/JavaCompiler.getTask:(Ljava/io/Writer;Ljavax/tools/JavaFileManager;Ljavax/tools/DiagnosticListener;Ljava/lang/Iterable;Ljava/lang/Iterable;Ljava/lang/Iterable;)Ljavax/tools/JavaCompiler$CompilationTask;
+     120: invokeinterface #63,  1           // InterfaceMethod javax/tools/JavaCompiler$CompilationTask.call:()Ljava/lang/Boolean;
+     125: astore        8
+     127: aload         8
+     129: ifnull        140
+     132: aload         8
+     134: invokevirtual #64                 // Method java/lang/Boolean.booleanValue:()Z
+     137: ifne          182
+     140: new           #34                 // class java/lang/IllegalStateException
+     143: dup
+     144: new           #54                 // class java/lang/StringBuilder
+     147: dup
+     148: invokespecial #55                 // Method java/lang/StringBuilder."<init>":()V
+     151: ldc           #65                 // String Compilation failed. class:
+     153: invokevirtual #56                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     156: aload_2
+     157: invokevirtual #56                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     160: ldc           #66                 // String , diagnostics:
+     162: invokevirtual #56                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     165: aload_0
+     166: getfield      #13                 // Field diagnosticCollector:Ljavax/tools/DiagnosticCollector;
+     169: invokevirtual #67                 // Method javax/tools/DiagnosticCollector.getDiagnostics:()Ljava/util/List;
+     172: invokevirtual #68                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     175: invokevirtual #59                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     178: invokespecial #69                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     181: athrow
+     182: aload_0
+     183: getfield      #41                 // Field classLoader:Lorg/apache/dubbo/common/compiler/support/JdkCompiler$ClassLoaderImpl;
+     186: aload_2
+     187: invokevirtual #70                 // Method org/apache/dubbo/common/compiler/support/JdkCompiler$ClassLoaderImpl.loadClass:(Ljava/lang/String;)Ljava/lang/Class;
+     190: areturn
+}

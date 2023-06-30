@@ -1,0 +1,54 @@
+Compiled from "ProviderAuthFilter.java"
+public class org.apache.dubbo.auth.filter.ProviderAuthFilter implements org.apache.dubbo.rpc.Filter {
+  private final org.apache.dubbo.rpc.model.ApplicationModel applicationModel;
+
+  public org.apache.dubbo.auth.filter.ProviderAuthFilter(org.apache.dubbo.rpc.model.ApplicationModel);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       9: return
+
+  public org.apache.dubbo.rpc.Result invoke(org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aload_1
+       1: invokeinterface #3,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+       6: astore_3
+       7: aload_3
+       8: ldc           #5                  // String auth
+      10: iconst_0
+      11: invokevirtual #6                  // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+      14: istore        4
+      16: iload         4
+      18: ifeq          67
+      21: aload_0
+      22: getfield      #2                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      25: ldc           #7                  // class org/apache/dubbo/auth/spi/Authenticator
+      27: invokevirtual #8                  // Method org/apache/dubbo/rpc/model/ApplicationModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      30: aload_3
+      31: ldc           #9                  // String authenticator
+      33: ldc           #10                 // String accesskey
+      35: invokevirtual #11                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      38: invokevirtual #12                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getExtension:(Ljava/lang/String;)Ljava/lang/Object;
+      41: checkcast     #7                  // class org/apache/dubbo/auth/spi/Authenticator
+      44: astore        5
+      46: aload         5
+      48: aload_2
+      49: aload_3
+      50: invokeinterface #13,  3           // InterfaceMethod org/apache/dubbo/auth/spi/Authenticator.authenticate:(Lorg/apache/dubbo/rpc/Invocation;Lorg/apache/dubbo/common/URL;)V
+      55: goto          67
+      58: astore        6
+      60: aload         6
+      62: aload_2
+      63: invokestatic  #15                 // Method org/apache/dubbo/rpc/AsyncRpcResult.newDefaultAsyncResult:(Ljava/lang/Throwable;Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/AsyncRpcResult;
+      66: areturn
+      67: aload_1
+      68: aload_2
+      69: invokeinterface #16,  2           // InterfaceMethod org/apache/dubbo/rpc/Invoker.invoke:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+      74: areturn
+    Exception table:
+       from    to  target type
+          46    55    58   Class java/lang/Exception
+}

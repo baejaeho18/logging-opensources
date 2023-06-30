@@ -1,0 +1,569 @@
+Compiled from "Environment.java"
+public class org.apache.dubbo.common.config.Environment extends org.apache.dubbo.common.context.LifecycleAdapter implements org.apache.dubbo.common.context.ApplicationExt {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  public static final java.lang.String NAME;
+
+  private org.apache.dubbo.common.config.PropertiesConfiguration propertiesConfiguration;
+
+  private org.apache.dubbo.common.config.SystemConfiguration systemConfiguration;
+
+  private org.apache.dubbo.common.config.EnvironmentConfiguration environmentConfiguration;
+
+  private org.apache.dubbo.common.config.InmemoryConfiguration externalConfiguration;
+
+  private org.apache.dubbo.common.config.InmemoryConfiguration appExternalConfiguration;
+
+  private org.apache.dubbo.common.config.InmemoryConfiguration appConfiguration;
+
+  protected org.apache.dubbo.common.config.CompositeConfiguration globalConfiguration;
+
+  protected java.util.List<java.util.Map<java.lang.String, java.lang.String>> globalConfigurationMaps;
+
+  private org.apache.dubbo.common.config.CompositeConfiguration defaultDynamicGlobalConfiguration;
+
+  private org.apache.dubbo.common.config.configcenter.DynamicConfiguration defaultDynamicConfiguration;
+
+  private java.lang.String localMigrationRule;
+
+  private final java.util.concurrent.atomic.AtomicBoolean initialized;
+
+  private final org.apache.dubbo.rpc.model.ScopeModel scopeModel;
+
+  public org.apache.dubbo.common.config.Environment(org.apache.dubbo.rpc.model.ScopeModel);
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method org/apache/dubbo/common/context/LifecycleAdapter."<init>":()V
+       4: aload_0
+       5: new           #3                  // class java/util/concurrent/atomic/AtomicBoolean
+       8: dup
+       9: iconst_0
+      10: invokespecial #4                  // Method java/util/concurrent/atomic/AtomicBoolean."<init>":(Z)V
+      13: putfield      #5                  // Field initialized:Ljava/util/concurrent/atomic/AtomicBoolean;
+      16: aload_0
+      17: aload_1
+      18: putfield      #6                  // Field scopeModel:Lorg/apache/dubbo/rpc/model/ScopeModel;
+      21: return
+
+  public void initialize() throws java.lang.IllegalStateException;
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field initialized:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: iconst_0
+       5: iconst_1
+       6: invokevirtual #7                  // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+       9: ifeq          92
+      12: aload_0
+      13: new           #8                  // class org/apache/dubbo/common/config/PropertiesConfiguration
+      16: dup
+      17: aload_0
+      18: getfield      #6                  // Field scopeModel:Lorg/apache/dubbo/rpc/model/ScopeModel;
+      21: invokespecial #9                  // Method org/apache/dubbo/common/config/PropertiesConfiguration."<init>":(Lorg/apache/dubbo/rpc/model/ScopeModel;)V
+      24: putfield      #10                 // Field propertiesConfiguration:Lorg/apache/dubbo/common/config/PropertiesConfiguration;
+      27: aload_0
+      28: new           #11                 // class org/apache/dubbo/common/config/SystemConfiguration
+      31: dup
+      32: invokespecial #12                 // Method org/apache/dubbo/common/config/SystemConfiguration."<init>":()V
+      35: putfield      #13                 // Field systemConfiguration:Lorg/apache/dubbo/common/config/SystemConfiguration;
+      38: aload_0
+      39: new           #14                 // class org/apache/dubbo/common/config/EnvironmentConfiguration
+      42: dup
+      43: invokespecial #15                 // Method org/apache/dubbo/common/config/EnvironmentConfiguration."<init>":()V
+      46: putfield      #16                 // Field environmentConfiguration:Lorg/apache/dubbo/common/config/EnvironmentConfiguration;
+      49: aload_0
+      50: new           #17                 // class org/apache/dubbo/common/config/InmemoryConfiguration
+      53: dup
+      54: ldc           #18                 // String ExternalConfig
+      56: invokespecial #19                 // Method org/apache/dubbo/common/config/InmemoryConfiguration."<init>":(Ljava/lang/String;)V
+      59: putfield      #20                 // Field externalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+      62: aload_0
+      63: new           #17                 // class org/apache/dubbo/common/config/InmemoryConfiguration
+      66: dup
+      67: ldc           #21                 // String AppExternalConfig
+      69: invokespecial #19                 // Method org/apache/dubbo/common/config/InmemoryConfiguration."<init>":(Ljava/lang/String;)V
+      72: putfield      #22                 // Field appExternalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+      75: aload_0
+      76: new           #17                 // class org/apache/dubbo/common/config/InmemoryConfiguration
+      79: dup
+      80: ldc           #23                 // String AppConfig
+      82: invokespecial #19                 // Method org/apache/dubbo/common/config/InmemoryConfiguration."<init>":(Ljava/lang/String;)V
+      85: putfield      #24                 // Field appConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+      88: aload_0
+      89: invokespecial #25                 // Method loadMigrationRule:()V
+      92: return
+
+  private void loadMigrationRule();
+    Code:
+       0: ldc           #27                 // String dubbo.migration-file.enable
+       2: ldc           #28                 // String false
+       4: invokestatic  #29                 // Method java/lang/System.getProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+       7: invokestatic  #30                 // Method java/lang/Boolean.parseBoolean:(Ljava/lang/String;)Z
+      10: ifeq          60
+      13: ldc           #31                 // String dubbo.migration.file
+      15: invokestatic  #32                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      18: astore_1
+      19: aload_1
+      20: invokestatic  #33                 // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+      23: ifeq          42
+      26: ldc           #31                 // String dubbo.migration.file
+      28: invokestatic  #34                 // Method java/lang/System.getenv:(Ljava/lang/String;)Ljava/lang/String;
+      31: astore_1
+      32: aload_1
+      33: invokestatic  #33                 // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+      36: ifeq          42
+      39: ldc           #35                 // String dubbo-migration.yaml
+      41: astore_1
+      42: aload_0
+      43: aload_0
+      44: getfield      #6                  // Field scopeModel:Lorg/apache/dubbo/rpc/model/ScopeModel;
+      47: invokevirtual #36                 // Method org/apache/dubbo/rpc/model/ScopeModel.getClassLoaders:()Ljava/util/Set;
+      50: aload_1
+      51: invokestatic  #37                 // Method org/apache/dubbo/common/utils/ConfigUtils.loadMigrationRule:(Ljava/util/Set;Ljava/lang/String;)Ljava/lang/String;
+      54: putfield      #38                 // Field localMigrationRule:Ljava/lang/String;
+      57: goto          65
+      60: aload_0
+      61: aconst_null
+      62: putfield      #38                 // Field localMigrationRule:Ljava/lang/String;
+      65: return
+
+  public void setLocalMigrationRule(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #38                 // Field localMigrationRule:Ljava/lang/String;
+       5: return
+
+  public void setExternalConfigMap(java.util.Map<java.lang.String, java.lang.String>);
+    Code:
+       0: aload_1
+       1: ifnull        12
+       4: aload_0
+       5: getfield      #20                 // Field externalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+       8: aload_1
+       9: invokevirtual #39                 // Method org/apache/dubbo/common/config/InmemoryConfiguration.setProperties:(Ljava/util/Map;)V
+      12: return
+
+  public void setAppExternalConfigMap(java.util.Map<java.lang.String, java.lang.String>);
+    Code:
+       0: aload_1
+       1: ifnull        12
+       4: aload_0
+       5: getfield      #22                 // Field appExternalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+       8: aload_1
+       9: invokevirtual #39                 // Method org/apache/dubbo/common/config/InmemoryConfiguration.setProperties:(Ljava/util/Map;)V
+      12: return
+
+  public void setAppConfigMap(java.util.Map<java.lang.String, java.lang.String>);
+    Code:
+       0: aload_1
+       1: ifnull        12
+       4: aload_0
+       5: getfield      #24                 // Field appConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+       8: aload_1
+       9: invokevirtual #39                 // Method org/apache/dubbo/common/config/InmemoryConfiguration.setProperties:(Ljava/util/Map;)V
+      12: return
+
+  public java.util.Map<java.lang.String, java.lang.String> getExternalConfigMap();
+    Code:
+       0: aload_0
+       1: getfield      #20                 // Field externalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+       4: invokevirtual #40                 // Method org/apache/dubbo/common/config/InmemoryConfiguration.getProperties:()Ljava/util/Map;
+       7: areturn
+
+  public java.util.Map<java.lang.String, java.lang.String> getAppExternalConfigMap();
+    Code:
+       0: aload_0
+       1: getfield      #22                 // Field appExternalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+       4: invokevirtual #40                 // Method org/apache/dubbo/common/config/InmemoryConfiguration.getProperties:()Ljava/util/Map;
+       7: areturn
+
+  public java.util.Map<java.lang.String, java.lang.String> getAppConfigMap();
+    Code:
+       0: aload_0
+       1: getfield      #24                 // Field appConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+       4: invokevirtual #40                 // Method org/apache/dubbo/common/config/InmemoryConfiguration.getProperties:()Ljava/util/Map;
+       7: areturn
+
+  public void updateExternalConfigMap(java.util.Map<java.lang.String, java.lang.String>);
+    Code:
+       0: aload_0
+       1: getfield      #20                 // Field externalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+       4: aload_1
+       5: invokevirtual #41                 // Method org/apache/dubbo/common/config/InmemoryConfiguration.addProperties:(Ljava/util/Map;)V
+       8: return
+
+  public void updateAppExternalConfigMap(java.util.Map<java.lang.String, java.lang.String>);
+    Code:
+       0: aload_0
+       1: getfield      #22                 // Field appExternalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+       4: aload_1
+       5: invokevirtual #41                 // Method org/apache/dubbo/common/config/InmemoryConfiguration.addProperties:(Ljava/util/Map;)V
+       8: return
+
+  public void updateAppConfigMap(java.util.Map<java.lang.String, java.lang.String>);
+    Code:
+       0: aload_0
+       1: getfield      #24                 // Field appConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+       4: aload_1
+       5: invokevirtual #41                 // Method org/apache/dubbo/common/config/InmemoryConfiguration.addProperties:(Ljava/util/Map;)V
+       8: return
+
+  public org.apache.dubbo.common.config.Configuration getPrefixedConfiguration(org.apache.dubbo.config.AbstractConfig, java.lang.String);
+    Code:
+       0: new           #42                 // class org/apache/dubbo/config/context/ConfigConfigurationAdapter
+       3: dup
+       4: aload_1
+       5: aload_2
+       6: invokespecial #43                 // Method org/apache/dubbo/config/context/ConfigConfigurationAdapter."<init>":(Lorg/apache/dubbo/config/AbstractConfig;Ljava/lang/String;)V
+       9: astore_3
+      10: new           #44                 // class org/apache/dubbo/common/config/CompositeConfiguration
+      13: dup
+      14: invokespecial #45                 // Method org/apache/dubbo/common/config/CompositeConfiguration."<init>":()V
+      17: astore        4
+      19: aload         4
+      21: aload_0
+      22: getfield      #13                 // Field systemConfiguration:Lorg/apache/dubbo/common/config/SystemConfiguration;
+      25: invokevirtual #46                 // Method org/apache/dubbo/common/config/CompositeConfiguration.addConfiguration:(Lorg/apache/dubbo/common/config/Configuration;)V
+      28: aload         4
+      30: aload_0
+      31: getfield      #16                 // Field environmentConfiguration:Lorg/apache/dubbo/common/config/EnvironmentConfiguration;
+      34: invokevirtual #46                 // Method org/apache/dubbo/common/config/CompositeConfiguration.addConfiguration:(Lorg/apache/dubbo/common/config/Configuration;)V
+      37: aload         4
+      39: aload_0
+      40: getfield      #22                 // Field appExternalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+      43: invokevirtual #46                 // Method org/apache/dubbo/common/config/CompositeConfiguration.addConfiguration:(Lorg/apache/dubbo/common/config/Configuration;)V
+      46: aload         4
+      48: aload_0
+      49: getfield      #20                 // Field externalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+      52: invokevirtual #46                 // Method org/apache/dubbo/common/config/CompositeConfiguration.addConfiguration:(Lorg/apache/dubbo/common/config/Configuration;)V
+      55: aload         4
+      57: aload_0
+      58: getfield      #24                 // Field appConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+      61: invokevirtual #46                 // Method org/apache/dubbo/common/config/CompositeConfiguration.addConfiguration:(Lorg/apache/dubbo/common/config/Configuration;)V
+      64: aload         4
+      66: aload_3
+      67: invokevirtual #46                 // Method org/apache/dubbo/common/config/CompositeConfiguration.addConfiguration:(Lorg/apache/dubbo/common/config/Configuration;)V
+      70: aload         4
+      72: aload_0
+      73: getfield      #10                 // Field propertiesConfiguration:Lorg/apache/dubbo/common/config/PropertiesConfiguration;
+      76: invokevirtual #46                 // Method org/apache/dubbo/common/config/CompositeConfiguration.addConfiguration:(Lorg/apache/dubbo/common/config/Configuration;)V
+      79: new           #47                 // class org/apache/dubbo/common/config/PrefixedConfiguration
+      82: dup
+      83: aload         4
+      85: aload_2
+      86: invokespecial #48                 // Method org/apache/dubbo/common/config/PrefixedConfiguration."<init>":(Lorg/apache/dubbo/common/config/Configuration;Ljava/lang/String;)V
+      89: areturn
+
+  public org.apache.dubbo.common.config.CompositeConfiguration getConfiguration();
+    Code:
+       0: aload_0
+       1: getfield      #49                 // Field globalConfiguration:Lorg/apache/dubbo/common/config/CompositeConfiguration;
+       4: ifnonnull     68
+       7: new           #44                 // class org/apache/dubbo/common/config/CompositeConfiguration
+      10: dup
+      11: invokespecial #45                 // Method org/apache/dubbo/common/config/CompositeConfiguration."<init>":()V
+      14: astore_1
+      15: aload_1
+      16: aload_0
+      17: getfield      #13                 // Field systemConfiguration:Lorg/apache/dubbo/common/config/SystemConfiguration;
+      20: invokevirtual #46                 // Method org/apache/dubbo/common/config/CompositeConfiguration.addConfiguration:(Lorg/apache/dubbo/common/config/Configuration;)V
+      23: aload_1
+      24: aload_0
+      25: getfield      #16                 // Field environmentConfiguration:Lorg/apache/dubbo/common/config/EnvironmentConfiguration;
+      28: invokevirtual #46                 // Method org/apache/dubbo/common/config/CompositeConfiguration.addConfiguration:(Lorg/apache/dubbo/common/config/Configuration;)V
+      31: aload_1
+      32: aload_0
+      33: getfield      #22                 // Field appExternalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+      36: invokevirtual #46                 // Method org/apache/dubbo/common/config/CompositeConfiguration.addConfiguration:(Lorg/apache/dubbo/common/config/Configuration;)V
+      39: aload_1
+      40: aload_0
+      41: getfield      #20                 // Field externalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+      44: invokevirtual #46                 // Method org/apache/dubbo/common/config/CompositeConfiguration.addConfiguration:(Lorg/apache/dubbo/common/config/Configuration;)V
+      47: aload_1
+      48: aload_0
+      49: getfield      #24                 // Field appConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+      52: invokevirtual #46                 // Method org/apache/dubbo/common/config/CompositeConfiguration.addConfiguration:(Lorg/apache/dubbo/common/config/Configuration;)V
+      55: aload_1
+      56: aload_0
+      57: getfield      #10                 // Field propertiesConfiguration:Lorg/apache/dubbo/common/config/PropertiesConfiguration;
+      60: invokevirtual #46                 // Method org/apache/dubbo/common/config/CompositeConfiguration.addConfiguration:(Lorg/apache/dubbo/common/config/Configuration;)V
+      63: aload_0
+      64: aload_1
+      65: putfield      #49                 // Field globalConfiguration:Lorg/apache/dubbo/common/config/CompositeConfiguration;
+      68: aload_0
+      69: getfield      #49                 // Field globalConfiguration:Lorg/apache/dubbo/common/config/CompositeConfiguration;
+      72: areturn
+
+  public java.util.List<java.util.Map<java.lang.String, java.lang.String>> getConfigurationMaps(org.apache.dubbo.config.AbstractConfig, java.lang.String);
+    Code:
+       0: new           #50                 // class java/util/ArrayList
+       3: dup
+       4: invokespecial #51                 // Method java/util/ArrayList."<init>":()V
+       7: astore_3
+       8: aload_3
+       9: aload_0
+      10: getfield      #13                 // Field systemConfiguration:Lorg/apache/dubbo/common/config/SystemConfiguration;
+      13: invokevirtual #52                 // Method org/apache/dubbo/common/config/SystemConfiguration.getProperties:()Ljava/util/Map;
+      16: invokeinterface #53,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      21: pop
+      22: aload_3
+      23: aload_0
+      24: getfield      #16                 // Field environmentConfiguration:Lorg/apache/dubbo/common/config/EnvironmentConfiguration;
+      27: invokevirtual #54                 // Method org/apache/dubbo/common/config/EnvironmentConfiguration.getProperties:()Ljava/util/Map;
+      30: invokeinterface #53,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      35: pop
+      36: aload_3
+      37: aload_0
+      38: getfield      #22                 // Field appExternalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+      41: invokevirtual #40                 // Method org/apache/dubbo/common/config/InmemoryConfiguration.getProperties:()Ljava/util/Map;
+      44: invokeinterface #53,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      49: pop
+      50: aload_3
+      51: aload_0
+      52: getfield      #20                 // Field externalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+      55: invokevirtual #40                 // Method org/apache/dubbo/common/config/InmemoryConfiguration.getProperties:()Ljava/util/Map;
+      58: invokeinterface #53,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      63: pop
+      64: aload_3
+      65: aload_0
+      66: getfield      #24                 // Field appConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+      69: invokevirtual #40                 // Method org/apache/dubbo/common/config/InmemoryConfiguration.getProperties:()Ljava/util/Map;
+      72: invokeinterface #53,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      77: pop
+      78: aload_1
+      79: ifnull        105
+      82: new           #42                 // class org/apache/dubbo/config/context/ConfigConfigurationAdapter
+      85: dup
+      86: aload_1
+      87: aload_2
+      88: invokespecial #43                 // Method org/apache/dubbo/config/context/ConfigConfigurationAdapter."<init>":(Lorg/apache/dubbo/config/AbstractConfig;Ljava/lang/String;)V
+      91: astore        4
+      93: aload_3
+      94: aload         4
+      96: invokevirtual #55                 // Method org/apache/dubbo/config/context/ConfigConfigurationAdapter.getProperties:()Ljava/util/Map;
+      99: invokeinterface #53,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     104: pop
+     105: aload_3
+     106: aload_0
+     107: getfield      #10                 // Field propertiesConfiguration:Lorg/apache/dubbo/common/config/PropertiesConfiguration;
+     110: invokevirtual #56                 // Method org/apache/dubbo/common/config/PropertiesConfiguration.getProperties:()Ljava/util/Map;
+     113: invokeinterface #53,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     118: pop
+     119: aload_3
+     120: areturn
+
+  public java.util.List<java.util.Map<java.lang.String, java.lang.String>> getConfigurationMaps();
+    Code:
+       0: aload_0
+       1: getfield      #57                 // Field globalConfigurationMaps:Ljava/util/List;
+       4: ifnonnull     17
+       7: aload_0
+       8: aload_0
+       9: aconst_null
+      10: aconst_null
+      11: invokevirtual #58                 // Method getConfigurationMaps:(Lorg/apache/dubbo/config/AbstractConfig;Ljava/lang/String;)Ljava/util/List;
+      14: putfield      #57                 // Field globalConfigurationMaps:Ljava/util/List;
+      17: aload_0
+      18: getfield      #57                 // Field globalConfigurationMaps:Ljava/util/List;
+      21: areturn
+
+  public void destroy() throws java.lang.IllegalStateException;
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field initialized:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: iconst_0
+       5: invokevirtual #59                 // Method java/util/concurrent/atomic/AtomicBoolean.set:(Z)V
+       8: aload_0
+       9: aconst_null
+      10: putfield      #13                 // Field systemConfiguration:Lorg/apache/dubbo/common/config/SystemConfiguration;
+      13: aload_0
+      14: aconst_null
+      15: putfield      #10                 // Field propertiesConfiguration:Lorg/apache/dubbo/common/config/PropertiesConfiguration;
+      18: aload_0
+      19: aconst_null
+      20: putfield      #16                 // Field environmentConfiguration:Lorg/apache/dubbo/common/config/EnvironmentConfiguration;
+      23: aload_0
+      24: aconst_null
+      25: putfield      #20                 // Field externalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+      28: aload_0
+      29: aconst_null
+      30: putfield      #22                 // Field appExternalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+      33: aload_0
+      34: aconst_null
+      35: putfield      #24                 // Field appConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+      38: aload_0
+      39: aconst_null
+      40: putfield      #49                 // Field globalConfiguration:Lorg/apache/dubbo/common/config/CompositeConfiguration;
+      43: aload_0
+      44: aconst_null
+      45: putfield      #57                 // Field globalConfigurationMaps:Ljava/util/List;
+      48: aload_0
+      49: aconst_null
+      50: putfield      #60                 // Field defaultDynamicGlobalConfiguration:Lorg/apache/dubbo/common/config/CompositeConfiguration;
+      53: aload_0
+      54: getfield      #61                 // Field defaultDynamicConfiguration:Lorg/apache/dubbo/common/config/configcenter/DynamicConfiguration;
+      57: ifnull        115
+      60: aload_0
+      61: getfield      #61                 // Field defaultDynamicConfiguration:Lorg/apache/dubbo/common/config/configcenter/DynamicConfiguration;
+      64: invokeinterface #62,  1           // InterfaceMethod org/apache/dubbo/common/config/configcenter/DynamicConfiguration.close:()V
+      69: goto          110
+      72: astore_1
+      73: getstatic     #64                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      76: ldc           #65                 // String 0-12
+      78: ldc           #66                 // String
+      80: ldc           #66                 // String
+      82: new           #67                 // class java/lang/StringBuilder
+      85: dup
+      86: invokespecial #68                 // Method java/lang/StringBuilder."<init>":()V
+      89: ldc           #69                 // String close dynamic configuration failed:
+      91: invokevirtual #70                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      94: aload_1
+      95: invokevirtual #71                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      98: invokevirtual #70                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     101: invokevirtual #72                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     104: aload_1
+     105: invokeinterface #73,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     110: aload_0
+     111: aconst_null
+     112: putfield      #61                 // Field defaultDynamicConfiguration:Lorg/apache/dubbo/common/config/configcenter/DynamicConfiguration;
+     115: return
+    Exception table:
+       from    to  target type
+          60    69    72   Class java/lang/Exception
+
+  public void reset();
+    Code:
+       0: aload_0
+       1: invokevirtual #74                 // Method destroy:()V
+       4: aload_0
+       5: invokevirtual #75                 // Method initialize:()V
+       8: return
+
+  public java.lang.String resolvePlaceholders(java.lang.String);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: invokevirtual #76                 // Method getConfiguration:()Lorg/apache/dubbo/common/config/CompositeConfiguration;
+       5: invokestatic  #77                 // Method org/apache/dubbo/common/utils/ConfigUtils.replaceProperty:(Ljava/lang/String;Lorg/apache/dubbo/common/config/Configuration;)Ljava/lang/String;
+       8: areturn
+
+  public org.apache.dubbo.common.config.PropertiesConfiguration getPropertiesConfiguration();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field propertiesConfiguration:Lorg/apache/dubbo/common/config/PropertiesConfiguration;
+       4: areturn
+
+  public org.apache.dubbo.common.config.SystemConfiguration getSystemConfiguration();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field systemConfiguration:Lorg/apache/dubbo/common/config/SystemConfiguration;
+       4: areturn
+
+  public org.apache.dubbo.common.config.EnvironmentConfiguration getEnvironmentConfiguration();
+    Code:
+       0: aload_0
+       1: getfield      #16                 // Field environmentConfiguration:Lorg/apache/dubbo/common/config/EnvironmentConfiguration;
+       4: areturn
+
+  public org.apache.dubbo.common.config.InmemoryConfiguration getExternalConfiguration();
+    Code:
+       0: aload_0
+       1: getfield      #20                 // Field externalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+       4: areturn
+
+  public org.apache.dubbo.common.config.InmemoryConfiguration getAppExternalConfiguration();
+    Code:
+       0: aload_0
+       1: getfield      #22                 // Field appExternalConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+       4: areturn
+
+  public org.apache.dubbo.common.config.InmemoryConfiguration getAppConfiguration();
+    Code:
+       0: aload_0
+       1: getfield      #24                 // Field appConfiguration:Lorg/apache/dubbo/common/config/InmemoryConfiguration;
+       4: areturn
+
+  public java.lang.String getLocalMigrationRule();
+    Code:
+       0: aload_0
+       1: getfield      #38                 // Field localMigrationRule:Ljava/lang/String;
+       4: areturn
+
+  public synchronized void refreshClassLoaders();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field propertiesConfiguration:Lorg/apache/dubbo/common/config/PropertiesConfiguration;
+       4: invokevirtual #78                 // Method org/apache/dubbo/common/config/PropertiesConfiguration.refresh:()V
+       7: aload_0
+       8: invokespecial #25                 // Method loadMigrationRule:()V
+      11: aload_0
+      12: aconst_null
+      13: putfield      #49                 // Field globalConfiguration:Lorg/apache/dubbo/common/config/CompositeConfiguration;
+      16: aload_0
+      17: aconst_null
+      18: putfield      #57                 // Field globalConfigurationMaps:Ljava/util/List;
+      21: aload_0
+      22: aconst_null
+      23: putfield      #60                 // Field defaultDynamicGlobalConfiguration:Lorg/apache/dubbo/common/config/CompositeConfiguration;
+      26: return
+
+  public org.apache.dubbo.common.config.Configuration getDynamicGlobalConfiguration();
+    Code:
+       0: aload_0
+       1: getfield      #60                 // Field defaultDynamicGlobalConfiguration:Lorg/apache/dubbo/common/config/CompositeConfiguration;
+       4: ifnonnull     79
+       7: aload_0
+       8: getfield      #61                 // Field defaultDynamicConfiguration:Lorg/apache/dubbo/common/config/configcenter/DynamicConfiguration;
+      11: ifnonnull     46
+      14: getstatic     #64                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      17: invokeinterface #79,  1           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isWarnEnabled:()Z
+      22: ifeq          41
+      25: getstatic     #64                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      28: ldc           #65                 // String 0-12
+      30: ldc           #66                 // String
+      32: ldc           #66                 // String
+      34: ldc           #80                 // String dynamicConfiguration is null , return globalConfiguration.
+      36: invokeinterface #81,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      41: aload_0
+      42: invokevirtual #76                 // Method getConfiguration:()Lorg/apache/dubbo/common/config/CompositeConfiguration;
+      45: areturn
+      46: aload_0
+      47: new           #44                 // class org/apache/dubbo/common/config/CompositeConfiguration
+      50: dup
+      51: invokespecial #45                 // Method org/apache/dubbo/common/config/CompositeConfiguration."<init>":()V
+      54: putfield      #60                 // Field defaultDynamicGlobalConfiguration:Lorg/apache/dubbo/common/config/CompositeConfiguration;
+      57: aload_0
+      58: getfield      #60                 // Field defaultDynamicGlobalConfiguration:Lorg/apache/dubbo/common/config/CompositeConfiguration;
+      61: aload_0
+      62: getfield      #61                 // Field defaultDynamicConfiguration:Lorg/apache/dubbo/common/config/configcenter/DynamicConfiguration;
+      65: invokevirtual #46                 // Method org/apache/dubbo/common/config/CompositeConfiguration.addConfiguration:(Lorg/apache/dubbo/common/config/Configuration;)V
+      68: aload_0
+      69: getfield      #60                 // Field defaultDynamicGlobalConfiguration:Lorg/apache/dubbo/common/config/CompositeConfiguration;
+      72: aload_0
+      73: invokevirtual #76                 // Method getConfiguration:()Lorg/apache/dubbo/common/config/CompositeConfiguration;
+      76: invokevirtual #46                 // Method org/apache/dubbo/common/config/CompositeConfiguration.addConfiguration:(Lorg/apache/dubbo/common/config/Configuration;)V
+      79: aload_0
+      80: getfield      #60                 // Field defaultDynamicGlobalConfiguration:Lorg/apache/dubbo/common/config/CompositeConfiguration;
+      83: areturn
+
+  public java.util.Optional<org.apache.dubbo.common.config.configcenter.DynamicConfiguration> getDynamicConfiguration();
+    Code:
+       0: aload_0
+       1: getfield      #61                 // Field defaultDynamicConfiguration:Lorg/apache/dubbo/common/config/configcenter/DynamicConfiguration;
+       4: invokestatic  #82                 // Method java/util/Optional.ofNullable:(Ljava/lang/Object;)Ljava/util/Optional;
+       7: areturn
+
+  public void setDynamicConfiguration(org.apache.dubbo.common.config.configcenter.DynamicConfiguration);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #61                 // Field defaultDynamicConfiguration:Lorg/apache/dubbo/common/config/configcenter/DynamicConfiguration;
+       5: return
+
+  static {};
+    Code:
+       0: ldc           #83                 // class org/apache/dubbo/common/config/Environment
+       2: invokestatic  #84                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #64                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

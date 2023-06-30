@@ -1,0 +1,1280 @@
+Compiled from "Wrapper.java"
+public abstract class org.apache.dubbo.common.bytecode.Wrapper {
+  private static final java.util.concurrent.ConcurrentMap<java.lang.Class<?>, org.apache.dubbo.common.bytecode.Wrapper> WRAPPER_MAP;
+
+  private static final java.lang.String[] EMPTY_STRING_ARRAY;
+
+  private static final java.lang.String[] OBJECT_METHODS;
+
+  private static final org.apache.dubbo.common.bytecode.Wrapper OBJECT_WRAPPER;
+
+  private static java.util.concurrent.atomic.AtomicLong WRAPPER_CLASS_COUNTER;
+
+  public org.apache.dubbo.common.bytecode.Wrapper();
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static org.apache.dubbo.common.bytecode.Wrapper getWrapper(java.lang.Class<?>);
+    Code:
+       0: aload_0
+       1: invokestatic  #4                  // Method org/apache/dubbo/common/bytecode/ClassGenerator.isDynamicClass:(Ljava/lang/Class;)Z
+       4: ifeq          15
+       7: aload_0
+       8: invokevirtual #5                  // Method java/lang/Class.getSuperclass:()Ljava/lang/Class;
+      11: astore_0
+      12: goto          0
+      15: aload_0
+      16: ldc           #6                  // class java/lang/Object
+      18: if_acmpne     25
+      21: getstatic     #7                  // Field OBJECT_WRAPPER:Lorg/apache/dubbo/common/bytecode/Wrapper;
+      24: areturn
+      25: getstatic     #8                  // Field WRAPPER_MAP:Ljava/util/concurrent/ConcurrentMap;
+      28: aload_0
+      29: invokedynamic #9,  0              // InvokeDynamic #0:apply:()Ljava/util/function/Function;
+      34: invokestatic  #10                 // Method org/apache/dubbo/common/utils/ConcurrentHashMapUtils.computeIfAbsent:(Ljava/util/concurrent/ConcurrentMap;Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+      37: checkcast     #11                 // class org/apache/dubbo/common/bytecode/Wrapper
+      40: areturn
+
+  private static org.apache.dubbo.common.bytecode.Wrapper makeWrapper(java.lang.Class<?>);
+    Code:
+       0: aload_0
+       1: invokevirtual #12                 // Method java/lang/Class.isPrimitive:()Z
+       4: ifeq          34
+       7: new           #13                 // class java/lang/IllegalArgumentException
+      10: dup
+      11: new           #14                 // class java/lang/StringBuilder
+      14: dup
+      15: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+      18: ldc           #16                 // String Can not create wrapper for primitive type:
+      20: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      23: aload_0
+      24: invokevirtual #18                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      27: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      30: invokespecial #20                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      33: athrow
+      34: aload_0
+      35: invokevirtual #21                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      38: astore_1
+      39: aload_0
+      40: invokestatic  #22                 // Method org/apache/dubbo/common/utils/ClassUtils.getClassLoader:(Ljava/lang/Class;)Ljava/lang/ClassLoader;
+      43: astore_2
+      44: new           #14                 // class java/lang/StringBuilder
+      47: dup
+      48: ldc           #23                 // String public void setPropertyValue(Object o, String n, Object v){
+      50: invokespecial #24                 // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      53: astore_3
+      54: new           #14                 // class java/lang/StringBuilder
+      57: dup
+      58: ldc           #25                 // String public Object getPropertyValue(Object o, String n){
+      60: invokespecial #24                 // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      63: astore        4
+      65: new           #14                 // class java/lang/StringBuilder
+      68: dup
+      69: new           #14                 // class java/lang/StringBuilder
+      72: dup
+      73: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+      76: ldc           #26                 // String public Object invokeMethod(Object o, String n, Class[] p, Object[] v) throws
+      78: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      81: ldc           #27                 // class java/lang/reflect/InvocationTargetException
+      83: invokevirtual #21                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      86: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      89: ldc           #28                 // String {
+      91: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      94: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      97: invokespecial #24                 // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+     100: astore        5
+     102: aload_3
+     103: aload_1
+     104: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     107: ldc           #29                 // String  w; try{ w = ((
+     109: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     112: aload_1
+     113: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     116: ldc           #30                 // String )$1); }catch(Throwable e){ throw new IllegalArgumentException(e); }
+     118: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     121: pop
+     122: aload         4
+     124: aload_1
+     125: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     128: ldc           #29                 // String  w; try{ w = ((
+     130: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     133: aload_1
+     134: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     137: ldc           #30                 // String )$1); }catch(Throwable e){ throw new IllegalArgumentException(e); }
+     139: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     142: pop
+     143: aload         5
+     145: aload_1
+     146: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     149: ldc           #29                 // String  w; try{ w = ((
+     151: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     154: aload_1
+     155: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     158: ldc           #30                 // String )$1); }catch(Throwable e){ throw new IllegalArgumentException(e); }
+     160: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     163: pop
+     164: new           #31                 // class java/util/HashMap
+     167: dup
+     168: invokespecial #32                 // Method java/util/HashMap."<init>":()V
+     171: astore        6
+     173: new           #33                 // class java/util/LinkedHashMap
+     176: dup
+     177: invokespecial #34                 // Method java/util/LinkedHashMap."<init>":()V
+     180: astore        7
+     182: new           #35                 // class java/util/ArrayList
+     185: dup
+     186: invokespecial #36                 // Method java/util/ArrayList."<init>":()V
+     189: astore        8
+     191: new           #35                 // class java/util/ArrayList
+     194: dup
+     195: invokespecial #36                 // Method java/util/ArrayList."<init>":()V
+     198: astore        9
+     200: aload_0
+     201: invokevirtual #37                 // Method java/lang/Class.getFields:()[Ljava/lang/reflect/Field;
+     204: astore        10
+     206: aload         10
+     208: arraylength
+     209: istore        11
+     211: iconst_0
+     212: istore        12
+     214: iload         12
+     216: iload         11
+     218: if_icmpge     398
+     221: aload         10
+     223: iload         12
+     225: aaload
+     226: astore        13
+     228: aload         13
+     230: invokevirtual #38                 // Method java/lang/reflect/Field.getName:()Ljava/lang/String;
+     233: astore        14
+     235: aload         13
+     237: invokevirtual #39                 // Method java/lang/reflect/Field.getType:()Ljava/lang/Class;
+     240: astore        15
+     242: aload         13
+     244: invokevirtual #40                 // Method java/lang/reflect/Field.getModifiers:()I
+     247: invokestatic  #41                 // Method java/lang/reflect/Modifier.isStatic:(I)Z
+     250: ifne          392
+     253: aload         13
+     255: invokevirtual #40                 // Method java/lang/reflect/Field.getModifiers:()I
+     258: invokestatic  #42                 // Method java/lang/reflect/Modifier.isTransient:(I)Z
+     261: ifne          392
+     264: aload         13
+     266: invokevirtual #40                 // Method java/lang/reflect/Field.getModifiers:()I
+     269: invokestatic  #43                 // Method java/lang/reflect/Modifier.isFinal:(I)Z
+     272: ifeq          278
+     275: goto          392
+     278: aload_3
+     279: ldc           #44                 // String  if( $2.equals(\"
+     281: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     284: aload         14
+     286: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     289: ldc           #45                 // String \") ){ ((
+     291: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     294: aload         13
+     296: invokevirtual #46                 // Method java/lang/reflect/Field.getDeclaringClass:()Ljava/lang/Class;
+     299: invokevirtual #21                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     302: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     305: ldc           #47                 // String )w).
+     307: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     310: aload         14
+     312: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     315: bipush        61
+     317: invokevirtual #48                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     320: aload         15
+     322: ldc           #49                 // String $3
+     324: invokestatic  #50                 // Method arg:(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/String;
+     327: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     330: ldc           #51                 // String ; return; }
+     332: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     335: pop
+     336: aload         4
+     338: ldc           #44                 // String  if( $2.equals(\"
+     340: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     343: aload         14
+     345: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     348: ldc           #52                 // String \") ){ return ($w)((
+     350: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     353: aload         13
+     355: invokevirtual #46                 // Method java/lang/reflect/Field.getDeclaringClass:()Ljava/lang/Class;
+     358: invokevirtual #21                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     361: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     364: ldc           #47                 // String )w).
+     366: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     369: aload         14
+     371: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     374: ldc           #53                 // String ; }
+     376: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     379: pop
+     380: aload         6
+     382: aload         14
+     384: aload         15
+     386: invokeinterface #54,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     391: pop
+     392: iinc          12, 1
+     395: goto          214
+     398: new           #55                 // class javassist/ClassPool
+     401: dup
+     402: invokestatic  #56                 // Method javassist/ClassPool.getDefault:()Ljavassist/ClassPool;
+     405: invokespecial #57                 // Method javassist/ClassPool."<init>":(Ljavassist/ClassPool;)V
+     408: astore        10
+     410: aload         10
+     412: new           #58                 // class javassist/LoaderClassPath
+     415: dup
+     416: aload_2
+     417: invokespecial #59                 // Method javassist/LoaderClassPath."<init>":(Ljava/lang/ClassLoader;)V
+     420: invokevirtual #60                 // Method javassist/ClassPool.insertClassPath:(Ljavassist/ClassPath;)Ljavassist/ClassPath;
+     423: pop
+     424: aload         10
+     426: new           #61                 // class org/apache/dubbo/common/bytecode/DubboLoaderClassPath
+     429: dup
+     430: invokespecial #62                 // Method org/apache/dubbo/common/bytecode/DubboLoaderClassPath."<init>":()V
+     433: invokevirtual #60                 // Method javassist/ClassPool.insertClassPath:(Ljavassist/ClassPath;)Ljavassist/ClassPath;
+     436: pop
+     437: new           #35                 // class java/util/ArrayList
+     440: dup
+     441: invokespecial #36                 // Method java/util/ArrayList."<init>":()V
+     444: astore        11
+     446: aload         10
+     448: aload_0
+     449: invokevirtual #21                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     452: invokevirtual #63                 // Method javassist/ClassPool.get:(Ljava/lang/String;)Ljavassist/CtClass;
+     455: invokevirtual #64                 // Method javassist/CtClass.getMethods:()[Ljavassist/CtMethod;
+     458: astore        12
+     460: aload         12
+     462: astore        13
+     464: aload         13
+     466: arraylength
+     467: istore        14
+     469: iconst_0
+     470: istore        15
+     472: iload         15
+     474: iload         14
+     476: if_icmpge     505
+     479: aload         13
+     481: iload         15
+     483: aaload
+     484: astore        16
+     486: aload         11
+     488: aload         16
+     490: invokestatic  #65                 // Method org/apache/dubbo/common/utils/ReflectUtils.getDesc:(Ljavassist/CtMethod;)Ljava/lang/String;
+     493: invokeinterface #66,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     498: pop
+     499: iinc          15, 1
+     502: goto          472
+     505: goto          520
+     508: astore        12
+     510: new           #68                 // class java/lang/RuntimeException
+     513: dup
+     514: aload         12
+     516: invokespecial #69                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/Throwable;)V
+     519: athrow
+     520: aload_0
+     521: invokevirtual #70                 // Method java/lang/Class.getMethods:()[Ljava/lang/reflect/Method;
+     524: invokestatic  #71                 // Method java/util/Arrays.stream:([Ljava/lang/Object;)Ljava/util/stream/Stream;
+     527: aload         11
+     529: invokedynamic #72,  0             // InvokeDynamic #1:test:(Ljava/util/List;)Ljava/util/function/Predicate;
+     534: invokeinterface #73,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+     539: invokestatic  #74                 // Method java/util/stream/Collectors.toList:()Ljava/util/stream/Collector;
+     542: invokeinterface #75,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+     547: checkcast     #76                 // class java/util/List
+     550: iconst_0
+     551: anewarray     #77                 // class java/lang/reflect/Method
+     554: invokeinterface #78,  2           // InterfaceMethod java/util/List.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;
+     559: checkcast     #79                 // class "[Ljava/lang/reflect/Method;"
+     562: astore        12
+     564: aload         12
+     566: invokestatic  #80                 // Method org/apache/dubbo/common/utils/ClassUtils.hasMethods:([Ljava/lang/reflect/Method;)Z
+     569: istore        13
+     571: iload         13
+     573: ifeq          1021
+     576: new           #31                 // class java/util/HashMap
+     579: dup
+     580: aload         12
+     582: arraylength
+     583: i2f
+     584: ldc           #81                 // float 0.75f
+     586: fdiv
+     587: f2i
+     588: iconst_1
+     589: iadd
+     590: invokespecial #82                 // Method java/util/HashMap."<init>":(I)V
+     593: astore        14
+     595: aload         12
+     597: astore        15
+     599: aload         15
+     601: arraylength
+     602: istore        16
+     604: iconst_0
+     605: istore        17
+     607: iload         17
+     609: iload         16
+     611: if_icmpge     645
+     614: aload         15
+     616: iload         17
+     618: aaload
+     619: astore        18
+     621: aload         14
+     623: aload         18
+     625: invokevirtual #83                 // Method java/lang/reflect/Method.getName:()Ljava/lang/String;
+     628: invokedynamic #84,  0             // InvokeDynamic #2:apply:()Ljava/util/function/BiFunction;
+     633: invokeinterface #85,  3           // InterfaceMethod java/util/Map.compute:(Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+     638: pop
+     639: iinc          17, 1
+     642: goto          607
+     645: aload         5
+     647: ldc           #86                 // String  try{
+     649: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     652: pop
+     653: aload         12
+     655: astore        15
+     657: aload         15
+     659: arraylength
+     660: istore        16
+     662: iconst_0
+     663: istore        17
+     665: iload         17
+     667: iload         16
+     669: if_icmpge     997
+     672: aload         15
+     674: iload         17
+     676: aaload
+     677: astore        18
+     679: aload         18
+     681: invokevirtual #87                 // Method java/lang/reflect/Method.getDeclaringClass:()Ljava/lang/Class;
+     684: ldc           #6                  // class java/lang/Object
+     686: if_acmpne     692
+     689: goto          991
+     692: aload         18
+     694: invokevirtual #83                 // Method java/lang/reflect/Method.getName:()Ljava/lang/String;
+     697: astore        19
+     699: aload         5
+     701: ldc           #88                 // String  if( \"
+     703: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     706: aload         19
+     708: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     711: ldc           #89                 // String \".equals( $2 )
+     713: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     716: pop
+     717: aload         18
+     719: invokevirtual #90                 // Method java/lang/reflect/Method.getParameterTypes:()[Ljava/lang/Class;
+     722: arraylength
+     723: istore        20
+     725: aload         5
+     727: ldc           #91                 // String  &&
+     729: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     732: ldc           #92                 // String  $3.length ==
+     734: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     737: iload         20
+     739: invokevirtual #93                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     742: pop
+     743: aload         14
+     745: aload         18
+     747: invokevirtual #83                 // Method java/lang/reflect/Method.getName:()Ljava/lang/String;
+     750: invokeinterface #94,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     755: checkcast     #95                 // class java/lang/Integer
+     758: invokevirtual #96                 // Method java/lang/Integer.intValue:()I
+     761: iconst_1
+     762: if_icmple     769
+     765: iconst_1
+     766: goto          770
+     769: iconst_0
+     770: istore        21
+     772: iload         21
+     774: ifeq          840
+     777: iload         20
+     779: ifle          840
+     782: iconst_0
+     783: istore        22
+     785: iload         22
+     787: iload         20
+     789: if_icmpge     840
+     792: aload         5
+     794: ldc           #91                 // String  &&
+     796: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     799: ldc           #97                 // String  $3[
+     801: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     804: iload         22
+     806: invokevirtual #93                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     809: ldc           #98                 // String ].getName().equals(\"
+     811: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     814: aload         18
+     816: invokevirtual #90                 // Method java/lang/reflect/Method.getParameterTypes:()[Ljava/lang/Class;
+     819: iload         22
+     821: aaload
+     822: invokevirtual #21                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     825: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     828: ldc           #99                 // String \")
+     830: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     833: pop
+     834: iinc          22, 1
+     837: goto          785
+     840: aload         5
+     842: ldc           #100                // String  ) {
+     844: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     847: pop
+     848: aload         18
+     850: invokevirtual #101                // Method java/lang/reflect/Method.getReturnType:()Ljava/lang/Class;
+     853: getstatic     #102                // Field java/lang/Void.TYPE:Ljava/lang/Class;
+     856: if_acmpne     903
+     859: aload         5
+     861: ldc           #103                // String  w.
+     863: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     866: aload         19
+     868: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     871: bipush        40
+     873: invokevirtual #48                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     876: aload         18
+     878: invokevirtual #90                 // Method java/lang/reflect/Method.getParameterTypes:()[Ljava/lang/Class;
+     881: ldc           #104                // String $4
+     883: invokestatic  #105                // Method args:([Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/String;
+     886: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     889: ldc           #106                // String );
+     891: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     894: ldc           #107                // String  return null;
+     896: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     899: pop
+     900: goto          939
+     903: aload         5
+     905: ldc           #108                // String  return ($w)w.
+     907: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     910: aload         19
+     912: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     915: bipush        40
+     917: invokevirtual #48                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     920: aload         18
+     922: invokevirtual #90                 // Method java/lang/reflect/Method.getParameterTypes:()[Ljava/lang/Class;
+     925: ldc           #104                // String $4
+     927: invokestatic  #105                // Method args:([Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/String;
+     930: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     933: ldc           #106                // String );
+     935: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     938: pop
+     939: aload         5
+     941: ldc           #109                // String  }
+     943: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     946: pop
+     947: aload         8
+     949: aload         19
+     951: invokeinterface #66,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     956: pop
+     957: aload         18
+     959: invokevirtual #87                 // Method java/lang/reflect/Method.getDeclaringClass:()Ljava/lang/Class;
+     962: aload_0
+     963: if_acmpne     976
+     966: aload         9
+     968: aload         19
+     970: invokeinterface #66,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     975: pop
+     976: aload         7
+     978: aload         18
+     980: invokestatic  #110                // Method org/apache/dubbo/common/utils/ReflectUtils.getDesc:(Ljava/lang/reflect/Method;)Ljava/lang/String;
+     983: aload         18
+     985: invokeinterface #54,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     990: pop
+     991: iinc          17, 1
+     994: goto          665
+     997: aload         5
+     999: ldc           #111                // String  } catch(Throwable e) {
+    1001: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1004: pop
+    1005: aload         5
+    1007: ldc           #112                // String      throw new java.lang.reflect.InvocationTargetException(e);
+    1009: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1012: pop
+    1013: aload         5
+    1015: ldc           #109                // String  }
+    1017: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1020: pop
+    1021: aload         5
+    1023: ldc           #113                // String  throw new
+    1025: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1028: ldc           #114                // class org/apache/dubbo/common/bytecode/NoSuchMethodException
+    1030: invokevirtual #21                 // Method java/lang/Class.getName:()Ljava/lang/String;
+    1033: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1036: ldc           #115                // String (\"Not found method \\\"\"+$2+\"\\\" in class
+    1038: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1041: aload_0
+    1042: invokevirtual #21                 // Method java/lang/Class.getName:()Ljava/lang/String;
+    1045: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1048: ldc           #116                // String .\"); }
+    1050: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1053: pop
+    1054: aload         7
+    1056: invokeinterface #117,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+    1061: invokeinterface #118,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+    1066: astore        15
+    1068: aload         15
+    1070: invokeinterface #119,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+    1075: ifeq          1365
+    1078: aload         15
+    1080: invokeinterface #120,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+    1085: checkcast     #121                // class java/util/Map$Entry
+    1088: astore        16
+    1090: aload         16
+    1092: invokeinterface #122,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+    1097: checkcast     #123                // class java/lang/String
+    1100: astore        17
+    1102: aload         16
+    1104: invokeinterface #124,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+    1109: checkcast     #77                 // class java/lang/reflect/Method
+    1112: astore        18
+    1114: getstatic     #125                // Field org/apache/dubbo/common/utils/ReflectUtils.GETTER_METHOD_DESC_PATTERN:Ljava/util/regex/Pattern;
+    1117: aload         17
+    1119: invokevirtual #126                // Method java/util/regex/Pattern.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+    1122: dup
+    1123: astore        14
+    1125: invokevirtual #127                // Method java/util/regex/Matcher.matches:()Z
+    1128: ifeq          1191
+    1131: aload         14
+    1133: iconst_1
+    1134: invokevirtual #128                // Method java/util/regex/Matcher.group:(I)Ljava/lang/String;
+    1137: invokestatic  #129                // Method propertyName:(Ljava/lang/String;)Ljava/lang/String;
+    1140: astore        19
+    1142: aload         4
+    1144: ldc           #44                 // String  if( $2.equals(\"
+    1146: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1149: aload         19
+    1151: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1154: ldc           #130                // String \") ){ return ($w)w.
+    1156: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1159: aload         18
+    1161: invokevirtual #83                 // Method java/lang/reflect/Method.getName:()Ljava/lang/String;
+    1164: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1167: ldc           #131                // String (); }
+    1169: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1172: pop
+    1173: aload         6
+    1175: aload         19
+    1177: aload         18
+    1179: invokevirtual #101                // Method java/lang/reflect/Method.getReturnType:()Ljava/lang/Class;
+    1182: invokeinterface #54,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1187: pop
+    1188: goto          1362
+    1191: getstatic     #132                // Field org/apache/dubbo/common/utils/ReflectUtils.IS_HAS_CAN_METHOD_DESC_PATTERN:Ljava/util/regex/Pattern;
+    1194: aload         17
+    1196: invokevirtual #126                // Method java/util/regex/Pattern.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+    1199: dup
+    1200: astore        14
+    1202: invokevirtual #127                // Method java/util/regex/Matcher.matches:()Z
+    1205: ifeq          1268
+    1208: aload         14
+    1210: iconst_1
+    1211: invokevirtual #128                // Method java/util/regex/Matcher.group:(I)Ljava/lang/String;
+    1214: invokestatic  #129                // Method propertyName:(Ljava/lang/String;)Ljava/lang/String;
+    1217: astore        19
+    1219: aload         4
+    1221: ldc           #44                 // String  if( $2.equals(\"
+    1223: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1226: aload         19
+    1228: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1231: ldc           #130                // String \") ){ return ($w)w.
+    1233: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1236: aload         18
+    1238: invokevirtual #83                 // Method java/lang/reflect/Method.getName:()Ljava/lang/String;
+    1241: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1244: ldc           #131                // String (); }
+    1246: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1249: pop
+    1250: aload         6
+    1252: aload         19
+    1254: aload         18
+    1256: invokevirtual #101                // Method java/lang/reflect/Method.getReturnType:()Ljava/lang/Class;
+    1259: invokeinterface #54,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1264: pop
+    1265: goto          1362
+    1268: getstatic     #133                // Field org/apache/dubbo/common/utils/ReflectUtils.SETTER_METHOD_DESC_PATTERN:Ljava/util/regex/Pattern;
+    1271: aload         17
+    1273: invokevirtual #126                // Method java/util/regex/Pattern.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+    1276: dup
+    1277: astore        14
+    1279: invokevirtual #127                // Method java/util/regex/Matcher.matches:()Z
+    1282: ifeq          1362
+    1285: aload         18
+    1287: invokevirtual #90                 // Method java/lang/reflect/Method.getParameterTypes:()[Ljava/lang/Class;
+    1290: iconst_0
+    1291: aaload
+    1292: astore        19
+    1294: aload         14
+    1296: iconst_1
+    1297: invokevirtual #128                // Method java/util/regex/Matcher.group:(I)Ljava/lang/String;
+    1300: invokestatic  #129                // Method propertyName:(Ljava/lang/String;)Ljava/lang/String;
+    1303: astore        20
+    1305: aload_3
+    1306: ldc           #44                 // String  if( $2.equals(\"
+    1308: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1311: aload         20
+    1313: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1316: ldc           #134                // String \") ){ w.
+    1318: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1321: aload         18
+    1323: invokevirtual #83                 // Method java/lang/reflect/Method.getName:()Ljava/lang/String;
+    1326: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1329: bipush        40
+    1331: invokevirtual #48                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+    1334: aload         19
+    1336: ldc           #49                 // String $3
+    1338: invokestatic  #50                 // Method arg:(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/String;
+    1341: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1344: ldc           #135                // String ); return; }
+    1346: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1349: pop
+    1350: aload         6
+    1352: aload         20
+    1354: aload         19
+    1356: invokeinterface #54,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1361: pop
+    1362: goto          1068
+    1365: aload_3
+    1366: ldc           #113                // String  throw new
+    1368: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1371: ldc           #136                // class org/apache/dubbo/common/bytecode/NoSuchPropertyException
+    1373: invokevirtual #21                 // Method java/lang/Class.getName:()Ljava/lang/String;
+    1376: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1379: ldc           #137                // String (\"Not found property \\\"\"+$2+\"\\\" field or setter method in class
+    1381: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1384: aload_0
+    1385: invokevirtual #21                 // Method java/lang/Class.getName:()Ljava/lang/String;
+    1388: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1391: ldc           #116                // String .\"); }
+    1393: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1396: pop
+    1397: aload         4
+    1399: ldc           #113                // String  throw new
+    1401: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1404: ldc           #136                // class org/apache/dubbo/common/bytecode/NoSuchPropertyException
+    1406: invokevirtual #21                 // Method java/lang/Class.getName:()Ljava/lang/String;
+    1409: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1412: ldc           #138                // String (\"Not found property \\\"\"+$2+\"\\\" field or getter method in class
+    1414: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1417: aload_0
+    1418: invokevirtual #21                 // Method java/lang/Class.getName:()Ljava/lang/String;
+    1421: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1424: ldc           #116                // String .\"); }
+    1426: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1429: pop
+    1430: getstatic     #139                // Field WRAPPER_CLASS_COUNTER:Ljava/util/concurrent/atomic/AtomicLong;
+    1433: invokevirtual #140                // Method java/util/concurrent/atomic/AtomicLong.getAndIncrement:()J
+    1436: lstore        15
+    1438: aload_2
+    1439: invokestatic  #141                // Method org/apache/dubbo/common/bytecode/ClassGenerator.newInstance:(Ljava/lang/ClassLoader;)Lorg/apache/dubbo/common/bytecode/ClassGenerator;
+    1442: astore        17
+    1444: aload         17
+    1446: new           #14                 // class java/lang/StringBuilder
+    1449: dup
+    1450: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+    1453: aload_0
+    1454: invokevirtual #21                 // Method java/lang/Class.getName:()Ljava/lang/String;
+    1457: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1460: ldc           #142                // String DubboWrap
+    1462: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1465: lload         15
+    1467: invokevirtual #143                // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+    1470: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+    1473: invokevirtual #144                // Method org/apache/dubbo/common/bytecode/ClassGenerator.setClassName:(Ljava/lang/String;)Lorg/apache/dubbo/common/bytecode/ClassGenerator;
+    1476: pop
+    1477: aload         17
+    1479: ldc           #11                 // class org/apache/dubbo/common/bytecode/Wrapper
+    1481: invokevirtual #145                // Method org/apache/dubbo/common/bytecode/ClassGenerator.setSuperClass:(Ljava/lang/Class;)Lorg/apache/dubbo/common/bytecode/ClassGenerator;
+    1484: pop
+    1485: aload         17
+    1487: invokevirtual #146                // Method org/apache/dubbo/common/bytecode/ClassGenerator.addDefaultConstructor:()Lorg/apache/dubbo/common/bytecode/ClassGenerator;
+    1490: pop
+    1491: aload         17
+    1493: ldc           #147                // String public static String[] pns;
+    1495: invokevirtual #148                // Method org/apache/dubbo/common/bytecode/ClassGenerator.addField:(Ljava/lang/String;)Lorg/apache/dubbo/common/bytecode/ClassGenerator;
+    1498: pop
+    1499: aload         17
+    1501: new           #14                 // class java/lang/StringBuilder
+    1504: dup
+    1505: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+    1508: ldc           #149                // String public static
+    1510: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1513: ldc           #150                // class java/util/Map
+    1515: invokevirtual #21                 // Method java/lang/Class.getName:()Ljava/lang/String;
+    1518: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1521: ldc           #151                // String  pts;
+    1523: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1526: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+    1529: invokevirtual #148                // Method org/apache/dubbo/common/bytecode/ClassGenerator.addField:(Ljava/lang/String;)Lorg/apache/dubbo/common/bytecode/ClassGenerator;
+    1532: pop
+    1533: aload         17
+    1535: ldc           #152                // String public static String[] mns;
+    1537: invokevirtual #148                // Method org/apache/dubbo/common/bytecode/ClassGenerator.addField:(Ljava/lang/String;)Lorg/apache/dubbo/common/bytecode/ClassGenerator;
+    1540: pop
+    1541: aload         17
+    1543: ldc           #153                // String public static String[] dmns;
+    1545: invokevirtual #148                // Method org/apache/dubbo/common/bytecode/ClassGenerator.addField:(Ljava/lang/String;)Lorg/apache/dubbo/common/bytecode/ClassGenerator;
+    1548: pop
+    1549: iconst_0
+    1550: istore        18
+    1552: aload         7
+    1554: invokeinterface #154,  1          // InterfaceMethod java/util/Map.size:()I
+    1559: istore        19
+    1561: iload         18
+    1563: iload         19
+    1565: if_icmpge     1605
+    1568: aload         17
+    1570: new           #14                 // class java/lang/StringBuilder
+    1573: dup
+    1574: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+    1577: ldc           #155                // String public static Class[] mts
+    1579: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1582: iload         18
+    1584: invokevirtual #93                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+    1587: ldc           #156                // String ;
+    1589: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1592: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+    1595: invokevirtual #148                // Method org/apache/dubbo/common/bytecode/ClassGenerator.addField:(Ljava/lang/String;)Lorg/apache/dubbo/common/bytecode/ClassGenerator;
+    1598: pop
+    1599: iinc          18, 1
+    1602: goto          1561
+    1605: aload         17
+    1607: ldc           #157                // String public String[] getPropertyNames(){ return pns; }
+    1609: invokevirtual #158                // Method org/apache/dubbo/common/bytecode/ClassGenerator.addMethod:(Ljava/lang/String;)Lorg/apache/dubbo/common/bytecode/ClassGenerator;
+    1612: pop
+    1613: aload         17
+    1615: ldc           #159                // String public boolean hasProperty(String n){ return pts.containsKey($1); }
+    1617: invokevirtual #158                // Method org/apache/dubbo/common/bytecode/ClassGenerator.addMethod:(Ljava/lang/String;)Lorg/apache/dubbo/common/bytecode/ClassGenerator;
+    1620: pop
+    1621: aload         17
+    1623: ldc           #160                // String public Class getPropertyType(String n){ return (Class)pts.get($1); }
+    1625: invokevirtual #158                // Method org/apache/dubbo/common/bytecode/ClassGenerator.addMethod:(Ljava/lang/String;)Lorg/apache/dubbo/common/bytecode/ClassGenerator;
+    1628: pop
+    1629: aload         17
+    1631: ldc           #161                // String public String[] getMethodNames(){ return mns; }
+    1633: invokevirtual #158                // Method org/apache/dubbo/common/bytecode/ClassGenerator.addMethod:(Ljava/lang/String;)Lorg/apache/dubbo/common/bytecode/ClassGenerator;
+    1636: pop
+    1637: aload         17
+    1639: ldc           #162                // String public String[] getDeclaredMethodNames(){ return dmns; }
+    1641: invokevirtual #158                // Method org/apache/dubbo/common/bytecode/ClassGenerator.addMethod:(Ljava/lang/String;)Lorg/apache/dubbo/common/bytecode/ClassGenerator;
+    1644: pop
+    1645: aload         17
+    1647: aload_3
+    1648: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+    1651: invokevirtual #158                // Method org/apache/dubbo/common/bytecode/ClassGenerator.addMethod:(Ljava/lang/String;)Lorg/apache/dubbo/common/bytecode/ClassGenerator;
+    1654: pop
+    1655: aload         17
+    1657: aload         4
+    1659: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+    1662: invokevirtual #158                // Method org/apache/dubbo/common/bytecode/ClassGenerator.addMethod:(Ljava/lang/String;)Lorg/apache/dubbo/common/bytecode/ClassGenerator;
+    1665: pop
+    1666: aload         17
+    1668: aload         5
+    1670: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+    1673: invokevirtual #158                // Method org/apache/dubbo/common/bytecode/ClassGenerator.addMethod:(Ljava/lang/String;)Lorg/apache/dubbo/common/bytecode/ClassGenerator;
+    1676: pop
+    1677: aload         17
+    1679: aload_0
+    1680: invokevirtual #163                // Method org/apache/dubbo/common/bytecode/ClassGenerator.toClass:(Ljava/lang/Class;)Ljava/lang/Class;
+    1683: astore        18
+    1685: aload         18
+    1687: ldc           #164                // String pts
+    1689: invokevirtual #165                // Method java/lang/Class.getField:(Ljava/lang/String;)Ljava/lang/reflect/Field;
+    1692: aconst_null
+    1693: aload         6
+    1695: invokevirtual #166                // Method java/lang/reflect/Field.set:(Ljava/lang/Object;Ljava/lang/Object;)V
+    1698: aload         18
+    1700: ldc           #167                // String pns
+    1702: invokevirtual #165                // Method java/lang/Class.getField:(Ljava/lang/String;)Ljava/lang/reflect/Field;
+    1705: aconst_null
+    1706: aload         6
+    1708: invokeinterface #168,  1          // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+    1713: iconst_0
+    1714: anewarray     #123                // class java/lang/String
+    1717: invokeinterface #169,  2          // InterfaceMethod java/util/Set.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;
+    1722: invokevirtual #166                // Method java/lang/reflect/Field.set:(Ljava/lang/Object;Ljava/lang/Object;)V
+    1725: aload         18
+    1727: ldc           #170                // String mns
+    1729: invokevirtual #165                // Method java/lang/Class.getField:(Ljava/lang/String;)Ljava/lang/reflect/Field;
+    1732: aconst_null
+    1733: aload         8
+    1735: iconst_0
+    1736: anewarray     #123                // class java/lang/String
+    1739: invokeinterface #78,  2           // InterfaceMethod java/util/List.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;
+    1744: invokevirtual #166                // Method java/lang/reflect/Field.set:(Ljava/lang/Object;Ljava/lang/Object;)V
+    1747: aload         18
+    1749: ldc           #171                // String dmns
+    1751: invokevirtual #165                // Method java/lang/Class.getField:(Ljava/lang/String;)Ljava/lang/reflect/Field;
+    1754: aconst_null
+    1755: aload         9
+    1757: iconst_0
+    1758: anewarray     #123                // class java/lang/String
+    1761: invokeinterface #78,  2           // InterfaceMethod java/util/List.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;
+    1766: invokevirtual #166                // Method java/lang/reflect/Field.set:(Ljava/lang/Object;Ljava/lang/Object;)V
+    1769: iconst_0
+    1770: istore        19
+    1772: aload         7
+    1774: invokeinterface #172,  1          // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+    1779: invokeinterface #173,  1          // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+    1784: astore        20
+    1786: aload         20
+    1788: invokeinterface #119,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+    1793: ifeq          1848
+    1796: aload         20
+    1798: invokeinterface #120,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+    1803: checkcast     #77                 // class java/lang/reflect/Method
+    1806: astore        21
+    1808: aload         18
+    1810: new           #14                 // class java/lang/StringBuilder
+    1813: dup
+    1814: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+    1817: ldc           #174                // String mts
+    1819: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    1822: iload         19
+    1824: iinc          19, 1
+    1827: invokevirtual #93                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+    1830: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+    1833: invokevirtual #165                // Method java/lang/Class.getField:(Ljava/lang/String;)Ljava/lang/reflect/Field;
+    1836: aconst_null
+    1837: aload         21
+    1839: invokevirtual #90                 // Method java/lang/reflect/Method.getParameterTypes:()[Ljava/lang/Class;
+    1842: invokevirtual #166                // Method java/lang/reflect/Field.set:(Ljava/lang/Object;Ljava/lang/Object;)V
+    1845: goto          1786
+    1848: aload         18
+    1850: iconst_0
+    1851: anewarray     #175                // class java/lang/Class
+    1854: invokevirtual #176                // Method java/lang/Class.getDeclaredConstructor:([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;
+    1857: iconst_0
+    1858: anewarray     #6                  // class java/lang/Object
+    1861: invokevirtual #177                // Method java/lang/reflect/Constructor.newInstance:([Ljava/lang/Object;)Ljava/lang/Object;
+    1864: checkcast     #11                 // class org/apache/dubbo/common/bytecode/Wrapper
+    1867: astore        20
+    1869: aload         17
+    1871: invokevirtual #178                // Method org/apache/dubbo/common/bytecode/ClassGenerator.release:()V
+    1874: aload         6
+    1876: invokeinterface #179,  1          // InterfaceMethod java/util/Map.clear:()V
+    1881: aload         7
+    1883: invokeinterface #179,  1          // InterfaceMethod java/util/Map.clear:()V
+    1888: aload         8
+    1890: invokeinterface #180,  1          // InterfaceMethod java/util/List.clear:()V
+    1895: aload         9
+    1897: invokeinterface #180,  1          // InterfaceMethod java/util/List.clear:()V
+    1902: aload         20
+    1904: areturn
+    1905: astore        18
+    1907: aload         18
+    1909: athrow
+    1910: astore        18
+    1912: new           #68                 // class java/lang/RuntimeException
+    1915: dup
+    1916: aload         18
+    1918: invokevirtual #182                // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+    1921: aload         18
+    1923: invokespecial #183                // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+    1926: athrow
+    1927: astore        23
+    1929: aload         17
+    1931: invokevirtual #178                // Method org/apache/dubbo/common/bytecode/ClassGenerator.release:()V
+    1934: aload         6
+    1936: invokeinterface #179,  1          // InterfaceMethod java/util/Map.clear:()V
+    1941: aload         7
+    1943: invokeinterface #179,  1          // InterfaceMethod java/util/Map.clear:()V
+    1948: aload         8
+    1950: invokeinterface #180,  1          // InterfaceMethod java/util/List.clear:()V
+    1955: aload         9
+    1957: invokeinterface #180,  1          // InterfaceMethod java/util/List.clear:()V
+    1962: aload         23
+    1964: athrow
+    Exception table:
+       from    to  target type
+         446   505   508   Class java/lang/Exception
+        1677  1869  1905   Class java/lang/RuntimeException
+        1677  1869  1910   Class java/lang/Throwable
+        1677  1869  1927   any
+        1905  1929  1927   any
+
+  private static java.lang.String arg(java.lang.Class<?>, java.lang.String);
+    Code:
+       0: aload_0
+       1: invokevirtual #12                 // Method java/lang/Class.isPrimitive:()Z
+       4: ifeq          293
+       7: aload_0
+       8: getstatic     #184                // Field java/lang/Boolean.TYPE:Ljava/lang/Class;
+      11: if_acmpne     39
+      14: new           #14                 // class java/lang/StringBuilder
+      17: dup
+      18: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+      21: ldc           #185                // String ((Boolean)
+      23: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      26: aload_1
+      27: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      30: ldc           #186                // String ).booleanValue()
+      32: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      35: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      38: areturn
+      39: aload_0
+      40: getstatic     #187                // Field java/lang/Byte.TYPE:Ljava/lang/Class;
+      43: if_acmpne     71
+      46: new           #14                 // class java/lang/StringBuilder
+      49: dup
+      50: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+      53: ldc           #188                // String ((Byte)
+      55: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      58: aload_1
+      59: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      62: ldc           #189                // String ).byteValue()
+      64: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      67: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      70: areturn
+      71: aload_0
+      72: getstatic     #190                // Field java/lang/Character.TYPE:Ljava/lang/Class;
+      75: if_acmpne     103
+      78: new           #14                 // class java/lang/StringBuilder
+      81: dup
+      82: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+      85: ldc           #191                // String ((Character)
+      87: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      90: aload_1
+      91: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      94: ldc           #192                // String ).charValue()
+      96: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      99: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     102: areturn
+     103: aload_0
+     104: getstatic     #193                // Field java/lang/Double.TYPE:Ljava/lang/Class;
+     107: if_acmpne     135
+     110: new           #14                 // class java/lang/StringBuilder
+     113: dup
+     114: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+     117: ldc           #194                // String ((Number)
+     119: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     122: aload_1
+     123: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     126: ldc           #195                // String ).doubleValue()
+     128: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     131: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     134: areturn
+     135: aload_0
+     136: getstatic     #196                // Field java/lang/Float.TYPE:Ljava/lang/Class;
+     139: if_acmpne     167
+     142: new           #14                 // class java/lang/StringBuilder
+     145: dup
+     146: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+     149: ldc           #194                // String ((Number)
+     151: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     154: aload_1
+     155: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     158: ldc           #197                // String ).floatValue()
+     160: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     163: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     166: areturn
+     167: aload_0
+     168: getstatic     #198                // Field java/lang/Integer.TYPE:Ljava/lang/Class;
+     171: if_acmpne     199
+     174: new           #14                 // class java/lang/StringBuilder
+     177: dup
+     178: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+     181: ldc           #194                // String ((Number)
+     183: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     186: aload_1
+     187: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     190: ldc           #199                // String ).intValue()
+     192: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     195: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     198: areturn
+     199: aload_0
+     200: getstatic     #200                // Field java/lang/Long.TYPE:Ljava/lang/Class;
+     203: if_acmpne     231
+     206: new           #14                 // class java/lang/StringBuilder
+     209: dup
+     210: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+     213: ldc           #194                // String ((Number)
+     215: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     218: aload_1
+     219: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     222: ldc           #201                // String ).longValue()
+     224: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     227: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     230: areturn
+     231: aload_0
+     232: getstatic     #202                // Field java/lang/Short.TYPE:Ljava/lang/Class;
+     235: if_acmpne     263
+     238: new           #14                 // class java/lang/StringBuilder
+     241: dup
+     242: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+     245: ldc           #194                // String ((Number)
+     247: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     250: aload_1
+     251: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     254: ldc           #203                // String ).shortValue()
+     256: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     259: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     262: areturn
+     263: new           #68                 // class java/lang/RuntimeException
+     266: dup
+     267: new           #14                 // class java/lang/StringBuilder
+     270: dup
+     271: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+     274: ldc           #204                // String Unknown primitive type:
+     276: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     279: aload_0
+     280: invokevirtual #21                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     283: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     286: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     289: invokespecial #205                // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;)V
+     292: athrow
+     293: new           #14                 // class java/lang/StringBuilder
+     296: dup
+     297: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+     300: ldc           #206                // String (
+     302: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     305: aload_0
+     306: invokestatic  #207                // Method org/apache/dubbo/common/utils/ReflectUtils.getName:(Ljava/lang/Class;)Ljava/lang/String;
+     309: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     312: ldc           #208                // String )
+     314: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     317: aload_1
+     318: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     321: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     324: areturn
+
+  private static java.lang.String args(java.lang.Class<?>[], java.lang.String);
+    Code:
+       0: aload_0
+       1: arraylength
+       2: istore_2
+       3: iload_2
+       4: ifne          10
+       7: ldc           #209                // String
+       9: areturn
+      10: new           #14                 // class java/lang/StringBuilder
+      13: dup
+      14: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+      17: astore_3
+      18: iconst_0
+      19: istore        4
+      21: iload         4
+      23: iload_2
+      24: if_icmpge     86
+      27: iload         4
+      29: ifle          39
+      32: aload_3
+      33: bipush        44
+      35: invokevirtual #48                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      38: pop
+      39: aload_3
+      40: aload_0
+      41: iload         4
+      43: aaload
+      44: new           #14                 // class java/lang/StringBuilder
+      47: dup
+      48: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+      51: aload_1
+      52: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      55: ldc           #210                // String [
+      57: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      60: iload         4
+      62: invokevirtual #93                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      65: ldc           #211                // String ]
+      67: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      70: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      73: invokestatic  #50                 // Method arg:(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/String;
+      76: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      79: pop
+      80: iinc          4, 1
+      83: goto          21
+      86: aload_3
+      87: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      90: areturn
+
+  private static java.lang.String propertyName(java.lang.String);
+    Code:
+       0: aload_0
+       1: invokevirtual #212                // Method java/lang/String.length:()I
+       4: iconst_1
+       5: if_icmpeq     19
+       8: aload_0
+       9: iconst_1
+      10: invokevirtual #213                // Method java/lang/String.charAt:(I)C
+      13: invokestatic  #214                // Method java/lang/Character.isLowerCase:(C)Z
+      16: ifeq          51
+      19: new           #14                 // class java/lang/StringBuilder
+      22: dup
+      23: invokespecial #15                 // Method java/lang/StringBuilder."<init>":()V
+      26: aload_0
+      27: iconst_0
+      28: invokevirtual #213                // Method java/lang/String.charAt:(I)C
+      31: invokestatic  #215                // Method java/lang/Character.toLowerCase:(C)C
+      34: invokevirtual #48                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      37: aload_0
+      38: iconst_1
+      39: invokevirtual #216                // Method java/lang/String.substring:(I)Ljava/lang/String;
+      42: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      45: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      48: goto          52
+      51: aload_0
+      52: areturn
+
+  public abstract java.lang.String[] getPropertyNames();
+
+  public abstract java.lang.Class<?> getPropertyType(java.lang.String);
+
+  public abstract boolean hasProperty(java.lang.String);
+
+  public abstract java.lang.Object getPropertyValue(java.lang.Object, java.lang.String) throws org.apache.dubbo.common.bytecode.NoSuchPropertyException, java.lang.IllegalArgumentException;
+
+  public abstract void setPropertyValue(java.lang.Object, java.lang.String, java.lang.Object) throws org.apache.dubbo.common.bytecode.NoSuchPropertyException, java.lang.IllegalArgumentException;
+
+  public java.lang.Object[] getPropertyValues(java.lang.Object, java.lang.String[]) throws org.apache.dubbo.common.bytecode.NoSuchPropertyException, java.lang.IllegalArgumentException;
+    Code:
+       0: aload_2
+       1: arraylength
+       2: anewarray     #6                  // class java/lang/Object
+       5: astore_3
+       6: iconst_0
+       7: istore        4
+       9: iload         4
+      11: aload_3
+      12: arraylength
+      13: if_icmpge     35
+      16: aload_3
+      17: iload         4
+      19: aload_0
+      20: aload_1
+      21: aload_2
+      22: iload         4
+      24: aaload
+      25: invokevirtual #217                // Method getPropertyValue:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+      28: aastore
+      29: iinc          4, 1
+      32: goto          9
+      35: aload_3
+      36: areturn
+
+  public void setPropertyValues(java.lang.Object, java.lang.String[], java.lang.Object[]) throws org.apache.dubbo.common.bytecode.NoSuchPropertyException, java.lang.IllegalArgumentException;
+    Code:
+       0: aload_2
+       1: arraylength
+       2: aload_3
+       3: arraylength
+       4: if_icmpeq     17
+       7: new           #13                 // class java/lang/IllegalArgumentException
+      10: dup
+      11: ldc           #218                // String pns.length != pvs.length
+      13: invokespecial #20                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: iconst_0
+      18: istore        4
+      20: iload         4
+      22: aload_2
+      23: arraylength
+      24: if_icmpge     46
+      27: aload_0
+      28: aload_1
+      29: aload_2
+      30: iload         4
+      32: aaload
+      33: aload_3
+      34: iload         4
+      36: aaload
+      37: invokevirtual #219                // Method setPropertyValue:(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Object;)V
+      40: iinc          4, 1
+      43: goto          20
+      46: return
+
+  public abstract java.lang.String[] getMethodNames();
+
+  public abstract java.lang.String[] getDeclaredMethodNames();
+
+  public boolean hasMethod(java.lang.String);
+    Code:
+       0: aload_0
+       1: invokevirtual #220                // Method getMethodNames:()[Ljava/lang/String;
+       4: astore_2
+       5: aload_2
+       6: arraylength
+       7: istore_3
+       8: iconst_0
+       9: istore        4
+      11: iload         4
+      13: iload_3
+      14: if_icmpge     40
+      17: aload_2
+      18: iload         4
+      20: aaload
+      21: astore        5
+      23: aload         5
+      25: aload_1
+      26: invokevirtual #221                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      29: ifeq          34
+      32: iconst_1
+      33: ireturn
+      34: iinc          4, 1
+      37: goto          11
+      40: iconst_0
+      41: ireturn
+
+  public abstract java.lang.Object invokeMethod(java.lang.Object, java.lang.String, java.lang.Class<?>[], java.lang.Object[]) throws org.apache.dubbo.common.bytecode.NoSuchMethodException, java.lang.reflect.InvocationTargetException;
+
+  private static java.lang.Integer lambda$makeWrapper$1(java.lang.String, java.lang.Integer);
+    Code:
+       0: aload_1
+       1: ifnonnull     8
+       4: iconst_1
+       5: goto          14
+       8: aload_1
+       9: invokevirtual #96                 // Method java/lang/Integer.intValue:()I
+      12: iconst_1
+      13: iadd
+      14: invokestatic  #222                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      17: areturn
+
+  private static boolean lambda$makeWrapper$0(java.util.List, java.lang.reflect.Method);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #110                // Method org/apache/dubbo/common/utils/ReflectUtils.getDesc:(Ljava/lang/reflect/Method;)Ljava/lang/String;
+       5: invokeinterface #223,  2          // InterfaceMethod java/util/List.contains:(Ljava/lang/Object;)Z
+      10: ireturn
+
+  static java.lang.String[] access$000();
+    Code:
+       0: getstatic     #2                  // Field OBJECT_METHODS:[Ljava/lang/String;
+       3: areturn
+
+  static java.lang.String[] access$100();
+    Code:
+       0: getstatic     #1                  // Field EMPTY_STRING_ARRAY:[Ljava/lang/String;
+       3: areturn
+
+  static {};
+    Code:
+       0: new           #224                // class java/util/concurrent/ConcurrentHashMap
+       3: dup
+       4: invokespecial #225                // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+       7: putstatic     #8                  // Field WRAPPER_MAP:Ljava/util/concurrent/ConcurrentMap;
+      10: iconst_0
+      11: anewarray     #123                // class java/lang/String
+      14: putstatic     #1                  // Field EMPTY_STRING_ARRAY:[Ljava/lang/String;
+      17: iconst_4
+      18: anewarray     #123                // class java/lang/String
+      21: dup
+      22: iconst_0
+      23: ldc           #226                // String getClass
+      25: aastore
+      26: dup
+      27: iconst_1
+      28: ldc           #227                // String hashCode
+      30: aastore
+      31: dup
+      32: iconst_2
+      33: ldc           #228                // String toString
+      35: aastore
+      36: dup
+      37: iconst_3
+      38: ldc           #229                // String equals
+      40: aastore
+      41: putstatic     #2                  // Field OBJECT_METHODS:[Ljava/lang/String;
+      44: new           #230                // class org/apache/dubbo/common/bytecode/Wrapper$1
+      47: dup
+      48: invokespecial #231                // Method org/apache/dubbo/common/bytecode/Wrapper$1."<init>":()V
+      51: putstatic     #7                  // Field OBJECT_WRAPPER:Lorg/apache/dubbo/common/bytecode/Wrapper;
+      54: new           #232                // class java/util/concurrent/atomic/AtomicLong
+      57: dup
+      58: lconst_0
+      59: invokespecial #233                // Method java/util/concurrent/atomic/AtomicLong."<init>":(J)V
+      62: putstatic     #139                // Field WRAPPER_CLASS_COUNTER:Ljava/util/concurrent/atomic/AtomicLong;
+      65: return
+}

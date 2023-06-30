@@ -1,0 +1,82 @@
+Compiled from "Streams.java"
+public interface org.apache.dubbo.common.function.Streams {
+  public static <T, S extends java.lang.Iterable<T>> java.util.stream.Stream<T> filterStream(S, java.util.function.Predicate<T>);
+    Code:
+       0: aload_0
+       1: invokeinterface #1,  1            // InterfaceMethod java/lang/Iterable.spliterator:()Ljava/util/Spliterator;
+       6: iconst_0
+       7: invokestatic  #2                  // Method java/util/stream/StreamSupport.stream:(Ljava/util/Spliterator;Z)Ljava/util/stream/Stream;
+      10: aload_1
+      11: invokeinterface #3,  2            // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+      16: areturn
+
+  public static <T, S extends java.lang.Iterable<T>> java.util.List<T> filterList(S, java.util.function.Predicate<T>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #4                  // InterfaceMethod filterStream:(Ljava/lang/Iterable;Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+       5: invokestatic  #5                  // Method java/util/stream/Collectors.toList:()Ljava/util/stream/Collector;
+       8: invokeinterface #6,  2            // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+      13: checkcast     #7                  // class java/util/List
+      16: areturn
+
+  public static <T, S extends java.lang.Iterable<T>> java.util.Set<T> filterSet(S, java.util.function.Predicate<T>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #4                  // InterfaceMethod filterStream:(Ljava/lang/Iterable;Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+       5: invokedynamic #8,  0              // InvokeDynamic #0:get:()Ljava/util/function/Supplier;
+      10: invokedynamic #9,  0              // InvokeDynamic #1:accept:()Ljava/util/function/BiConsumer;
+      15: invokedynamic #10,  0             // InvokeDynamic #2:accept:()Ljava/util/function/BiConsumer;
+      20: invokeinterface #11,  4           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/function/Supplier;Ljava/util/function/BiConsumer;Ljava/util/function/BiConsumer;)Ljava/lang/Object;
+      25: checkcast     #12                 // class java/util/Set
+      28: areturn
+
+  public static <T, S extends java.lang.Iterable<T>> S filter(S, java.util.function.Predicate<T>);
+    Code:
+       0: ldc           #12                 // class java/util/Set
+       2: aload_0
+       3: invokevirtual #13                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       6: invokevirtual #14                 // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+       9: istore_2
+      10: iload_2
+      11: ifeq          22
+      14: aload_0
+      15: aload_1
+      16: invokestatic  #15                 // InterfaceMethod filterSet:(Ljava/lang/Iterable;Ljava/util/function/Predicate;)Ljava/util/Set;
+      19: goto          27
+      22: aload_0
+      23: aload_1
+      24: invokestatic  #16                 // InterfaceMethod filterList:(Ljava/lang/Iterable;Ljava/util/function/Predicate;)Ljava/util/List;
+      27: areturn
+
+  public static <T, S extends java.lang.Iterable<T>> S filterAll(S, java.util.function.Predicate<T>...);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #17                 // InterfaceMethod org/apache/dubbo/common/function/Predicates.and:([Ljava/util/function/Predicate;)Ljava/util/function/Predicate;
+       5: invokestatic  #18                 // InterfaceMethod filter:(Ljava/lang/Iterable;Ljava/util/function/Predicate;)Ljava/lang/Iterable;
+       8: areturn
+
+  public static <T, S extends java.lang.Iterable<T>> S filterAny(S, java.util.function.Predicate<T>...);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #19                 // InterfaceMethod org/apache/dubbo/common/function/Predicates.or:([Ljava/util/function/Predicate;)Ljava/util/function/Predicate;
+       5: invokestatic  #18                 // InterfaceMethod filter:(Ljava/lang/Iterable;Ljava/util/function/Predicate;)Ljava/lang/Iterable;
+       8: areturn
+
+  public static <T> T filterFirst(java.lang.Iterable<T>, java.util.function.Predicate<T>...);
+    Code:
+       0: aload_0
+       1: invokeinterface #1,  1            // InterfaceMethod java/lang/Iterable.spliterator:()Ljava/util/Spliterator;
+       6: iconst_0
+       7: invokestatic  #2                  // Method java/util/stream/StreamSupport.stream:(Ljava/util/Spliterator;Z)Ljava/util/stream/Stream;
+      10: aload_1
+      11: invokestatic  #17                 // InterfaceMethod org/apache/dubbo/common/function/Predicates.and:([Ljava/util/function/Predicate;)Ljava/util/function/Predicate;
+      14: invokeinterface #3,  2            // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+      19: invokeinterface #20,  1           // InterfaceMethod java/util/stream/Stream.findFirst:()Ljava/util/Optional;
+      24: aconst_null
+      25: invokevirtual #21                 // Method java/util/Optional.orElse:(Ljava/lang/Object;)Ljava/lang/Object;
+      28: areturn
+}

@@ -1,0 +1,151 @@
+Compiled from "GsonUtils.java"
+public class org.apache.dubbo.common.json.GsonUtils {
+  private static volatile java.lang.Object gsonCache;
+
+  private static volatile java.lang.Boolean supportGson;
+
+  public org.apache.dubbo.common.json.GsonUtils();
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  private static boolean isSupportGson();
+    Code:
+       0: getstatic     #3                  // Field supportGson:Ljava/lang/Boolean;
+       3: ifnonnull     59
+       6: ldc           #4                  // class org/apache/dubbo/common/json/GsonUtils
+       8: dup
+       9: astore_0
+      10: monitorenter
+      11: getstatic     #3                  // Field supportGson:Ljava/lang/Boolean;
+      14: ifnonnull     49
+      17: ldc           #5                  // String com.google.gson.Gson
+      19: invokestatic  #6                  // Method org/apache/dubbo/common/utils/ClassUtils.forName:(Ljava/lang/String;)Ljava/lang/Class;
+      22: astore_1
+      23: aload_1
+      24: ifnull        31
+      27: iconst_1
+      28: goto          32
+      31: iconst_0
+      32: invokestatic  #7                  // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      35: putstatic     #3                  // Field supportGson:Ljava/lang/Boolean;
+      38: goto          49
+      41: astore_1
+      42: iconst_0
+      43: invokestatic  #7                  // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      46: putstatic     #3                  // Field supportGson:Ljava/lang/Boolean;
+      49: aload_0
+      50: monitorexit
+      51: goto          59
+      54: astore_2
+      55: aload_0
+      56: monitorexit
+      57: aload_2
+      58: athrow
+      59: getstatic     #3                  // Field supportGson:Ljava/lang/Boolean;
+      62: invokevirtual #9                  // Method java/lang/Boolean.booleanValue:()Z
+      65: ireturn
+    Exception table:
+       from    to  target type
+          17    38    41   Class java/lang/Throwable
+          11    51    54   any
+          54    57    54   any
+
+  public static java.lang.Object fromJson(java.lang.String, java.lang.reflect.Type) throws java.lang.RuntimeException;
+    Code:
+       0: invokestatic  #10                 // Method isSupportGson:()Z
+       3: ifne          16
+       6: new           #11                 // class java/lang/RuntimeException
+       9: dup
+      10: ldc           #12                 // String Gson is not supported. Please import Gson in JVM env.
+      12: invokespecial #13                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;)V
+      15: athrow
+      16: aload_1
+      17: invokestatic  #14                 // Method com/google/gson/reflect/TypeToken.get:(Ljava/lang/reflect/Type;)Lcom/google/gson/reflect/TypeToken;
+      20: invokevirtual #15                 // Method com/google/gson/reflect/TypeToken.getType:()Ljava/lang/reflect/Type;
+      23: astore_2
+      24: invokestatic  #16                 // Method getGson:()Lcom/google/gson/Gson;
+      27: aload_0
+      28: aload_2
+      29: invokevirtual #17                 // Method com/google/gson/Gson.fromJson:(Ljava/lang/String;Ljava/lang/reflect/Type;)Ljava/lang/Object;
+      32: areturn
+      33: astore_3
+      34: new           #11                 // class java/lang/RuntimeException
+      37: dup
+      38: ldc           #19                 // String Generic serialization [%s] Json syntax exception thrown when parsing (message:%s type:%s) error:%s
+      40: iconst_4
+      41: anewarray     #20                 // class java/lang/Object
+      44: dup
+      45: iconst_0
+      46: ldc           #21                 // String gson
+      48: aastore
+      49: dup
+      50: iconst_1
+      51: aload_0
+      52: aastore
+      53: dup
+      54: iconst_2
+      55: aload_2
+      56: invokevirtual #22                 // Method java/lang/Object.toString:()Ljava/lang/String;
+      59: aastore
+      60: dup
+      61: iconst_3
+      62: aload_3
+      63: invokevirtual #23                 // Method com/google/gson/JsonSyntaxException.getMessage:()Ljava/lang/String;
+      66: aastore
+      67: invokestatic  #24                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      70: invokespecial #13                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;)V
+      73: athrow
+    Exception table:
+       from    to  target type
+          24    32    33   Class com/google/gson/JsonSyntaxException
+
+  private static com.google.gson.Gson getGson();
+    Code:
+       0: getstatic     #25                 // Field gsonCache:Ljava/lang/Object;
+       3: ifnull        15
+       6: getstatic     #25                 // Field gsonCache:Ljava/lang/Object;
+       9: instanceof    #26                 // class com/google/gson/Gson
+      12: ifne          55
+      15: ldc           #4                  // class org/apache/dubbo/common/json/GsonUtils
+      17: dup
+      18: astore_0
+      19: monitorenter
+      20: getstatic     #25                 // Field gsonCache:Ljava/lang/Object;
+      23: ifnull        35
+      26: getstatic     #25                 // Field gsonCache:Ljava/lang/Object;
+      29: instanceof    #26                 // class com/google/gson/Gson
+      32: ifne          45
+      35: new           #26                 // class com/google/gson/Gson
+      38: dup
+      39: invokespecial #27                 // Method com/google/gson/Gson."<init>":()V
+      42: putstatic     #25                 // Field gsonCache:Ljava/lang/Object;
+      45: aload_0
+      46: monitorexit
+      47: goto          55
+      50: astore_1
+      51: aload_0
+      52: monitorexit
+      53: aload_1
+      54: athrow
+      55: getstatic     #25                 // Field gsonCache:Ljava/lang/Object;
+      58: checkcast     #26                 // class com/google/gson/Gson
+      61: areturn
+    Exception table:
+       from    to  target type
+          20    47    50   any
+          50    53    50   any
+
+  protected static void setSupportGson(java.lang.Boolean);
+    Code:
+       0: aload_0
+       1: putstatic     #3                  // Field supportGson:Ljava/lang/Boolean;
+       4: return
+
+  static {};
+    Code:
+       0: aconst_null
+       1: putstatic     #25                 // Field gsonCache:Ljava/lang/Object;
+       4: return
+}

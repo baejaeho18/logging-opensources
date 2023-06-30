@@ -1,0 +1,207 @@
+Compiled from "AbstractCompiler.java"
+public abstract class org.apache.dubbo.common.compiler.support.AbstractCompiler implements org.apache.dubbo.common.compiler.Compiler {
+  private static final java.util.regex.Pattern PACKAGE_PATTERN;
+
+  private static final java.util.regex.Pattern CLASS_PATTERN;
+
+  private static final java.util.Map<java.lang.String, java.util.concurrent.locks.Lock> CLASS_IN_CREATION_MAP;
+
+  public org.apache.dubbo.common.compiler.support.AbstractCompiler();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public java.lang.Class<?> compile(java.lang.Class<?>, java.lang.String, java.lang.ClassLoader);
+    Code:
+       0: aload_2
+       1: invokevirtual #2                  // Method java/lang/String.trim:()Ljava/lang/String;
+       4: astore_2
+       5: getstatic     #3                  // Field PACKAGE_PATTERN:Ljava/util/regex/Pattern;
+       8: aload_2
+       9: invokevirtual #4                  // Method java/util/regex/Pattern.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+      12: astore        4
+      14: aload         4
+      16: invokevirtual #5                  // Method java/util/regex/Matcher.find:()Z
+      19: ifeq          33
+      22: aload         4
+      24: iconst_1
+      25: invokevirtual #6                  // Method java/util/regex/Matcher.group:(I)Ljava/lang/String;
+      28: astore        5
+      30: goto          37
+      33: ldc           #7                  // String
+      35: astore        5
+      37: getstatic     #8                  // Field CLASS_PATTERN:Ljava/util/regex/Pattern;
+      40: aload_2
+      41: invokevirtual #4                  // Method java/util/regex/Pattern.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+      44: astore        4
+      46: aload         4
+      48: invokevirtual #5                  // Method java/util/regex/Matcher.find:()Z
+      51: ifeq          65
+      54: aload         4
+      56: iconst_1
+      57: invokevirtual #6                  // Method java/util/regex/Matcher.group:(I)Ljava/lang/String;
+      60: astore        6
+      62: goto          92
+      65: new           #9                  // class java/lang/IllegalArgumentException
+      68: dup
+      69: new           #10                 // class java/lang/StringBuilder
+      72: dup
+      73: invokespecial #11                 // Method java/lang/StringBuilder."<init>":()V
+      76: ldc           #12                 // String No such class name in
+      78: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      81: aload_2
+      82: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      85: invokevirtual #14                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      88: invokespecial #15                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      91: athrow
+      92: aload         5
+      94: ifnull        133
+      97: aload         5
+      99: invokevirtual #16                 // Method java/lang/String.length:()I
+     102: ifle          133
+     105: new           #10                 // class java/lang/StringBuilder
+     108: dup
+     109: invokespecial #11                 // Method java/lang/StringBuilder."<init>":()V
+     112: aload         5
+     114: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     117: ldc           #17                 // String .
+     119: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     122: aload         6
+     124: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     127: invokevirtual #14                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     130: goto          135
+     133: aload         6
+     135: astore        7
+     137: getstatic     #18                 // Field CLASS_IN_CREATION_MAP:Ljava/util/Map;
+     140: aload         7
+     142: invokeinterface #19,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     147: checkcast     #20                 // class java/util/concurrent/locks/Lock
+     150: astore        8
+     152: aload         8
+     154: ifnonnull     190
+     157: getstatic     #18                 // Field CLASS_IN_CREATION_MAP:Ljava/util/Map;
+     160: aload         7
+     162: new           #21                 // class java/util/concurrent/locks/ReentrantLock
+     165: dup
+     166: invokespecial #22                 // Method java/util/concurrent/locks/ReentrantLock."<init>":()V
+     169: invokeinterface #23,  3           // InterfaceMethod java/util/Map.putIfAbsent:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     174: pop
+     175: getstatic     #18                 // Field CLASS_IN_CREATION_MAP:Ljava/util/Map;
+     178: aload         7
+     180: invokeinterface #19,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     185: checkcast     #20                 // class java/util/concurrent/locks/Lock
+     188: astore        8
+     190: aload         8
+     192: invokeinterface #24,  1           // InterfaceMethod java/util/concurrent/locks/Lock.lock:()V
+     197: aload         7
+     199: iconst_1
+     200: aload_3
+     201: invokestatic  #25                 // Method java/lang/Class.forName:(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;
+     204: astore        9
+     206: aload         8
+     208: invokeinterface #26,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     213: aload         9
+     215: areturn
+     216: astore        9
+     218: aload_2
+     219: ldc           #28                 // String }
+     221: invokevirtual #29                 // Method java/lang/String.endsWith:(Ljava/lang/String;)Z
+     224: ifne          259
+     227: new           #30                 // class java/lang/IllegalStateException
+     230: dup
+     231: new           #10                 // class java/lang/StringBuilder
+     234: dup
+     235: invokespecial #11                 // Method java/lang/StringBuilder."<init>":()V
+     238: ldc           #31                 // String The java code not endsWith \"}\", code: \n
+     240: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     243: aload_2
+     244: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     247: ldc           #32                 // String \n
+     249: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     252: invokevirtual #14                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     255: invokespecial #33                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     258: athrow
+     259: aload_0
+     260: aload_1
+     261: aload_3
+     262: aload         7
+     264: aload_2
+     265: invokevirtual #34                 // Method doCompile:(Ljava/lang/Class;Ljava/lang/ClassLoader;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Class;
+     268: astore        10
+     270: aload         8
+     272: invokeinterface #26,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     277: aload         10
+     279: areturn
+     280: astore        10
+     282: aload         10
+     284: athrow
+     285: astore        10
+     287: new           #30                 // class java/lang/IllegalStateException
+     290: dup
+     291: new           #10                 // class java/lang/StringBuilder
+     294: dup
+     295: invokespecial #11                 // Method java/lang/StringBuilder."<init>":()V
+     298: ldc           #37                 // String Failed to compile class, cause:
+     300: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     303: aload         10
+     305: invokevirtual #38                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     308: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     311: ldc           #39                 // String , class:
+     313: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     316: aload         7
+     318: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     321: ldc           #40                 // String , code: \n
+     323: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     326: aload_2
+     327: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     330: ldc           #41                 // String \n, stack:
+     332: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     335: aload         10
+     337: invokestatic  #42                 // Method org/apache/dubbo/common/compiler/support/ClassUtils.toString:(Ljava/lang/Throwable;)Ljava/lang/String;
+     340: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     343: invokevirtual #14                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     346: invokespecial #33                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     349: athrow
+     350: astore        11
+     352: aload         8
+     354: invokeinterface #26,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     359: aload         11
+     361: athrow
+    Exception table:
+       from    to  target type
+         190   206   216   Class java/lang/ClassNotFoundException
+         259   270   280   Class java/lang/RuntimeException
+         259   270   285   Class java/lang/Throwable
+         190   206   350   any
+         216   270   350   any
+         280   352   350   any
+
+  protected java.lang.Class<?> doCompile(java.lang.ClassLoader, java.lang.String, java.lang.String) throws java.lang.Throwable;
+    Code:
+       0: aconst_null
+       1: areturn
+
+  protected java.lang.Class<?> doCompile(java.lang.Class<?>, java.lang.ClassLoader, java.lang.String, java.lang.String) throws java.lang.Throwable;
+    Code:
+       0: aload_0
+       1: aload_2
+       2: aload_3
+       3: aload         4
+       5: invokevirtual #43                 // Method doCompile:(Ljava/lang/ClassLoader;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Class;
+       8: areturn
+
+  static {};
+    Code:
+       0: ldc           #44                 // String package\\s+([$_a-zA-Z][$_a-zA-Z0-9\\.]*);
+       2: invokestatic  #45                 // Method java/util/regex/Pattern.compile:(Ljava/lang/String;)Ljava/util/regex/Pattern;
+       5: putstatic     #3                  // Field PACKAGE_PATTERN:Ljava/util/regex/Pattern;
+       8: ldc           #46                 // String class\\s+([$_a-zA-Z][$_a-zA-Z0-9]*)\\s+
+      10: invokestatic  #45                 // Method java/util/regex/Pattern.compile:(Ljava/lang/String;)Ljava/util/regex/Pattern;
+      13: putstatic     #8                  // Field CLASS_PATTERN:Ljava/util/regex/Pattern;
+      16: new           #47                 // class java/util/concurrent/ConcurrentHashMap
+      19: dup
+      20: invokespecial #48                 // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      23: putstatic     #18                 // Field CLASS_IN_CREATION_MAP:Ljava/util/Map;
+      26: return
+}

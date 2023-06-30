@@ -1,0 +1,72 @@
+Compiled from "LoadStatusChecker.java"
+public class org.apache.dubbo.common.status.support.LoadStatusChecker implements org.apache.dubbo.common.status.StatusChecker {
+  public org.apache.dubbo.common.status.support.LoadStatusChecker();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public org.apache.dubbo.common.status.Status check();
+    Code:
+       0: invokestatic  #2                  // Method org/apache/dubbo/common/system/OperatingSystemBeanManager.getOperatingSystemBean:()Ljava/lang/management/OperatingSystemMXBean;
+       3: invokeinterface #3,  1            // InterfaceMethod java/lang/management/OperatingSystemMXBean.getSystemLoadAverage:()D
+       8: dstore_1
+       9: dload_1
+      10: ldc2_w        #4                  // double -1.0d
+      13: dcmpl
+      14: ifne          21
+      17: invokestatic  #6                  // Method org/apache/dubbo/common/system/OperatingSystemBeanManager.getSystemCpuUsage:()D
+      20: dstore_1
+      21: invokestatic  #2                  // Method org/apache/dubbo/common/system/OperatingSystemBeanManager.getOperatingSystemBean:()Ljava/lang/management/OperatingSystemMXBean;
+      24: invokeinterface #7,  1            // InterfaceMethod java/lang/management/OperatingSystemMXBean.getAvailableProcessors:()I
+      29: istore_3
+      30: dload_1
+      31: dconst_0
+      32: dcmpg
+      33: ifge          44
+      36: getstatic     #8                  // Field org/apache/dubbo/common/status/Status$Level.UNKNOWN:Lorg/apache/dubbo/common/status/Status$Level;
+      39: astore        4
+      41: goto          64
+      44: dload_1
+      45: iload_3
+      46: i2d
+      47: dcmpg
+      48: ifge          59
+      51: getstatic     #9                  // Field org/apache/dubbo/common/status/Status$Level.OK:Lorg/apache/dubbo/common/status/Status$Level;
+      54: astore        4
+      56: goto          64
+      59: getstatic     #10                 // Field org/apache/dubbo/common/status/Status$Level.WARN:Lorg/apache/dubbo/common/status/Status$Level;
+      62: astore        4
+      64: new           #11                 // class java/lang/StringBuilder
+      67: dup
+      68: invokespecial #12                 // Method java/lang/StringBuilder."<init>":()V
+      71: dload_1
+      72: dconst_0
+      73: dcmpg
+      74: ifge          82
+      77: ldc           #13                 // String
+      79: goto          106
+      82: new           #11                 // class java/lang/StringBuilder
+      85: dup
+      86: invokespecial #12                 // Method java/lang/StringBuilder."<init>":()V
+      89: ldc           #14                 // String load:
+      91: invokevirtual #15                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      94: dload_1
+      95: invokevirtual #16                 // Method java/lang/StringBuilder.append:(D)Ljava/lang/StringBuilder;
+      98: ldc           #17                 // String ,
+     100: invokevirtual #15                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     103: invokevirtual #18                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     106: invokevirtual #15                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     109: ldc           #19                 // String cpu:
+     111: invokevirtual #15                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     114: iload_3
+     115: invokevirtual #20                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     118: invokevirtual #18                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     121: astore        5
+     123: new           #21                 // class org/apache/dubbo/common/status/Status
+     126: dup
+     127: aload         4
+     129: aload         5
+     131: invokespecial #22                 // Method org/apache/dubbo/common/status/Status."<init>":(Lorg/apache/dubbo/common/status/Status$Level;Ljava/lang/String;)V
+     134: areturn
+}
