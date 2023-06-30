@@ -1,0 +1,227 @@
+Compiled from "BlockingMultiObserver.java"
+public final class io.reactivex.rxjava3.internal.observers.BlockingMultiObserver<T> extends java.util.concurrent.CountDownLatch implements io.reactivex.rxjava3.core.SingleObserver<T>, io.reactivex.rxjava3.core.CompletableObserver, io.reactivex.rxjava3.core.MaybeObserver<T> {
+  T value;
+
+  java.lang.Throwable error;
+
+  io.reactivex.rxjava3.disposables.Disposable upstream;
+
+  volatile boolean cancelled;
+
+  public io.reactivex.rxjava3.internal.observers.BlockingMultiObserver();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: invokespecial #1                  // Method java/util/concurrent/CountDownLatch."<init>":(I)V
+       5: return
+
+  void dispose();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: putfield      #2                  // Field cancelled:Z
+       5: aload_0
+       6: getfield      #3                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+       9: astore_1
+      10: aload_1
+      11: ifnull        20
+      14: aload_1
+      15: invokeinterface #4,  1            // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.dispose:()V
+      20: return
+
+  public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #3                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+       5: aload_0
+       6: getfield      #2                  // Field cancelled:Z
+       9: ifeq          18
+      12: aload_1
+      13: invokeinterface #4,  1            // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.dispose:()V
+      18: return
+
+  public void onSuccess(T);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #5                  // Field value:Ljava/lang/Object;
+       5: aload_0
+       6: invokevirtual #6                  // Method countDown:()V
+       9: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #7                  // Field error:Ljava/lang/Throwable;
+       5: aload_0
+       6: invokevirtual #6                  // Method countDown:()V
+       9: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: invokevirtual #6                  // Method countDown:()V
+       4: return
+
+  public T blockingGet();
+    Code:
+       0: aload_0
+       1: invokevirtual #8                  // Method getCount:()J
+       4: lconst_0
+       5: lcmp
+       6: ifeq          29
+       9: invokestatic  #9                  // Method io/reactivex/rxjava3/internal/util/BlockingHelper.verifyNonBlocking:()V
+      12: aload_0
+      13: invokevirtual #10                 // Method await:()V
+      16: goto          29
+      19: astore_1
+      20: aload_0
+      21: invokevirtual #12                 // Method dispose:()V
+      24: aload_1
+      25: invokestatic  #13                 // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;
+      28: athrow
+      29: aload_0
+      30: getfield      #7                  // Field error:Ljava/lang/Throwable;
+      33: astore_1
+      34: aload_1
+      35: ifnull        43
+      38: aload_1
+      39: invokestatic  #13                 // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;
+      42: athrow
+      43: aload_0
+      44: getfield      #5                  // Field value:Ljava/lang/Object;
+      47: areturn
+    Exception table:
+       from    to  target type
+           9    16    19   Class java/lang/InterruptedException
+
+  public T blockingGet(T);
+    Code:
+       0: aload_0
+       1: invokevirtual #8                  // Method getCount:()J
+       4: lconst_0
+       5: lcmp
+       6: ifeq          29
+       9: invokestatic  #9                  // Method io/reactivex/rxjava3/internal/util/BlockingHelper.verifyNonBlocking:()V
+      12: aload_0
+      13: invokevirtual #10                 // Method await:()V
+      16: goto          29
+      19: astore_2
+      20: aload_0
+      21: invokevirtual #12                 // Method dispose:()V
+      24: aload_2
+      25: invokestatic  #13                 // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;
+      28: athrow
+      29: aload_0
+      30: getfield      #7                  // Field error:Ljava/lang/Throwable;
+      33: astore_2
+      34: aload_2
+      35: ifnull        43
+      38: aload_2
+      39: invokestatic  #13                 // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;
+      42: athrow
+      43: aload_0
+      44: getfield      #5                  // Field value:Ljava/lang/Object;
+      47: astore_3
+      48: aload_3
+      49: ifnull        56
+      52: aload_3
+      53: goto          57
+      56: aload_1
+      57: areturn
+    Exception table:
+       from    to  target type
+           9    16    19   Class java/lang/InterruptedException
+
+  public boolean blockingAwait(long, java.util.concurrent.TimeUnit);
+    Code:
+       0: aload_0
+       1: invokevirtual #8                  // Method getCount:()J
+       4: lconst_0
+       5: lcmp
+       6: ifeq          42
+       9: invokestatic  #9                  // Method io/reactivex/rxjava3/internal/util/BlockingHelper.verifyNonBlocking:()V
+      12: aload_0
+      13: lload_1
+      14: aload_3
+      15: invokevirtual #14                 // Method await:(JLjava/util/concurrent/TimeUnit;)Z
+      18: ifne          27
+      21: aload_0
+      22: invokevirtual #12                 // Method dispose:()V
+      25: iconst_0
+      26: ireturn
+      27: goto          42
+      30: astore        4
+      32: aload_0
+      33: invokevirtual #12                 // Method dispose:()V
+      36: aload         4
+      38: invokestatic  #13                 // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;
+      41: athrow
+      42: aload_0
+      43: getfield      #7                  // Field error:Ljava/lang/Throwable;
+      46: astore        4
+      48: aload         4
+      50: ifnull        59
+      53: aload         4
+      55: invokestatic  #13                 // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;
+      58: athrow
+      59: iconst_1
+      60: ireturn
+    Exception table:
+       from    to  target type
+           9    26    30   Class java/lang/InterruptedException
+
+  public void blockingConsume(io.reactivex.rxjava3.functions.Consumer<? super T>, io.reactivex.rxjava3.functions.Consumer<? super java.lang.Throwable>, io.reactivex.rxjava3.functions.Action);
+    Code:
+       0: aload_0
+       1: invokevirtual #8                  // Method getCount:()J
+       4: lconst_0
+       5: lcmp
+       6: ifeq          34
+       9: invokestatic  #9                  // Method io/reactivex/rxjava3/internal/util/BlockingHelper.verifyNonBlocking:()V
+      12: aload_0
+      13: invokevirtual #10                 // Method await:()V
+      16: goto          34
+      19: astore        4
+      21: aload_0
+      22: invokevirtual #12                 // Method dispose:()V
+      25: aload_2
+      26: aload         4
+      28: invokeinterface #15,  2           // InterfaceMethod io/reactivex/rxjava3/functions/Consumer.accept:(Ljava/lang/Object;)V
+      33: return
+      34: aload_0
+      35: getfield      #7                  // Field error:Ljava/lang/Throwable;
+      38: astore        4
+      40: aload         4
+      42: ifnull        54
+      45: aload_2
+      46: aload         4
+      48: invokeinterface #15,  2           // InterfaceMethod io/reactivex/rxjava3/functions/Consumer.accept:(Ljava/lang/Object;)V
+      53: return
+      54: aload_0
+      55: getfield      #5                  // Field value:Ljava/lang/Object;
+      58: astore        5
+      60: aload         5
+      62: ifnull        76
+      65: aload_1
+      66: aload         5
+      68: invokeinterface #15,  2           // InterfaceMethod io/reactivex/rxjava3/functions/Consumer.accept:(Ljava/lang/Object;)V
+      73: goto          82
+      76: aload_3
+      77: invokeinterface #16,  1           // InterfaceMethod io/reactivex/rxjava3/functions/Action.run:()V
+      82: goto          97
+      85: astore        4
+      87: aload         4
+      89: invokestatic  #18                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      92: aload         4
+      94: invokestatic  #19                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      97: return
+    Exception table:
+       from    to  target type
+           9    16    19   Class java/lang/InterruptedException
+           0    33    85   Class java/lang/Throwable
+          34    53    85   Class java/lang/Throwable
+          54    82    85   Class java/lang/Throwable
+}

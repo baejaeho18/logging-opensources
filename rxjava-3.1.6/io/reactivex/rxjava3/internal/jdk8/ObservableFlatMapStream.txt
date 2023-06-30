@@ -1,0 +1,72 @@
+Compiled from "ObservableFlatMapStream.java"
+public final class io.reactivex.rxjava3.internal.jdk8.ObservableFlatMapStream<T, R> extends io.reactivex.rxjava3.core.Observable<R> {
+  final io.reactivex.rxjava3.core.Observable<T> source;
+
+  final io.reactivex.rxjava3.functions.Function<? super T, ? extends java.util.stream.Stream<? extends R>> mapper;
+
+  public io.reactivex.rxjava3.internal.jdk8.ObservableFlatMapStream(io.reactivex.rxjava3.core.Observable<T>, io.reactivex.rxjava3.functions.Function<? super T, ? extends java.util.stream.Stream<? extends R>>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method io/reactivex/rxjava3/core/Observable."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field source:Lio/reactivex/rxjava3/core/Observable;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field mapper:Lio/reactivex/rxjava3/functions/Function;
+      14: return
+
+  protected void subscribeActual(io.reactivex.rxjava3.core.Observer<? super R>);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field source:Lio/reactivex/rxjava3/core/Observable;
+       4: instanceof    #4                  // class io/reactivex/rxjava3/functions/Supplier
+       7: ifeq          81
+      10: aconst_null
+      11: astore_2
+      12: aload_0
+      13: getfield      #2                  // Field source:Lio/reactivex/rxjava3/core/Observable;
+      16: checkcast     #4                  // class io/reactivex/rxjava3/functions/Supplier
+      19: invokeinterface #5,  1            // InterfaceMethod io/reactivex/rxjava3/functions/Supplier.get:()Ljava/lang/Object;
+      24: astore_3
+      25: aload_3
+      26: ifnull        48
+      29: aload_0
+      30: getfield      #3                  // Field mapper:Lio/reactivex/rxjava3/functions/Function;
+      33: aload_3
+      34: invokeinterface #6,  2            // InterfaceMethod io/reactivex/rxjava3/functions/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+      39: ldc           #7                  // String The mapper returned a null Stream
+      41: invokestatic  #8                  // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+      44: checkcast     #9                  // class java/util/stream/Stream
+      47: astore_2
+      48: goto          62
+      51: astore_3
+      52: aload_3
+      53: invokestatic  #11                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      56: aload_3
+      57: aload_1
+      58: invokestatic  #12                 // Method io/reactivex/rxjava3/internal/disposables/EmptyDisposable.error:(Ljava/lang/Throwable;Lio/reactivex/rxjava3/core/Observer;)V
+      61: return
+      62: aload_2
+      63: ifnull        74
+      66: aload_1
+      67: aload_2
+      68: invokestatic  #13                 // Method io/reactivex/rxjava3/internal/jdk8/ObservableFromStream.subscribeStream:(Lio/reactivex/rxjava3/core/Observer;Ljava/util/stream/Stream;)V
+      71: goto          78
+      74: aload_1
+      75: invokestatic  #14                 // Method io/reactivex/rxjava3/internal/disposables/EmptyDisposable.complete:(Lio/reactivex/rxjava3/core/Observer;)V
+      78: goto          100
+      81: aload_0
+      82: getfield      #2                  // Field source:Lio/reactivex/rxjava3/core/Observable;
+      85: new           #15                 // class io/reactivex/rxjava3/internal/jdk8/ObservableFlatMapStream$FlatMapStreamObserver
+      88: dup
+      89: aload_1
+      90: aload_0
+      91: getfield      #3                  // Field mapper:Lio/reactivex/rxjava3/functions/Function;
+      94: invokespecial #16                 // Method io/reactivex/rxjava3/internal/jdk8/ObservableFlatMapStream$FlatMapStreamObserver."<init>":(Lio/reactivex/rxjava3/core/Observer;Lio/reactivex/rxjava3/functions/Function;)V
+      97: invokevirtual #17                 // Method io/reactivex/rxjava3/core/Observable.subscribe:(Lio/reactivex/rxjava3/core/Observer;)V
+     100: return
+    Exception table:
+       from    to  target type
+          12    48    51   Class java/lang/Throwable
+}

@@ -1,0 +1,138 @@
+Compiled from "ParallelMapOptional.java"
+final class io.reactivex.rxjava3.internal.jdk8.ParallelMapOptional$ParallelMapSubscriber<T, R> implements io.reactivex.rxjava3.operators.ConditionalSubscriber<T>, org.reactivestreams.Subscription {
+  final org.reactivestreams.Subscriber<? super R> downstream;
+
+  final io.reactivex.rxjava3.functions.Function<? super T, java.util.Optional<? extends R>> mapper;
+
+  org.reactivestreams.Subscription upstream;
+
+  boolean done;
+
+  io.reactivex.rxjava3.internal.jdk8.ParallelMapOptional$ParallelMapSubscriber(org.reactivestreams.Subscriber<? super R>, io.reactivex.rxjava3.functions.Function<? super T, java.util.Optional<? extends R>>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field mapper:Lio/reactivex/rxjava3/functions/Function;
+      14: return
+
+  public void request(long);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field upstream:Lorg/reactivestreams/Subscription;
+       4: lload_1
+       5: invokeinterface #5,  3            // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+      10: return
+
+  public void cancel();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field upstream:Lorg/reactivestreams/Subscription;
+       4: invokeinterface #6,  1            // InterfaceMethod org/reactivestreams/Subscription.cancel:()V
+       9: return
+
+  public void onSubscribe(org.reactivestreams.Subscription);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field upstream:Lorg/reactivestreams/Subscription;
+       4: aload_1
+       5: invokestatic  #7                  // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.validate:(Lorg/reactivestreams/Subscription;Lorg/reactivestreams/Subscription;)Z
+       8: ifeq          26
+      11: aload_0
+      12: aload_1
+      13: putfield      #4                  // Field upstream:Lorg/reactivestreams/Subscription;
+      16: aload_0
+      17: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      20: aload_0
+      21: invokeinterface #8,  2            // InterfaceMethod org/reactivestreams/Subscriber.onSubscribe:(Lorg/reactivestreams/Subscription;)V
+      26: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #9                  // Method tryOnNext:(Ljava/lang/Object;)Z
+       5: ifne          18
+       8: aload_0
+       9: getfield      #4                  // Field upstream:Lorg/reactivestreams/Subscription;
+      12: lconst_1
+      13: invokeinterface #5,  3            // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+      18: return
+
+  public boolean tryOnNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field done:Z
+       4: ifeq          9
+       7: iconst_1
+       8: ireturn
+       9: aload_0
+      10: getfield      #3                  // Field mapper:Lio/reactivex/rxjava3/functions/Function;
+      13: aload_1
+      14: invokeinterface #11,  2           // InterfaceMethod io/reactivex/rxjava3/functions/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+      19: ldc           #12                 // String The mapper returned a null Optional
+      21: invokestatic  #13                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+      24: checkcast     #14                 // class java/util/Optional
+      27: astore_2
+      28: goto          47
+      31: astore_3
+      32: aload_3
+      33: invokestatic  #16                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      36: aload_0
+      37: invokevirtual #17                 // Method cancel:()V
+      40: aload_0
+      41: aload_3
+      42: invokevirtual #18                 // Method onError:(Ljava/lang/Throwable;)V
+      45: iconst_1
+      46: ireturn
+      47: aload_2
+      48: invokevirtual #19                 // Method java/util/Optional.isPresent:()Z
+      51: ifeq          69
+      54: aload_0
+      55: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      58: aload_2
+      59: invokevirtual #20                 // Method java/util/Optional.get:()Ljava/lang/Object;
+      62: invokeinterface #21,  2           // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+      67: iconst_1
+      68: ireturn
+      69: iconst_0
+      70: ireturn
+    Exception table:
+       from    to  target type
+           9    28    31   Class java/lang/Throwable
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field done:Z
+       4: ifeq          12
+       7: aload_1
+       8: invokestatic  #22                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      11: return
+      12: aload_0
+      13: iconst_1
+      14: putfield      #10                 // Field done:Z
+      17: aload_0
+      18: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      21: aload_1
+      22: invokeinterface #23,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      27: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field done:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: iconst_1
+      10: putfield      #10                 // Field done:Z
+      13: aload_0
+      14: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      17: invokeinterface #24,  1           // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+      22: return
+}

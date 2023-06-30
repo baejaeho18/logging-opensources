@@ -1,0 +1,206 @@
+Compiled from "BlockingDisposableMultiObserver.java"
+public final class io.reactivex.rxjava3.internal.observers.BlockingDisposableMultiObserver<T> extends java.util.concurrent.CountDownLatch implements io.reactivex.rxjava3.core.MaybeObserver<T>, io.reactivex.rxjava3.core.SingleObserver<T>, io.reactivex.rxjava3.core.CompletableObserver, io.reactivex.rxjava3.disposables.Disposable {
+  T value;
+
+  java.lang.Throwable error;
+
+  final io.reactivex.rxjava3.internal.disposables.SequentialDisposable upstream;
+
+  public io.reactivex.rxjava3.internal.observers.BlockingDisposableMultiObserver();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: invokespecial #1                  // Method java/util/concurrent/CountDownLatch."<init>":(I)V
+       5: aload_0
+       6: new           #2                  // class io/reactivex/rxjava3/internal/disposables/SequentialDisposable
+       9: dup
+      10: invokespecial #3                  // Method io/reactivex/rxjava3/internal/disposables/SequentialDisposable."<init>":()V
+      13: putfield      #4                  // Field upstream:Lio/reactivex/rxjava3/internal/disposables/SequentialDisposable;
+      16: return
+
+  public void dispose();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field upstream:Lio/reactivex/rxjava3/internal/disposables/SequentialDisposable;
+       4: invokevirtual #5                  // Method io/reactivex/rxjava3/internal/disposables/SequentialDisposable.dispose:()V
+       7: aload_0
+       8: invokevirtual #6                  // Method countDown:()V
+      11: return
+
+  public boolean isDisposed();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field upstream:Lio/reactivex/rxjava3/internal/disposables/SequentialDisposable;
+       4: invokevirtual #7                  // Method io/reactivex/rxjava3/internal/disposables/SequentialDisposable.isDisposed:()Z
+       7: ireturn
+
+  public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field upstream:Lio/reactivex/rxjava3/internal/disposables/SequentialDisposable;
+       4: aload_1
+       5: invokestatic  #8                  // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.setOnce:(Ljava/util/concurrent/atomic/AtomicReference;Lio/reactivex/rxjava3/disposables/Disposable;)Z
+       8: pop
+       9: return
+
+  public void onSuccess(T);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #9                  // Field value:Ljava/lang/Object;
+       5: aload_0
+       6: getfield      #4                  // Field upstream:Lio/reactivex/rxjava3/internal/disposables/SequentialDisposable;
+       9: invokestatic  #10                 // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.disposed:()Lio/reactivex/rxjava3/disposables/Disposable;
+      12: invokevirtual #11                 // Method io/reactivex/rxjava3/internal/disposables/SequentialDisposable.lazySet:(Ljava/lang/Object;)V
+      15: aload_0
+      16: invokevirtual #6                  // Method countDown:()V
+      19: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #12                 // Field error:Ljava/lang/Throwable;
+       5: aload_0
+       6: getfield      #4                  // Field upstream:Lio/reactivex/rxjava3/internal/disposables/SequentialDisposable;
+       9: invokestatic  #10                 // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.disposed:()Lio/reactivex/rxjava3/disposables/Disposable;
+      12: invokevirtual #11                 // Method io/reactivex/rxjava3/internal/disposables/SequentialDisposable.lazySet:(Ljava/lang/Object;)V
+      15: aload_0
+      16: invokevirtual #6                  // Method countDown:()V
+      19: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field upstream:Lio/reactivex/rxjava3/internal/disposables/SequentialDisposable;
+       4: invokestatic  #10                 // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.disposed:()Lio/reactivex/rxjava3/disposables/Disposable;
+       7: invokevirtual #11                 // Method io/reactivex/rxjava3/internal/disposables/SequentialDisposable.lazySet:(Ljava/lang/Object;)V
+      10: aload_0
+      11: invokevirtual #6                  // Method countDown:()V
+      14: return
+
+  public void blockingConsume(io.reactivex.rxjava3.core.CompletableObserver);
+    Code:
+       0: aload_0
+       1: invokevirtual #13                 // Method getCount:()J
+       4: lconst_0
+       5: lcmp
+       6: ifeq          32
+       9: invokestatic  #14                 // Method io/reactivex/rxjava3/internal/util/BlockingHelper.verifyNonBlocking:()V
+      12: aload_0
+      13: invokevirtual #15                 // Method await:()V
+      16: goto          32
+      19: astore_2
+      20: aload_0
+      21: invokevirtual #17                 // Method dispose:()V
+      24: aload_1
+      25: aload_2
+      26: invokeinterface #18,  2           // InterfaceMethod io/reactivex/rxjava3/core/CompletableObserver.onError:(Ljava/lang/Throwable;)V
+      31: return
+      32: aload_0
+      33: invokevirtual #19                 // Method isDisposed:()Z
+      36: ifeq          40
+      39: return
+      40: aload_0
+      41: getfield      #12                 // Field error:Ljava/lang/Throwable;
+      44: astore_2
+      45: aload_2
+      46: ifnull        59
+      49: aload_1
+      50: aload_2
+      51: invokeinterface #18,  2           // InterfaceMethod io/reactivex/rxjava3/core/CompletableObserver.onError:(Ljava/lang/Throwable;)V
+      56: goto          65
+      59: aload_1
+      60: invokeinterface #20,  1           // InterfaceMethod io/reactivex/rxjava3/core/CompletableObserver.onComplete:()V
+      65: return
+    Exception table:
+       from    to  target type
+           9    16    19   Class java/lang/InterruptedException
+
+  public void blockingConsume(io.reactivex.rxjava3.core.SingleObserver<? super T>);
+    Code:
+       0: aload_0
+       1: invokevirtual #13                 // Method getCount:()J
+       4: lconst_0
+       5: lcmp
+       6: ifeq          32
+       9: invokestatic  #14                 // Method io/reactivex/rxjava3/internal/util/BlockingHelper.verifyNonBlocking:()V
+      12: aload_0
+      13: invokevirtual #15                 // Method await:()V
+      16: goto          32
+      19: astore_2
+      20: aload_0
+      21: invokevirtual #17                 // Method dispose:()V
+      24: aload_1
+      25: aload_2
+      26: invokeinterface #21,  2           // InterfaceMethod io/reactivex/rxjava3/core/SingleObserver.onError:(Ljava/lang/Throwable;)V
+      31: return
+      32: aload_0
+      33: invokevirtual #19                 // Method isDisposed:()Z
+      36: ifeq          40
+      39: return
+      40: aload_0
+      41: getfield      #12                 // Field error:Ljava/lang/Throwable;
+      44: astore_2
+      45: aload_2
+      46: ifnull        59
+      49: aload_1
+      50: aload_2
+      51: invokeinterface #21,  2           // InterfaceMethod io/reactivex/rxjava3/core/SingleObserver.onError:(Ljava/lang/Throwable;)V
+      56: goto          69
+      59: aload_1
+      60: aload_0
+      61: getfield      #9                  // Field value:Ljava/lang/Object;
+      64: invokeinterface #22,  2           // InterfaceMethod io/reactivex/rxjava3/core/SingleObserver.onSuccess:(Ljava/lang/Object;)V
+      69: return
+    Exception table:
+       from    to  target type
+           9    16    19   Class java/lang/InterruptedException
+
+  public void blockingConsume(io.reactivex.rxjava3.core.MaybeObserver<? super T>);
+    Code:
+       0: aload_0
+       1: invokevirtual #13                 // Method getCount:()J
+       4: lconst_0
+       5: lcmp
+       6: ifeq          32
+       9: invokestatic  #14                 // Method io/reactivex/rxjava3/internal/util/BlockingHelper.verifyNonBlocking:()V
+      12: aload_0
+      13: invokevirtual #15                 // Method await:()V
+      16: goto          32
+      19: astore_2
+      20: aload_0
+      21: invokevirtual #17                 // Method dispose:()V
+      24: aload_1
+      25: aload_2
+      26: invokeinterface #23,  2           // InterfaceMethod io/reactivex/rxjava3/core/MaybeObserver.onError:(Ljava/lang/Throwable;)V
+      31: return
+      32: aload_0
+      33: invokevirtual #19                 // Method isDisposed:()Z
+      36: ifeq          40
+      39: return
+      40: aload_0
+      41: getfield      #12                 // Field error:Ljava/lang/Throwable;
+      44: astore_2
+      45: aload_2
+      46: ifnull        59
+      49: aload_1
+      50: aload_2
+      51: invokeinterface #23,  2           // InterfaceMethod io/reactivex/rxjava3/core/MaybeObserver.onError:(Ljava/lang/Throwable;)V
+      56: goto          84
+      59: aload_0
+      60: getfield      #9                  // Field value:Ljava/lang/Object;
+      63: astore_3
+      64: aload_3
+      65: ifnonnull     77
+      68: aload_1
+      69: invokeinterface #24,  1           // InterfaceMethod io/reactivex/rxjava3/core/MaybeObserver.onComplete:()V
+      74: goto          84
+      77: aload_1
+      78: aload_3
+      79: invokeinterface #25,  2           // InterfaceMethod io/reactivex/rxjava3/core/MaybeObserver.onSuccess:(Ljava/lang/Object;)V
+      84: return
+    Exception table:
+       from    to  target type
+           9    16    19   Class java/lang/InterruptedException
+}

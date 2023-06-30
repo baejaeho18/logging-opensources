@@ -1,0 +1,119 @@
+Compiled from "CompletionStageConsumer.java"
+public final class io.reactivex.rxjava3.internal.jdk8.CompletionStageConsumer<T> extends java.util.concurrent.CompletableFuture<T> implements io.reactivex.rxjava3.core.MaybeObserver<T>, io.reactivex.rxjava3.core.SingleObserver<T>, io.reactivex.rxjava3.core.CompletableObserver {
+  final java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.disposables.Disposable> upstream;
+
+  final boolean hasDefault;
+
+  final T defaultItem;
+
+  public io.reactivex.rxjava3.internal.jdk8.CompletionStageConsumer(boolean, T);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/CompletableFuture."<init>":()V
+       4: aload_0
+       5: iload_1
+       6: putfield      #2                  // Field hasDefault:Z
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field defaultItem:Ljava/lang/Object;
+      14: aload_0
+      15: new           #4                  // class java/util/concurrent/atomic/AtomicReference
+      18: dup
+      19: invokespecial #5                  // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+      22: putfield      #6                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      25: return
+
+  public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+       4: aload_1
+       5: invokestatic  #7                  // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.setOnce:(Ljava/util/concurrent/atomic/AtomicReference;Lio/reactivex/rxjava3/disposables/Disposable;)Z
+       8: pop
+       9: return
+
+  public void onSuccess(T);
+    Code:
+       0: aload_0
+       1: invokevirtual #8                  // Method clear:()V
+       4: aload_0
+       5: aload_1
+       6: invokevirtual #9                  // Method complete:(Ljava/lang/Object;)Z
+       9: pop
+      10: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: invokevirtual #8                  // Method clear:()V
+       4: aload_0
+       5: aload_1
+       6: invokevirtual #10                 // Method completeExceptionally:(Ljava/lang/Throwable;)Z
+       9: ifne          16
+      12: aload_1
+      13: invokestatic  #11                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      16: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field hasDefault:Z
+       4: ifeq          19
+       7: aload_0
+       8: aload_0
+       9: getfield      #3                  // Field defaultItem:Ljava/lang/Object;
+      12: invokevirtual #9                  // Method complete:(Ljava/lang/Object;)Z
+      15: pop
+      16: goto          33
+      19: aload_0
+      20: new           #12                 // class java/util/NoSuchElementException
+      23: dup
+      24: ldc           #13                 // String The source was empty
+      26: invokespecial #14                 // Method java/util/NoSuchElementException."<init>":(Ljava/lang/String;)V
+      29: invokevirtual #10                 // Method completeExceptionally:(Ljava/lang/Throwable;)Z
+      32: pop
+      33: return
+
+  void cancelUpstream();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokestatic  #15                 // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.dispose:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+       7: pop
+       8: return
+
+  void clear();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+       4: getstatic     #16                 // Field io/reactivex/rxjava3/internal/disposables/DisposableHelper.DISPOSED:Lio/reactivex/rxjava3/internal/disposables/DisposableHelper;
+       7: invokevirtual #17                 // Method java/util/concurrent/atomic/AtomicReference.lazySet:(Ljava/lang/Object;)V
+      10: return
+
+  public boolean cancel(boolean);
+    Code:
+       0: aload_0
+       1: invokevirtual #18                 // Method cancelUpstream:()V
+       4: aload_0
+       5: iload_1
+       6: invokespecial #19                 // Method java/util/concurrent/CompletableFuture.cancel:(Z)Z
+       9: ireturn
+
+  public boolean complete(T);
+    Code:
+       0: aload_0
+       1: invokevirtual #18                 // Method cancelUpstream:()V
+       4: aload_0
+       5: aload_1
+       6: invokespecial #20                 // Method java/util/concurrent/CompletableFuture.complete:(Ljava/lang/Object;)Z
+       9: ireturn
+
+  public boolean completeExceptionally(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: invokevirtual #18                 // Method cancelUpstream:()V
+       4: aload_0
+       5: aload_1
+       6: invokespecial #21                 // Method java/util/concurrent/CompletableFuture.completeExceptionally:(Ljava/lang/Throwable;)Z
+       9: ireturn
+}

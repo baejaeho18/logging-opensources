@@ -1,0 +1,198 @@
+Compiled from "ObservableFlatMapStream.java"
+final class io.reactivex.rxjava3.internal.jdk8.ObservableFlatMapStream$FlatMapStreamObserver<T, R> extends java.util.concurrent.atomic.AtomicInteger implements io.reactivex.rxjava3.core.Observer<T>, io.reactivex.rxjava3.disposables.Disposable {
+  private static final long serialVersionUID;
+
+  final io.reactivex.rxjava3.core.Observer<? super R> downstream;
+
+  final io.reactivex.rxjava3.functions.Function<? super T, ? extends java.util.stream.Stream<? extends R>> mapper;
+
+  io.reactivex.rxjava3.disposables.Disposable upstream;
+
+  volatile boolean disposed;
+
+  boolean done;
+
+  io.reactivex.rxjava3.internal.jdk8.ObservableFlatMapStream$FlatMapStreamObserver(io.reactivex.rxjava3.core.Observer<? super R>, io.reactivex.rxjava3.functions.Function<? super T, ? extends java.util.stream.Stream<? extends R>>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field mapper:Lio/reactivex/rxjava3/functions/Function;
+      14: return
+
+  public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+       4: aload_1
+       5: invokestatic  #5                  // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.validate:(Lio/reactivex/rxjava3/disposables/Disposable;Lio/reactivex/rxjava3/disposables/Disposable;)Z
+       8: ifeq          26
+      11: aload_0
+      12: aload_1
+      13: putfield      #4                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+      16: aload_0
+      17: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      20: aload_0
+      21: invokeinterface #6,  2            // InterfaceMethod io/reactivex/rxjava3/core/Observer.onSubscribe:(Lio/reactivex/rxjava3/disposables/Disposable;)V
+      26: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field done:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: getfield      #3                  // Field mapper:Lio/reactivex/rxjava3/functions/Function;
+      12: aload_1
+      13: invokeinterface #8,  2            // InterfaceMethod io/reactivex/rxjava3/functions/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+      18: ldc           #9                  // String The mapper returned a null Stream
+      20: invokestatic  #10                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+      23: checkcast     #11                 // class java/util/stream/Stream
+      26: astore_2
+      27: aconst_null
+      28: astore_3
+      29: aload_2
+      30: invokeinterface #12,  1           // InterfaceMethod java/util/stream/Stream.iterator:()Ljava/util/Iterator;
+      35: astore        4
+      37: aload         4
+      39: invokeinterface #13,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      44: ifeq          120
+      47: aload_0
+      48: getfield      #14                 // Field disposed:Z
+      51: ifeq          62
+      54: aload_0
+      55: iconst_1
+      56: putfield      #7                  // Field done:Z
+      59: goto          120
+      62: aload         4
+      64: invokeinterface #15,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      69: ldc           #16                 // String The Stream\'s Iterator.next returned a null value
+      71: invokestatic  #10                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+      74: astore        5
+      76: aload_0
+      77: getfield      #14                 // Field disposed:Z
+      80: ifeq          91
+      83: aload_0
+      84: iconst_1
+      85: putfield      #7                  // Field done:Z
+      88: goto          120
+      91: aload_0
+      92: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      95: aload         5
+      97: invokeinterface #17,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onNext:(Ljava/lang/Object;)V
+     102: aload_0
+     103: getfield      #14                 // Field disposed:Z
+     106: ifeq          117
+     109: aload_0
+     110: iconst_1
+     111: putfield      #7                  // Field done:Z
+     114: goto          120
+     117: goto          37
+     120: aload_2
+     121: ifnull        204
+     124: aload_3
+     125: ifnull        148
+     128: aload_2
+     129: invokeinterface #18,  1           // InterfaceMethod java/util/stream/Stream.close:()V
+     134: goto          204
+     137: astore        4
+     139: aload_3
+     140: aload         4
+     142: invokevirtual #20                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     145: goto          204
+     148: aload_2
+     149: invokeinterface #18,  1           // InterfaceMethod java/util/stream/Stream.close:()V
+     154: goto          204
+     157: astore        4
+     159: aload         4
+     161: astore_3
+     162: aload         4
+     164: athrow
+     165: astore        6
+     167: aload_2
+     168: ifnull        201
+     171: aload_3
+     172: ifnull        195
+     175: aload_2
+     176: invokeinterface #18,  1           // InterfaceMethod java/util/stream/Stream.close:()V
+     181: goto          201
+     184: astore        7
+     186: aload_3
+     187: aload         7
+     189: invokevirtual #20                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     192: goto          201
+     195: aload_2
+     196: invokeinterface #18,  1           // InterfaceMethod java/util/stream/Stream.close:()V
+     201: aload         6
+     203: athrow
+     204: goto          226
+     207: astore_2
+     208: aload_2
+     209: invokestatic  #21                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+     212: aload_0
+     213: getfield      #4                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+     216: invokeinterface #22,  1           // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.dispose:()V
+     221: aload_0
+     222: aload_2
+     223: invokevirtual #23                 // Method onError:(Ljava/lang/Throwable;)V
+     226: return
+    Exception table:
+       from    to  target type
+         128   134   137   Class java/lang/Throwable
+          29   120   157   Class java/lang/Throwable
+          29   120   165   any
+         175   181   184   Class java/lang/Throwable
+         157   167   165   any
+           8   204   207   Class java/lang/Throwable
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field done:Z
+       4: ifeq          14
+       7: aload_1
+       8: invokestatic  #24                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      11: goto          29
+      14: aload_0
+      15: iconst_1
+      16: putfield      #7                  // Field done:Z
+      19: aload_0
+      20: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      23: aload_1
+      24: invokeinterface #25,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      29: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field done:Z
+       4: ifne          21
+       7: aload_0
+       8: iconst_1
+       9: putfield      #7                  // Field done:Z
+      12: aload_0
+      13: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      16: invokeinterface #26,  1           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onComplete:()V
+      21: return
+
+  public void dispose();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: putfield      #14                 // Field disposed:Z
+       5: aload_0
+       6: getfield      #4                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+       9: invokeinterface #22,  1           // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.dispose:()V
+      14: return
+
+  public boolean isDisposed();
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field disposed:Z
+       4: ireturn
+}
