@@ -1,0 +1,925 @@
+Compiled from "ConfigUtils.java"
+public class org.apache.dubbo.common.utils.ConfigUtils {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private static final java.util.regex.Pattern VARIABLE_PATTERN;
+
+  private static int PID;
+
+  private org.apache.dubbo.common.utils.ConfigUtils();
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static boolean isNotEmpty(java.lang.String);
+    Code:
+       0: aload_0
+       1: invokestatic  #4                  // Method isEmpty:(Ljava/lang/String;)Z
+       4: ifne          11
+       7: iconst_1
+       8: goto          12
+      11: iconst_0
+      12: ireturn
+
+  public static boolean isEmpty(java.lang.String);
+    Code:
+       0: aload_0
+       1: invokestatic  #5                  // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+       4: ifne          43
+       7: ldc           #6                  // String false
+       9: aload_0
+      10: invokevirtual #7                  // Method java/lang/String.equalsIgnoreCase:(Ljava/lang/String;)Z
+      13: ifne          43
+      16: ldc           #8                  // String 0
+      18: aload_0
+      19: invokevirtual #7                  // Method java/lang/String.equalsIgnoreCase:(Ljava/lang/String;)Z
+      22: ifne          43
+      25: ldc           #9                  // String null
+      27: aload_0
+      28: invokevirtual #7                  // Method java/lang/String.equalsIgnoreCase:(Ljava/lang/String;)Z
+      31: ifne          43
+      34: ldc           #10                 // String N/A
+      36: aload_0
+      37: invokevirtual #7                  // Method java/lang/String.equalsIgnoreCase:(Ljava/lang/String;)Z
+      40: ifeq          47
+      43: iconst_1
+      44: goto          48
+      47: iconst_0
+      48: ireturn
+
+  public static boolean isDefault(java.lang.String);
+    Code:
+       0: ldc           #11                 // String true
+       2: aload_0
+       3: invokevirtual #7                  // Method java/lang/String.equalsIgnoreCase:(Ljava/lang/String;)Z
+       6: ifne          18
+       9: ldc           #12                 // String default
+      11: aload_0
+      12: invokevirtual #7                  // Method java/lang/String.equalsIgnoreCase:(Ljava/lang/String;)Z
+      15: ifeq          22
+      18: iconst_1
+      19: goto          23
+      22: iconst_0
+      23: ireturn
+
+  public static java.util.List<java.lang.String> mergeValues(org.apache.dubbo.common.extension.ExtensionDirector, java.lang.Class<?>, java.lang.String, java.util.List<java.lang.String>);
+    Code:
+       0: new           #13                 // class java/util/ArrayList
+       3: dup
+       4: invokespecial #14                 // Method java/util/ArrayList."<init>":()V
+       7: astore        4
+       9: aload_3
+      10: ifnull        69
+      13: aload_3
+      14: invokeinterface #15,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      19: astore        5
+      21: aload         5
+      23: invokeinterface #16,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      28: ifeq          69
+      31: aload         5
+      33: invokeinterface #17,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      38: checkcast     #18                 // class java/lang/String
+      41: astore        6
+      43: aload_0
+      44: aload_1
+      45: invokevirtual #19                 // Method org/apache/dubbo/common/extension/ExtensionDirector.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      48: aload         6
+      50: invokevirtual #20                 // Method org/apache/dubbo/common/extension/ExtensionLoader.hasExtension:(Ljava/lang/String;)Z
+      53: ifeq          66
+      56: aload         4
+      58: aload         6
+      60: invokeinterface #21,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      65: pop
+      66: goto          21
+      69: new           #13                 // class java/util/ArrayList
+      72: dup
+      73: invokespecial #14                 // Method java/util/ArrayList."<init>":()V
+      76: astore        5
+      78: aload_2
+      79: ifnull        92
+      82: aload_2
+      83: invokevirtual #22                 // Method java/lang/String.trim:()Ljava/lang/String;
+      86: invokevirtual #23                 // Method java/lang/String.length:()I
+      89: ifne          99
+      92: iconst_0
+      93: anewarray     #18                 // class java/lang/String
+      96: goto          106
+      99: getstatic     #24                 // Field org/apache/dubbo/common/constants/CommonConstants.COMMA_SPLIT_PATTERN:Ljava/util/regex/Pattern;
+     102: aload_2
+     103: invokevirtual #25                 // Method java/util/regex/Pattern.split:(Ljava/lang/CharSequence;)[Ljava/lang/String;
+     106: astore        6
+     108: aload         6
+     110: astore        7
+     112: aload         7
+     114: arraylength
+     115: istore        8
+     117: iconst_0
+     118: istore        9
+     120: iload         9
+     122: iload         8
+     124: if_icmpge     166
+     127: aload         7
+     129: iload         9
+     131: aaload
+     132: astore        10
+     134: aload         10
+     136: ifnull        160
+     139: aload         10
+     141: invokevirtual #22                 // Method java/lang/String.trim:()Ljava/lang/String;
+     144: invokevirtual #23                 // Method java/lang/String.length:()I
+     147: ifle          160
+     150: aload         5
+     152: aload         10
+     154: invokeinterface #21,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     159: pop
+     160: iinc          9, 1
+     163: goto          120
+     166: aload         5
+     168: ldc           #26                 // String -default
+     170: invokeinterface #27,  2           // InterfaceMethod java/util/List.contains:(Ljava/lang/Object;)Z
+     175: ifne          233
+     178: aload         5
+     180: ldc           #12                 // String default
+     182: invokeinterface #28,  2           // InterfaceMethod java/util/List.indexOf:(Ljava/lang/Object;)I
+     187: istore        7
+     189: iload         7
+     191: ifle          209
+     194: aload         5
+     196: iload         7
+     198: aload         4
+     200: invokeinterface #29,  3           // InterfaceMethod java/util/List.addAll:(ILjava/util/Collection;)Z
+     205: pop
+     206: goto          220
+     209: aload         5
+     211: iconst_0
+     212: aload         4
+     214: invokeinterface #29,  3           // InterfaceMethod java/util/List.addAll:(ILjava/util/Collection;)Z
+     219: pop
+     220: aload         5
+     222: ldc           #12                 // String default
+     224: invokeinterface #30,  2           // InterfaceMethod java/util/List.remove:(Ljava/lang/Object;)Z
+     229: pop
+     230: goto          243
+     233: aload         5
+     235: ldc           #12                 // String default
+     237: invokeinterface #30,  2           // InterfaceMethod java/util/List.remove:(Ljava/lang/Object;)Z
+     242: pop
+     243: new           #13                 // class java/util/ArrayList
+     246: dup
+     247: aload         5
+     249: invokespecial #31                 // Method java/util/ArrayList."<init>":(Ljava/util/Collection;)V
+     252: invokevirtual #32                 // Method java/util/ArrayList.iterator:()Ljava/util/Iterator;
+     255: astore        7
+     257: aload         7
+     259: invokeinterface #16,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     264: ifeq          316
+     267: aload         7
+     269: invokeinterface #17,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     274: checkcast     #18                 // class java/lang/String
+     277: astore        8
+     279: aload         8
+     281: ldc           #33                 // String -
+     283: invokevirtual #34                 // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+     286: ifeq          313
+     289: aload         5
+     291: aload         8
+     293: invokeinterface #30,  2           // InterfaceMethod java/util/List.remove:(Ljava/lang/Object;)Z
+     298: pop
+     299: aload         5
+     301: aload         8
+     303: iconst_1
+     304: invokevirtual #35                 // Method java/lang/String.substring:(I)Ljava/lang/String;
+     307: invokeinterface #30,  2           // InterfaceMethod java/util/List.remove:(Ljava/lang/Object;)Z
+     312: pop
+     313: goto          257
+     316: aload         5
+     318: areturn
+
+  public static java.lang.String replaceProperty(java.lang.String, java.util.Map<java.lang.String, java.lang.String>);
+    Code:
+       0: aload_0
+       1: new           #36                 // class org/apache/dubbo/common/config/InmemoryConfiguration
+       4: dup
+       5: aload_1
+       6: invokespecial #37                 // Method org/apache/dubbo/common/config/InmemoryConfiguration."<init>":(Ljava/util/Map;)V
+       9: invokestatic  #38                 // Method replaceProperty:(Ljava/lang/String;Lorg/apache/dubbo/common/config/Configuration;)Ljava/lang/String;
+      12: areturn
+
+  public static java.lang.String replaceProperty(java.lang.String, org.apache.dubbo.common.config.Configuration);
+    Code:
+       0: aload_0
+       1: invokestatic  #5                  // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+       4: ifne          16
+       7: aload_0
+       8: bipush        36
+      10: invokevirtual #39                 // Method java/lang/String.indexOf:(I)I
+      13: ifge          18
+      16: aload_0
+      17: areturn
+      18: getstatic     #40                 // Field VARIABLE_PATTERN:Ljava/util/regex/Pattern;
+      21: aload_0
+      22: invokevirtual #41                 // Method java/util/regex/Pattern.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+      25: astore_2
+      26: new           #42                 // class java/lang/StringBuffer
+      29: dup
+      30: invokespecial #43                 // Method java/lang/StringBuffer."<init>":()V
+      33: astore_3
+      34: aload_2
+      35: invokevirtual #44                 // Method java/util/regex/Matcher.find:()Z
+      38: ifeq          115
+      41: aload_2
+      42: iconst_1
+      43: invokevirtual #45                 // Method java/util/regex/Matcher.group:(I)Ljava/lang/String;
+      46: astore        4
+      48: aload         4
+      50: invokestatic  #46                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      53: astore        5
+      55: aload         5
+      57: ifnonnull     90
+      60: aload_1
+      61: ifnull        90
+      64: aload_1
+      65: aload         4
+      67: invokeinterface #47,  2           // InterfaceMethod org/apache/dubbo/common/config/Configuration.getProperty:(Ljava/lang/String;)Ljava/lang/Object;
+      72: astore        6
+      74: aload         6
+      76: ifnull        87
+      79: aload         6
+      81: invokevirtual #48                 // Method java/lang/Object.toString:()Ljava/lang/String;
+      84: goto          88
+      87: aconst_null
+      88: astore        5
+      90: aload         5
+      92: ifnonnull     101
+      95: aload_2
+      96: invokevirtual #49                 // Method java/util/regex/Matcher.group:()Ljava/lang/String;
+      99: astore        5
+     101: aload_2
+     102: aload_3
+     103: aload         5
+     105: invokestatic  #50                 // Method java/util/regex/Matcher.quoteReplacement:(Ljava/lang/String;)Ljava/lang/String;
+     108: invokevirtual #51                 // Method java/util/regex/Matcher.appendReplacement:(Ljava/lang/StringBuffer;Ljava/lang/String;)Ljava/util/regex/Matcher;
+     111: pop
+     112: goto          34
+     115: aload_2
+     116: aload_3
+     117: invokevirtual #52                 // Method java/util/regex/Matcher.appendTail:(Ljava/lang/StringBuffer;)Ljava/lang/StringBuffer;
+     120: pop
+     121: aload_3
+     122: invokevirtual #53                 // Method java/lang/StringBuffer.toString:()Ljava/lang/String;
+     125: areturn
+
+  public static java.util.Properties getProperties(java.util.Set<java.lang.ClassLoader>);
+    Code:
+       0: ldc           #54                 // String dubbo.properties.file
+       2: invokestatic  #46                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+       5: astore_1
+       6: aload_1
+       7: invokestatic  #5                  // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+      10: ifeq          29
+      13: ldc           #54                 // String dubbo.properties.file
+      15: invokestatic  #55                 // Method java/lang/System.getenv:(Ljava/lang/String;)Ljava/lang/String;
+      18: astore_1
+      19: aload_1
+      20: invokestatic  #5                  // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+      23: ifeq          29
+      26: ldc           #56                 // String dubbo.properties
+      28: astore_1
+      29: aload_0
+      30: aload_1
+      31: iconst_0
+      32: iconst_1
+      33: invokestatic  #57                 // Method loadProperties:(Ljava/util/Set;Ljava/lang/String;ZZ)Ljava/util/Properties;
+      36: areturn
+
+  public static java.lang.String getSystemProperty(java.lang.String);
+    Code:
+       0: aload_0
+       1: invokestatic  #55                 // Method java/lang/System.getenv:(Ljava/lang/String;)Ljava/lang/String;
+       4: astore_1
+       5: aload_1
+       6: invokestatic  #5                  // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+       9: ifeq          17
+      12: aload_0
+      13: invokestatic  #46                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      16: astore_1
+      17: aload_1
+      18: areturn
+
+  public static java.util.Properties loadProperties(java.util.Set<java.lang.ClassLoader>, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iconst_0
+       3: iconst_0
+       4: invokestatic  #57                 // Method loadProperties:(Ljava/util/Set;Ljava/lang/String;ZZ)Ljava/util/Properties;
+       7: areturn
+
+  public static java.util.Properties loadProperties(java.util.Set<java.lang.ClassLoader>, java.lang.String, boolean);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iload_2
+       3: iconst_0
+       4: invokestatic  #57                 // Method loadProperties:(Ljava/util/Set;Ljava/lang/String;ZZ)Ljava/util/Properties;
+       7: areturn
+
+  public static java.util.Properties loadProperties(java.util.Set<java.lang.ClassLoader>, java.lang.String, boolean, boolean);
+    Code:
+       0: new           #58                 // class java/util/Properties
+       3: dup
+       4: invokespecial #59                 // Method java/util/Properties."<init>":()V
+       7: astore        4
+       9: aload_1
+      10: invokestatic  #60                 // Method checkFileNameExist:(Ljava/lang/String;)Z
+      13: ifeq          116
+      16: new           #61                 // class java/io/FileInputStream
+      19: dup
+      20: aload_1
+      21: invokespecial #62                 // Method java/io/FileInputStream."<init>":(Ljava/lang/String;)V
+      24: astore        5
+      26: aload         4
+      28: aload         5
+      30: invokevirtual #63                 // Method java/util/Properties.load:(Ljava/io/InputStream;)V
+      33: aload         5
+      35: invokevirtual #64                 // Method java/io/FileInputStream.close:()V
+      38: goto          51
+      41: astore        6
+      43: aload         5
+      45: invokevirtual #64                 // Method java/io/FileInputStream.close:()V
+      48: aload         6
+      50: athrow
+      51: goto          113
+      54: astore        5
+      56: getstatic     #66                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      59: ldc           #67                 // String 0-22
+      61: ldc           #68                 // String
+      63: ldc           #68                 // String
+      65: new           #69                 // class java/lang/StringBuilder
+      68: dup
+      69: invokespecial #70                 // Method java/lang/StringBuilder."<init>":()V
+      72: ldc           #71                 // String Failed to load
+      74: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      77: aload_1
+      78: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      81: ldc           #73                 // String  file from
+      83: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      86: aload_1
+      87: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      90: ldc           #74                 // String (ignore this file):
+      92: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      95: aload         5
+      97: invokevirtual #75                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     100: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     103: invokevirtual #76                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     106: aload         5
+     108: invokeinterface #77,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     113: aload         4
+     115: areturn
+     116: aconst_null
+     117: astore        5
+     119: new           #78                 // class java/util/LinkedList
+     122: dup
+     123: invokespecial #79                 // Method java/util/LinkedList."<init>":()V
+     126: astore        6
+     128: aload         6
+     130: invokestatic  #80                 // Method org/apache/dubbo/common/utils/ClassUtils.getClassLoader:()Ljava/lang/ClassLoader;
+     133: invokeinterface #21,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     138: pop
+     139: aload         6
+     141: aload_0
+     142: invokeinterface #81,  2           // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+     147: pop
+     148: aload_1
+     149: aload         6
+     151: invokestatic  #82                 // Method org/apache/dubbo/common/utils/ClassLoaderResourceLoader.loadResources:(Ljava/lang/String;Ljava/util/Collection;)Ljava/util/Map;
+     154: invokeinterface #83,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+     159: invokeinterface #84,  1           // InterfaceMethod java/util/Collection.stream:()Ljava/util/stream/Stream;
+     164: new           #85                 // class java/util/LinkedHashSet
+     167: dup
+     168: invokespecial #86                 // Method java/util/LinkedHashSet."<init>":()V
+     171: invokedynamic #87,  0             // InvokeDynamic #0:apply:()Ljava/util/function/BinaryOperator;
+     176: invokeinterface #88,  3           // InterfaceMethod java/util/stream/Stream.reduce:(Ljava/lang/Object;Ljava/util/function/BinaryOperator;)Ljava/lang/Object;
+     181: checkcast     #89                 // class java/util/Set
+     184: astore        5
+     186: goto          239
+     189: astore        6
+     191: getstatic     #66                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     194: ldc           #67                 // String 0-22
+     196: ldc           #68                 // String
+     198: ldc           #68                 // String
+     200: new           #69                 // class java/lang/StringBuilder
+     203: dup
+     204: invokespecial #70                 // Method java/lang/StringBuilder."<init>":()V
+     207: ldc           #90                 // String Fail to load
+     209: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     212: aload_1
+     213: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     216: ldc           #91                 // String  file:
+     218: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     221: aload         6
+     223: invokevirtual #75                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     226: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     229: invokevirtual #76                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     232: aload         6
+     234: invokeinterface #77,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     239: aload         5
+     241: invokestatic  #92                 // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+     244: ifeq          292
+     247: iload_3
+     248: ifne          289
+     251: getstatic     #66                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     254: ldc           #67                 // String 0-22
+     256: ldc           #68                 // String
+     258: ldc           #68                 // String
+     260: new           #69                 // class java/lang/StringBuilder
+     263: dup
+     264: invokespecial #70                 // Method java/lang/StringBuilder."<init>":()V
+     267: ldc           #93                 // String No
+     269: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     272: aload_1
+     273: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     276: ldc           #94                 // String  found on the class path.
+     278: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     281: invokevirtual #76                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     284: invokeinterface #95,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     289: aload         4
+     291: areturn
+     292: iload_2
+     293: ifne          433
+     296: aload         5
+     298: invokeinterface #96,  1           // InterfaceMethod java/util/Set.size:()I
+     303: iconst_1
+     304: if_icmple     356
+     307: ldc           #97                 // String only 1 %s file is expected, but %d dubbo.properties files found on class path: %s
+     309: iconst_3
+     310: anewarray     #98                 // class java/lang/Object
+     313: dup
+     314: iconst_0
+     315: aload_1
+     316: aastore
+     317: dup
+     318: iconst_1
+     319: aload         5
+     321: invokeinterface #96,  1           // InterfaceMethod java/util/Set.size:()I
+     326: invokestatic  #99                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     329: aastore
+     330: dup
+     331: iconst_2
+     332: aload         5
+     334: aastore
+     335: invokestatic  #100                // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+     338: astore        6
+     340: getstatic     #66                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     343: ldc           #67                 // String 0-22
+     345: ldc           #68                 // String
+     347: ldc           #68                 // String
+     349: aload         6
+     351: invokeinterface #95,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     356: aload         4
+     358: invokestatic  #80                 // Method org/apache/dubbo/common/utils/ClassUtils.getClassLoader:()Ljava/lang/ClassLoader;
+     361: aload_1
+     362: invokevirtual #101                // Method java/lang/ClassLoader.getResourceAsStream:(Ljava/lang/String;)Ljava/io/InputStream;
+     365: invokevirtual #63                 // Method java/util/Properties.load:(Ljava/io/InputStream;)V
+     368: goto          430
+     371: astore        6
+     373: getstatic     #66                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     376: ldc           #67                 // String 0-22
+     378: ldc           #68                 // String
+     380: ldc           #68                 // String
+     382: new           #69                 // class java/lang/StringBuilder
+     385: dup
+     386: invokespecial #70                 // Method java/lang/StringBuilder."<init>":()V
+     389: ldc           #71                 // String Failed to load
+     391: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     394: aload_1
+     395: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     398: ldc           #73                 // String  file from
+     400: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     403: aload_1
+     404: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     407: ldc           #74                 // String (ignore this file):
+     409: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     412: aload         6
+     414: invokevirtual #75                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     417: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     420: invokevirtual #76                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     423: aload         6
+     425: invokeinterface #77,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     430: aload         4
+     432: areturn
+     433: getstatic     #66                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     436: new           #69                 // class java/lang/StringBuilder
+     439: dup
+     440: invokespecial #70                 // Method java/lang/StringBuilder."<init>":()V
+     443: ldc           #102                // String load
+     445: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     448: aload_1
+     449: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     452: ldc           #103                // String  properties file from
+     454: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     457: aload         5
+     459: invokevirtual #104                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     462: invokevirtual #76                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     465: invokeinterface #105,  2          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+     470: aload         5
+     472: invokeinterface #106,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     477: astore        6
+     479: aload         6
+     481: invokeinterface #16,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     486: ifeq          630
+     489: aload         6
+     491: invokeinterface #17,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     496: checkcast     #107                // class java/net/URL
+     499: astore        7
+     501: new           #58                 // class java/util/Properties
+     504: dup
+     505: invokespecial #59                 // Method java/util/Properties."<init>":()V
+     508: astore        8
+     510: aload         7
+     512: invokevirtual #108                // Method java/net/URL.openStream:()Ljava/io/InputStream;
+     515: astore        9
+     517: aload         9
+     519: ifnull        564
+     522: aload         8
+     524: aload         9
+     526: invokevirtual #63                 // Method java/util/Properties.load:(Ljava/io/InputStream;)V
+     529: aload         4
+     531: aload         8
+     533: invokevirtual #109                // Method java/util/Properties.putAll:(Ljava/util/Map;)V
+     536: aload         9
+     538: invokevirtual #110                // Method java/io/InputStream.close:()V
+     541: goto          564
+     544: astore        10
+     546: goto          564
+     549: astore        11
+     551: aload         9
+     553: invokevirtual #110                // Method java/io/InputStream.close:()V
+     556: goto          561
+     559: astore        12
+     561: aload         11
+     563: athrow
+     564: goto          627
+     567: astore        8
+     569: getstatic     #66                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     572: ldc           #67                 // String 0-22
+     574: ldc           #68                 // String
+     576: ldc           #68                 // String
+     578: new           #69                 // class java/lang/StringBuilder
+     581: dup
+     582: invokespecial #70                 // Method java/lang/StringBuilder."<init>":()V
+     585: ldc           #90                 // String Fail to load
+     587: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     590: aload_1
+     591: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     594: ldc           #73                 // String  file from
+     596: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     599: aload         7
+     601: invokevirtual #104                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     604: ldc           #74                 // String (ignore this file):
+     606: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     609: aload         8
+     611: invokevirtual #75                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     614: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     617: invokevirtual #76                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     620: aload         8
+     622: invokeinterface #77,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     627: goto          479
+     630: aload         4
+     632: areturn
+    Exception table:
+       from    to  target type
+          26    33    41   any
+          41    43    41   any
+          16    51    54   Class java/lang/Throwable
+         119   186   189   Class java/lang/Throwable
+         356   368   371   Class java/lang/Throwable
+         536   541   544   Class java/lang/Throwable
+         522   536   549   any
+         551   556   559   Class java/lang/Throwable
+         549   551   549   any
+         501   564   567   Class java/lang/Throwable
+
+  public static java.lang.String loadMigrationRule(java.util.Set<java.lang.ClassLoader>, java.lang.String);
+    Code:
+       0: ldc           #68                 // String
+       2: astore_2
+       3: aload_1
+       4: invokestatic  #60                 // Method checkFileNameExist:(Ljava/lang/String;)Z
+       7: ifeq          165
+      10: new           #61                 // class java/io/FileInputStream
+      13: dup
+      14: aload_1
+      15: invokespecial #62                 // Method java/io/FileInputStream."<init>":(Ljava/lang/String;)V
+      18: astore_3
+      19: aconst_null
+      20: astore        4
+      22: aload_3
+      23: invokestatic  #111                // Method readString:(Ljava/io/InputStream;)Ljava/lang/String;
+      26: astore        5
+      28: aload_3
+      29: ifnull        60
+      32: aload         4
+      34: ifnull        56
+      37: aload_3
+      38: invokevirtual #64                 // Method java/io/FileInputStream.close:()V
+      41: goto          60
+      44: astore        6
+      46: aload         4
+      48: aload         6
+      50: invokevirtual #112                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+      53: goto          60
+      56: aload_3
+      57: invokevirtual #64                 // Method java/io/FileInputStream.close:()V
+      60: aload         5
+      62: areturn
+      63: astore        5
+      65: aload         5
+      67: astore        4
+      69: aload         5
+      71: athrow
+      72: astore        7
+      74: aload_3
+      75: ifnull        106
+      78: aload         4
+      80: ifnull        102
+      83: aload_3
+      84: invokevirtual #64                 // Method java/io/FileInputStream.close:()V
+      87: goto          106
+      90: astore        8
+      92: aload         4
+      94: aload         8
+      96: invokevirtual #112                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+      99: goto          106
+     102: aload_3
+     103: invokevirtual #64                 // Method java/io/FileInputStream.close:()V
+     106: aload         7
+     108: athrow
+     109: astore_3
+     110: getstatic     #66                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     113: ldc           #67                 // String 0-22
+     115: ldc           #68                 // String
+     117: ldc           #68                 // String
+     119: new           #69                 // class java/lang/StringBuilder
+     122: dup
+     123: invokespecial #70                 // Method java/lang/StringBuilder."<init>":()V
+     126: ldc           #71                 // String Failed to load
+     128: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     131: aload_1
+     132: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     135: ldc           #73                 // String  file from
+     137: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     140: aload_1
+     141: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     144: ldc           #74                 // String (ignore this file):
+     146: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     149: aload_3
+     150: invokevirtual #75                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     153: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     156: invokevirtual #76                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     159: aload_3
+     160: invokeinterface #77,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     165: new           #78                 // class java/util/LinkedList
+     168: dup
+     169: invokespecial #79                 // Method java/util/LinkedList."<init>":()V
+     172: astore_3
+     173: aload_3
+     174: invokestatic  #80                 // Method org/apache/dubbo/common/utils/ClassUtils.getClassLoader:()Ljava/lang/ClassLoader;
+     177: invokeinterface #21,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     182: pop
+     183: aload_3
+     184: aload_0
+     185: invokeinterface #81,  2           // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+     190: pop
+     191: aload_1
+     192: aload_3
+     193: invokestatic  #82                 // Method org/apache/dubbo/common/utils/ClassLoaderResourceLoader.loadResources:(Ljava/lang/String;Ljava/util/Collection;)Ljava/util/Map;
+     196: invokeinterface #83,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+     201: invokeinterface #113,  1          // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+     206: astore        4
+     208: aload         4
+     210: invokeinterface #16,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     215: ifeq          285
+     218: aload         4
+     220: invokeinterface #17,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     225: checkcast     #89                 // class java/util/Set
+     228: astore        5
+     230: aload         5
+     232: invokeinterface #106,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     237: astore        6
+     239: aload         6
+     241: invokeinterface #16,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     246: ifeq          282
+     249: aload         6
+     251: invokeinterface #17,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     256: checkcast     #107                // class java/net/URL
+     259: astore        7
+     261: aload         7
+     263: invokevirtual #108                // Method java/net/URL.openStream:()Ljava/io/InputStream;
+     266: astore        8
+     268: aload         8
+     270: ifnull        279
+     273: aload         8
+     275: invokestatic  #111                // Method readString:(Ljava/io/InputStream;)Ljava/lang/String;
+     278: areturn
+     279: goto          239
+     282: goto          208
+     285: goto          344
+     288: astore_3
+     289: getstatic     #66                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     292: ldc           #67                 // String 0-22
+     294: ldc           #68                 // String
+     296: ldc           #68                 // String
+     298: new           #69                 // class java/lang/StringBuilder
+     301: dup
+     302: invokespecial #70                 // Method java/lang/StringBuilder."<init>":()V
+     305: ldc           #71                 // String Failed to load
+     307: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     310: aload_1
+     311: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     314: ldc           #73                 // String  file from
+     316: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     319: aload_1
+     320: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     323: ldc           #74                 // String (ignore this file):
+     325: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     328: aload_3
+     329: invokevirtual #75                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     332: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     335: invokevirtual #76                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     338: aload_3
+     339: invokeinterface #77,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     344: aload_2
+     345: areturn
+    Exception table:
+       from    to  target type
+          37    41    44   Class java/lang/Throwable
+          22    28    63   Class java/lang/Throwable
+          22    28    72   any
+          83    87    90   Class java/lang/Throwable
+          63    74    72   any
+          10    60   109   Class java/lang/Throwable
+          63   109   109   Class java/lang/Throwable
+         165   278   288   Class java/lang/Throwable
+         279   285   288   Class java/lang/Throwable
+
+  private static java.lang.String readString(java.io.InputStream);
+    Code:
+       0: new           #69                 // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #70                 // Method java/lang/StringBuilder."<init>":()V
+       7: astore_1
+       8: bipush        10
+      10: newarray       char
+      12: astore_2
+      13: new           #114                // class java/io/BufferedReader
+      16: dup
+      17: new           #115                // class java/io/InputStreamReader
+      20: dup
+      21: aload_0
+      22: invokespecial #116                // Method java/io/InputStreamReader."<init>":(Ljava/io/InputStream;)V
+      25: invokespecial #117                // Method java/io/BufferedReader."<init>":(Ljava/io/Reader;)V
+      28: astore_3
+      29: aconst_null
+      30: astore        4
+      32: aload_3
+      33: aload_2
+      34: invokevirtual #118                // Method java/io/BufferedReader.read:([C)I
+      37: dup
+      38: istore        5
+      40: iconst_m1
+      41: if_icmpeq     75
+      44: iload         5
+      46: bipush        10
+      48: if_icmpge     58
+      51: aload_2
+      52: iload         5
+      54: invokestatic  #119                // Method java/util/Arrays.copyOf:([CI)[C
+      57: astore_2
+      58: aload_1
+      59: aload_2
+      60: invokestatic  #120                // Method java/lang/String.valueOf:([C)Ljava/lang/String;
+      63: invokevirtual #72                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      66: pop
+      67: bipush        10
+      69: newarray       char
+      71: astore_2
+      72: goto          32
+      75: aload_3
+      76: ifnull        156
+      79: aload         4
+      81: ifnull        103
+      84: aload_3
+      85: invokevirtual #121                // Method java/io/BufferedReader.close:()V
+      88: goto          156
+      91: astore        5
+      93: aload         4
+      95: aload         5
+      97: invokevirtual #112                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     100: goto          156
+     103: aload_3
+     104: invokevirtual #121                // Method java/io/BufferedReader.close:()V
+     107: goto          156
+     110: astore        5
+     112: aload         5
+     114: astore        4
+     116: aload         5
+     118: athrow
+     119: astore        6
+     121: aload_3
+     122: ifnull        153
+     125: aload         4
+     127: ifnull        149
+     130: aload_3
+     131: invokevirtual #121                // Method java/io/BufferedReader.close:()V
+     134: goto          153
+     137: astore        7
+     139: aload         4
+     141: aload         7
+     143: invokevirtual #112                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     146: goto          153
+     149: aload_3
+     150: invokevirtual #121                // Method java/io/BufferedReader.close:()V
+     153: aload         6
+     155: athrow
+     156: goto          177
+     159: astore_3
+     160: getstatic     #66                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     163: ldc           #67                 // String 0-22
+     165: ldc           #68                 // String
+     167: ldc           #68                 // String
+     169: ldc           #123                // String Read migration file error.
+     171: aload_3
+     172: invokeinterface #124,  6          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     177: aload_1
+     178: invokevirtual #76                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     181: areturn
+    Exception table:
+       from    to  target type
+          84    88    91   Class java/lang/Throwable
+          32    75   110   Class java/lang/Throwable
+          32    75   119   any
+         130   134   137   Class java/lang/Throwable
+         110   121   119   any
+          13   156   159   Class java/io/IOException
+
+  private static boolean checkFileNameExist(java.lang.String);
+    Code:
+       0: new           #125                // class java/io/File
+       3: dup
+       4: aload_0
+       5: invokespecial #126                // Method java/io/File."<init>":(Ljava/lang/String;)V
+       8: astore_1
+       9: aload_1
+      10: invokevirtual #127                // Method java/io/File.exists:()Z
+      13: ireturn
+
+  public static int getPid();
+    Code:
+       0: getstatic     #128                // Field PID:I
+       3: ifge          42
+       6: invokestatic  #129                // Method java/lang/management/ManagementFactory.getRuntimeMXBean:()Ljava/lang/management/RuntimeMXBean;
+       9: astore_0
+      10: aload_0
+      11: invokeinterface #130,  1          // InterfaceMethod java/lang/management/RuntimeMXBean.getName:()Ljava/lang/String;
+      16: astore_1
+      17: aload_1
+      18: iconst_0
+      19: aload_1
+      20: bipush        64
+      22: invokevirtual #39                 // Method java/lang/String.indexOf:(I)I
+      25: invokevirtual #131                // Method java/lang/String.substring:(II)Ljava/lang/String;
+      28: invokestatic  #132                // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+      31: putstatic     #128                // Field PID:I
+      34: goto          42
+      37: astore_0
+      38: iconst_0
+      39: putstatic     #128                // Field PID:I
+      42: getstatic     #128                // Field PID:I
+      45: ireturn
+    Exception table:
+       from    to  target type
+           6    34    37   Class java/lang/Throwable
+
+  private static java.util.Set lambda$loadProperties$0(java.util.Set, java.util.Set);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokeinterface #133,  2          // InterfaceMethod java/util/Set.addAll:(Ljava/util/Collection;)Z
+       7: pop
+       8: aload_0
+       9: areturn
+
+  static {};
+    Code:
+       0: ldc           #134                // class org/apache/dubbo/common/utils/ConfigUtils
+       2: invokestatic  #135                // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #66                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: ldc           #136                // String \\$\\s*\\{?\\s*([\\._0-9a-zA-Z]+)\\s*\\}?
+      10: invokestatic  #137                // Method java/util/regex/Pattern.compile:(Ljava/lang/String;)Ljava/util/regex/Pattern;
+      13: putstatic     #40                 // Field VARIABLE_PATTERN:Ljava/util/regex/Pattern;
+      16: iconst_m1
+      17: putstatic     #128                // Field PID:I
+      20: return
+}

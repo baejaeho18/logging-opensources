@@ -1,0 +1,108 @@
+Compiled from "AbstractCacheManager.java"
+public class org.apache.dubbo.metadata.AbstractCacheManager$CacheRefreshTask<V> implements java.lang.Runnable {
+  private final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private static final java.lang.String DEFAULT_COMMENT;
+
+  private final org.apache.dubbo.common.cache.FileCacheStore cacheStore;
+
+  private final org.apache.dubbo.common.utils.LRUCache<java.lang.String, V> cache;
+
+  private final org.apache.dubbo.metadata.AbstractCacheManager<V> cacheManager;
+
+  private final long maxFileSize;
+
+  public org.apache.dubbo.metadata.AbstractCacheManager$CacheRefreshTask(org.apache.dubbo.common.cache.FileCacheStore, org.apache.dubbo.common.utils.LRUCache<java.lang.String, V>, org.apache.dubbo.metadata.AbstractCacheManager<V>, long);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_0
+       6: invokevirtual #2                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       9: invokestatic  #3                  // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      12: putfield      #4                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      15: aload_0
+      16: aload_1
+      17: putfield      #5                  // Field cacheStore:Lorg/apache/dubbo/common/cache/FileCacheStore;
+      20: aload_0
+      21: aload_2
+      22: putfield      #6                  // Field cache:Lorg/apache/dubbo/common/utils/LRUCache;
+      25: aload_0
+      26: aload_3
+      27: putfield      #7                  // Field cacheManager:Lorg/apache/dubbo/metadata/AbstractCacheManager;
+      30: aload_0
+      31: lload         4
+      33: putfield      #8                  // Field maxFileSize:J
+      36: return
+
+  public void run();
+    Code:
+       0: new           #9                  // class java/util/HashMap
+       3: dup
+       4: invokespecial #10                 // Method java/util/HashMap."<init>":()V
+       7: astore_1
+       8: aload_0
+       9: getfield      #6                  // Field cache:Lorg/apache/dubbo/common/utils/LRUCache;
+      12: invokevirtual #11                 // Method org/apache/dubbo/common/utils/LRUCache.lock:()V
+      15: aload_0
+      16: getfield      #6                  // Field cache:Lorg/apache/dubbo/common/utils/LRUCache;
+      19: invokevirtual #12                 // Method org/apache/dubbo/common/utils/LRUCache.entrySet:()Ljava/util/Set;
+      22: invokeinterface #13,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      27: astore_2
+      28: aload_2
+      29: invokeinterface #14,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      34: ifeq          72
+      37: aload_2
+      38: invokeinterface #15,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      43: checkcast     #16                 // class java/util/Map$Entry
+      46: astore_3
+      47: aload_1
+      48: aload_3
+      49: invokeinterface #17,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+      54: aload_3
+      55: invokeinterface #18,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+      60: invokestatic  #19                 // Method org/apache/dubbo/common/utils/JsonUtils.toJson:(Ljava/lang/Object;)Ljava/lang/String;
+      63: invokeinterface #20,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      68: pop
+      69: goto          28
+      72: aload_0
+      73: getfield      #6                  // Field cache:Lorg/apache/dubbo/common/utils/LRUCache;
+      76: invokevirtual #21                 // Method org/apache/dubbo/common/utils/LRUCache.releaseLock:()V
+      79: goto          94
+      82: astore        4
+      84: aload_0
+      85: getfield      #6                  // Field cache:Lorg/apache/dubbo/common/utils/LRUCache;
+      88: invokevirtual #21                 // Method org/apache/dubbo/common/utils/LRUCache.releaseLock:()V
+      91: aload         4
+      93: athrow
+      94: aload_0
+      95: getfield      #4                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      98: new           #22                 // class java/lang/StringBuilder
+     101: dup
+     102: invokespecial #23                 // Method java/lang/StringBuilder."<init>":()V
+     105: ldc           #24                 // String Dumping
+     107: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     110: aload_0
+     111: getfield      #7                  // Field cacheManager:Lorg/apache/dubbo/metadata/AbstractCacheManager;
+     114: invokevirtual #26                 // Method org/apache/dubbo/metadata/AbstractCacheManager.getName:()Ljava/lang/String;
+     117: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     120: ldc           #27                 // String  caches, latest entries
+     122: invokevirtual #25                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     125: aload_1
+     126: invokeinterface #28,  1           // InterfaceMethod java/util/Map.size:()I
+     131: invokevirtual #29                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     134: invokevirtual #30                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     137: invokeinterface #31,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+     142: aload_0
+     143: getfield      #5                  // Field cacheStore:Lorg/apache/dubbo/common/cache/FileCacheStore;
+     146: aload_1
+     147: ldc           #33                 // String Dubbo cache
+     149: aload_0
+     150: getfield      #8                  // Field maxFileSize:J
+     153: invokevirtual #34                 // Method org/apache/dubbo/common/cache/FileCacheStore.refreshCache:(Ljava/util/Map;Ljava/lang/String;J)V
+     156: return
+    Exception table:
+       from    to  target type
+          15    72    82   any
+          82    84    82   any
+}

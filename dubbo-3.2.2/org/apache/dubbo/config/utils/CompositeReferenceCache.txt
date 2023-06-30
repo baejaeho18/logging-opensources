@@ -1,0 +1,261 @@
+Compiled from "CompositeReferenceCache.java"
+public class org.apache.dubbo.config.utils.CompositeReferenceCache implements org.apache.dubbo.common.config.ReferenceCache {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final org.apache.dubbo.rpc.model.ApplicationModel applicationModel;
+
+  public org.apache.dubbo.config.utils.CompositeReferenceCache(org.apache.dubbo.rpc.model.ApplicationModel);
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #3                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       9: return
+
+  public <T> T get(org.apache.dubbo.config.ReferenceConfigBase<T>);
+    Code:
+       0: aload_1
+       1: invokevirtual #4                  // Method org/apache/dubbo/config/ReferenceConfigBase.getInterfaceClass:()Ljava/lang/Class;
+       4: astore_2
+       5: aload_2
+       6: invokevirtual #5                  // Method java/lang/Class.getName:()Ljava/lang/String;
+       9: aload_1
+      10: invokevirtual #6                  // Method org/apache/dubbo/config/ReferenceConfigBase.getGroup:()Ljava/lang/String;
+      13: aload_1
+      14: invokevirtual #7                  // Method org/apache/dubbo/config/ReferenceConfigBase.getVersion:()Ljava/lang/String;
+      17: invokestatic  #8                  // Method org/apache/dubbo/common/BaseServiceMetadata.buildServiceKey:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      20: astore_3
+      21: aload_1
+      22: invokevirtual #9                  // Method org/apache/dubbo/config/ReferenceConfigBase.getSingleton:()Ljava/lang/Boolean;
+      25: ifnull        38
+      28: aload_1
+      29: invokevirtual #9                  // Method org/apache/dubbo/config/ReferenceConfigBase.getSingleton:()Ljava/lang/Boolean;
+      32: invokevirtual #10                 // Method java/lang/Boolean.booleanValue:()Z
+      35: ifeq          42
+      38: iconst_1
+      39: goto          43
+      42: iconst_0
+      43: istore        4
+      45: aconst_null
+      46: astore        5
+      48: iload         4
+      50: ifeq          64
+      53: aload_0
+      54: aload_3
+      55: aload_2
+      56: invokevirtual #11                 // Method get:(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;
+      59: astore        5
+      61: goto          80
+      64: getstatic     #12                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      67: ldc           #13                 // String 5-27
+      69: ldc           #14                 // String the api method is being used incorrectly
+      71: ldc           #15                 // String
+      73: ldc           #16                 // String Using non-singleton ReferenceConfig and ReferenceCache at the same time may cause memory leak. Call ReferenceConfig#get() directly for non-singleton ReferenceConfig instead of using ReferenceCache#get(ReferenceConfig)
+      75: invokeinterface #17,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      80: aload         5
+      82: ifnonnull     91
+      85: aload_1
+      86: invokevirtual #18                 // Method org/apache/dubbo/config/ReferenceConfigBase.get:()Ljava/lang/Object;
+      89: astore        5
+      91: aload         5
+      93: areturn
+
+  public <T> T get(java.lang.String, java.lang.Class<T>);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       4: invokevirtual #19                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getModuleModels:()Ljava/util/List;
+       7: invokeinterface #20,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      12: astore_3
+      13: aload_3
+      14: invokeinterface #21,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      19: ifeq          63
+      22: aload_3
+      23: invokeinterface #22,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      28: checkcast     #23                 // class org/apache/dubbo/rpc/model/ModuleModel
+      31: astore        4
+      33: aload         4
+      35: invokevirtual #24                 // Method org/apache/dubbo/rpc/model/ModuleModel.getDeployer:()Lorg/apache/dubbo/common/deploy/ModuleDeployer;
+      38: invokeinterface #25,  1           // InterfaceMethod org/apache/dubbo/common/deploy/ModuleDeployer.getReferenceCache:()Lorg/apache/dubbo/common/config/ReferenceCache;
+      43: aload_1
+      44: aload_2
+      45: invokeinterface #26,  3           // InterfaceMethod org/apache/dubbo/common/config/ReferenceCache.get:(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;
+      50: astore        5
+      52: aload         5
+      54: ifnull        60
+      57: aload         5
+      59: areturn
+      60: goto          13
+      63: aconst_null
+      64: areturn
+
+  public <T> T get(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       4: invokevirtual #19                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getModuleModels:()Ljava/util/List;
+       7: invokeinterface #20,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      12: astore_2
+      13: aload_2
+      14: invokeinterface #21,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      19: ifeq          60
+      22: aload_2
+      23: invokeinterface #22,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      28: checkcast     #23                 // class org/apache/dubbo/rpc/model/ModuleModel
+      31: astore_3
+      32: aload_3
+      33: invokevirtual #24                 // Method org/apache/dubbo/rpc/model/ModuleModel.getDeployer:()Lorg/apache/dubbo/common/deploy/ModuleDeployer;
+      36: invokeinterface #25,  1           // InterfaceMethod org/apache/dubbo/common/deploy/ModuleDeployer.getReferenceCache:()Lorg/apache/dubbo/common/config/ReferenceCache;
+      41: aload_1
+      42: invokeinterface #27,  2           // InterfaceMethod org/apache/dubbo/common/config/ReferenceCache.get:(Ljava/lang/String;)Ljava/lang/Object;
+      47: astore        4
+      49: aload         4
+      51: ifnull        57
+      54: aload         4
+      56: areturn
+      57: goto          13
+      60: aconst_null
+      61: areturn
+
+  public <T> java.util.List<T> getAll(java.lang.Class<T>);
+    Code:
+       0: new           #28                 // class java/util/ArrayList
+       3: dup
+       4: invokespecial #29                 // Method java/util/ArrayList."<init>":()V
+       7: astore_2
+       8: aload_0
+       9: getfield      #3                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      12: invokevirtual #19                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getModuleModels:()Ljava/util/List;
+      15: invokeinterface #20,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      20: astore_3
+      21: aload_3
+      22: invokeinterface #21,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      27: ifeq          67
+      30: aload_3
+      31: invokeinterface #22,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      36: checkcast     #23                 // class org/apache/dubbo/rpc/model/ModuleModel
+      39: astore        4
+      41: aload_2
+      42: aload         4
+      44: invokevirtual #24                 // Method org/apache/dubbo/rpc/model/ModuleModel.getDeployer:()Lorg/apache/dubbo/common/deploy/ModuleDeployer;
+      47: invokeinterface #25,  1           // InterfaceMethod org/apache/dubbo/common/deploy/ModuleDeployer.getReferenceCache:()Lorg/apache/dubbo/common/config/ReferenceCache;
+      52: aload_1
+      53: invokeinterface #30,  2           // InterfaceMethod org/apache/dubbo/common/config/ReferenceCache.getAll:(Ljava/lang/Class;)Ljava/util/List;
+      58: invokeinterface #31,  2           // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+      63: pop
+      64: goto          21
+      67: aload_2
+      68: areturn
+
+  public <T> T get(java.lang.Class<T>);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       4: invokevirtual #19                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getModuleModels:()Ljava/util/List;
+       7: invokeinterface #20,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      12: astore_2
+      13: aload_2
+      14: invokeinterface #21,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      19: ifeq          60
+      22: aload_2
+      23: invokeinterface #22,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      28: checkcast     #23                 // class org/apache/dubbo/rpc/model/ModuleModel
+      31: astore_3
+      32: aload_3
+      33: invokevirtual #24                 // Method org/apache/dubbo/rpc/model/ModuleModel.getDeployer:()Lorg/apache/dubbo/common/deploy/ModuleDeployer;
+      36: invokeinterface #25,  1           // InterfaceMethod org/apache/dubbo/common/deploy/ModuleDeployer.getReferenceCache:()Lorg/apache/dubbo/common/config/ReferenceCache;
+      41: aload_1
+      42: invokeinterface #32,  2           // InterfaceMethod org/apache/dubbo/common/config/ReferenceCache.get:(Ljava/lang/Class;)Ljava/lang/Object;
+      47: astore        4
+      49: aload         4
+      51: ifnull        57
+      54: aload         4
+      56: areturn
+      57: goto          13
+      60: aconst_null
+      61: areturn
+
+  public void destroy(java.lang.String, java.lang.Class<?>);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       4: invokevirtual #19                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getModuleModels:()Ljava/util/List;
+       7: invokeinterface #20,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      12: astore_3
+      13: aload_3
+      14: invokeinterface #21,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      19: ifeq          53
+      22: aload_3
+      23: invokeinterface #22,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      28: checkcast     #23                 // class org/apache/dubbo/rpc/model/ModuleModel
+      31: astore        4
+      33: aload         4
+      35: invokevirtual #24                 // Method org/apache/dubbo/rpc/model/ModuleModel.getDeployer:()Lorg/apache/dubbo/common/deploy/ModuleDeployer;
+      38: invokeinterface #25,  1           // InterfaceMethod org/apache/dubbo/common/deploy/ModuleDeployer.getReferenceCache:()Lorg/apache/dubbo/common/config/ReferenceCache;
+      43: aload_1
+      44: aload_2
+      45: invokeinterface #33,  3           // InterfaceMethod org/apache/dubbo/common/config/ReferenceCache.destroy:(Ljava/lang/String;Ljava/lang/Class;)V
+      50: goto          13
+      53: return
+
+  public void destroy(java.lang.Class<?>);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       4: invokevirtual #19                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getModuleModels:()Ljava/util/List;
+       7: invokeinterface #20,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      12: astore_2
+      13: aload_2
+      14: invokeinterface #21,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      19: ifeq          50
+      22: aload_2
+      23: invokeinterface #22,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      28: checkcast     #23                 // class org/apache/dubbo/rpc/model/ModuleModel
+      31: astore_3
+      32: aload_3
+      33: invokevirtual #24                 // Method org/apache/dubbo/rpc/model/ModuleModel.getDeployer:()Lorg/apache/dubbo/common/deploy/ModuleDeployer;
+      36: invokeinterface #25,  1           // InterfaceMethod org/apache/dubbo/common/deploy/ModuleDeployer.getReferenceCache:()Lorg/apache/dubbo/common/config/ReferenceCache;
+      41: aload_1
+      42: invokeinterface #34,  2           // InterfaceMethod org/apache/dubbo/common/config/ReferenceCache.destroy:(Ljava/lang/Class;)V
+      47: goto          13
+      50: return
+
+  public <T> void destroy(org.apache.dubbo.config.ReferenceConfigBase<T>);
+    Code:
+       0: aload_1
+       1: invokevirtual #35                 // Method org/apache/dubbo/config/ReferenceConfigBase.getScopeModel:()Lorg/apache/dubbo/rpc/model/ModuleModel;
+       4: invokevirtual #24                 // Method org/apache/dubbo/rpc/model/ModuleModel.getDeployer:()Lorg/apache/dubbo/common/deploy/ModuleDeployer;
+       7: invokeinterface #25,  1           // InterfaceMethod org/apache/dubbo/common/deploy/ModuleDeployer.getReferenceCache:()Lorg/apache/dubbo/common/config/ReferenceCache;
+      12: aload_1
+      13: invokeinterface #36,  2           // InterfaceMethod org/apache/dubbo/common/config/ReferenceCache.destroy:(Lorg/apache/dubbo/config/ReferenceConfigBase;)V
+      18: return
+
+  public void destroyAll();
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       4: invokevirtual #19                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getModuleModels:()Ljava/util/List;
+       7: invokeinterface #20,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      12: astore_1
+      13: aload_1
+      14: invokeinterface #21,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      19: ifeq          49
+      22: aload_1
+      23: invokeinterface #22,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      28: checkcast     #23                 // class org/apache/dubbo/rpc/model/ModuleModel
+      31: astore_2
+      32: aload_2
+      33: invokevirtual #24                 // Method org/apache/dubbo/rpc/model/ModuleModel.getDeployer:()Lorg/apache/dubbo/common/deploy/ModuleDeployer;
+      36: invokeinterface #25,  1           // InterfaceMethod org/apache/dubbo/common/deploy/ModuleDeployer.getReferenceCache:()Lorg/apache/dubbo/common/config/ReferenceCache;
+      41: invokeinterface #37,  1           // InterfaceMethod org/apache/dubbo/common/config/ReferenceCache.destroyAll:()V
+      46: goto          13
+      49: return
+
+  static {};
+    Code:
+       0: ldc           #38                 // class org/apache/dubbo/config/utils/CompositeReferenceCache
+       2: invokestatic  #39                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #12                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

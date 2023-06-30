@@ -1,0 +1,276 @@
+Compiled from "CIDRUtils.java"
+public class org.apache.dubbo.common.utils.CIDRUtils {
+  private final java.lang.String cidr;
+
+  private java.net.InetAddress inetAddress;
+
+  private java.net.InetAddress startAddress;
+
+  private java.net.InetAddress endAddress;
+
+  private final int prefixLength;
+
+  public org.apache.dubbo.common.utils.CIDRUtils(java.lang.String) throws java.net.UnknownHostException;
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field cidr:Ljava/lang/String;
+       9: aload_0
+      10: getfield      #2                  // Field cidr:Ljava/lang/String;
+      13: ldc           #3                  // String /
+      15: invokevirtual #4                  // Method java/lang/String.contains:(Ljava/lang/CharSequence;)Z
+      18: ifeq          77
+      21: aload_0
+      22: getfield      #2                  // Field cidr:Ljava/lang/String;
+      25: ldc           #3                  // String /
+      27: invokevirtual #5                  // Method java/lang/String.indexOf:(Ljava/lang/String;)I
+      30: istore_2
+      31: aload_0
+      32: getfield      #2                  // Field cidr:Ljava/lang/String;
+      35: iconst_0
+      36: iload_2
+      37: invokevirtual #6                  // Method java/lang/String.substring:(II)Ljava/lang/String;
+      40: astore_3
+      41: aload_0
+      42: getfield      #2                  // Field cidr:Ljava/lang/String;
+      45: iload_2
+      46: iconst_1
+      47: iadd
+      48: invokevirtual #7                  // Method java/lang/String.substring:(I)Ljava/lang/String;
+      51: astore        4
+      53: aload_0
+      54: aload_3
+      55: invokestatic  #8                  // Method java/net/InetAddress.getByName:(Ljava/lang/String;)Ljava/net/InetAddress;
+      58: putfield      #9                  // Field inetAddress:Ljava/net/InetAddress;
+      61: aload_0
+      62: aload         4
+      64: invokestatic  #10                 // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+      67: putfield      #11                 // Field prefixLength:I
+      70: aload_0
+      71: invokespecial #12                 // Method calculate:()V
+      74: goto          87
+      77: new           #13                 // class java/lang/IllegalArgumentException
+      80: dup
+      81: ldc           #14                 // String not an valid CIDR format!
+      83: invokespecial #15                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      86: athrow
+      87: return
+
+  private void calculate() throws java.net.UnknownHostException;
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field inetAddress:Ljava/net/InetAddress;
+       4: invokevirtual #16                 // Method java/net/InetAddress.getAddress:()[B
+       7: arraylength
+       8: iconst_4
+       9: if_icmpne     26
+      12: iconst_4
+      13: invokestatic  #17                 // Method java/nio/ByteBuffer.allocate:(I)Ljava/nio/ByteBuffer;
+      16: iconst_m1
+      17: invokevirtual #18                 // Method java/nio/ByteBuffer.putInt:(I)Ljava/nio/ByteBuffer;
+      20: astore_1
+      21: iconst_4
+      22: istore_2
+      23: goto          47
+      26: bipush        16
+      28: invokestatic  #17                 // Method java/nio/ByteBuffer.allocate:(I)Ljava/nio/ByteBuffer;
+      31: ldc2_w        #19                 // long -1l
+      34: invokevirtual #21                 // Method java/nio/ByteBuffer.putLong:(J)Ljava/nio/ByteBuffer;
+      37: ldc2_w        #19                 // long -1l
+      40: invokevirtual #21                 // Method java/nio/ByteBuffer.putLong:(J)Ljava/nio/ByteBuffer;
+      43: astore_1
+      44: bipush        16
+      46: istore_2
+      47: new           #22                 // class java/math/BigInteger
+      50: dup
+      51: iconst_1
+      52: aload_1
+      53: invokevirtual #23                 // Method java/nio/ByteBuffer.array:()[B
+      56: invokespecial #24                 // Method java/math/BigInteger."<init>":(I[B)V
+      59: invokevirtual #25                 // Method java/math/BigInteger.not:()Ljava/math/BigInteger;
+      62: aload_0
+      63: getfield      #11                 // Field prefixLength:I
+      66: invokevirtual #26                 // Method java/math/BigInteger.shiftRight:(I)Ljava/math/BigInteger;
+      69: astore_3
+      70: aload_0
+      71: getfield      #9                  // Field inetAddress:Ljava/net/InetAddress;
+      74: invokevirtual #16                 // Method java/net/InetAddress.getAddress:()[B
+      77: invokestatic  #27                 // Method java/nio/ByteBuffer.wrap:([B)Ljava/nio/ByteBuffer;
+      80: astore        4
+      82: new           #22                 // class java/math/BigInteger
+      85: dup
+      86: iconst_1
+      87: aload         4
+      89: invokevirtual #23                 // Method java/nio/ByteBuffer.array:()[B
+      92: invokespecial #24                 // Method java/math/BigInteger."<init>":(I[B)V
+      95: astore        5
+      97: aload         5
+      99: aload_3
+     100: invokevirtual #28                 // Method java/math/BigInteger.and:(Ljava/math/BigInteger;)Ljava/math/BigInteger;
+     103: astore        6
+     105: aload         6
+     107: aload_3
+     108: invokevirtual #25                 // Method java/math/BigInteger.not:()Ljava/math/BigInteger;
+     111: invokevirtual #29                 // Method java/math/BigInteger.add:(Ljava/math/BigInteger;)Ljava/math/BigInteger;
+     114: astore        7
+     116: aload_0
+     117: aload         6
+     119: invokevirtual #30                 // Method java/math/BigInteger.toByteArray:()[B
+     122: iload_2
+     123: invokespecial #31                 // Method toBytes:([BI)[B
+     126: astore        8
+     128: aload_0
+     129: aload         7
+     131: invokevirtual #30                 // Method java/math/BigInteger.toByteArray:()[B
+     134: iload_2
+     135: invokespecial #31                 // Method toBytes:([BI)[B
+     138: astore        9
+     140: aload_0
+     141: aload         8
+     143: invokestatic  #32                 // Method java/net/InetAddress.getByAddress:([B)Ljava/net/InetAddress;
+     146: putfield      #33                 // Field startAddress:Ljava/net/InetAddress;
+     149: aload_0
+     150: aload         9
+     152: invokestatic  #32                 // Method java/net/InetAddress.getByAddress:([B)Ljava/net/InetAddress;
+     155: putfield      #34                 // Field endAddress:Ljava/net/InetAddress;
+     158: return
+
+  private byte[] toBytes(byte[], int);
+    Code:
+       0: iconst_0
+       1: istore_3
+       2: new           #35                 // class java/util/ArrayList
+       5: dup
+       6: invokespecial #36                 // Method java/util/ArrayList."<init>":()V
+       9: astore        4
+      11: iload_3
+      12: iload_2
+      13: if_icmpge     50
+      16: aload_1
+      17: arraylength
+      18: iconst_1
+      19: isub
+      20: iload_3
+      21: isub
+      22: iflt          50
+      25: aload         4
+      27: iconst_0
+      28: aload_1
+      29: aload_1
+      30: arraylength
+      31: iconst_1
+      32: isub
+      33: iload_3
+      34: isub
+      35: baload
+      36: invokestatic  #37                 // Method java/lang/Byte.valueOf:(B)Ljava/lang/Byte;
+      39: invokeinterface #38,  3           // InterfaceMethod java/util/List.add:(ILjava/lang/Object;)V
+      44: iinc          3, 1
+      47: goto          11
+      50: aload         4
+      52: invokeinterface #39,  1           // InterfaceMethod java/util/List.size:()I
+      57: istore        5
+      59: iconst_0
+      60: istore        6
+      62: iload         6
+      64: iload_2
+      65: iload         5
+      67: isub
+      68: if_icmpge     89
+      71: aload         4
+      73: iconst_0
+      74: iconst_0
+      75: invokestatic  #37                 // Method java/lang/Byte.valueOf:(B)Ljava/lang/Byte;
+      78: invokeinterface #38,  3           // InterfaceMethod java/util/List.add:(ILjava/lang/Object;)V
+      83: iinc          6, 1
+      86: goto          62
+      89: aload         4
+      91: invokeinterface #39,  1           // InterfaceMethod java/util/List.size:()I
+      96: newarray       byte
+      98: astore        6
+     100: iconst_0
+     101: istore        7
+     103: iload         7
+     105: aload         4
+     107: invokeinterface #39,  1           // InterfaceMethod java/util/List.size:()I
+     112: if_icmpge     141
+     115: aload         6
+     117: iload         7
+     119: aload         4
+     121: iload         7
+     123: invokeinterface #40,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     128: checkcast     #41                 // class java/lang/Byte
+     131: invokevirtual #42                 // Method java/lang/Byte.byteValue:()B
+     134: bastore
+     135: iinc          7, 1
+     138: goto          103
+     141: aload         6
+     143: areturn
+
+  public java.lang.String getNetworkAddress();
+    Code:
+       0: aload_0
+       1: getfield      #33                 // Field startAddress:Ljava/net/InetAddress;
+       4: invokevirtual #43                 // Method java/net/InetAddress.getHostAddress:()Ljava/lang/String;
+       7: areturn
+
+  public java.lang.String getBroadcastAddress();
+    Code:
+       0: aload_0
+       1: getfield      #34                 // Field endAddress:Ljava/net/InetAddress;
+       4: invokevirtual #43                 // Method java/net/InetAddress.getHostAddress:()Ljava/lang/String;
+       7: areturn
+
+  public boolean isInRange(java.lang.String) throws java.net.UnknownHostException;
+    Code:
+       0: aload_1
+       1: invokestatic  #8                  // Method java/net/InetAddress.getByName:(Ljava/lang/String;)Ljava/net/InetAddress;
+       4: astore_2
+       5: new           #22                 // class java/math/BigInteger
+       8: dup
+       9: iconst_1
+      10: aload_0
+      11: getfield      #33                 // Field startAddress:Ljava/net/InetAddress;
+      14: invokevirtual #16                 // Method java/net/InetAddress.getAddress:()[B
+      17: invokespecial #24                 // Method java/math/BigInteger."<init>":(I[B)V
+      20: astore_3
+      21: new           #22                 // class java/math/BigInteger
+      24: dup
+      25: iconst_1
+      26: aload_0
+      27: getfield      #34                 // Field endAddress:Ljava/net/InetAddress;
+      30: invokevirtual #16                 // Method java/net/InetAddress.getAddress:()[B
+      33: invokespecial #24                 // Method java/math/BigInteger."<init>":(I[B)V
+      36: astore        4
+      38: new           #22                 // class java/math/BigInteger
+      41: dup
+      42: iconst_1
+      43: aload_2
+      44: invokevirtual #16                 // Method java/net/InetAddress.getAddress:()[B
+      47: invokespecial #24                 // Method java/math/BigInteger."<init>":(I[B)V
+      50: astore        5
+      52: aload_3
+      53: aload         5
+      55: invokevirtual #44                 // Method java/math/BigInteger.compareTo:(Ljava/math/BigInteger;)I
+      58: istore        6
+      60: aload         5
+      62: aload         4
+      64: invokevirtual #44                 // Method java/math/BigInteger.compareTo:(Ljava/math/BigInteger;)I
+      67: istore        7
+      69: iload         6
+      71: iconst_m1
+      72: if_icmpeq     80
+      75: iload         6
+      77: ifne          95
+      80: iload         7
+      82: iconst_m1
+      83: if_icmpeq     91
+      86: iload         7
+      88: ifne          95
+      91: iconst_1
+      92: goto          96
+      95: iconst_0
+      96: ireturn
+}

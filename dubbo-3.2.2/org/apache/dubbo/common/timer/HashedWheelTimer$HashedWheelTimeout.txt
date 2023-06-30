@@ -1,0 +1,262 @@
+Compiled from "HashedWheelTimer.java"
+final class org.apache.dubbo.common.timer.HashedWheelTimer$HashedWheelTimeout implements org.apache.dubbo.common.timer.Timeout {
+  private static final int ST_INIT;
+
+  private static final int ST_CANCELLED;
+
+  private static final int ST_EXPIRED;
+
+  private static final java.util.concurrent.atomic.AtomicIntegerFieldUpdater<org.apache.dubbo.common.timer.HashedWheelTimer$HashedWheelTimeout> STATE_UPDATER;
+
+  private final org.apache.dubbo.common.timer.HashedWheelTimer timer;
+
+  private final org.apache.dubbo.common.timer.TimerTask task;
+
+  private final long deadline;
+
+  private volatile int state;
+
+  long remainingRounds;
+
+  org.apache.dubbo.common.timer.HashedWheelTimer$HashedWheelTimeout next;
+
+  org.apache.dubbo.common.timer.HashedWheelTimer$HashedWheelTimeout prev;
+
+  org.apache.dubbo.common.timer.HashedWheelTimer$HashedWheelBucket bucket;
+
+  org.apache.dubbo.common.timer.HashedWheelTimer$HashedWheelTimeout(org.apache.dubbo.common.timer.HashedWheelTimer, org.apache.dubbo.common.timer.TimerTask, long);
+    Code:
+       0: aload_0
+       1: invokespecial #4                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iconst_0
+       6: putfield      #6                  // Field state:I
+       9: aload_0
+      10: aload_1
+      11: putfield      #2                  // Field timer:Lorg/apache/dubbo/common/timer/HashedWheelTimer;
+      14: aload_0
+      15: aload_2
+      16: putfield      #7                  // Field task:Lorg/apache/dubbo/common/timer/TimerTask;
+      19: aload_0
+      20: lload_3
+      21: putfield      #3                  // Field deadline:J
+      24: return
+
+  public org.apache.dubbo.common.timer.Timer timer();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field timer:Lorg/apache/dubbo/common/timer/HashedWheelTimer;
+       4: areturn
+
+  public org.apache.dubbo.common.timer.TimerTask task();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field task:Lorg/apache/dubbo/common/timer/TimerTask;
+       4: areturn
+
+  public boolean cancel();
+    Code:
+       0: aload_0
+       1: iconst_0
+       2: iconst_1
+       3: invokevirtual #8                  // Method compareAndSetState:(II)Z
+       6: ifne          11
+       9: iconst_0
+      10: ireturn
+      11: aload_0
+      12: getfield      #2                  // Field timer:Lorg/apache/dubbo/common/timer/HashedWheelTimer;
+      15: invokestatic  #9                  // Method org/apache/dubbo/common/timer/HashedWheelTimer.access$1000:(Lorg/apache/dubbo/common/timer/HashedWheelTimer;)Ljava/util/Queue;
+      18: aload_0
+      19: invokeinterface #10,  2           // InterfaceMethod java/util/Queue.add:(Ljava/lang/Object;)Z
+      24: pop
+      25: iconst_1
+      26: ireturn
+
+  void remove();
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field bucket:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelBucket;
+       4: astore_1
+       5: aload_1
+       6: ifnull        18
+       9: aload_1
+      10: aload_0
+      11: invokevirtual #12                 // Method org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelBucket.remove:(Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;)Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      14: pop
+      15: goto          29
+      18: aload_0
+      19: getfield      #2                  // Field timer:Lorg/apache/dubbo/common/timer/HashedWheelTimer;
+      22: invokestatic  #13                 // Method org/apache/dubbo/common/timer/HashedWheelTimer.access$1300:(Lorg/apache/dubbo/common/timer/HashedWheelTimer;)Ljava/util/concurrent/atomic/AtomicLong;
+      25: invokevirtual #14                 // Method java/util/concurrent/atomic/AtomicLong.decrementAndGet:()J
+      28: pop2
+      29: return
+
+  public boolean compareAndSetState(int, int);
+    Code:
+       0: getstatic     #15                 // Field STATE_UPDATER:Ljava/util/concurrent/atomic/AtomicIntegerFieldUpdater;
+       3: aload_0
+       4: iload_1
+       5: iload_2
+       6: invokevirtual #16                 // Method java/util/concurrent/atomic/AtomicIntegerFieldUpdater.compareAndSet:(Ljava/lang/Object;II)Z
+       9: ireturn
+
+  public int state();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field state:I
+       4: ireturn
+
+  public boolean isCancelled();
+    Code:
+       0: aload_0
+       1: invokevirtual #17                 // Method state:()I
+       4: iconst_1
+       5: if_icmpne     12
+       8: iconst_1
+       9: goto          13
+      12: iconst_0
+      13: ireturn
+
+  public boolean isExpired();
+    Code:
+       0: aload_0
+       1: invokevirtual #17                 // Method state:()I
+       4: iconst_2
+       5: if_icmpne     12
+       8: iconst_1
+       9: goto          13
+      12: iconst_0
+      13: ireturn
+
+  public void expire();
+    Code:
+       0: aload_0
+       1: iconst_0
+       2: iconst_2
+       3: invokevirtual #8                  // Method compareAndSetState:(II)Z
+       6: ifne          10
+       9: return
+      10: aload_0
+      11: getfield      #7                  // Field task:Lorg/apache/dubbo/common/timer/TimerTask;
+      14: aload_0
+      15: invokeinterface #18,  2           // InterfaceMethod org/apache/dubbo/common/timer/TimerTask.run:(Lorg/apache/dubbo/common/timer/Timeout;)V
+      20: goto          78
+      23: astore_1
+      24: invokestatic  #20                 // Method org/apache/dubbo/common/timer/HashedWheelTimer.access$1100:()Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      27: invokeinterface #21,  1           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isWarnEnabled:()Z
+      32: ifeq          78
+      35: invokestatic  #20                 // Method org/apache/dubbo/common/timer/HashedWheelTimer.access$1100:()Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      38: ldc           #22                 // String 0-19
+      40: ldc           #23                 // String
+      42: ldc           #23                 // String
+      44: new           #24                 // class java/lang/StringBuilder
+      47: dup
+      48: invokespecial #25                 // Method java/lang/StringBuilder."<init>":()V
+      51: ldc           #26                 // String An exception was thrown by
+      53: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      56: ldc           #28                 // class org/apache/dubbo/common/timer/TimerTask
+      58: invokevirtual #29                 // Method java/lang/Class.getSimpleName:()Ljava/lang/String;
+      61: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      64: bipush        46
+      66: invokevirtual #30                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      69: invokevirtual #31                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      72: aload_1
+      73: invokeinterface #32,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      78: return
+    Exception table:
+       from    to  target type
+          10    20    23   Class java/lang/Throwable
+
+  public java.lang.String toString();
+    Code:
+       0: invokestatic  #33                 // Method java/lang/System.nanoTime:()J
+       3: lstore_1
+       4: aload_0
+       5: getfield      #3                  // Field deadline:J
+       8: lload_1
+       9: lsub
+      10: aload_0
+      11: getfield      #2                  // Field timer:Lorg/apache/dubbo/common/timer/HashedWheelTimer;
+      14: invokestatic  #34                 // Method org/apache/dubbo/common/timer/HashedWheelTimer.access$200:(Lorg/apache/dubbo/common/timer/HashedWheelTimer;)J
+      17: ladd
+      18: lstore_3
+      19: aload_0
+      20: invokevirtual #35                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      23: invokestatic  #36                 // Method org/apache/dubbo/common/utils/ClassUtils.simpleClassName:(Ljava/lang/Class;)Ljava/lang/String;
+      26: astore        5
+      28: new           #24                 // class java/lang/StringBuilder
+      31: dup
+      32: sipush        192
+      35: invokespecial #37                 // Method java/lang/StringBuilder."<init>":(I)V
+      38: aload         5
+      40: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      43: bipush        40
+      45: invokevirtual #30                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      48: ldc           #38                 // String deadline:
+      50: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      53: astore        6
+      55: lload_3
+      56: lconst_0
+      57: lcmp
+      58: ifle          76
+      61: aload         6
+      63: lload_3
+      64: invokevirtual #39                 // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+      67: ldc           #40                 // String  ns later
+      69: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      72: pop
+      73: goto          106
+      76: lload_3
+      77: lconst_0
+      78: lcmp
+      79: ifge          98
+      82: aload         6
+      84: lload_3
+      85: lneg
+      86: invokevirtual #39                 // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+      89: ldc           #41                 // String  ns ago
+      91: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      94: pop
+      95: goto          106
+      98: aload         6
+     100: ldc           #42                 // String now
+     102: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     105: pop
+     106: aload_0
+     107: invokevirtual #43                 // Method isCancelled:()Z
+     110: ifeq          121
+     113: aload         6
+     115: ldc           #44                 // String , cancelled
+     117: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     120: pop
+     121: aload         6
+     123: ldc           #45                 // String , task:
+     125: invokevirtual #27                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     128: aload_0
+     129: invokevirtual #46                 // Method task:()Lorg/apache/dubbo/common/timer/TimerTask;
+     132: invokevirtual #47                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     135: bipush        41
+     137: invokevirtual #30                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     140: invokevirtual #31                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     143: areturn
+
+  static long access$800(org.apache.dubbo.common.timer.HashedWheelTimer$HashedWheelTimeout);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field deadline:J
+       4: lreturn
+
+  static org.apache.dubbo.common.timer.HashedWheelTimer access$1400(org.apache.dubbo.common.timer.HashedWheelTimer$HashedWheelTimeout);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field timer:Lorg/apache/dubbo/common/timer/HashedWheelTimer;
+       4: areturn
+
+  static {};
+    Code:
+       0: ldc           #5                  // class org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout
+       2: ldc           #48                 // String state
+       4: invokestatic  #49                 // Method java/util/concurrent/atomic/AtomicIntegerFieldUpdater.newUpdater:(Ljava/lang/Class;Ljava/lang/String;)Ljava/util/concurrent/atomic/AtomicIntegerFieldUpdater;
+       7: putstatic     #15                 // Field STATE_UPDATER:Ljava/util/concurrent/atomic/AtomicIntegerFieldUpdater;
+      10: return
+}

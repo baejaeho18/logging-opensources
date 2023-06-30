@@ -1,0 +1,226 @@
+Compiled from "ExecutorUtil.java"
+public class org.apache.dubbo.common.utils.ExecutorUtil {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private static final java.util.concurrent.ThreadPoolExecutor SHUTDOWN_EXECUTOR;
+
+  public org.apache.dubbo.common.utils.ExecutorUtil();
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static boolean isTerminated(java.util.concurrent.Executor);
+    Code:
+       0: aload_0
+       1: instanceof    #4                  // class java/util/concurrent/ExecutorService
+       4: ifeq          21
+       7: aload_0
+       8: checkcast     #4                  // class java/util/concurrent/ExecutorService
+      11: invokeinterface #5,  1            // InterfaceMethod java/util/concurrent/ExecutorService.isTerminated:()Z
+      16: ifeq          21
+      19: iconst_1
+      20: ireturn
+      21: iconst_0
+      22: ireturn
+
+  public static void gracefulShutdown(java.util.concurrent.Executor, int);
+    Code:
+       0: aload_0
+       1: instanceof    #4                  // class java/util/concurrent/ExecutorService
+       4: ifeq          14
+       7: aload_0
+       8: invokestatic  #6                  // Method isTerminated:(Ljava/util/concurrent/Executor;)Z
+      11: ifeq          15
+      14: return
+      15: aload_0
+      16: checkcast     #4                  // class java/util/concurrent/ExecutorService
+      19: astore_2
+      20: aload_2
+      21: invokeinterface #7,  1            // InterfaceMethod java/util/concurrent/ExecutorService.shutdown:()V
+      26: goto          31
+      29: astore_3
+      30: return
+      31: aload_2
+      32: iload_1
+      33: i2l
+      34: getstatic     #10                 // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+      37: invokeinterface #11,  4           // InterfaceMethod java/util/concurrent/ExecutorService.awaitTermination:(JLjava/util/concurrent/TimeUnit;)Z
+      42: ifne          52
+      45: aload_2
+      46: invokeinterface #12,  1           // InterfaceMethod java/util/concurrent/ExecutorService.shutdownNow:()Ljava/util/List;
+      51: pop
+      52: goto          69
+      55: astore_3
+      56: aload_2
+      57: invokeinterface #12,  1           // InterfaceMethod java/util/concurrent/ExecutorService.shutdownNow:()Ljava/util/List;
+      62: pop
+      63: invokestatic  #14                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+      66: invokevirtual #15                 // Method java/lang/Thread.interrupt:()V
+      69: aload_2
+      70: invokestatic  #6                  // Method isTerminated:(Ljava/util/concurrent/Executor;)Z
+      73: ifne          80
+      76: aload_2
+      77: invokestatic  #16                 // Method newThreadToCloseExecutor:(Ljava/util/concurrent/ExecutorService;)V
+      80: return
+    Exception table:
+       from    to  target type
+          20    26    29   Class java/lang/SecurityException
+          20    26    29   Class java/lang/NullPointerException
+          31    52    55   Class java/lang/InterruptedException
+
+  public static void shutdownNow(java.util.concurrent.Executor, int);
+    Code:
+       0: aload_0
+       1: instanceof    #4                  // class java/util/concurrent/ExecutorService
+       4: ifeq          14
+       7: aload_0
+       8: invokestatic  #6                  // Method isTerminated:(Ljava/util/concurrent/Executor;)Z
+      11: ifeq          15
+      14: return
+      15: aload_0
+      16: checkcast     #4                  // class java/util/concurrent/ExecutorService
+      19: astore_2
+      20: aload_2
+      21: invokeinterface #12,  1           // InterfaceMethod java/util/concurrent/ExecutorService.shutdownNow:()Ljava/util/List;
+      26: pop
+      27: goto          32
+      30: astore_3
+      31: return
+      32: aload_2
+      33: iload_1
+      34: i2l
+      35: getstatic     #10                 // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+      38: invokeinterface #11,  4           // InterfaceMethod java/util/concurrent/ExecutorService.awaitTermination:(JLjava/util/concurrent/TimeUnit;)Z
+      43: pop
+      44: goto          54
+      47: astore_3
+      48: invokestatic  #14                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+      51: invokevirtual #15                 // Method java/lang/Thread.interrupt:()V
+      54: aload_2
+      55: invokestatic  #6                  // Method isTerminated:(Ljava/util/concurrent/Executor;)Z
+      58: ifne          65
+      61: aload_2
+      62: invokestatic  #16                 // Method newThreadToCloseExecutor:(Ljava/util/concurrent/ExecutorService;)V
+      65: return
+    Exception table:
+       from    to  target type
+          20    27    30   Class java/lang/SecurityException
+          20    27    30   Class java/lang/NullPointerException
+          32    44    47   Class java/lang/InterruptedException
+
+  private static void newThreadToCloseExecutor(java.util.concurrent.ExecutorService);
+    Code:
+       0: aload_0
+       1: invokestatic  #6                  // Method isTerminated:(Ljava/util/concurrent/Executor;)Z
+       4: ifne          19
+       7: getstatic     #17                 // Field SHUTDOWN_EXECUTOR:Ljava/util/concurrent/ThreadPoolExecutor;
+      10: aload_0
+      11: invokedynamic #18,  0             // InvokeDynamic #0:run:(Ljava/util/concurrent/ExecutorService;)Ljava/lang/Runnable;
+      16: invokevirtual #19                 // Method java/util/concurrent/ThreadPoolExecutor.execute:(Ljava/lang/Runnable;)V
+      19: return
+
+  public static org.apache.dubbo.common.URL setThreadName(org.apache.dubbo.common.URL, java.lang.String);
+    Code:
+       0: aload_0
+       1: ldc           #20                 // String threadname
+       3: aload_1
+       4: invokevirtual #21                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+       7: astore_2
+       8: new           #22                 // class java/lang/StringBuilder
+      11: dup
+      12: invokespecial #23                 // Method java/lang/StringBuilder."<init>":()V
+      15: aload_2
+      16: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      19: ldc           #25                 // String -
+      21: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      24: aload_0
+      25: invokevirtual #26                 // Method org/apache/dubbo/common/URL.getAddress:()Ljava/lang/String;
+      28: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      31: invokevirtual #27                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      34: astore_2
+      35: aload_0
+      36: ldc           #20                 // String threadname
+      38: aload_2
+      39: invokevirtual #28                 // Method org/apache/dubbo/common/URL.addParameter:(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/dubbo/common/URL;
+      42: astore_0
+      43: aload_0
+      44: areturn
+
+  public static void cancelScheduledFuture(java.util.concurrent.ScheduledFuture<?>);
+    Code:
+       0: aload_0
+       1: astore_1
+       2: aload_1
+       3: ifnull        23
+       6: aload_1
+       7: invokeinterface #29,  1           // InterfaceMethod java/util/concurrent/ScheduledFuture.isCancelled:()Z
+      12: ifne          23
+      15: aload_1
+      16: iconst_1
+      17: invokeinterface #30,  2           // InterfaceMethod java/util/concurrent/ScheduledFuture.cancel:(Z)Z
+      22: pop
+      23: return
+
+  private static void lambda$newThreadToCloseExecutor$0(java.util.concurrent.ExecutorService);
+    Code:
+       0: iconst_0
+       1: istore_1
+       2: iload_1
+       3: sipush        1000
+       6: if_icmpge     40
+       9: aload_0
+      10: invokeinterface #12,  1           // InterfaceMethod java/util/concurrent/ExecutorService.shutdownNow:()Ljava/util/List;
+      15: pop
+      16: aload_0
+      17: ldc2_w        #31                 // long 10l
+      20: getstatic     #10                 // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+      23: invokeinterface #11,  4           // InterfaceMethod java/util/concurrent/ExecutorService.awaitTermination:(JLjava/util/concurrent/TimeUnit;)Z
+      28: ifeq          34
+      31: goto          40
+      34: iinc          1, 1
+      37: goto          2
+      40: goto          73
+      43: astore_1
+      44: invokestatic  #14                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+      47: invokevirtual #15                 // Method java/lang/Thread.interrupt:()V
+      50: goto          73
+      53: astore_1
+      54: getstatic     #34                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      57: ldc           #35                 // String 0-17
+      59: ldc           #36                 // String
+      61: ldc           #36                 // String
+      63: aload_1
+      64: invokevirtual #37                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+      67: aload_1
+      68: invokeinterface #38,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      73: return
+    Exception table:
+       from    to  target type
+           0    40    43   Class java/lang/InterruptedException
+           0    40    53   Class java/lang/Throwable
+
+  static {};
+    Code:
+       0: ldc           #39                 // class org/apache/dubbo/common/utils/ExecutorUtil
+       2: invokestatic  #40                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #34                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: new           #41                 // class java/util/concurrent/ThreadPoolExecutor
+      11: dup
+      12: iconst_0
+      13: iconst_1
+      14: lconst_0
+      15: getstatic     #10                 // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+      18: new           #42                 // class java/util/concurrent/LinkedBlockingQueue
+      21: dup
+      22: bipush        100
+      24: invokespecial #43                 // Method java/util/concurrent/LinkedBlockingQueue."<init>":(I)V
+      27: new           #44                 // class org/apache/dubbo/common/utils/NamedThreadFactory
+      30: dup
+      31: ldc           #45                 // String Close-ExecutorService-Timer
+      33: iconst_1
+      34: invokespecial #46                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;Z)V
+      37: invokespecial #47                 // Method java/util/concurrent/ThreadPoolExecutor."<init>":(IIJLjava/util/concurrent/TimeUnit;Ljava/util/concurrent/BlockingQueue;Ljava/util/concurrent/ThreadFactory;)V
+      40: putstatic     #17                 // Field SHUTDOWN_EXECUTOR:Ljava/util/concurrent/ThreadPoolExecutor;
+      43: return
+}

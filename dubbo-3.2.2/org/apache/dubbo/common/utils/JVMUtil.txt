@@ -1,0 +1,310 @@
+Compiled from "JVMUtil.java"
+public class org.apache.dubbo.common.utils.JVMUtil {
+  public org.apache.dubbo.common.utils.JVMUtil();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static void jstack(java.io.OutputStream) throws java.lang.Exception;
+    Code:
+       0: invokestatic  #2                  // Method java/lang/management/ManagementFactory.getThreadMXBean:()Ljava/lang/management/ThreadMXBean;
+       3: astore_1
+       4: aload_1
+       5: iconst_1
+       6: iconst_1
+       7: invokeinterface #3,  3            // InterfaceMethod java/lang/management/ThreadMXBean.dumpAllThreads:(ZZ)[Ljava/lang/management/ThreadInfo;
+      12: astore_2
+      13: aload_2
+      14: arraylength
+      15: istore_3
+      16: iconst_0
+      17: istore        4
+      19: iload         4
+      21: iload_3
+      22: if_icmpge     49
+      25: aload_2
+      26: iload         4
+      28: aaload
+      29: astore        5
+      31: aload_0
+      32: aload         5
+      34: invokestatic  #4                  // Method getThreadDumpString:(Ljava/lang/management/ThreadInfo;)Ljava/lang/String;
+      37: invokevirtual #5                  // Method java/lang/String.getBytes:()[B
+      40: invokevirtual #6                  // Method java/io/OutputStream.write:([B)V
+      43: iinc          4, 1
+      46: goto          19
+      49: return
+
+  private static java.lang.String getThreadDumpString(java.lang.management.ThreadInfo);
+    Code:
+       0: new           #7                  // class java/lang/StringBuilder
+       3: dup
+       4: new           #7                  // class java/lang/StringBuilder
+       7: dup
+       8: invokespecial #8                  // Method java/lang/StringBuilder."<init>":()V
+      11: ldc           #9                  // String \"
+      13: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      16: aload_0
+      17: invokevirtual #11                 // Method java/lang/management/ThreadInfo.getThreadName:()Ljava/lang/String;
+      20: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      23: ldc           #12                 // String \" Id=
+      25: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      28: aload_0
+      29: invokevirtual #13                 // Method java/lang/management/ThreadInfo.getThreadId:()J
+      32: invokevirtual #14                 // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+      35: ldc           #15                 // String
+      37: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      40: aload_0
+      41: invokevirtual #16                 // Method java/lang/management/ThreadInfo.getThreadState:()Ljava/lang/Thread$State;
+      44: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      47: invokevirtual #18                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      50: invokespecial #19                 // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      53: astore_1
+      54: aload_0
+      55: invokevirtual #20                 // Method java/lang/management/ThreadInfo.getLockName:()Ljava/lang/String;
+      58: ifnull        88
+      61: aload_1
+      62: new           #7                  // class java/lang/StringBuilder
+      65: dup
+      66: invokespecial #8                  // Method java/lang/StringBuilder."<init>":()V
+      69: ldc           #21                 // String  on
+      71: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      74: aload_0
+      75: invokevirtual #20                 // Method java/lang/management/ThreadInfo.getLockName:()Ljava/lang/String;
+      78: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      81: invokevirtual #18                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      84: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      87: pop
+      88: aload_0
+      89: invokevirtual #22                 // Method java/lang/management/ThreadInfo.getLockOwnerName:()Ljava/lang/String;
+      92: ifnull        134
+      95: aload_1
+      96: new           #7                  // class java/lang/StringBuilder
+      99: dup
+     100: invokespecial #8                  // Method java/lang/StringBuilder."<init>":()V
+     103: ldc           #23                 // String  owned by \"
+     105: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     108: aload_0
+     109: invokevirtual #22                 // Method java/lang/management/ThreadInfo.getLockOwnerName:()Ljava/lang/String;
+     112: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     115: ldc           #12                 // String \" Id=
+     117: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     120: aload_0
+     121: invokevirtual #24                 // Method java/lang/management/ThreadInfo.getLockOwnerId:()J
+     124: invokevirtual #14                 // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+     127: invokevirtual #18                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     130: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     133: pop
+     134: aload_0
+     135: invokevirtual #25                 // Method java/lang/management/ThreadInfo.isSuspended:()Z
+     138: ifeq          148
+     141: aload_1
+     142: ldc           #26                 // String  (suspended)
+     144: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     147: pop
+     148: aload_0
+     149: invokevirtual #27                 // Method java/lang/management/ThreadInfo.isInNative:()Z
+     152: ifeq          162
+     155: aload_1
+     156: ldc           #28                 // String  (in native)
+     158: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     161: pop
+     162: aload_1
+     163: bipush        10
+     165: invokevirtual #29                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     168: pop
+     169: iconst_0
+     170: istore_2
+     171: bipush        32
+     173: istore_3
+     174: ldc           #31                 // String dubbo.jstack-dump.max-line
+     176: invokestatic  #32                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+     179: astore        4
+     181: aload         4
+     183: invokestatic  #33                 // Method org/apache/dubbo/common/utils/StringUtils.isNotEmpty:(Ljava/lang/String;)Z
+     186: ifeq          200
+     189: aload         4
+     191: invokestatic  #34                 // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+     194: istore_3
+     195: goto          200
+     198: astore        5
+     200: aload_0
+     201: invokevirtual #36                 // Method java/lang/management/ThreadInfo.getStackTrace:()[Ljava/lang/StackTraceElement;
+     204: astore        5
+     206: aload_0
+     207: invokevirtual #37                 // Method java/lang/management/ThreadInfo.getLockedMonitors:()[Ljava/lang/management/MonitorInfo;
+     210: astore        6
+     212: iload_2
+     213: aload         5
+     215: arraylength
+     216: if_icmpge     413
+     219: iload_2
+     220: iload_3
+     221: if_icmpge     413
+     224: aload         5
+     226: iload_2
+     227: aaload
+     228: astore        7
+     230: aload_1
+     231: ldc           #38                 // String \tat
+     233: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     236: aload         7
+     238: invokevirtual #39                 // Method java/lang/StackTraceElement.toString:()Ljava/lang/String;
+     241: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     244: pop
+     245: aload_1
+     246: bipush        10
+     248: invokevirtual #29                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     251: pop
+     252: iload_2
+     253: ifne          347
+     256: aload_0
+     257: invokevirtual #40                 // Method java/lang/management/ThreadInfo.getLockInfo:()Ljava/lang/management/LockInfo;
+     260: ifnull        347
+     263: aload_0
+     264: invokevirtual #16                 // Method java/lang/management/ThreadInfo.getThreadState:()Ljava/lang/Thread$State;
+     267: astore        8
+     269: getstatic     #41                 // Field java/lang/Thread$State.BLOCKED:Ljava/lang/Thread$State;
+     272: aload         8
+     274: invokevirtual #42                 // Method java/lang/Thread$State.equals:(Ljava/lang/Object;)Z
+     277: ifeq          304
+     280: aload_1
+     281: ldc           #43                 // String \t-  blocked on
+     283: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     286: aload_0
+     287: invokevirtual #40                 // Method java/lang/management/ThreadInfo.getLockInfo:()Ljava/lang/management/LockInfo;
+     290: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     293: pop
+     294: aload_1
+     295: bipush        10
+     297: invokevirtual #29                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     300: pop
+     301: goto          347
+     304: getstatic     #44                 // Field java/lang/Thread$State.WAITING:Ljava/lang/Thread$State;
+     307: aload         8
+     309: invokevirtual #42                 // Method java/lang/Thread$State.equals:(Ljava/lang/Object;)Z
+     312: ifne          326
+     315: getstatic     #45                 // Field java/lang/Thread$State.TIMED_WAITING:Ljava/lang/Thread$State;
+     318: aload         8
+     320: invokevirtual #42                 // Method java/lang/Thread$State.equals:(Ljava/lang/Object;)Z
+     323: ifeq          347
+     326: aload_1
+     327: ldc           #46                 // String \t-  waiting on
+     329: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     332: aload_0
+     333: invokevirtual #40                 // Method java/lang/management/ThreadInfo.getLockInfo:()Ljava/lang/management/LockInfo;
+     336: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     339: pop
+     340: aload_1
+     341: bipush        10
+     343: invokevirtual #29                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     346: pop
+     347: aload         6
+     349: astore        8
+     351: aload         8
+     353: arraylength
+     354: istore        9
+     356: iconst_0
+     357: istore        10
+     359: iload         10
+     361: iload         9
+     363: if_icmpge     407
+     366: aload         8
+     368: iload         10
+     370: aaload
+     371: astore        11
+     373: aload         11
+     375: invokevirtual #47                 // Method java/lang/management/MonitorInfo.getLockedStackDepth:()I
+     378: iload_2
+     379: if_icmpne     401
+     382: aload_1
+     383: ldc           #48                 // String \t-  locked
+     385: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     388: aload         11
+     390: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     393: pop
+     394: aload_1
+     395: bipush        10
+     397: invokevirtual #29                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     400: pop
+     401: iinc          10, 1
+     404: goto          359
+     407: iinc          2, 1
+     410: goto          212
+     413: iload_2
+     414: aload         5
+     416: arraylength
+     417: if_icmpge     434
+     420: aload_1
+     421: ldc           #49                 // String \t...
+     423: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     426: pop
+     427: aload_1
+     428: bipush        10
+     430: invokevirtual #29                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     433: pop
+     434: aload_0
+     435: invokevirtual #50                 // Method java/lang/management/ThreadInfo.getLockedSynchronizers:()[Ljava/lang/management/LockInfo;
+     438: astore        7
+     440: aload         7
+     442: arraylength
+     443: ifle          543
+     446: aload_1
+     447: new           #7                  // class java/lang/StringBuilder
+     450: dup
+     451: invokespecial #8                  // Method java/lang/StringBuilder."<init>":()V
+     454: ldc           #51                 // String \n\tNumber of locked synchronizers =
+     456: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     459: aload         7
+     461: arraylength
+     462: invokevirtual #52                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     465: invokevirtual #18                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     468: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     471: pop
+     472: aload_1
+     473: bipush        10
+     475: invokevirtual #29                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     478: pop
+     479: aload         7
+     481: astore        8
+     483: aload         8
+     485: arraylength
+     486: istore        9
+     488: iconst_0
+     489: istore        10
+     491: iload         10
+     493: iload         9
+     495: if_icmpge     543
+     498: aload         8
+     500: iload         10
+     502: aaload
+     503: astore        11
+     505: aload_1
+     506: new           #7                  // class java/lang/StringBuilder
+     509: dup
+     510: invokespecial #8                  // Method java/lang/StringBuilder."<init>":()V
+     513: ldc           #53                 // String \t-
+     515: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     518: aload         11
+     520: invokevirtual #17                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     523: invokevirtual #18                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     526: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     529: pop
+     530: aload_1
+     531: bipush        10
+     533: invokevirtual #29                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     536: pop
+     537: iinc          10, 1
+     540: goto          491
+     543: aload_1
+     544: bipush        10
+     546: invokevirtual #29                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     549: pop
+     550: aload_1
+     551: invokevirtual #18                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     554: areturn
+    Exception table:
+       from    to  target type
+         189   195   198   Class java/lang/Exception
+}

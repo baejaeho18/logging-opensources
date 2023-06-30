@@ -1,0 +1,452 @@
+Compiled from "DefaultSerializeClassChecker.java"
+public class org.apache.dubbo.common.utils.DefaultSerializeClassChecker implements org.apache.dubbo.common.utils.AllowClassNotifyListener {
+  private static final long MAGIC_HASH_CODE;
+
+  private static final long MAGIC_PRIME;
+
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private volatile org.apache.dubbo.common.utils.SerializeCheckStatus checkStatus;
+
+  private volatile boolean checkSerializable;
+
+  private final org.apache.dubbo.common.utils.SerializeSecurityManager serializeSecurityManager;
+
+  private volatile long[] allowPrefixes;
+
+  private volatile long[] disAllowPrefixes;
+
+  public org.apache.dubbo.common.utils.DefaultSerializeClassChecker(org.apache.dubbo.rpc.model.FrameworkModel);
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: getstatic     #3                  // Field org/apache/dubbo/common/utils/AllowClassNotifyListener.DEFAULT_STATUS:Lorg/apache/dubbo/common/utils/SerializeCheckStatus;
+       8: putfield      #4                  // Field checkStatus:Lorg/apache/dubbo/common/utils/SerializeCheckStatus;
+      11: aload_0
+      12: iconst_1
+      13: putfield      #5                  // Field checkSerializable:Z
+      16: aload_0
+      17: iconst_0
+      18: newarray       long
+      20: putfield      #6                  // Field allowPrefixes:[J
+      23: aload_0
+      24: iconst_0
+      25: newarray       long
+      27: putfield      #7                  // Field disAllowPrefixes:[J
+      30: aload_0
+      31: aload_1
+      32: invokevirtual #8                  // Method org/apache/dubbo/rpc/model/FrameworkModel.getBeanFactory:()Lorg/apache/dubbo/common/beans/factory/ScopeBeanFactory;
+      35: ldc           #9                  // class org/apache/dubbo/common/utils/SerializeSecurityManager
+      37: invokevirtual #10                 // Method org/apache/dubbo/common/beans/factory/ScopeBeanFactory.getOrRegisterBean:(Ljava/lang/Class;)Ljava/lang/Object;
+      40: checkcast     #9                  // class org/apache/dubbo/common/utils/SerializeSecurityManager
+      43: putfield      #11                 // Field serializeSecurityManager:Lorg/apache/dubbo/common/utils/SerializeSecurityManager;
+      46: aload_0
+      47: getfield      #11                 // Field serializeSecurityManager:Lorg/apache/dubbo/common/utils/SerializeSecurityManager;
+      50: aload_0
+      51: invokevirtual #12                 // Method org/apache/dubbo/common/utils/SerializeSecurityManager.registerListener:(Lorg/apache/dubbo/common/utils/AllowClassNotifyListener;)V
+      54: return
+
+  public synchronized void notifyPrefix(java.util.Set<java.lang.String>, java.util.Set<java.lang.String>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #13                 // Method loadPrefix:(Ljava/util/Set;)[J
+       5: putfield      #6                  // Field allowPrefixes:[J
+       8: aload_0
+       9: aload_2
+      10: invokestatic  #13                 // Method loadPrefix:(Ljava/util/Set;)[J
+      13: putfield      #7                  // Field disAllowPrefixes:[J
+      16: return
+
+  public synchronized void notifyCheckStatus(org.apache.dubbo.common.utils.SerializeCheckStatus);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #4                  // Field checkStatus:Lorg/apache/dubbo/common/utils/SerializeCheckStatus;
+       5: return
+
+  public synchronized void notifyCheckSerializable(boolean);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: putfield      #5                  // Field checkSerializable:Z
+       5: return
+
+  private static long[] loadPrefix(java.util.Set<java.lang.String>);
+    Code:
+       0: aload_0
+       1: invokeinterface #14,  1           // InterfaceMethod java/util/Set.size:()I
+       6: newarray       long
+       8: astore_1
+       9: iconst_0
+      10: istore_2
+      11: aload_0
+      12: invokeinterface #15,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      17: astore_3
+      18: aload_3
+      19: invokeinterface #16,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      24: ifeq          125
+      27: aload_3
+      28: invokeinterface #17,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      33: checkcast     #18                 // class java/lang/String
+      36: astore        4
+      38: aload         4
+      40: ifnull        18
+      43: aload         4
+      45: invokevirtual #19                 // Method java/lang/String.isEmpty:()Z
+      48: ifeq          54
+      51: goto          18
+      54: ldc2_w        #21                 // long -3750763034362895579l
+      57: lstore        5
+      59: iconst_0
+      60: istore        7
+      62: iload         7
+      64: aload         4
+      66: invokevirtual #23                 // Method java/lang/String.length:()I
+      69: if_icmpge     114
+      72: aload         4
+      74: iload         7
+      76: invokevirtual #24                 // Method java/lang/String.charAt:(I)C
+      79: istore        8
+      81: iload         8
+      83: bipush        36
+      85: if_icmpne     92
+      88: bipush        46
+      90: istore        8
+      92: lload         5
+      94: iload         8
+      96: i2l
+      97: lxor
+      98: lstore        5
+     100: lload         5
+     102: ldc2_w        #25                 // long 1099511628211l
+     105: lmul
+     106: lstore        5
+     108: iinc          7, 1
+     111: goto          62
+     114: aload_1
+     115: iload_2
+     116: iinc          2, 1
+     119: lload         5
+     121: lastore
+     122: goto          18
+     125: iload_2
+     126: aload_1
+     127: arraylength
+     128: if_icmpeq     137
+     131: aload_1
+     132: iload_2
+     133: invokestatic  #27                 // Method java/util/Arrays.copyOf:([JI)[J
+     136: astore_1
+     137: aload_1
+     138: invokestatic  #28                 // Method java/util/Arrays.sort:([J)V
+     141: aload_1
+     142: areturn
+
+  public java.lang.Class<?> loadClass(java.lang.ClassLoader, java.lang.String) throws java.lang.ClassNotFoundException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #29                 // Method loadClass0:(Ljava/lang/ClassLoader;Ljava/lang/String;)Ljava/lang/Class;
+       6: astore_3
+       7: aload_0
+       8: getfield      #5                  // Field checkSerializable:Z
+      11: ifeq          98
+      14: aload_3
+      15: invokevirtual #30                 // Method java/lang/Class.isPrimitive:()Z
+      18: ifne          98
+      21: ldc           #31                 // class java/io/Serializable
+      23: aload_3
+      24: invokevirtual #32                 // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+      27: ifne          98
+      30: new           #33                 // class java/lang/StringBuilder
+      33: dup
+      34: invokespecial #34                 // Method java/lang/StringBuilder."<init>":()V
+      37: ldc           #35                 // String [Serialization Security] Serialized class
+      39: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      42: aload_2
+      43: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      46: ldc           #37                 // String  has not implement Serializable interface. Current mode is strict check, will disallow to deserialize it by default.
+      48: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      51: invokevirtual #38                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      54: astore        4
+      56: aload_0
+      57: getfield      #11                 // Field serializeSecurityManager:Lorg/apache/dubbo/common/utils/SerializeSecurityManager;
+      60: invokevirtual #39                 // Method org/apache/dubbo/common/utils/SerializeSecurityManager.getWarnedClasses:()Ljava/util/Set;
+      63: aload_2
+      64: invokeinterface #40,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      69: ifeq          88
+      72: getstatic     #41                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      75: ldc           #42                 // String 4-21
+      77: ldc           #43                 // String
+      79: ldc           #43                 // String
+      81: aload         4
+      83: invokeinterface #44,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      88: new           #45                 // class java/lang/IllegalArgumentException
+      91: dup
+      92: aload         4
+      94: invokespecial #46                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      97: athrow
+      98: aload_3
+      99: areturn
+
+  private java.lang.Class<?> loadClass0(java.lang.ClassLoader, java.lang.String) throws java.lang.ClassNotFoundException;
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field checkStatus:Lorg/apache/dubbo/common/utils/SerializeCheckStatus;
+       4: getstatic     #47                 // Field org/apache/dubbo/common/utils/SerializeCheckStatus.DISABLE:Lorg/apache/dubbo/common/utils/SerializeCheckStatus;
+       7: if_acmpne     16
+      10: aload_2
+      11: aload_1
+      12: invokestatic  #48                 // Method org/apache/dubbo/common/utils/ClassUtils.forName:(Ljava/lang/String;Ljava/lang/ClassLoader;)Ljava/lang/Class;
+      15: areturn
+      16: ldc2_w        #21                 // long -3750763034362895579l
+      19: lstore_3
+      20: iconst_0
+      21: istore        5
+      23: aload_2
+      24: invokevirtual #23                 // Method java/lang/String.length:()I
+      27: istore        6
+      29: iload         5
+      31: iload         6
+      33: if_icmpge     90
+      36: aload_2
+      37: iload         5
+      39: invokevirtual #24                 // Method java/lang/String.charAt:(I)C
+      42: istore        7
+      44: iload         7
+      46: bipush        36
+      48: if_icmpne     55
+      51: bipush        46
+      53: istore        7
+      55: lload_3
+      56: iload         7
+      58: i2l
+      59: lxor
+      60: lstore_3
+      61: lload_3
+      62: ldc2_w        #25                 // long 1099511628211l
+      65: lmul
+      66: lstore_3
+      67: aload_0
+      68: getfield      #6                  // Field allowPrefixes:[J
+      71: lload_3
+      72: invokestatic  #49                 // Method java/util/Arrays.binarySearch:([JJ)I
+      75: iflt          84
+      78: aload_2
+      79: aload_1
+      80: invokestatic  #48                 // Method org/apache/dubbo/common/utils/ClassUtils.forName:(Ljava/lang/String;Ljava/lang/ClassLoader;)Ljava/lang/Class;
+      83: areturn
+      84: iinc          5, 1
+      87: goto          29
+      90: aload_0
+      91: getfield      #4                  // Field checkStatus:Lorg/apache/dubbo/common/utils/SerializeCheckStatus;
+      94: getstatic     #50                 // Field org/apache/dubbo/common/utils/SerializeCheckStatus.STRICT:Lorg/apache/dubbo/common/utils/SerializeCheckStatus;
+      97: if_acmpne     168
+     100: new           #33                 // class java/lang/StringBuilder
+     103: dup
+     104: invokespecial #34                 // Method java/lang/StringBuilder."<init>":()V
+     107: ldc           #35                 // String [Serialization Security] Serialized class
+     109: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     112: aload_2
+     113: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     116: ldc           #51                 // String  is not in allow list. Current mode is `STRICT`, will disallow to deserialize it by default. Please add it into security/serialize.allowlist or follow FAQ to configure it.
+     118: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     121: invokevirtual #38                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     124: astore        5
+     126: aload_0
+     127: getfield      #11                 // Field serializeSecurityManager:Lorg/apache/dubbo/common/utils/SerializeSecurityManager;
+     130: invokevirtual #39                 // Method org/apache/dubbo/common/utils/SerializeSecurityManager.getWarnedClasses:()Ljava/util/Set;
+     133: aload_2
+     134: invokeinterface #40,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+     139: ifeq          158
+     142: getstatic     #41                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     145: ldc           #42                 // String 4-21
+     147: ldc           #43                 // String
+     149: ldc           #43                 // String
+     151: aload         5
+     153: invokeinterface #44,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     158: new           #45                 // class java/lang/IllegalArgumentException
+     161: dup
+     162: aload         5
+     164: invokespecial #46                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     167: athrow
+     168: ldc2_w        #21                 // long -3750763034362895579l
+     171: lstore_3
+     172: iconst_0
+     173: istore        5
+     175: aload_2
+     176: invokevirtual #23                 // Method java/lang/String.length:()I
+     179: istore        6
+     181: iload         5
+     183: iload         6
+     185: if_icmpge     304
+     188: aload_2
+     189: iload         5
+     191: invokevirtual #24                 // Method java/lang/String.charAt:(I)C
+     194: istore        7
+     196: iload         7
+     198: bipush        36
+     200: if_icmpne     207
+     203: bipush        46
+     205: istore        7
+     207: lload_3
+     208: iload         7
+     210: i2l
+     211: lxor
+     212: lstore_3
+     213: lload_3
+     214: ldc2_w        #25                 // long 1099511628211l
+     217: lmul
+     218: lstore_3
+     219: aload_0
+     220: getfield      #7                  // Field disAllowPrefixes:[J
+     223: lload_3
+     224: invokestatic  #49                 // Method java/util/Arrays.binarySearch:([JJ)I
+     227: iflt          298
+     230: new           #33                 // class java/lang/StringBuilder
+     233: dup
+     234: invokespecial #34                 // Method java/lang/StringBuilder."<init>":()V
+     237: ldc           #35                 // String [Serialization Security] Serialized class
+     239: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     242: aload_2
+     243: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     246: ldc           #52                 // String  is in disallow list. Current mode is `WARN`, will disallow to deserialize it by default. Please add it into security/serialize.allowlist or follow FAQ to configure it.
+     248: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     251: invokevirtual #38                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     254: astore        8
+     256: aload_0
+     257: getfield      #11                 // Field serializeSecurityManager:Lorg/apache/dubbo/common/utils/SerializeSecurityManager;
+     260: invokevirtual #39                 // Method org/apache/dubbo/common/utils/SerializeSecurityManager.getWarnedClasses:()Ljava/util/Set;
+     263: aload_2
+     264: invokeinterface #40,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+     269: ifeq          288
+     272: getstatic     #41                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     275: ldc           #42                 // String 4-21
+     277: ldc           #43                 // String
+     279: ldc           #43                 // String
+     281: aload         8
+     283: invokeinterface #44,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     288: new           #45                 // class java/lang/IllegalArgumentException
+     291: dup
+     292: aload         8
+     294: invokespecial #46                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     297: athrow
+     298: iinc          5, 1
+     301: goto          181
+     304: ldc2_w        #21                 // long -3750763034362895579l
+     307: lstore_3
+     308: iconst_0
+     309: istore        5
+     311: aload_2
+     312: invokevirtual #23                 // Method java/lang/String.length:()I
+     315: istore        6
+     317: iload         5
+     319: iload         6
+     321: if_icmpge     443
+     324: aload_2
+     325: iload         5
+     327: invokevirtual #24                 // Method java/lang/String.charAt:(I)C
+     330: invokestatic  #53                 // Method java/lang/Character.toLowerCase:(C)C
+     333: istore        7
+     335: iload         7
+     337: bipush        36
+     339: if_icmpne     346
+     342: bipush        46
+     344: istore        7
+     346: lload_3
+     347: iload         7
+     349: i2l
+     350: lxor
+     351: lstore_3
+     352: lload_3
+     353: ldc2_w        #25                 // long 1099511628211l
+     356: lmul
+     357: lstore_3
+     358: aload_0
+     359: getfield      #7                  // Field disAllowPrefixes:[J
+     362: lload_3
+     363: invokestatic  #49                 // Method java/util/Arrays.binarySearch:([JJ)I
+     366: iflt          437
+     369: new           #33                 // class java/lang/StringBuilder
+     372: dup
+     373: invokespecial #34                 // Method java/lang/StringBuilder."<init>":()V
+     376: ldc           #35                 // String [Serialization Security] Serialized class
+     378: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     381: aload_2
+     382: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     385: ldc           #52                 // String  is in disallow list. Current mode is `WARN`, will disallow to deserialize it by default. Please add it into security/serialize.allowlist or follow FAQ to configure it.
+     387: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     390: invokevirtual #38                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     393: astore        8
+     395: aload_0
+     396: getfield      #11                 // Field serializeSecurityManager:Lorg/apache/dubbo/common/utils/SerializeSecurityManager;
+     399: invokevirtual #39                 // Method org/apache/dubbo/common/utils/SerializeSecurityManager.getWarnedClasses:()Ljava/util/Set;
+     402: aload_2
+     403: invokeinterface #40,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+     408: ifeq          427
+     411: getstatic     #41                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     414: ldc           #42                 // String 4-21
+     416: ldc           #43                 // String
+     418: ldc           #43                 // String
+     420: aload         8
+     422: invokeinterface #44,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     427: new           #45                 // class java/lang/IllegalArgumentException
+     430: dup
+     431: aload         8
+     433: invokespecial #46                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     436: athrow
+     437: iinc          5, 1
+     440: goto          317
+     443: aload_2
+     444: aload_1
+     445: invokestatic  #48                 // Method org/apache/dubbo/common/utils/ClassUtils.forName:(Ljava/lang/String;Ljava/lang/ClassLoader;)Ljava/lang/Class;
+     448: astore        5
+     450: aload_0
+     451: getfield      #11                 // Field serializeSecurityManager:Lorg/apache/dubbo/common/utils/SerializeSecurityManager;
+     454: invokevirtual #39                 // Method org/apache/dubbo/common/utils/SerializeSecurityManager.getWarnedClasses:()Ljava/util/Set;
+     457: aload_2
+     458: invokeinterface #40,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+     463: ifeq          504
+     466: getstatic     #41                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     469: ldc           #42                 // String 4-21
+     471: ldc           #43                 // String
+     473: ldc           #43                 // String
+     475: new           #33                 // class java/lang/StringBuilder
+     478: dup
+     479: invokespecial #34                 // Method java/lang/StringBuilder."<init>":()V
+     482: ldc           #35                 // String [Serialization Security] Serialized class
+     484: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     487: aload_2
+     488: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     491: ldc           #54                 // String  is not in allow list. Current mode is `WARN`, will allow to deserialize it by default. Dubbo will set to `STRICT` mode by default in the future. Please add it into security/serialize.allowlist or follow FAQ to configure it.
+     493: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     496: invokevirtual #38                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     499: invokeinterface #44,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     504: aload         5
+     506: areturn
+
+  public static org.apache.dubbo.common.utils.DefaultSerializeClassChecker getInstance();
+    Code:
+       0: invokestatic  #55                 // Method org/apache/dubbo/rpc/model/FrameworkModel.defaultModel:()Lorg/apache/dubbo/rpc/model/FrameworkModel;
+       3: invokevirtual #8                  // Method org/apache/dubbo/rpc/model/FrameworkModel.getBeanFactory:()Lorg/apache/dubbo/common/beans/factory/ScopeBeanFactory;
+       6: ldc           #20                 // class org/apache/dubbo/common/utils/DefaultSerializeClassChecker
+       8: invokevirtual #56                 // Method org/apache/dubbo/common/beans/factory/ScopeBeanFactory.getBean:(Ljava/lang/Class;)Ljava/lang/Object;
+      11: checkcast     #20                 // class org/apache/dubbo/common/utils/DefaultSerializeClassChecker
+      14: areturn
+
+  public boolean isCheckSerializable();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field checkSerializable:Z
+       4: ireturn
+
+  static {};
+    Code:
+       0: ldc           #20                 // class org/apache/dubbo/common/utils/DefaultSerializeClassChecker
+       2: invokestatic  #57                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #41                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

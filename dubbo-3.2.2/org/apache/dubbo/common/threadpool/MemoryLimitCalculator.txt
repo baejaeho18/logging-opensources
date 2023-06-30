@@ -1,0 +1,104 @@
+Compiled from "MemoryLimitCalculator.java"
+public class org.apache.dubbo.common.threadpool.MemoryLimitCalculator {
+  private static volatile long maxAvailable;
+
+  private static final java.util.concurrent.atomic.AtomicBoolean refreshStarted;
+
+  public org.apache.dubbo.common.threadpool.MemoryLimitCalculator();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  private static void refresh();
+    Code:
+       0: invokestatic  #2                  // Method java/lang/Runtime.getRuntime:()Ljava/lang/Runtime;
+       3: invokevirtual #3                  // Method java/lang/Runtime.freeMemory:()J
+       6: putstatic     #4                  // Field maxAvailable:J
+       9: return
+
+  private static void checkAndScheduleRefresh();
+    Code:
+       0: getstatic     #5                  // Field refreshStarted:Ljava/util/concurrent/atomic/AtomicBoolean;
+       3: invokevirtual #6                  // Method java/util/concurrent/atomic/AtomicBoolean.get:()Z
+       6: ifne          66
+       9: invokestatic  #7                  // Method refresh:()V
+      12: getstatic     #5                  // Field refreshStarted:Ljava/util/concurrent/atomic/AtomicBoolean;
+      15: iconst_0
+      16: iconst_1
+      17: invokevirtual #8                  // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+      20: ifeq          66
+      23: new           #9                  // class org/apache/dubbo/common/utils/NamedThreadFactory
+      26: dup
+      27: ldc           #10                 // String Dubbo-Memory-Calculator
+      29: invokespecial #11                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;)V
+      32: invokestatic  #12                 // Method java/util/concurrent/Executors.newSingleThreadScheduledExecutor:(Ljava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ScheduledExecutorService;
+      35: astore_0
+      36: aload_0
+      37: invokedynamic #13,  0             // InvokeDynamic #0:run:()Ljava/lang/Runnable;
+      42: ldc2_w        #14                 // long 50l
+      45: ldc2_w        #14                 // long 50l
+      48: getstatic     #16                 // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+      51: invokeinterface #17,  7           // InterfaceMethod java/util/concurrent/ScheduledExecutorService.scheduleWithFixedDelay:(Ljava/lang/Runnable;JJLjava/util/concurrent/TimeUnit;)Ljava/util/concurrent/ScheduledFuture;
+      56: pop
+      57: aload_0
+      58: invokedynamic #18,  0             // InvokeDynamic #1:destroy:(Ljava/util/concurrent/ScheduledExecutorService;)Lorg/apache/dubbo/common/resource/Disposable;
+      63: invokestatic  #19                 // Method org/apache/dubbo/common/resource/GlobalResourcesRepository.registerGlobalDisposable:(Lorg/apache/dubbo/common/resource/Disposable;)V
+      66: return
+
+  public static long maxAvailable();
+    Code:
+       0: invokestatic  #20                 // Method checkAndScheduleRefresh:()V
+       3: getstatic     #4                  // Field maxAvailable:J
+       6: lreturn
+
+  public static long calculate(float);
+    Code:
+       0: fload_0
+       1: fconst_0
+       2: fcmpg
+       3: ifle          12
+       6: fload_0
+       7: fconst_1
+       8: fcmpl
+       9: ifle          20
+      12: new           #21                 // class java/lang/IllegalArgumentException
+      15: dup
+      16: invokespecial #22                 // Method java/lang/IllegalArgumentException."<init>":()V
+      19: athrow
+      20: invokestatic  #20                 // Method checkAndScheduleRefresh:()V
+      23: invokestatic  #23                 // Method maxAvailable:()J
+      26: l2f
+      27: fload_0
+      28: fmul
+      29: f2l
+      30: lreturn
+
+  public static long defaultLimit();
+    Code:
+       0: invokestatic  #20                 // Method checkAndScheduleRefresh:()V
+       3: invokestatic  #23                 // Method maxAvailable:()J
+       6: l2d
+       7: ldc2_w        #24                 // double 0.8d
+      10: dmul
+      11: d2l
+      12: lreturn
+
+  private static void lambda$checkAndScheduleRefresh$0(java.util.concurrent.ScheduledExecutorService);
+    Code:
+       0: getstatic     #5                  // Field refreshStarted:Ljava/util/concurrent/atomic/AtomicBoolean;
+       3: iconst_0
+       4: invokevirtual #26                 // Method java/util/concurrent/atomic/AtomicBoolean.set:(Z)V
+       7: aload_0
+       8: invokeinterface #27,  1           // InterfaceMethod java/util/concurrent/ScheduledExecutorService.shutdown:()V
+      13: return
+
+  static {};
+    Code:
+       0: new           #28                 // class java/util/concurrent/atomic/AtomicBoolean
+       3: dup
+       4: iconst_0
+       5: invokespecial #29                 // Method java/util/concurrent/atomic/AtomicBoolean."<init>":(Z)V
+       8: putstatic     #5                  // Field refreshStarted:Ljava/util/concurrent/atomic/AtomicBoolean;
+      11: return
+}

@@ -1,0 +1,342 @@
+Compiled from "TypeUtils.java"
+public interface org.apache.dubbo.common.utils.TypeUtils {
+  public static final java.util.function.Predicate<java.lang.Class<?>> NON_OBJECT_TYPE_FILTER;
+
+  public static boolean isParameterizedType(java.lang.reflect.Type);
+    Code:
+       0: aload_0
+       1: instanceof    #1                  // class java/lang/reflect/ParameterizedType
+       4: ireturn
+
+  public static java.lang.reflect.Type getRawType(java.lang.reflect.Type);
+    Code:
+       0: aload_0
+       1: invokestatic  #2                  // InterfaceMethod isParameterizedType:(Ljava/lang/reflect/Type;)Z
+       4: ifeq          17
+       7: aload_0
+       8: checkcast     #1                  // class java/lang/reflect/ParameterizedType
+      11: invokeinterface #3,  1            // InterfaceMethod java/lang/reflect/ParameterizedType.getRawType:()Ljava/lang/reflect/Type;
+      16: areturn
+      17: aload_0
+      18: areturn
+
+  public static java.lang.Class<?> getRawClass(java.lang.reflect.Type);
+    Code:
+       0: aload_0
+       1: invokestatic  #4                  // InterfaceMethod getRawType:(Ljava/lang/reflect/Type;)Ljava/lang/reflect/Type;
+       4: astore_1
+       5: aload_1
+       6: invokestatic  #5                  // InterfaceMethod isClass:(Ljava/lang/reflect/Type;)Z
+       9: ifeq          17
+      12: aload_1
+      13: checkcast     #6                  // class java/lang/Class
+      16: areturn
+      17: aconst_null
+      18: areturn
+
+  public static boolean isClass(java.lang.reflect.Type);
+    Code:
+       0: aload_0
+       1: instanceof    #6                  // class java/lang/Class
+       4: ireturn
+
+  public static <T> java.lang.Class<T> findActualTypeArgument(java.lang.reflect.Type, java.lang.Class<?>, int);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #7                  // InterfaceMethod findActualTypeArguments:(Ljava/lang/reflect/Type;Ljava/lang/Class;)Ljava/util/List;
+       5: iload_2
+       6: invokeinterface #8,  2            // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+      11: checkcast     #6                  // class java/lang/Class
+      14: areturn
+
+  public static java.util.List<java.lang.Class<?>> findActualTypeArguments(java.lang.reflect.Type, java.lang.Class<?>);
+    Code:
+       0: new           #9                  // class java/util/ArrayList
+       3: dup
+       4: invokespecial #10                 // Method java/util/ArrayList."<init>":()V
+       7: astore_2
+       8: aload_0
+       9: iconst_1
+      10: anewarray     #11                 // class java/util/function/Predicate
+      13: dup
+      14: iconst_0
+      15: aload_1
+      16: invokedynamic #12,  0             // InvokeDynamic #0:test:(Ljava/lang/Class;)Ljava/util/function/Predicate;
+      21: aastore
+      22: invokestatic  #13                 // InterfaceMethod getAllGenericTypes:(Ljava/lang/reflect/Type;[Ljava/util/function/Predicate;)Ljava/util/List;
+      25: aload_2
+      26: aload_1
+      27: invokedynamic #14,  0             // InvokeDynamic #1:accept:(Ljava/util/List;Ljava/lang/Class;)Ljava/util/function/Consumer;
+      32: invokeinterface #15,  2           // InterfaceMethod java/util/List.forEach:(Ljava/util/function/Consumer;)V
+      37: aload_2
+      38: invokestatic  #16                 // Method java/util/Collections.unmodifiableList:(Ljava/util/List;)Ljava/util/List;
+      41: areturn
+
+  public static java.util.List<java.lang.reflect.ParameterizedType> getGenericTypes(java.lang.reflect.Type, java.util.function.Predicate<java.lang.reflect.ParameterizedType>...);
+    Code:
+       0: aload_0
+       1: invokestatic  #17                 // InterfaceMethod getRawClass:(Ljava/lang/reflect/Type;)Ljava/lang/Class;
+       4: astore_2
+       5: aload_2
+       6: ifnonnull     13
+       9: invokestatic  #18                 // Method java/util/Collections.emptyList:()Ljava/util/List;
+      12: areturn
+      13: new           #19                 // class java/util/LinkedList
+      16: dup
+      17: invokespecial #20                 // Method java/util/LinkedList."<init>":()V
+      20: astore_3
+      21: aload_3
+      22: aload_2
+      23: invokevirtual #21                 // Method java/lang/Class.getGenericSuperclass:()Ljava/lang/reflect/Type;
+      26: invokeinterface #22,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      31: pop
+      32: aload_3
+      33: aload_2
+      34: invokevirtual #23                 // Method java/lang/Class.getGenericInterfaces:()[Ljava/lang/reflect/Type;
+      37: invokestatic  #24                 // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+      40: invokeinterface #25,  2           // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+      45: pop
+      46: aload_3
+      47: invokedynamic #26,  0             // InvokeDynamic #2:test:()Ljava/util/function/Predicate;
+      52: invokestatic  #27                 // InterfaceMethod org/apache/dubbo/common/function/Streams.filterList:(Ljava/lang/Iterable;Ljava/util/function/Predicate;)Ljava/util/List;
+      55: invokeinterface #28,  1           // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+      60: ldc           #1                  // class java/lang/reflect/ParameterizedType
+      62: dup
+      63: invokevirtual #29                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      66: pop
+      67: invokedynamic #30,  0             // InvokeDynamic #3:apply:(Ljava/lang/Class;)Ljava/util/function/Function;
+      72: invokeinterface #31,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      77: aload_1
+      78: invokestatic  #32                 // InterfaceMethod org/apache/dubbo/common/function/Predicates.and:([Ljava/util/function/Predicate;)Ljava/util/function/Predicate;
+      81: invokeinterface #33,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+      86: invokestatic  #34                 // Method java/util/stream/Collectors.toList:()Ljava/util/stream/Collector;
+      89: invokeinterface #35,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+      94: checkcast     #36                 // class java/util/List
+      97: invokestatic  #16                 // Method java/util/Collections.unmodifiableList:(Ljava/util/List;)Ljava/util/List;
+     100: areturn
+
+  public static java.util.List<java.lang.reflect.ParameterizedType> getAllGenericTypes(java.lang.reflect.Type, java.util.function.Predicate<java.lang.reflect.ParameterizedType>...);
+    Code:
+       0: new           #19                 // class java/util/LinkedList
+       3: dup
+       4: invokespecial #20                 // Method java/util/LinkedList."<init>":()V
+       7: astore_2
+       8: aload_2
+       9: aload_0
+      10: aload_1
+      11: invokestatic  #37                 // InterfaceMethod getAllGenericSuperClasses:(Ljava/lang/reflect/Type;[Ljava/util/function/Predicate;)Ljava/util/List;
+      14: invokeinterface #25,  2           // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+      19: pop
+      20: aload_2
+      21: aload_0
+      22: aload_1
+      23: invokestatic  #38                 // InterfaceMethod getAllGenericInterfaces:(Ljava/lang/reflect/Type;[Ljava/util/function/Predicate;)Ljava/util/List;
+      26: invokeinterface #25,  2           // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+      31: pop
+      32: aload_2
+      33: invokestatic  #16                 // Method java/util/Collections.unmodifiableList:(Ljava/util/List;)Ljava/util/List;
+      36: areturn
+
+  public static java.util.List<java.lang.reflect.ParameterizedType> getAllGenericSuperClasses(java.lang.reflect.Type, java.util.function.Predicate<java.lang.reflect.ParameterizedType>...);
+    Code:
+       0: aload_0
+       1: invokestatic  #17                 // InterfaceMethod getRawClass:(Ljava/lang/reflect/Type;)Ljava/lang/Class;
+       4: astore_2
+       5: aload_2
+       6: ifnull        16
+       9: aload_2
+      10: invokevirtual #39                 // Method java/lang/Class.isInterface:()Z
+      13: ifeq          20
+      16: invokestatic  #18                 // Method java/util/Collections.emptyList:()Ljava/util/List;
+      19: areturn
+      20: new           #19                 // class java/util/LinkedList
+      23: dup
+      24: invokespecial #20                 // Method java/util/LinkedList."<init>":()V
+      27: astore_3
+      28: aload_3
+      29: aload_2
+      30: invokeinterface #22,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      35: pop
+      36: aload_3
+      37: aload_2
+      38: iconst_1
+      39: anewarray     #11                 // class java/util/function/Predicate
+      42: dup
+      43: iconst_0
+      44: getstatic     #40                 // Field NON_OBJECT_TYPE_FILTER:Ljava/util/function/Predicate;
+      47: aastore
+      48: invokestatic  #41                 // Method org/apache/dubbo/common/utils/ClassUtils.getAllSuperClasses:(Ljava/lang/Class;[Ljava/util/function/Predicate;)Ljava/util/Set;
+      51: invokeinterface #25,  2           // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+      56: pop
+      57: aload_3
+      58: invokeinterface #28,  1           // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+      63: invokedynamic #42,  0             // InvokeDynamic #4:apply:()Ljava/util/function/Function;
+      68: invokeinterface #31,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      73: invokedynamic #26,  0             // InvokeDynamic #2:test:()Ljava/util/function/Predicate;
+      78: invokeinterface #33,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+      83: ldc           #1                  // class java/lang/reflect/ParameterizedType
+      85: dup
+      86: invokevirtual #29                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      89: pop
+      90: invokedynamic #30,  0             // InvokeDynamic #3:apply:(Ljava/lang/Class;)Ljava/util/function/Function;
+      95: invokeinterface #31,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+     100: invokestatic  #34                 // Method java/util/stream/Collectors.toList:()Ljava/util/stream/Collector;
+     103: invokeinterface #35,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+     108: checkcast     #36                 // class java/util/List
+     111: astore        4
+     113: aload         4
+     115: aload_1
+     116: invokestatic  #43                 // InterfaceMethod org/apache/dubbo/common/function/Streams.filterAll:(Ljava/lang/Iterable;[Ljava/util/function/Predicate;)Ljava/lang/Iterable;
+     119: checkcast     #36                 // class java/util/List
+     122: invokestatic  #16                 // Method java/util/Collections.unmodifiableList:(Ljava/util/List;)Ljava/util/List;
+     125: areturn
+
+  public static java.util.List<java.lang.reflect.ParameterizedType> getAllGenericInterfaces(java.lang.reflect.Type, java.util.function.Predicate<java.lang.reflect.ParameterizedType>...);
+    Code:
+       0: aload_0
+       1: invokestatic  #17                 // InterfaceMethod getRawClass:(Ljava/lang/reflect/Type;)Ljava/lang/Class;
+       4: astore_2
+       5: aload_2
+       6: ifnonnull     13
+       9: invokestatic  #18                 // Method java/util/Collections.emptyList:()Ljava/util/List;
+      12: areturn
+      13: new           #19                 // class java/util/LinkedList
+      16: dup
+      17: invokespecial #20                 // Method java/util/LinkedList."<init>":()V
+      20: astore_3
+      21: aload_3
+      22: aload_2
+      23: invokeinterface #22,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      28: pop
+      29: aload_3
+      30: aload_2
+      31: iconst_1
+      32: anewarray     #11                 // class java/util/function/Predicate
+      35: dup
+      36: iconst_0
+      37: getstatic     #40                 // Field NON_OBJECT_TYPE_FILTER:Ljava/util/function/Predicate;
+      40: aastore
+      41: invokestatic  #41                 // Method org/apache/dubbo/common/utils/ClassUtils.getAllSuperClasses:(Ljava/lang/Class;[Ljava/util/function/Predicate;)Ljava/util/Set;
+      44: invokeinterface #25,  2           // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+      49: pop
+      50: aload_3
+      51: aload_2
+      52: iconst_0
+      53: anewarray     #11                 // class java/util/function/Predicate
+      56: invokestatic  #44                 // Method org/apache/dubbo/common/utils/ClassUtils.getAllInterfaces:(Ljava/lang/Class;[Ljava/util/function/Predicate;)Ljava/util/Set;
+      59: invokeinterface #25,  2           // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+      64: pop
+      65: aload_3
+      66: invokeinterface #28,  1           // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+      71: invokedynamic #45,  0             // InvokeDynamic #5:apply:()Ljava/util/function/Function;
+      76: invokeinterface #31,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      81: invokedynamic #46,  0             // InvokeDynamic #6:apply:()Ljava/util/function/Function;
+      86: invokeinterface #31,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      91: invokedynamic #47,  0             // InvokeDynamic #7:apply:()Ljava/util/function/Function;
+      96: invokeinterface #48,  2           // InterfaceMethod java/util/stream/Stream.flatMap:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+     101: invokedynamic #26,  0             // InvokeDynamic #2:test:()Ljava/util/function/Predicate;
+     106: invokeinterface #33,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+     111: ldc           #1                  // class java/lang/reflect/ParameterizedType
+     113: dup
+     114: invokevirtual #29                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     117: pop
+     118: invokedynamic #30,  0             // InvokeDynamic #3:apply:(Ljava/lang/Class;)Ljava/util/function/Function;
+     123: invokeinterface #31,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+     128: invokestatic  #34                 // Method java/util/stream/Collectors.toList:()Ljava/util/stream/Collector;
+     131: invokeinterface #35,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+     136: checkcast     #36                 // class java/util/List
+     139: astore        4
+     141: aload         4
+     143: aload_1
+     144: invokestatic  #43                 // InterfaceMethod org/apache/dubbo/common/function/Streams.filterAll:(Ljava/lang/Iterable;[Ljava/util/function/Predicate;)Ljava/lang/Iterable;
+     147: checkcast     #36                 // class java/util/List
+     150: invokestatic  #16                 // Method java/util/Collections.unmodifiableList:(Ljava/util/List;)Ljava/util/List;
+     153: areturn
+
+  public static java.lang.String getClassName(java.lang.reflect.Type);
+    Code:
+       0: aload_0
+       1: invokestatic  #4                  // InterfaceMethod getRawType:(Ljava/lang/reflect/Type;)Ljava/lang/reflect/Type;
+       4: invokeinterface #49,  1           // InterfaceMethod java/lang/reflect/Type.getTypeName:()Ljava/lang/String;
+       9: areturn
+
+  public static java.util.Set<java.lang.String> getClassNames(java.lang.Iterable<? extends java.lang.reflect.Type>);
+    Code:
+       0: aload_0
+       1: invokeinterface #50,  1           // InterfaceMethod java/lang/Iterable.spliterator:()Ljava/util/Spliterator;
+       6: iconst_0
+       7: invokestatic  #51                 // Method java/util/stream/StreamSupport.stream:(Ljava/util/Spliterator;Z)Ljava/util/stream/Stream;
+      10: invokedynamic #52,  0             // InvokeDynamic #8:apply:()Ljava/util/function/Function;
+      15: invokeinterface #31,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      20: invokestatic  #53                 // Method java/util/stream/Collectors.toSet:()Ljava/util/stream/Collector;
+      23: invokeinterface #35,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+      28: checkcast     #54                 // class java/util/Set
+      31: areturn
+
+  private static void lambda$findActualTypeArguments$2(java.util.List, java.lang.Class, java.lang.reflect.ParameterizedType);
+    Code:
+       0: aload_2
+       1: invokestatic  #17                 // InterfaceMethod getRawClass:(Ljava/lang/reflect/Type;)Ljava/lang/Class;
+       4: astore_3
+       5: aload_2
+       6: invokeinterface #55,  1           // InterfaceMethod java/lang/reflect/ParameterizedType.getActualTypeArguments:()[Ljava/lang/reflect/Type;
+      11: astore        4
+      13: iconst_0
+      14: istore        5
+      16: iload         5
+      18: aload         4
+      20: arraylength
+      21: if_icmpge     58
+      24: aload         4
+      26: iload         5
+      28: aaload
+      29: astore        6
+      31: aload         6
+      33: instanceof    #6                  // class java/lang/Class
+      36: ifeq          52
+      39: aload_0
+      40: iload         5
+      42: aload         6
+      44: checkcast     #6                  // class java/lang/Class
+      47: invokeinterface #56,  3           // InterfaceMethod java/util/List.add:(ILjava/lang/Object;)V
+      52: iinc          5, 1
+      55: goto          16
+      58: aload_3
+      59: invokevirtual #57                 // Method java/lang/Class.getSuperclass:()Ljava/lang/Class;
+      62: astore        5
+      64: aload         5
+      66: ifnull        82
+      69: aload_0
+      70: aload         5
+      72: aload_1
+      73: invokestatic  #7                  // InterfaceMethod findActualTypeArguments:(Ljava/lang/reflect/Type;Ljava/lang/Class;)Ljava/util/List;
+      76: invokeinterface #25,  2           // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+      81: pop
+      82: return
+
+  private static boolean lambda$findActualTypeArguments$1(java.lang.Class, java.lang.reflect.ParameterizedType);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #17                 // InterfaceMethod getRawClass:(Ljava/lang/reflect/Type;)Ljava/lang/Class;
+       5: invokestatic  #58                 // Method org/apache/dubbo/common/utils/ClassUtils.isAssignableFrom:(Ljava/lang/Class;Ljava/lang/Class;)Z
+       8: ireturn
+
+  private static boolean lambda$static$0(java.lang.Class);
+    Code:
+       0: ldc           #59                 // class java/lang/Object
+       2: aload_0
+       3: invokestatic  #60                 // Method java/util/Objects.equals:(Ljava/lang/Object;Ljava/lang/Object;)Z
+       6: ifne          13
+       9: iconst_1
+      10: goto          14
+      13: iconst_0
+      14: ireturn
+
+  static {};
+    Code:
+       0: invokedynamic #61,  0             // InvokeDynamic #9:test:()Ljava/util/function/Predicate;
+       5: putstatic     #40                 // Field NON_OBJECT_TYPE_FILTER:Ljava/util/function/Predicate;
+       8: return
+}

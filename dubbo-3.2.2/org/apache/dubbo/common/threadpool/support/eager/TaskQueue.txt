@@ -1,0 +1,81 @@
+Compiled from "TaskQueue.java"
+public class org.apache.dubbo.common.threadpool.support.eager.TaskQueue<R extends java.lang.Runnable> extends java.util.concurrent.LinkedBlockingQueue<java.lang.Runnable> {
+  private static final long serialVersionUID;
+
+  private org.apache.dubbo.common.threadpool.support.eager.EagerThreadPoolExecutor executor;
+
+  public org.apache.dubbo.common.threadpool.support.eager.TaskQueue(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: invokespecial #1                  // Method java/util/concurrent/LinkedBlockingQueue."<init>":(I)V
+       5: return
+
+  public void setExecutor(org.apache.dubbo.common.threadpool.support.eager.EagerThreadPoolExecutor);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #2                  // Field executor:Lorg/apache/dubbo/common/threadpool/support/eager/EagerThreadPoolExecutor;
+       5: return
+
+  public boolean offer(java.lang.Runnable);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field executor:Lorg/apache/dubbo/common/threadpool/support/eager/EagerThreadPoolExecutor;
+       4: ifnonnull     17
+       7: new           #3                  // class java/util/concurrent/RejectedExecutionException
+      10: dup
+      11: ldc           #4                  // String The task queue does not have executor!
+      13: invokespecial #5                  // Method java/util/concurrent/RejectedExecutionException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: aload_0
+      18: getfield      #2                  // Field executor:Lorg/apache/dubbo/common/threadpool/support/eager/EagerThreadPoolExecutor;
+      21: invokevirtual #6                  // Method org/apache/dubbo/common/threadpool/support/eager/EagerThreadPoolExecutor.getPoolSize:()I
+      24: istore_2
+      25: aload_0
+      26: getfield      #2                  // Field executor:Lorg/apache/dubbo/common/threadpool/support/eager/EagerThreadPoolExecutor;
+      29: invokevirtual #7                  // Method org/apache/dubbo/common/threadpool/support/eager/EagerThreadPoolExecutor.getActiveCount:()I
+      32: iload_2
+      33: if_icmpge     42
+      36: aload_0
+      37: aload_1
+      38: invokespecial #8                  // Method java/util/concurrent/LinkedBlockingQueue.offer:(Ljava/lang/Object;)Z
+      41: ireturn
+      42: iload_2
+      43: aload_0
+      44: getfield      #2                  // Field executor:Lorg/apache/dubbo/common/threadpool/support/eager/EagerThreadPoolExecutor;
+      47: invokevirtual #9                  // Method org/apache/dubbo/common/threadpool/support/eager/EagerThreadPoolExecutor.getMaximumPoolSize:()I
+      50: if_icmpge     55
+      53: iconst_0
+      54: ireturn
+      55: aload_0
+      56: aload_1
+      57: invokespecial #8                  // Method java/util/concurrent/LinkedBlockingQueue.offer:(Ljava/lang/Object;)Z
+      60: ireturn
+
+  public boolean retryOffer(java.lang.Runnable, long, java.util.concurrent.TimeUnit) throws java.lang.InterruptedException;
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field executor:Lorg/apache/dubbo/common/threadpool/support/eager/EagerThreadPoolExecutor;
+       4: invokevirtual #10                 // Method org/apache/dubbo/common/threadpool/support/eager/EagerThreadPoolExecutor.isShutdown:()Z
+       7: ifeq          20
+      10: new           #3                  // class java/util/concurrent/RejectedExecutionException
+      13: dup
+      14: ldc           #11                 // String Executor is shutdown!
+      16: invokespecial #5                  // Method java/util/concurrent/RejectedExecutionException."<init>":(Ljava/lang/String;)V
+      19: athrow
+      20: aload_0
+      21: aload_1
+      22: lload_2
+      23: aload         4
+      25: invokespecial #12                 // Method java/util/concurrent/LinkedBlockingQueue.offer:(Ljava/lang/Object;JLjava/util/concurrent/TimeUnit;)Z
+      28: ireturn
+
+  public boolean offer(java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: checkcast     #13                 // class java/lang/Runnable
+       5: invokevirtual #14                 // Method offer:(Ljava/lang/Runnable;)Z
+       8: ireturn
+}

@@ -1,0 +1,385 @@
+Compiled from "LFUCache.java"
+public class org.apache.dubbo.common.utils.LFUCache<K, V> {
+  private final java.util.Map<K, org.apache.dubbo.common.utils.LFUCache$CacheNode<K, V>> map;
+
+  private final org.apache.dubbo.common.utils.LFUCache$CacheDeque<K, V>[] freqTable;
+
+  private final int capacity;
+
+  private final int evictionCount;
+
+  private int curSize;
+
+  private final java.util.concurrent.locks.ReentrantLock lock;
+
+  private static final int DEFAULT_INITIAL_CAPACITY;
+
+  private static final float DEFAULT_EVICTION_FACTOR;
+
+  public org.apache.dubbo.common.utils.LFUCache();
+    Code:
+       0: aload_0
+       1: sipush        1000
+       4: ldc           #2                  // float 0.75f
+       6: invokespecial #3                  // Method "<init>":(IF)V
+       9: return
+
+  public org.apache.dubbo.common.utils.LFUCache(int, float);
+    Code:
+       0: aload_0
+       1: invokespecial #4                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iconst_0
+       6: putfield      #5                  // Field curSize:I
+       9: aload_0
+      10: new           #6                  // class java/util/concurrent/locks/ReentrantLock
+      13: dup
+      14: invokespecial #7                  // Method java/util/concurrent/locks/ReentrantLock."<init>":()V
+      17: putfield      #8                  // Field lock:Ljava/util/concurrent/locks/ReentrantLock;
+      20: iload_1
+      21: ifgt          51
+      24: new           #9                  // class java/lang/IllegalArgumentException
+      27: dup
+      28: new           #10                 // class java/lang/StringBuilder
+      31: dup
+      32: invokespecial #11                 // Method java/lang/StringBuilder."<init>":()V
+      35: ldc           #12                 // String Illegal initial capacity:
+      37: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      40: iload_1
+      41: invokevirtual #14                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      44: invokevirtual #15                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      47: invokespecial #16                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      50: athrow
+      51: fload_2
+      52: fconst_1
+      53: fcmpg
+      54: ifgt          67
+      57: fload_2
+      58: fconst_0
+      59: fcmpl
+      60: ifle          67
+      63: iconst_1
+      64: goto          68
+      67: iconst_0
+      68: istore_3
+      69: iload_3
+      70: ifeq          80
+      73: fload_2
+      74: invokestatic  #17                 // Method java/lang/Float.isNaN:(F)Z
+      77: ifeq          107
+      80: new           #9                  // class java/lang/IllegalArgumentException
+      83: dup
+      84: new           #10                 // class java/lang/StringBuilder
+      87: dup
+      88: invokespecial #11                 // Method java/lang/StringBuilder."<init>":()V
+      91: ldc           #18                 // String Illegal eviction factor value:
+      93: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      96: fload_2
+      97: invokevirtual #19                 // Method java/lang/StringBuilder.append:(F)Ljava/lang/StringBuilder;
+     100: invokevirtual #15                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     103: invokespecial #16                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     106: athrow
+     107: aload_0
+     108: iload_1
+     109: putfield      #20                 // Field capacity:I
+     112: aload_0
+     113: aload_0
+     114: getfield      #20                 // Field capacity:I
+     117: i2f
+     118: fload_2
+     119: fmul
+     120: f2i
+     121: putfield      #21                 // Field evictionCount:I
+     124: aload_0
+     125: new           #22                 // class java/util/HashMap
+     128: dup
+     129: invokespecial #23                 // Method java/util/HashMap."<init>":()V
+     132: putfield      #24                 // Field map:Ljava/util/Map;
+     135: aload_0
+     136: aload_0
+     137: getfield      #20                 // Field capacity:I
+     140: iconst_1
+     141: iadd
+     142: anewarray     #25                 // class org/apache/dubbo/common/utils/LFUCache$CacheDeque
+     145: putfield      #26                 // Field freqTable:[Lorg/apache/dubbo/common/utils/LFUCache$CacheDeque;
+     148: iconst_0
+     149: istore        4
+     151: iload         4
+     153: aload_0
+     154: getfield      #20                 // Field capacity:I
+     157: if_icmpgt     180
+     160: aload_0
+     161: getfield      #26                 // Field freqTable:[Lorg/apache/dubbo/common/utils/LFUCache$CacheDeque;
+     164: iload         4
+     166: new           #25                 // class org/apache/dubbo/common/utils/LFUCache$CacheDeque
+     169: dup
+     170: invokespecial #27                 // Method org/apache/dubbo/common/utils/LFUCache$CacheDeque."<init>":()V
+     173: aastore
+     174: iinc          4, 1
+     177: goto          151
+     180: iconst_0
+     181: istore        4
+     183: iload         4
+     185: aload_0
+     186: getfield      #20                 // Field capacity:I
+     189: if_icmpge     217
+     192: aload_0
+     193: getfield      #26                 // Field freqTable:[Lorg/apache/dubbo/common/utils/LFUCache$CacheDeque;
+     196: iload         4
+     198: aaload
+     199: aload_0
+     200: getfield      #26                 // Field freqTable:[Lorg/apache/dubbo/common/utils/LFUCache$CacheDeque;
+     203: iload         4
+     205: iconst_1
+     206: iadd
+     207: aaload
+     208: putfield      #28                 // Field org/apache/dubbo/common/utils/LFUCache$CacheDeque.nextDeque:Lorg/apache/dubbo/common/utils/LFUCache$CacheDeque;
+     211: iinc          4, 1
+     214: goto          183
+     217: aload_0
+     218: getfield      #26                 // Field freqTable:[Lorg/apache/dubbo/common/utils/LFUCache$CacheDeque;
+     221: aload_0
+     222: getfield      #20                 // Field capacity:I
+     225: aaload
+     226: aload_0
+     227: getfield      #26                 // Field freqTable:[Lorg/apache/dubbo/common/utils/LFUCache$CacheDeque;
+     230: aload_0
+     231: getfield      #20                 // Field capacity:I
+     234: aaload
+     235: putfield      #28                 // Field org/apache/dubbo/common/utils/LFUCache$CacheDeque.nextDeque:Lorg/apache/dubbo/common/utils/LFUCache$CacheDeque;
+     238: return
+
+  public int getCapacity();
+    Code:
+       0: aload_0
+       1: getfield      #20                 // Field capacity:I
+       4: ireturn
+
+  public V put(K, V);
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field lock:Ljava/util/concurrent/locks/ReentrantLock;
+       4: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+       7: aload_0
+       8: getfield      #24                 // Field map:Ljava/util/Map;
+      11: aload_1
+      12: invokeinterface #30,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      17: checkcast     #31                 // class org/apache/dubbo/common/utils/LFUCache$CacheNode
+      20: astore_3
+      21: aload_3
+      22: ifnull        61
+      25: aload_3
+      26: invokestatic  #32                 // Method org/apache/dubbo/common/utils/LFUCache$CacheNode.withdrawNode:(Lorg/apache/dubbo/common/utils/LFUCache$CacheNode;)Lorg/apache/dubbo/common/utils/LFUCache$CacheNode;
+      29: pop
+      30: aload_3
+      31: aload_2
+      32: putfield      #33                 // Field org/apache/dubbo/common/utils/LFUCache$CacheNode.value:Ljava/lang/Object;
+      35: aload_0
+      36: getfield      #26                 // Field freqTable:[Lorg/apache/dubbo/common/utils/LFUCache$CacheDeque;
+      39: iconst_0
+      40: aaload
+      41: aload_3
+      42: invokevirtual #34                 // Method org/apache/dubbo/common/utils/LFUCache$CacheDeque.addLastNode:(Lorg/apache/dubbo/common/utils/LFUCache$CacheNode;)Lorg/apache/dubbo/common/utils/LFUCache$CacheNode;
+      45: pop
+      46: aload_0
+      47: getfield      #24                 // Field map:Ljava/util/Map;
+      50: aload_1
+      51: aload_3
+      52: invokeinterface #35,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      57: pop
+      58: goto          111
+      61: aload_0
+      62: dup
+      63: getfield      #5                  // Field curSize:I
+      66: iconst_1
+      67: iadd
+      68: putfield      #5                  // Field curSize:I
+      71: aload_0
+      72: getfield      #5                  // Field curSize:I
+      75: aload_0
+      76: getfield      #20                 // Field capacity:I
+      79: if_icmple     87
+      82: aload_0
+      83: invokespecial #36                 // Method proceedEviction:()I
+      86: pop
+      87: aload_0
+      88: getfield      #26                 // Field freqTable:[Lorg/apache/dubbo/common/utils/LFUCache$CacheDeque;
+      91: iconst_0
+      92: aaload
+      93: aload_1
+      94: aload_2
+      95: invokevirtual #37                 // Method org/apache/dubbo/common/utils/LFUCache$CacheDeque.addLast:(Ljava/lang/Object;Ljava/lang/Object;)Lorg/apache/dubbo/common/utils/LFUCache$CacheNode;
+      98: astore_3
+      99: aload_0
+     100: getfield      #24                 // Field map:Ljava/util/Map;
+     103: aload_1
+     104: aload_3
+     105: invokeinterface #35,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     110: pop
+     111: aload_0
+     112: getfield      #8                  // Field lock:Ljava/util/concurrent/locks/ReentrantLock;
+     115: invokevirtual #38                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     118: goto          133
+     121: astore        4
+     123: aload_0
+     124: getfield      #8                  // Field lock:Ljava/util/concurrent/locks/ReentrantLock;
+     127: invokevirtual #38                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     130: aload         4
+     132: athrow
+     133: aload_3
+     134: getfield      #33                 // Field org/apache/dubbo/common/utils/LFUCache$CacheNode.value:Ljava/lang/Object;
+     137: areturn
+    Exception table:
+       from    to  target type
+           7   111   121   any
+         121   123   121   any
+
+  public V remove(K);
+    Code:
+       0: aconst_null
+       1: astore_2
+       2: aload_0
+       3: getfield      #8                  // Field lock:Ljava/util/concurrent/locks/ReentrantLock;
+       6: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+       9: aload_0
+      10: getfield      #24                 // Field map:Ljava/util/Map;
+      13: aload_1
+      14: invokeinterface #39,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      19: ifeq          55
+      22: aload_0
+      23: getfield      #24                 // Field map:Ljava/util/Map;
+      26: aload_1
+      27: invokeinterface #40,  2           // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      32: checkcast     #31                 // class org/apache/dubbo/common/utils/LFUCache$CacheNode
+      35: astore_2
+      36: aload_2
+      37: ifnull        45
+      40: aload_2
+      41: invokestatic  #32                 // Method org/apache/dubbo/common/utils/LFUCache$CacheNode.withdrawNode:(Lorg/apache/dubbo/common/utils/LFUCache$CacheNode;)Lorg/apache/dubbo/common/utils/LFUCache$CacheNode;
+      44: pop
+      45: aload_0
+      46: dup
+      47: getfield      #5                  // Field curSize:I
+      50: iconst_1
+      51: isub
+      52: putfield      #5                  // Field curSize:I
+      55: aload_0
+      56: getfield      #8                  // Field lock:Ljava/util/concurrent/locks/ReentrantLock;
+      59: invokevirtual #38                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      62: goto          75
+      65: astore_3
+      66: aload_0
+      67: getfield      #8                  // Field lock:Ljava/util/concurrent/locks/ReentrantLock;
+      70: invokevirtual #38                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      73: aload_3
+      74: athrow
+      75: aload_2
+      76: ifnull        86
+      79: aload_2
+      80: getfield      #33                 // Field org/apache/dubbo/common/utils/LFUCache$CacheNode.value:Ljava/lang/Object;
+      83: goto          87
+      86: aconst_null
+      87: areturn
+    Exception table:
+       from    to  target type
+           9    55    65   any
+
+  public V get(K);
+    Code:
+       0: aconst_null
+       1: astore_2
+       2: aload_0
+       3: getfield      #8                  // Field lock:Ljava/util/concurrent/locks/ReentrantLock;
+       6: invokevirtual #29                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+       9: aload_0
+      10: getfield      #24                 // Field map:Ljava/util/Map;
+      13: aload_1
+      14: invokeinterface #39,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      19: ifeq          53
+      22: aload_0
+      23: getfield      #24                 // Field map:Ljava/util/Map;
+      26: aload_1
+      27: invokeinterface #30,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      32: checkcast     #31                 // class org/apache/dubbo/common/utils/LFUCache$CacheNode
+      35: astore_2
+      36: aload_2
+      37: invokestatic  #32                 // Method org/apache/dubbo/common/utils/LFUCache$CacheNode.withdrawNode:(Lorg/apache/dubbo/common/utils/LFUCache$CacheNode;)Lorg/apache/dubbo/common/utils/LFUCache$CacheNode;
+      40: pop
+      41: aload_2
+      42: getfield      #41                 // Field org/apache/dubbo/common/utils/LFUCache$CacheNode.owner:Lorg/apache/dubbo/common/utils/LFUCache$CacheDeque;
+      45: getfield      #28                 // Field org/apache/dubbo/common/utils/LFUCache$CacheDeque.nextDeque:Lorg/apache/dubbo/common/utils/LFUCache$CacheDeque;
+      48: aload_2
+      49: invokevirtual #34                 // Method org/apache/dubbo/common/utils/LFUCache$CacheDeque.addLastNode:(Lorg/apache/dubbo/common/utils/LFUCache$CacheNode;)Lorg/apache/dubbo/common/utils/LFUCache$CacheNode;
+      52: pop
+      53: aload_0
+      54: getfield      #8                  // Field lock:Ljava/util/concurrent/locks/ReentrantLock;
+      57: invokevirtual #38                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      60: goto          73
+      63: astore_3
+      64: aload_0
+      65: getfield      #8                  // Field lock:Ljava/util/concurrent/locks/ReentrantLock;
+      68: invokevirtual #38                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+      71: aload_3
+      72: athrow
+      73: aload_2
+      74: ifnull        84
+      77: aload_2
+      78: getfield      #33                 // Field org/apache/dubbo/common/utils/LFUCache$CacheNode.value:Ljava/lang/Object;
+      81: goto          85
+      84: aconst_null
+      85: areturn
+    Exception table:
+       from    to  target type
+           9    53    63   any
+
+  private int proceedEviction();
+    Code:
+       0: aload_0
+       1: getfield      #20                 // Field capacity:I
+       4: aload_0
+       5: getfield      #21                 // Field evictionCount:I
+       8: isub
+       9: istore_1
+      10: iconst_0
+      11: istore_2
+      12: iconst_0
+      13: istore_3
+      14: iload_3
+      15: aload_0
+      16: getfield      #20                 // Field capacity:I
+      19: if_icmpgt     78
+      22: aload_0
+      23: getfield      #26                 // Field freqTable:[Lorg/apache/dubbo/common/utils/LFUCache$CacheDeque;
+      26: iload_3
+      27: aaload
+      28: invokevirtual #42                 // Method org/apache/dubbo/common/utils/LFUCache$CacheDeque.isEmpty:()Z
+      31: ifne          72
+      34: aload_0
+      35: getfield      #26                 // Field freqTable:[Lorg/apache/dubbo/common/utils/LFUCache$CacheDeque;
+      38: iload_3
+      39: aaload
+      40: invokevirtual #43                 // Method org/apache/dubbo/common/utils/LFUCache$CacheDeque.pollFirst:()Lorg/apache/dubbo/common/utils/LFUCache$CacheNode;
+      43: astore        4
+      45: aload_0
+      46: aload         4
+      48: getfield      #44                 // Field org/apache/dubbo/common/utils/LFUCache$CacheNode.key:Ljava/lang/Object;
+      51: invokevirtual #45                 // Method remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      54: pop
+      55: iload_1
+      56: aload_0
+      57: getfield      #5                  // Field curSize:I
+      60: if_icmplt     66
+      63: goto          78
+      66: iinc          2, 1
+      69: goto          22
+      72: iinc          3, 1
+      75: goto          14
+      78: iload_2
+      79: ireturn
+
+  public int getSize();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field curSize:I
+       4: ireturn
+}

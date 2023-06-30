@@ -1,0 +1,458 @@
+Compiled from "FrameworkExecutorRepository.java"
+public class org.apache.dubbo.common.threadpool.manager.FrameworkExecutorRepository implements org.apache.dubbo.common.resource.Disposable {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final java.util.concurrent.ExecutorService sharedExecutor;
+
+  private final java.util.concurrent.ScheduledExecutorService sharedScheduledExecutor;
+
+  private final org.apache.dubbo.common.threadpool.manager.Ring<java.util.concurrent.ScheduledExecutorService> scheduledExecutors;
+
+  private final java.util.concurrent.ScheduledExecutorService connectivityScheduledExecutor;
+
+  private final java.util.concurrent.ScheduledExecutorService cacheRefreshingScheduledExecutor;
+
+  private final java.util.concurrent.ExecutorService mappingRefreshingExecutor;
+
+  public final org.apache.dubbo.common.threadpool.manager.Ring<java.util.concurrent.ScheduledExecutorService> registryNotificationExecutorRing;
+
+  private final org.apache.dubbo.common.threadpool.manager.Ring<java.util.concurrent.ScheduledExecutorService> serviceDiscoveryAddressNotificationExecutorRing;
+
+  private final java.util.concurrent.ScheduledExecutorService metadataRetryExecutor;
+
+  private final java.util.concurrent.ExecutorService poolRouterExecutor;
+
+  private final org.apache.dubbo.common.threadpool.manager.Ring<java.util.concurrent.ExecutorService> executorServiceRing;
+
+  private final java.util.concurrent.ExecutorService internalServiceExecutor;
+
+  public org.apache.dubbo.common.threadpool.manager.FrameworkExecutorRepository();
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #3                  // class org/apache/dubbo/common/threadpool/manager/Ring
+       8: dup
+       9: invokespecial #4                  // Method org/apache/dubbo/common/threadpool/manager/Ring."<init>":()V
+      12: putfield      #5                  // Field scheduledExecutors:Lorg/apache/dubbo/common/threadpool/manager/Ring;
+      15: aload_0
+      16: new           #3                  // class org/apache/dubbo/common/threadpool/manager/Ring
+      19: dup
+      20: invokespecial #4                  // Method org/apache/dubbo/common/threadpool/manager/Ring."<init>":()V
+      23: putfield      #6                  // Field registryNotificationExecutorRing:Lorg/apache/dubbo/common/threadpool/manager/Ring;
+      26: aload_0
+      27: new           #3                  // class org/apache/dubbo/common/threadpool/manager/Ring
+      30: dup
+      31: invokespecial #4                  // Method org/apache/dubbo/common/threadpool/manager/Ring."<init>":()V
+      34: putfield      #7                  // Field serviceDiscoveryAddressNotificationExecutorRing:Lorg/apache/dubbo/common/threadpool/manager/Ring;
+      37: aload_0
+      38: new           #3                  // class org/apache/dubbo/common/threadpool/manager/Ring
+      41: dup
+      42: invokespecial #4                  // Method org/apache/dubbo/common/threadpool/manager/Ring."<init>":()V
+      45: putfield      #8                  // Field executorServiceRing:Lorg/apache/dubbo/common/threadpool/manager/Ring;
+      48: aload_0
+      49: new           #9                  // class org/apache/dubbo/common/utils/NamedThreadFactory
+      52: dup
+      53: ldc           #10                 // String Dubbo-framework-shared-handler
+      55: iconst_1
+      56: invokespecial #11                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;Z)V
+      59: invokestatic  #12                 // Method java/util/concurrent/Executors.newCachedThreadPool:(Ljava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ExecutorService;
+      62: putfield      #13                 // Field sharedExecutor:Ljava/util/concurrent/ExecutorService;
+      65: aload_0
+      66: bipush        8
+      68: new           #9                  // class org/apache/dubbo/common/utils/NamedThreadFactory
+      71: dup
+      72: ldc           #14                 // String Dubbo-framework-shared-scheduler
+      74: iconst_1
+      75: invokespecial #11                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;Z)V
+      78: invokestatic  #15                 // Method java/util/concurrent/Executors.newScheduledThreadPool:(ILjava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ScheduledExecutorService;
+      81: putfield      #16                 // Field sharedScheduledExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+      84: invokestatic  #17                 // Method java/lang/Runtime.getRuntime:()Ljava/lang/Runtime;
+      87: invokevirtual #18                 // Method java/lang/Runtime.availableProcessors:()I
+      90: istore_1
+      91: iconst_0
+      92: istore_2
+      93: iload_2
+      94: iload_1
+      95: if_icmpge     207
+      98: new           #9                  // class org/apache/dubbo/common/utils/NamedThreadFactory
+     101: dup
+     102: new           #19                 // class java/lang/StringBuilder
+     105: dup
+     106: invokespecial #20                 // Method java/lang/StringBuilder."<init>":()V
+     109: ldc           #21                 // String Dubbo-framework-scheduler-
+     111: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     114: iload_2
+     115: invokevirtual #23                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     118: invokevirtual #24                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     121: iconst_1
+     122: invokespecial #11                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;Z)V
+     125: invokestatic  #25                 // Method java/util/concurrent/Executors.newSingleThreadScheduledExecutor:(Ljava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ScheduledExecutorService;
+     128: astore_3
+     129: aload_0
+     130: getfield      #5                  // Field scheduledExecutors:Lorg/apache/dubbo/common/threadpool/manager/Ring;
+     133: aload_3
+     134: invokevirtual #26                 // Method org/apache/dubbo/common/threadpool/manager/Ring.addItem:(Ljava/lang/Object;)V
+     137: aload_0
+     138: getfield      #8                  // Field executorServiceRing:Lorg/apache/dubbo/common/threadpool/manager/Ring;
+     141: new           #27                 // class java/util/concurrent/ThreadPoolExecutor
+     144: dup
+     145: iconst_1
+     146: iconst_1
+     147: lconst_0
+     148: getstatic     #28                 // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+     151: new           #29                 // class java/util/concurrent/LinkedBlockingQueue
+     154: dup
+     155: sipush        1024
+     158: invokespecial #30                 // Method java/util/concurrent/LinkedBlockingQueue."<init>":(I)V
+     161: new           #31                 // class org/apache/dubbo/common/threadlocal/NamedInternalThreadFactory
+     164: dup
+     165: new           #19                 // class java/lang/StringBuilder
+     168: dup
+     169: invokespecial #20                 // Method java/lang/StringBuilder."<init>":()V
+     172: ldc           #32                 // String Dubbo-framework-state-router-loop-
+     174: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     177: iload_2
+     178: invokevirtual #23                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     181: invokevirtual #24                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     184: iconst_1
+     185: invokespecial #33                 // Method org/apache/dubbo/common/threadlocal/NamedInternalThreadFactory."<init>":(Ljava/lang/String;Z)V
+     188: new           #34                 // class java/util/concurrent/ThreadPoolExecutor$AbortPolicy
+     191: dup
+     192: invokespecial #35                 // Method java/util/concurrent/ThreadPoolExecutor$AbortPolicy."<init>":()V
+     195: invokespecial #36                 // Method java/util/concurrent/ThreadPoolExecutor."<init>":(IIJLjava/util/concurrent/TimeUnit;Ljava/util/concurrent/BlockingQueue;Ljava/util/concurrent/ThreadFactory;Ljava/util/concurrent/RejectedExecutionHandler;)V
+     198: invokevirtual #26                 // Method org/apache/dubbo/common/threadpool/manager/Ring.addItem:(Ljava/lang/Object;)V
+     201: iinc          2, 1
+     204: goto          93
+     207: aload_0
+     208: iload_1
+     209: new           #9                  // class org/apache/dubbo/common/utils/NamedThreadFactory
+     212: dup
+     213: ldc           #37                 // String Dubbo-framework-connectivity-scheduler
+     215: iconst_1
+     216: invokespecial #11                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;Z)V
+     219: invokestatic  #15                 // Method java/util/concurrent/Executors.newScheduledThreadPool:(ILjava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ScheduledExecutorService;
+     222: putfield      #38                 // Field connectivityScheduledExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+     225: aload_0
+     226: new           #9                  // class org/apache/dubbo/common/utils/NamedThreadFactory
+     229: dup
+     230: ldc           #39                 // String Dubbo-framework-cache-refreshing-scheduler
+     232: iconst_1
+     233: invokespecial #11                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;Z)V
+     236: invokestatic  #25                 // Method java/util/concurrent/Executors.newSingleThreadScheduledExecutor:(Ljava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ScheduledExecutorService;
+     239: putfield      #40                 // Field cacheRefreshingScheduledExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+     242: aload_0
+     243: iload_1
+     244: new           #9                  // class org/apache/dubbo/common/utils/NamedThreadFactory
+     247: dup
+     248: ldc           #41                 // String Dubbo-framework-mapping-refreshing-scheduler
+     250: iconst_1
+     251: invokespecial #11                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;Z)V
+     254: invokestatic  #42                 // Method java/util/concurrent/Executors.newFixedThreadPool:(ILjava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ExecutorService;
+     257: putfield      #43                 // Field mappingRefreshingExecutor:Ljava/util/concurrent/ExecutorService;
+     260: aload_0
+     261: new           #27                 // class java/util/concurrent/ThreadPoolExecutor
+     264: dup
+     265: iconst_1
+     266: bipush        10
+     268: lconst_0
+     269: getstatic     #28                 // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+     272: new           #29                 // class java/util/concurrent/LinkedBlockingQueue
+     275: dup
+     276: sipush        1024
+     279: invokespecial #30                 // Method java/util/concurrent/LinkedBlockingQueue."<init>":(I)V
+     282: new           #31                 // class org/apache/dubbo/common/threadlocal/NamedInternalThreadFactory
+     285: dup
+     286: ldc           #44                 // String Dubbo-framework-state-router-pool-router
+     288: iconst_1
+     289: invokespecial #33                 // Method org/apache/dubbo/common/threadlocal/NamedInternalThreadFactory."<init>":(Ljava/lang/String;Z)V
+     292: new           #34                 // class java/util/concurrent/ThreadPoolExecutor$AbortPolicy
+     295: dup
+     296: invokespecial #35                 // Method java/util/concurrent/ThreadPoolExecutor$AbortPolicy."<init>":()V
+     299: invokespecial #36                 // Method java/util/concurrent/ThreadPoolExecutor."<init>":(IIJLjava/util/concurrent/TimeUnit;Ljava/util/concurrent/BlockingQueue;Ljava/util/concurrent/ThreadFactory;Ljava/util/concurrent/RejectedExecutionHandler;)V
+     302: putfield      #45                 // Field poolRouterExecutor:Ljava/util/concurrent/ExecutorService;
+     305: iconst_0
+     306: istore_2
+     307: iload_2
+     308: iload_1
+     309: if_icmpge     396
+     312: new           #9                  // class org/apache/dubbo/common/utils/NamedThreadFactory
+     315: dup
+     316: new           #19                 // class java/lang/StringBuilder
+     319: dup
+     320: invokespecial #20                 // Method java/lang/StringBuilder."<init>":()V
+     323: ldc           #46                 // String Dubbo-framework-SD-address-refresh-
+     325: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     328: iload_2
+     329: invokevirtual #23                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     332: invokevirtual #24                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     335: invokespecial #47                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;)V
+     338: invokestatic  #25                 // Method java/util/concurrent/Executors.newSingleThreadScheduledExecutor:(Ljava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ScheduledExecutorService;
+     341: astore_3
+     342: new           #9                  // class org/apache/dubbo/common/utils/NamedThreadFactory
+     345: dup
+     346: new           #19                 // class java/lang/StringBuilder
+     349: dup
+     350: invokespecial #20                 // Method java/lang/StringBuilder."<init>":()V
+     353: ldc           #48                 // String Dubbo-framework-registry-notification-
+     355: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     358: iload_2
+     359: invokevirtual #23                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     362: invokevirtual #24                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     365: invokespecial #47                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;)V
+     368: invokestatic  #25                 // Method java/util/concurrent/Executors.newSingleThreadScheduledExecutor:(Ljava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ScheduledExecutorService;
+     371: astore        4
+     373: aload_0
+     374: getfield      #7                  // Field serviceDiscoveryAddressNotificationExecutorRing:Lorg/apache/dubbo/common/threadpool/manager/Ring;
+     377: aload_3
+     378: invokevirtual #26                 // Method org/apache/dubbo/common/threadpool/manager/Ring.addItem:(Ljava/lang/Object;)V
+     381: aload_0
+     382: getfield      #6                  // Field registryNotificationExecutorRing:Lorg/apache/dubbo/common/threadpool/manager/Ring;
+     385: aload         4
+     387: invokevirtual #26                 // Method org/apache/dubbo/common/threadpool/manager/Ring.addItem:(Ljava/lang/Object;)V
+     390: iinc          2, 1
+     393: goto          307
+     396: aload_0
+     397: new           #9                  // class org/apache/dubbo/common/utils/NamedThreadFactory
+     400: dup
+     401: ldc           #49                 // String Dubbo-framework-metadata-retry
+     403: invokespecial #47                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;)V
+     406: invokestatic  #25                 // Method java/util/concurrent/Executors.newSingleThreadScheduledExecutor:(Ljava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ScheduledExecutorService;
+     409: putfield      #50                 // Field metadataRetryExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+     412: aload_0
+     413: new           #27                 // class java/util/concurrent/ThreadPoolExecutor
+     416: dup
+     417: iconst_0
+     418: bipush        100
+     420: ldc2_w        #51                 // long 60l
+     423: getstatic     #53                 // Field java/util/concurrent/TimeUnit.SECONDS:Ljava/util/concurrent/TimeUnit;
+     426: new           #54                 // class java/util/concurrent/SynchronousQueue
+     429: dup
+     430: invokespecial #55                 // Method java/util/concurrent/SynchronousQueue."<init>":()V
+     433: new           #31                 // class org/apache/dubbo/common/threadlocal/NamedInternalThreadFactory
+     436: dup
+     437: ldc           #56                 // String Dubbo-internal-service
+     439: iconst_1
+     440: invokespecial #33                 // Method org/apache/dubbo/common/threadlocal/NamedInternalThreadFactory."<init>":(Ljava/lang/String;Z)V
+     443: new           #34                 // class java/util/concurrent/ThreadPoolExecutor$AbortPolicy
+     446: dup
+     447: invokespecial #35                 // Method java/util/concurrent/ThreadPoolExecutor$AbortPolicy."<init>":()V
+     450: invokespecial #36                 // Method java/util/concurrent/ThreadPoolExecutor."<init>":(IIJLjava/util/concurrent/TimeUnit;Ljava/util/concurrent/BlockingQueue;Ljava/util/concurrent/ThreadFactory;Ljava/util/concurrent/RejectedExecutionHandler;)V
+     453: putfield      #57                 // Field internalServiceExecutor:Ljava/util/concurrent/ExecutorService;
+     456: return
+
+  public java.util.concurrent.ScheduledExecutorService nextScheduledExecutor();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field scheduledExecutors:Lorg/apache/dubbo/common/threadpool/manager/Ring;
+       4: invokevirtual #58                 // Method org/apache/dubbo/common/threadpool/manager/Ring.pollItem:()Ljava/lang/Object;
+       7: checkcast     #59                 // class java/util/concurrent/ScheduledExecutorService
+      10: areturn
+
+  public java.util.concurrent.ExecutorService nextExecutorExecutor();
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field executorServiceRing:Lorg/apache/dubbo/common/threadpool/manager/Ring;
+       4: invokevirtual #58                 // Method org/apache/dubbo/common/threadpool/manager/Ring.pollItem:()Ljava/lang/Object;
+       7: checkcast     #60                 // class java/util/concurrent/ExecutorService
+      10: areturn
+
+  public java.util.concurrent.ScheduledExecutorService getRegistryNotificationExecutor();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field registryNotificationExecutorRing:Lorg/apache/dubbo/common/threadpool/manager/Ring;
+       4: invokevirtual #58                 // Method org/apache/dubbo/common/threadpool/manager/Ring.pollItem:()Ljava/lang/Object;
+       7: checkcast     #59                 // class java/util/concurrent/ScheduledExecutorService
+      10: areturn
+
+  public java.util.concurrent.ScheduledExecutorService getServiceDiscoveryAddressNotificationExecutor();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field serviceDiscoveryAddressNotificationExecutorRing:Lorg/apache/dubbo/common/threadpool/manager/Ring;
+       4: invokevirtual #58                 // Method org/apache/dubbo/common/threadpool/manager/Ring.pollItem:()Ljava/lang/Object;
+       7: checkcast     #59                 // class java/util/concurrent/ScheduledExecutorService
+      10: areturn
+
+  public java.util.concurrent.ScheduledExecutorService getMetadataRetryExecutor();
+    Code:
+       0: aload_0
+       1: getfield      #50                 // Field metadataRetryExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+       4: areturn
+
+  public java.util.concurrent.ExecutorService getInternalServiceExecutor();
+    Code:
+       0: aload_0
+       1: getfield      #57                 // Field internalServiceExecutor:Ljava/util/concurrent/ExecutorService;
+       4: areturn
+
+  public java.util.concurrent.ExecutorService getSharedExecutor();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field sharedExecutor:Ljava/util/concurrent/ExecutorService;
+       4: areturn
+
+  public java.util.concurrent.ScheduledExecutorService getSharedScheduledExecutor();
+    Code:
+       0: aload_0
+       1: getfield      #16                 // Field sharedScheduledExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+       4: areturn
+
+  public java.util.concurrent.ExecutorService getPoolRouterExecutor();
+    Code:
+       0: aload_0
+       1: getfield      #45                 // Field poolRouterExecutor:Ljava/util/concurrent/ExecutorService;
+       4: areturn
+
+  public java.util.concurrent.ScheduledExecutorService getConnectivityScheduledExecutor();
+    Code:
+       0: aload_0
+       1: getfield      #38                 // Field connectivityScheduledExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+       4: areturn
+
+  public java.util.concurrent.ScheduledExecutorService getCacheRefreshingScheduledExecutor();
+    Code:
+       0: aload_0
+       1: getfield      #40                 // Field cacheRefreshingScheduledExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+       4: areturn
+
+  public java.util.concurrent.ExecutorService getMappingRefreshingExecutor();
+    Code:
+       0: aload_0
+       1: getfield      #43                 // Field mappingRefreshingExecutor:Ljava/util/concurrent/ExecutorService;
+       4: areturn
+
+  public void destroy();
+    Code:
+       0: getstatic     #61                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       3: ldc           #62                 // String destroying framework executor repository ..
+       5: invokeinterface #63,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      10: aload_0
+      11: aload_0
+      12: getfield      #45                 // Field poolRouterExecutor:Ljava/util/concurrent/ExecutorService;
+      15: ldc           #64                 // String poolRouterExecutor
+      17: invokespecial #65                 // Method shutdownExecutorService:(Ljava/util/concurrent/ExecutorService;Ljava/lang/String;)V
+      20: aload_0
+      21: aload_0
+      22: getfield      #50                 // Field metadataRetryExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+      25: ldc           #66                 // String metadataRetryExecutor
+      27: invokespecial #65                 // Method shutdownExecutorService:(Ljava/util/concurrent/ExecutorService;Ljava/lang/String;)V
+      30: aload_0
+      31: aload_0
+      32: getfield      #57                 // Field internalServiceExecutor:Ljava/util/concurrent/ExecutorService;
+      35: ldc           #67                 // String internalServiceExecutor
+      37: invokespecial #65                 // Method shutdownExecutorService:(Ljava/util/concurrent/ExecutorService;Ljava/lang/String;)V
+      40: aload_0
+      41: aload_0
+      42: getfield      #5                  // Field scheduledExecutors:Lorg/apache/dubbo/common/threadpool/manager/Ring;
+      45: invokevirtual #68                 // Method org/apache/dubbo/common/threadpool/manager/Ring.listItems:()Ljava/util/List;
+      48: ldc           #69                 // String scheduledExecutors
+      50: invokespecial #70                 // Method shutdownExecutorServices:(Ljava/util/List;Ljava/lang/String;)V
+      53: aload_0
+      54: aload_0
+      55: getfield      #8                  // Field executorServiceRing:Lorg/apache/dubbo/common/threadpool/manager/Ring;
+      58: invokevirtual #68                 // Method org/apache/dubbo/common/threadpool/manager/Ring.listItems:()Ljava/util/List;
+      61: ldc           #71                 // String executorServiceRing
+      63: invokespecial #70                 // Method shutdownExecutorServices:(Ljava/util/List;Ljava/lang/String;)V
+      66: aload_0
+      67: aload_0
+      68: getfield      #38                 // Field connectivityScheduledExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+      71: ldc           #72                 // String connectivityScheduledExecutor
+      73: invokespecial #65                 // Method shutdownExecutorService:(Ljava/util/concurrent/ExecutorService;Ljava/lang/String;)V
+      76: aload_0
+      77: aload_0
+      78: getfield      #40                 // Field cacheRefreshingScheduledExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+      81: ldc           #73                 // String cacheRefreshingScheduledExecutor
+      83: invokespecial #65                 // Method shutdownExecutorService:(Ljava/util/concurrent/ExecutorService;Ljava/lang/String;)V
+      86: aload_0
+      87: aload_0
+      88: getfield      #13                 // Field sharedExecutor:Ljava/util/concurrent/ExecutorService;
+      91: ldc           #74                 // String sharedExecutor
+      93: invokespecial #65                 // Method shutdownExecutorService:(Ljava/util/concurrent/ExecutorService;Ljava/lang/String;)V
+      96: aload_0
+      97: aload_0
+      98: getfield      #16                 // Field sharedScheduledExecutor:Ljava/util/concurrent/ScheduledExecutorService;
+     101: ldc           #75                 // String sharedScheduledExecutor
+     103: invokespecial #65                 // Method shutdownExecutorService:(Ljava/util/concurrent/ExecutorService;Ljava/lang/String;)V
+     106: aload_0
+     107: aload_0
+     108: getfield      #7                  // Field serviceDiscoveryAddressNotificationExecutorRing:Lorg/apache/dubbo/common/threadpool/manager/Ring;
+     111: invokevirtual #68                 // Method org/apache/dubbo/common/threadpool/manager/Ring.listItems:()Ljava/util/List;
+     114: ldc           #76                 // String serviceDiscoveryAddressNotificationExecutorRing
+     116: invokespecial #70                 // Method shutdownExecutorServices:(Ljava/util/List;Ljava/lang/String;)V
+     119: aload_0
+     120: aload_0
+     121: getfield      #6                  // Field registryNotificationExecutorRing:Lorg/apache/dubbo/common/threadpool/manager/Ring;
+     124: invokevirtual #68                 // Method org/apache/dubbo/common/threadpool/manager/Ring.listItems:()Ljava/util/List;
+     127: ldc           #77                 // String registryNotificationExecutorRing
+     129: invokespecial #70                 // Method shutdownExecutorServices:(Ljava/util/List;Ljava/lang/String;)V
+     132: aload_0
+     133: aload_0
+     134: getfield      #43                 // Field mappingRefreshingExecutor:Ljava/util/concurrent/ExecutorService;
+     137: ldc           #78                 // String mappingRefreshingExecutor
+     139: invokespecial #65                 // Method shutdownExecutorService:(Ljava/util/concurrent/ExecutorService;Ljava/lang/String;)V
+     142: return
+
+  private void shutdownExecutorServices(java.util.List<? extends java.util.concurrent.ExecutorService>, java.lang.String);
+    Code:
+       0: aload_1
+       1: invokeinterface #79,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       6: astore_3
+       7: aload_3
+       8: invokeinterface #80,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      13: ifeq          37
+      16: aload_3
+      17: invokeinterface #81,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      22: checkcast     #60                 // class java/util/concurrent/ExecutorService
+      25: astore        4
+      27: aload_0
+      28: aload         4
+      30: aload_2
+      31: invokespecial #65                 // Method shutdownExecutorService:(Ljava/util/concurrent/ExecutorService;Ljava/lang/String;)V
+      34: goto          7
+      37: return
+
+  private void shutdownExecutorService(java.util.concurrent.ExecutorService, java.lang.String);
+    Code:
+       0: aload_1
+       1: invokeinterface #82,  1           // InterfaceMethod java/util/concurrent/ExecutorService.shutdownNow:()Ljava/util/List;
+       6: pop
+       7: goto          74
+      10: astore_3
+      11: new           #19                 // class java/lang/StringBuilder
+      14: dup
+      15: invokespecial #20                 // Method java/lang/StringBuilder."<init>":()V
+      18: ldc           #84                 // String shutdown executor service [
+      20: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      23: aload_2
+      24: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      27: ldc           #85                 // String ] failed:
+      29: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      32: invokevirtual #24                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      35: astore        4
+      37: getstatic     #61                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      40: ldc           #86                 // String 0-17
+      42: ldc           #87                 // String
+      44: ldc           #87                 // String
+      46: new           #19                 // class java/lang/StringBuilder
+      49: dup
+      50: invokespecial #20                 // Method java/lang/StringBuilder."<init>":()V
+      53: aload         4
+      55: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      58: aload_3
+      59: invokevirtual #88                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      62: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      65: invokevirtual #24                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      68: aload_3
+      69: invokeinterface #89,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      74: return
+    Exception table:
+       from    to  target type
+           0     7    10   Class java/lang/Exception
+
+  static {};
+    Code:
+       0: ldc           #90                 // class org/apache/dubbo/common/threadpool/manager/FrameworkExecutorRepository
+       2: invokestatic  #91                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #61                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

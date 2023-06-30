@@ -1,0 +1,125 @@
+Compiled from "NacosDynamicConfiguration.java"
+public class org.apache.dubbo.configcenter.support.nacos.NacosDynamicConfiguration$NacosConfigListener extends com.alibaba.nacos.api.config.listener.AbstractSharedListener {
+  private java.util.Set<org.apache.dubbo.common.config.configcenter.ConfigurationListener> listeners;
+
+  private java.util.Map<java.lang.String, java.lang.String> cacheData;
+
+  final org.apache.dubbo.configcenter.support.nacos.NacosDynamicConfiguration this$0;
+
+  public org.apache.dubbo.configcenter.support.nacos.NacosDynamicConfiguration$NacosConfigListener(org.apache.dubbo.configcenter.support.nacos.NacosDynamicConfiguration);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #2                  // Field this$0:Lorg/apache/dubbo/configcenter/support/nacos/NacosDynamicConfiguration;
+       5: aload_0
+       6: invokespecial #3                  // Method com/alibaba/nacos/api/config/listener/AbstractSharedListener."<init>":()V
+       9: aload_0
+      10: new           #4                  // class java/util/concurrent/CopyOnWriteArraySet
+      13: dup
+      14: invokespecial #5                  // Method java/util/concurrent/CopyOnWriteArraySet."<init>":()V
+      17: putfield      #6                  // Field listeners:Ljava/util/Set;
+      20: aload_0
+      21: new           #7                  // class java/util/concurrent/ConcurrentHashMap
+      24: dup
+      25: invokespecial #8                  // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      28: putfield      #9                  // Field cacheData:Ljava/util/Map;
+      31: return
+
+  public java.util.concurrent.Executor getExecutor();
+    Code:
+       0: aconst_null
+       1: areturn
+
+  public void innerReceive(java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field cacheData:Ljava/util/Map;
+       4: aload_1
+       5: invokeinterface #10,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      10: checkcast     #11                 // class java/lang/String
+      13: astore        4
+      15: new           #12                 // class org/apache/dubbo/common/config/configcenter/ConfigChangedEvent
+      18: dup
+      19: aload_1
+      20: aload_2
+      21: aload_3
+      22: aload_0
+      23: aload_3
+      24: aload         4
+      26: invokespecial #13                 // Method getChangeType:(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/dubbo/common/config/configcenter/ConfigChangeType;
+      29: invokespecial #14                 // Method org/apache/dubbo/common/config/configcenter/ConfigChangedEvent."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/apache/dubbo/common/config/configcenter/ConfigChangeType;)V
+      32: astore        5
+      34: aload_3
+      35: ifnonnull     52
+      38: aload_0
+      39: getfield      #9                  // Field cacheData:Ljava/util/Map;
+      42: aload_1
+      43: invokeinterface #15,  2           // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      48: pop
+      49: goto          64
+      52: aload_0
+      53: getfield      #9                  // Field cacheData:Ljava/util/Map;
+      56: aload_1
+      57: aload_3
+      58: invokeinterface #16,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      63: pop
+      64: aload_0
+      65: getfield      #6                  // Field listeners:Ljava/util/Set;
+      68: aload         5
+      70: invokedynamic #17,  0             // InvokeDynamic #0:accept:(Lorg/apache/dubbo/common/config/configcenter/ConfigChangedEvent;)Ljava/util/function/Consumer;
+      75: invokeinterface #18,  2           // InterfaceMethod java/util/Set.forEach:(Ljava/util/function/Consumer;)V
+      80: aload_0
+      81: getfield      #2                  // Field this$0:Lorg/apache/dubbo/configcenter/support/nacos/NacosDynamicConfiguration;
+      84: invokestatic  #19                 // Method org/apache/dubbo/configcenter/support/nacos/NacosDynamicConfiguration.access$000:(Lorg/apache/dubbo/configcenter/support/nacos/NacosDynamicConfiguration;)Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      87: aload         5
+      89: invokevirtual #20                 // Method org/apache/dubbo/common/config/configcenter/ConfigChangedEvent.getKey:()Ljava/lang/String;
+      92: aload         5
+      94: invokevirtual #21                 // Method org/apache/dubbo/common/config/configcenter/ConfigChangedEvent.getGroup:()Ljava/lang/String;
+      97: ldc           #23                 // String nacos
+      99: getstatic     #24                 // Field org/apache/dubbo/common/config/configcenter/ConfigChangeType.ADDED:Lorg/apache/dubbo/common/config/configcenter/ConfigChangeType;
+     102: invokevirtual #25                 // Method org/apache/dubbo/common/config/configcenter/ConfigChangeType.name:()Ljava/lang/String;
+     105: iconst_1
+     106: invokestatic  #26                 // Method org/apache/dubbo/metrics/config/event/ConfigCenterEvent.toChangeEvent:(Lorg/apache/dubbo/rpc/model/ApplicationModel;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Lorg/apache/dubbo/metrics/config/event/ConfigCenterEvent;
+     109: invokestatic  #27                 // Method org/apache/dubbo/metrics/event/MetricsEventBus.publish:(Lorg/apache/dubbo/metrics/event/MetricsEvent;)V
+     112: return
+
+  void addListener(org.apache.dubbo.common.config.configcenter.ConfigurationListener);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field listeners:Ljava/util/Set;
+       4: aload_1
+       5: invokeinterface #28,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      10: pop
+      11: return
+
+  void removeListener(org.apache.dubbo.common.config.configcenter.ConfigurationListener);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field listeners:Ljava/util/Set;
+       4: aload_1
+       5: invokeinterface #29,  2           // InterfaceMethod java/util/Set.remove:(Ljava/lang/Object;)Z
+      10: pop
+      11: return
+
+  private org.apache.dubbo.common.config.configcenter.ConfigChangeType getChangeType(java.lang.String, java.lang.String);
+    Code:
+       0: aload_1
+       1: invokestatic  #30                 // Method org/apache/dubbo/common/utils/StringUtils.isBlank:(Ljava/lang/CharSequence;)Z
+       4: ifeq          11
+       7: getstatic     #31                 // Field org/apache/dubbo/common/config/configcenter/ConfigChangeType.DELETED:Lorg/apache/dubbo/common/config/configcenter/ConfigChangeType;
+      10: areturn
+      11: aload_2
+      12: invokestatic  #30                 // Method org/apache/dubbo/common/utils/StringUtils.isBlank:(Ljava/lang/CharSequence;)Z
+      15: ifeq          22
+      18: getstatic     #24                 // Field org/apache/dubbo/common/config/configcenter/ConfigChangeType.ADDED:Lorg/apache/dubbo/common/config/configcenter/ConfigChangeType;
+      21: areturn
+      22: getstatic     #32                 // Field org/apache/dubbo/common/config/configcenter/ConfigChangeType.MODIFIED:Lorg/apache/dubbo/common/config/configcenter/ConfigChangeType;
+      25: areturn
+
+  private static void lambda$innerReceive$0(org.apache.dubbo.common.config.configcenter.ConfigChangedEvent, org.apache.dubbo.common.config.configcenter.ConfigurationListener);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: invokeinterface #33,  2           // InterfaceMethod org/apache/dubbo/common/config/configcenter/ConfigurationListener.process:(Lorg/apache/dubbo/common/config/configcenter/ConfigChangedEvent;)V
+       7: return
+}

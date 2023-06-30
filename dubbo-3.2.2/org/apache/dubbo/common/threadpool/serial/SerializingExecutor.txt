@@ -1,0 +1,168 @@
+Compiled from "SerializingExecutor.java"
+public final class org.apache.dubbo.common.threadpool.serial.SerializingExecutor implements java.util.concurrent.Executor,java.lang.Runnable {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger LOGGER;
+
+  private final java.util.concurrent.atomic.AtomicBoolean atomicBoolean;
+
+  private final java.util.concurrent.Executor executor;
+
+  private final java.util.Queue<java.lang.Runnable> runQueue;
+
+  public org.apache.dubbo.common.threadpool.serial.SerializingExecutor(java.util.concurrent.Executor);
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #3                  // class java/util/concurrent/atomic/AtomicBoolean
+       8: dup
+       9: invokespecial #4                  // Method java/util/concurrent/atomic/AtomicBoolean."<init>":()V
+      12: putfield      #5                  // Field atomicBoolean:Ljava/util/concurrent/atomic/AtomicBoolean;
+      15: aload_0
+      16: new           #6                  // class java/util/concurrent/ConcurrentLinkedQueue
+      19: dup
+      20: invokespecial #7                  // Method java/util/concurrent/ConcurrentLinkedQueue."<init>":()V
+      23: putfield      #8                  // Field runQueue:Ljava/util/Queue;
+      26: aload_0
+      27: aload_1
+      28: putfield      #9                  // Field executor:Ljava/util/concurrent/Executor;
+      31: return
+
+  public void execute(java.lang.Runnable);
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field runQueue:Ljava/util/Queue;
+       4: aload_1
+       5: invokeinterface #10,  2           // InterfaceMethod java/util/Queue.add:(Ljava/lang/Object;)Z
+      10: pop
+      11: aload_0
+      12: aload_1
+      13: invokespecial #11                 // Method schedule:(Ljava/lang/Runnable;)V
+      16: return
+
+  private void schedule(java.lang.Runnable);
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field atomicBoolean:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: iconst_0
+       5: iconst_1
+       6: invokevirtual #12                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+       9: ifeq          86
+      12: iconst_0
+      13: istore_2
+      14: aload_0
+      15: getfield      #9                  // Field executor:Ljava/util/concurrent/Executor;
+      18: aload_0
+      19: invokeinterface #13,  2           // InterfaceMethod java/util/concurrent/Executor.execute:(Ljava/lang/Runnable;)V
+      24: iconst_1
+      25: istore_2
+      26: iload_2
+      27: ifne          86
+      30: aload_1
+      31: ifnull        45
+      34: aload_0
+      35: getfield      #8                  // Field runQueue:Ljava/util/Queue;
+      38: aload_1
+      39: invokeinterface #14,  2           // InterfaceMethod java/util/Queue.remove:(Ljava/lang/Object;)Z
+      44: pop
+      45: aload_0
+      46: getfield      #5                  // Field atomicBoolean:Ljava/util/concurrent/atomic/AtomicBoolean;
+      49: iconst_0
+      50: invokevirtual #15                 // Method java/util/concurrent/atomic/AtomicBoolean.set:(Z)V
+      53: goto          86
+      56: astore_3
+      57: iload_2
+      58: ifne          84
+      61: aload_1
+      62: ifnull        76
+      65: aload_0
+      66: getfield      #8                  // Field runQueue:Ljava/util/Queue;
+      69: aload_1
+      70: invokeinterface #14,  2           // InterfaceMethod java/util/Queue.remove:(Ljava/lang/Object;)Z
+      75: pop
+      76: aload_0
+      77: getfield      #5                  // Field atomicBoolean:Ljava/util/concurrent/atomic/AtomicBoolean;
+      80: iconst_0
+      81: invokevirtual #15                 // Method java/util/concurrent/atomic/AtomicBoolean.set:(Z)V
+      84: aload_3
+      85: athrow
+      86: return
+    Exception table:
+       from    to  target type
+          14    26    56   any
+
+  public void run();
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field runQueue:Ljava/util/Queue;
+       4: invokeinterface #16,  1           // InterfaceMethod java/util/Queue.poll:()Ljava/lang/Object;
+       9: checkcast     #17                 // class java/lang/Runnable
+      12: dup
+      13: astore_1
+      14: ifnull        88
+      17: invokestatic  #18                 // Method org/apache/dubbo/common/threadlocal/InternalThreadLocalMap.getAndRemove:()Lorg/apache/dubbo/common/threadlocal/InternalThreadLocalMap;
+      20: astore_2
+      21: aload_1
+      22: invokeinterface #19,  1           // InterfaceMethod java/lang/Runnable.run:()V
+      27: aload_2
+      28: invokestatic  #20                 // Method org/apache/dubbo/common/threadlocal/InternalThreadLocalMap.set:(Lorg/apache/dubbo/common/threadlocal/InternalThreadLocalMap;)V
+      31: goto          85
+      34: astore_3
+      35: getstatic     #22                 // Field LOGGER:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      38: ldc           #23                 // String 0-19
+      40: ldc           #24                 // String
+      42: ldc           #24                 // String
+      44: new           #25                 // class java/lang/StringBuilder
+      47: dup
+      48: invokespecial #26                 // Method java/lang/StringBuilder."<init>":()V
+      51: ldc           #27                 // String Exception while executing runnable
+      53: invokevirtual #28                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      56: aload_1
+      57: invokevirtual #29                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      60: invokevirtual #30                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      63: aload_3
+      64: invokeinterface #31,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      69: aload_2
+      70: invokestatic  #20                 // Method org/apache/dubbo/common/threadlocal/InternalThreadLocalMap.set:(Lorg/apache/dubbo/common/threadlocal/InternalThreadLocalMap;)V
+      73: goto          85
+      76: astore        4
+      78: aload_2
+      79: invokestatic  #20                 // Method org/apache/dubbo/common/threadlocal/InternalThreadLocalMap.set:(Lorg/apache/dubbo/common/threadlocal/InternalThreadLocalMap;)V
+      82: aload         4
+      84: athrow
+      85: goto          0
+      88: aload_0
+      89: getfield      #5                  // Field atomicBoolean:Ljava/util/concurrent/atomic/AtomicBoolean;
+      92: iconst_0
+      93: invokevirtual #15                 // Method java/util/concurrent/atomic/AtomicBoolean.set:(Z)V
+      96: goto          112
+      99: astore        5
+     101: aload_0
+     102: getfield      #5                  // Field atomicBoolean:Ljava/util/concurrent/atomic/AtomicBoolean;
+     105: iconst_0
+     106: invokevirtual #15                 // Method java/util/concurrent/atomic/AtomicBoolean.set:(Z)V
+     109: aload         5
+     111: athrow
+     112: aload_0
+     113: getfield      #8                  // Field runQueue:Ljava/util/Queue;
+     116: invokeinterface #32,  1           // InterfaceMethod java/util/Queue.isEmpty:()Z
+     121: ifne          129
+     124: aload_0
+     125: aconst_null
+     126: invokespecial #11                 // Method schedule:(Ljava/lang/Runnable;)V
+     129: return
+    Exception table:
+       from    to  target type
+          21    27    34   Class java/lang/RuntimeException
+          21    27    76   any
+          34    69    76   any
+          76    78    76   any
+           0    88    99   any
+          99   101    99   any
+
+  static {};
+    Code:
+       0: ldc           #33                 // class org/apache/dubbo/common/threadpool/serial/SerializingExecutor
+       2: invokestatic  #34                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #22                 // Field LOGGER:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

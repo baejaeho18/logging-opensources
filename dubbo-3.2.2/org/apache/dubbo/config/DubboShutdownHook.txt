@@ -1,0 +1,367 @@
+Compiled from "DubboShutdownHook.java"
+public class org.apache.dubbo.config.DubboShutdownHook extends java.lang.Thread {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final org.apache.dubbo.rpc.model.ApplicationModel applicationModel;
+
+  private final java.util.concurrent.atomic.AtomicBoolean registered;
+
+  private final java.util.concurrent.atomic.AtomicBoolean destroyed;
+
+  private final boolean ignoreListenShutdownHook;
+
+  public org.apache.dubbo.config.DubboShutdownHook(org.apache.dubbo.rpc.model.ApplicationModel);
+    Code:
+       0: aload_0
+       1: ldc           #2                  // String DubboShutdownHook
+       3: invokespecial #3                  // Method java/lang/Thread."<init>":(Ljava/lang/String;)V
+       6: aload_0
+       7: new           #4                  // class java/util/concurrent/atomic/AtomicBoolean
+      10: dup
+      11: iconst_0
+      12: invokespecial #5                  // Method java/util/concurrent/atomic/AtomicBoolean."<init>":(Z)V
+      15: putfield      #6                  // Field registered:Ljava/util/concurrent/atomic/AtomicBoolean;
+      18: aload_0
+      19: new           #4                  // class java/util/concurrent/atomic/AtomicBoolean
+      22: dup
+      23: iconst_0
+      24: invokespecial #5                  // Method java/util/concurrent/atomic/AtomicBoolean."<init>":(Z)V
+      27: putfield      #7                  // Field destroyed:Ljava/util/concurrent/atomic/AtomicBoolean;
+      30: aload_0
+      31: aload_1
+      32: putfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      35: aload_0
+      36: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      39: ldc           #9                  // String ApplicationModel is null
+      41: invokestatic  #10                 // Method org/apache/dubbo/common/utils/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      44: aload_0
+      45: aload_1
+      46: ldc           #12                 // String dubbo.shutdownHook.listenIgnore
+      48: invokestatic  #13                 // Method org/apache/dubbo/common/config/ConfigurationUtils.getProperty:(Lorg/apache/dubbo/rpc/model/ScopeModel;Ljava/lang/String;)Ljava/lang/String;
+      51: invokestatic  #14                 // Method java/lang/Boolean.parseBoolean:(Ljava/lang/String;)Z
+      54: putfield      #15                 // Field ignoreListenShutdownHook:Z
+      57: aload_0
+      58: getfield      #15                 // Field ignoreListenShutdownHook:Z
+      61: ifeq          74
+      64: getstatic     #16                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      67: ldc           #17                 // String dubbo.shutdownHook.listenIgnore configured, will ignore add shutdown hook to jvm.
+      69: invokeinterface #18,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      74: return
+
+  public void run();
+    Code:
+       0: aload_0
+       1: getfield      #15                 // Field ignoreListenShutdownHook:Z
+       4: ifne          44
+       7: aload_0
+       8: getfield      #7                  // Field destroyed:Ljava/util/concurrent/atomic/AtomicBoolean;
+      11: iconst_0
+      12: iconst_1
+      13: invokevirtual #19                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+      16: ifeq          44
+      19: getstatic     #16                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      22: invokeinterface #20,  1           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isInfoEnabled:()Z
+      27: ifeq          40
+      30: getstatic     #16                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      33: ldc           #21                 // String Run shutdown hook now.
+      35: invokeinterface #18,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      40: aload_0
+      41: invokespecial #22                 // Method doDestroy:()V
+      44: return
+
+  private void doDestroy();
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       4: invokevirtual #23                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getFrameworkModel:()Lorg/apache/dubbo/rpc/model/FrameworkModel;
+       7: invokestatic  #24                 // InterfaceMethod org/apache/dubbo/rpc/GracefulShutdown.getGracefulShutdowns:(Lorg/apache/dubbo/rpc/model/FrameworkModel;)Ljava/util/List;
+      10: astore_1
+      11: aload_1
+      12: invokeinterface #25,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      17: astore_2
+      18: aload_2
+      19: invokeinterface #26,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      24: ifeq          46
+      27: aload_2
+      28: invokeinterface #27,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      33: checkcast     #28                 // class org/apache/dubbo/rpc/GracefulShutdown
+      36: astore_3
+      37: aload_3
+      38: invokeinterface #29,  1           // InterfaceMethod org/apache/dubbo/rpc/GracefulShutdown.readonly:()V
+      43: goto          18
+      46: iconst_0
+      47: istore_2
+      48: aload_0
+      49: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      52: invokevirtual #30                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getModuleModels:()Ljava/util/List;
+      55: invokeinterface #25,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      60: astore_3
+      61: aload_3
+      62: invokeinterface #26,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      67: ifeq          97
+      70: aload_3
+      71: invokeinterface #27,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      76: checkcast     #31                 // class org/apache/dubbo/rpc/model/ModuleModel
+      79: astore        4
+      81: aload         4
+      83: invokevirtual #32                 // Method org/apache/dubbo/rpc/model/ModuleModel.isLifeCycleManagedExternally:()Z
+      86: ifeq          94
+      89: iconst_1
+      90: istore_2
+      91: goto          97
+      94: goto          61
+      97: iload_2
+      98: ifeq          356
+     101: aload_0
+     102: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     105: invokestatic  #33                 // Method org/apache/dubbo/common/config/ConfigurationUtils.getServerShutdownTimeout:(Lorg/apache/dubbo/rpc/model/ScopeModel;)I
+     108: istore_3
+     109: iload_3
+     110: ifle          356
+     113: invokestatic  #34                 // Method java/lang/System.currentTimeMillis:()J
+     116: lstore        4
+     118: getstatic     #16                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     121: new           #35                 // class java/lang/StringBuilder
+     124: dup
+     125: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+     128: ldc           #37                 // String Waiting for modules(
+     130: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     133: aload_0
+     134: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     137: invokevirtual #39                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getDesc:()Ljava/lang/String;
+     140: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     143: ldc           #40                 // String ) managed by Spring to be shutdown.
+     145: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     148: invokevirtual #41                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     151: invokeinterface #18,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+     156: aload_0
+     157: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     160: invokevirtual #42                 // Method org/apache/dubbo/rpc/model/ApplicationModel.isDestroyed:()Z
+     163: ifne          290
+     166: iload_2
+     167: ifeq          290
+     170: invokestatic  #34                 // Method java/lang/System.currentTimeMillis:()J
+     173: lload         4
+     175: lsub
+     176: iload_3
+     177: i2l
+     178: lcmp
+     179: ifge          290
+     182: getstatic     #43                 // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+     185: ldc2_w        #44                 // long 10l
+     188: invokevirtual #46                 // Method java/util/concurrent/TimeUnit.sleep:(J)V
+     191: iconst_0
+     192: istore_2
+     193: aload_0
+     194: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     197: invokevirtual #42                 // Method org/apache/dubbo/rpc/model/ApplicationModel.isDestroyed:()Z
+     200: ifne          255
+     203: aload_0
+     204: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     207: invokevirtual #30                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getModuleModels:()Ljava/util/List;
+     210: invokeinterface #25,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     215: astore        6
+     217: aload         6
+     219: invokeinterface #26,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     224: ifeq          255
+     227: aload         6
+     229: invokeinterface #27,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     234: checkcast     #31                 // class org/apache/dubbo/rpc/model/ModuleModel
+     237: astore        7
+     239: aload         7
+     241: invokevirtual #32                 // Method org/apache/dubbo/rpc/model/ModuleModel.isLifeCycleManagedExternally:()Z
+     244: ifeq          252
+     247: iconst_1
+     248: istore_2
+     249: goto          255
+     252: goto          217
+     255: goto          156
+     258: astore        6
+     260: getstatic     #16                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     263: ldc           #48                 // String 99-1
+     265: ldc           #49                 // String
+     267: ldc           #49                 // String
+     269: aload         6
+     271: invokevirtual #50                 // Method java/lang/InterruptedException.getMessage:()Ljava/lang/String;
+     274: aload         6
+     276: invokeinterface #51,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     281: invokestatic  #52                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+     284: invokevirtual #53                 // Method java/lang/Thread.interrupt:()V
+     287: goto          156
+     290: aload_0
+     291: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     294: invokevirtual #42                 // Method org/apache/dubbo/rpc/model/ApplicationModel.isDestroyed:()Z
+     297: ifne          356
+     300: invokestatic  #34                 // Method java/lang/System.currentTimeMillis:()J
+     303: lload         4
+     305: lsub
+     306: lstore        6
+     308: getstatic     #16                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     311: new           #35                 // class java/lang/StringBuilder
+     314: dup
+     315: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+     318: ldc           #54                 // String Dubbo wait for application(
+     320: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     323: aload_0
+     324: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     327: invokevirtual #39                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getDesc:()Ljava/lang/String;
+     330: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     333: ldc           #55                 // String ) managed by Spring to be shutdown failed, time usage:
+     335: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     338: lload         6
+     340: invokevirtual #56                 // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+     343: ldc           #57                 // String ms
+     345: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     348: invokevirtual #41                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     351: invokeinterface #18,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+     356: aload_0
+     357: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     360: invokevirtual #42                 // Method org/apache/dubbo/rpc/model/ApplicationModel.isDestroyed:()Z
+     363: ifne          406
+     366: getstatic     #16                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     369: new           #35                 // class java/lang/StringBuilder
+     372: dup
+     373: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+     376: ldc           #58                 // String Dubbo shutdown hooks execute now.
+     378: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     381: aload_0
+     382: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     385: invokevirtual #39                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getDesc:()Ljava/lang/String;
+     388: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     391: invokevirtual #41                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     394: invokeinterface #18,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+     399: aload_0
+     400: getfield      #8                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     403: invokevirtual #59                 // Method org/apache/dubbo/rpc/model/ApplicationModel.destroy:()V
+     406: return
+    Exception table:
+       from    to  target type
+         182   255   258   Class java/lang/InterruptedException
+
+  public void register();
+    Code:
+       0: aload_0
+       1: getfield      #15                 // Field ignoreListenShutdownHook:Z
+       4: ifne          108
+       7: aload_0
+       8: getfield      #6                  // Field registered:Ljava/util/concurrent/atomic/AtomicBoolean;
+      11: iconst_0
+      12: iconst_1
+      13: invokevirtual #19                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+      16: ifeq          108
+      19: invokestatic  #60                 // Method java/lang/Runtime.getRuntime:()Ljava/lang/Runtime;
+      22: aload_0
+      23: invokevirtual #61                 // Method java/lang/Runtime.addShutdownHook:(Ljava/lang/Thread;)V
+      26: goto          108
+      29: astore_1
+      30: getstatic     #16                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      33: ldc           #63                 // String 5-2
+      35: ldc           #49                 // String
+      37: ldc           #49                 // String
+      39: new           #35                 // class java/lang/StringBuilder
+      42: dup
+      43: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+      46: ldc           #64                 // String register shutdown hook failed:
+      48: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      51: aload_1
+      52: invokevirtual #65                 // Method java/lang/IllegalStateException.getMessage:()Ljava/lang/String;
+      55: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      58: invokevirtual #41                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      61: aload_1
+      62: invokeinterface #51,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      67: goto          108
+      70: astore_1
+      71: getstatic     #16                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      74: ldc           #63                 // String 5-2
+      76: ldc           #49                 // String
+      78: ldc           #49                 // String
+      80: new           #35                 // class java/lang/StringBuilder
+      83: dup
+      84: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+      87: ldc           #64                 // String register shutdown hook failed:
+      89: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      92: aload_1
+      93: invokevirtual #67                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      96: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      99: invokevirtual #41                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     102: aload_1
+     103: invokeinterface #51,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     108: return
+    Exception table:
+       from    to  target type
+          19    26    29   Class java/lang/IllegalStateException
+          19    26    70   Class java/lang/Exception
+
+  public void unregister();
+    Code:
+       0: aload_0
+       1: getfield      #15                 // Field ignoreListenShutdownHook:Z
+       4: ifne          117
+       7: aload_0
+       8: getfield      #6                  // Field registered:Ljava/util/concurrent/atomic/AtomicBoolean;
+      11: iconst_1
+      12: iconst_0
+      13: invokevirtual #19                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+      16: ifeq          117
+      19: aload_0
+      20: invokevirtual #68                 // Method isAlive:()Z
+      23: ifeq          27
+      26: return
+      27: invokestatic  #60                 // Method java/lang/Runtime.getRuntime:()Ljava/lang/Runtime;
+      30: aload_0
+      31: invokevirtual #69                 // Method java/lang/Runtime.removeShutdownHook:(Ljava/lang/Thread;)Z
+      34: pop
+      35: goto          117
+      38: astore_1
+      39: getstatic     #16                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      42: ldc           #63                 // String 5-2
+      44: ldc           #49                 // String
+      46: ldc           #49                 // String
+      48: new           #35                 // class java/lang/StringBuilder
+      51: dup
+      52: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+      55: ldc           #70                 // String unregister shutdown hook failed:
+      57: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      60: aload_1
+      61: invokevirtual #65                 // Method java/lang/IllegalStateException.getMessage:()Ljava/lang/String;
+      64: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      67: invokevirtual #41                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      70: aload_1
+      71: invokeinterface #51,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      76: goto          117
+      79: astore_1
+      80: getstatic     #16                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      83: ldc           #63                 // String 5-2
+      85: ldc           #49                 // String
+      87: ldc           #49                 // String
+      89: new           #35                 // class java/lang/StringBuilder
+      92: dup
+      93: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+      96: ldc           #70                 // String unregister shutdown hook failed:
+      98: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     101: aload_1
+     102: invokevirtual #67                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+     105: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     108: invokevirtual #41                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     111: aload_1
+     112: invokeinterface #51,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     117: return
+    Exception table:
+       from    to  target type
+          27    35    38   Class java/lang/IllegalStateException
+          27    35    79   Class java/lang/Exception
+
+  public boolean getRegistered();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field registered:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: invokevirtual #71                 // Method java/util/concurrent/atomic/AtomicBoolean.get:()Z
+       7: ireturn
+
+  static {};
+    Code:
+       0: ldc           #72                 // class org/apache/dubbo/config/DubboShutdownHook
+       2: invokestatic  #73                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #16                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

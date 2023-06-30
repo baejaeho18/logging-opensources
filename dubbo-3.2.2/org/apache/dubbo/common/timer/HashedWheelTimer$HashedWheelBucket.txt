@@ -1,0 +1,257 @@
+Compiled from "HashedWheelTimer.java"
+final class org.apache.dubbo.common.timer.HashedWheelTimer$HashedWheelBucket {
+  private org.apache.dubbo.common.timer.HashedWheelTimer$HashedWheelTimeout head;
+
+  private org.apache.dubbo.common.timer.HashedWheelTimer$HashedWheelTimeout tail;
+
+  static final boolean $assertionsDisabled;
+
+  private org.apache.dubbo.common.timer.HashedWheelTimer$HashedWheelBucket();
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  void addTimeout(org.apache.dubbo.common.timer.HashedWheelTimer$HashedWheelTimeout);
+    Code:
+       0: getstatic     #3                  // Field $assertionsDisabled:Z
+       3: ifne          21
+       6: aload_1
+       7: getfield      #4                  // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.bucket:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelBucket;
+      10: ifnull        21
+      13: new           #5                  // class java/lang/AssertionError
+      16: dup
+      17: invokespecial #6                  // Method java/lang/AssertionError."<init>":()V
+      20: athrow
+      21: aload_1
+      22: aload_0
+      23: putfield      #4                  // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.bucket:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelBucket;
+      26: aload_0
+      27: getfield      #7                  // Field head:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      30: ifnonnull     46
+      33: aload_0
+      34: aload_0
+      35: aload_1
+      36: dup_x1
+      37: putfield      #8                  // Field tail:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      40: putfield      #7                  // Field head:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      43: goto          67
+      46: aload_0
+      47: getfield      #8                  // Field tail:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      50: aload_1
+      51: putfield      #9                  // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.next:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      54: aload_1
+      55: aload_0
+      56: getfield      #8                  // Field tail:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      59: putfield      #10                 // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.prev:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      62: aload_0
+      63: aload_1
+      64: putfield      #8                  // Field tail:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      67: return
+
+  void expireTimeouts(long);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field head:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+       4: astore_3
+       5: aload_3
+       6: ifnull        114
+       9: aload_3
+      10: getfield      #9                  // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.next:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      13: astore        4
+      15: aload_3
+      16: getfield      #11                 // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.remainingRounds:J
+      19: lconst_0
+      20: lcmp
+      21: ifgt          81
+      24: aload_0
+      25: aload_3
+      26: invokevirtual #12                 // Method remove:(Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;)Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      29: astore        4
+      31: aload_3
+      32: invokestatic  #13                 // Method org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.access$800:(Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;)J
+      35: lload_1
+      36: lcmp
+      37: ifgt          47
+      40: aload_3
+      41: invokevirtual #14                 // Method org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.expire:()V
+      44: goto          108
+      47: new           #15                 // class java/lang/IllegalStateException
+      50: dup
+      51: ldc           #16                 // String timeout.deadline (%d) > deadline (%d)
+      53: iconst_2
+      54: anewarray     #17                 // class java/lang/Object
+      57: dup
+      58: iconst_0
+      59: aload_3
+      60: invokestatic  #13                 // Method org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.access$800:(Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;)J
+      63: invokestatic  #18                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+      66: aastore
+      67: dup
+      68: iconst_1
+      69: lload_1
+      70: invokestatic  #18                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+      73: aastore
+      74: invokestatic  #19                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      77: invokespecial #20                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      80: athrow
+      81: aload_3
+      82: invokevirtual #21                 // Method org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.isCancelled:()Z
+      85: ifeq          98
+      88: aload_0
+      89: aload_3
+      90: invokevirtual #12                 // Method remove:(Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;)Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      93: astore        4
+      95: goto          108
+      98: aload_3
+      99: dup
+     100: getfield      #11                 // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.remainingRounds:J
+     103: lconst_1
+     104: lsub
+     105: putfield      #11                 // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.remainingRounds:J
+     108: aload         4
+     110: astore_3
+     111: goto          5
+     114: return
+
+  public org.apache.dubbo.common.timer.HashedWheelTimer$HashedWheelTimeout remove(org.apache.dubbo.common.timer.HashedWheelTimer$HashedWheelTimeout);
+    Code:
+       0: aload_1
+       1: getfield      #9                  // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.next:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+       4: astore_2
+       5: aload_1
+       6: getfield      #10                 // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.prev:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+       9: ifnull        20
+      12: aload_1
+      13: getfield      #10                 // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.prev:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      16: aload_2
+      17: putfield      #9                  // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.next:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      20: aload_1
+      21: getfield      #9                  // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.next:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      24: ifnull        38
+      27: aload_1
+      28: getfield      #9                  // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.next:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      31: aload_1
+      32: getfield      #10                 // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.prev:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      35: putfield      #10                 // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.prev:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      38: aload_1
+      39: aload_0
+      40: getfield      #7                  // Field head:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      43: if_acmpne     75
+      46: aload_1
+      47: aload_0
+      48: getfield      #8                  // Field tail:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      51: if_acmpne     67
+      54: aload_0
+      55: aconst_null
+      56: putfield      #8                  // Field tail:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      59: aload_0
+      60: aconst_null
+      61: putfield      #7                  // Field head:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      64: goto          91
+      67: aload_0
+      68: aload_2
+      69: putfield      #7                  // Field head:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      72: goto          91
+      75: aload_1
+      76: aload_0
+      77: getfield      #8                  // Field tail:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      80: if_acmpne     91
+      83: aload_0
+      84: aload_1
+      85: getfield      #10                 // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.prev:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      88: putfield      #8                  // Field tail:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      91: aload_1
+      92: aconst_null
+      93: putfield      #10                 // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.prev:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      96: aload_1
+      97: aconst_null
+      98: putfield      #9                  // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.next:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+     101: aload_1
+     102: aconst_null
+     103: putfield      #4                  // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.bucket:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelBucket;
+     106: aload_1
+     107: invokestatic  #22                 // Method org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.access$1400:(Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;)Lorg/apache/dubbo/common/timer/HashedWheelTimer;
+     110: invokestatic  #23                 // Method org/apache/dubbo/common/timer/HashedWheelTimer.access$1300:(Lorg/apache/dubbo/common/timer/HashedWheelTimer;)Ljava/util/concurrent/atomic/AtomicLong;
+     113: invokevirtual #24                 // Method java/util/concurrent/atomic/AtomicLong.decrementAndGet:()J
+     116: pop2
+     117: aload_2
+     118: areturn
+
+  void clearTimeouts(java.util.Set<org.apache.dubbo.common.timer.Timeout>);
+    Code:
+       0: aload_0
+       1: invokespecial #25                 // Method pollTimeout:()Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+       4: astore_2
+       5: aload_2
+       6: ifnonnull     10
+       9: return
+      10: aload_2
+      11: invokevirtual #26                 // Method org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.isExpired:()Z
+      14: ifne          0
+      17: aload_2
+      18: invokevirtual #21                 // Method org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.isCancelled:()Z
+      21: ifeq          27
+      24: goto          0
+      27: aload_1
+      28: aload_2
+      29: invokeinterface #27,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      34: pop
+      35: goto          0
+
+  private org.apache.dubbo.common.timer.HashedWheelTimer$HashedWheelTimeout pollTimeout();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field head:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+       4: astore_1
+       5: aload_1
+       6: ifnonnull     11
+       9: aconst_null
+      10: areturn
+      11: aload_1
+      12: getfield      #9                  // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.next:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      15: astore_2
+      16: aload_2
+      17: ifnonnull     33
+      20: aload_0
+      21: aload_0
+      22: aconst_null
+      23: dup_x1
+      24: putfield      #7                  // Field head:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      27: putfield      #8                  // Field tail:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      30: goto          43
+      33: aload_0
+      34: aload_2
+      35: putfield      #7                  // Field head:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      38: aload_2
+      39: aconst_null
+      40: putfield      #10                 // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.prev:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      43: aload_1
+      44: aconst_null
+      45: putfield      #9                  // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.next:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      48: aload_1
+      49: aconst_null
+      50: putfield      #10                 // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.prev:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout;
+      53: aload_1
+      54: aconst_null
+      55: putfield      #4                  // Field org/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelTimeout.bucket:Lorg/apache/dubbo/common/timer/HashedWheelTimer$HashedWheelBucket;
+      58: aload_1
+      59: areturn
+
+  org.apache.dubbo.common.timer.HashedWheelTimer$HashedWheelBucket(org.apache.dubbo.common.timer.HashedWheelTimer$1);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method "<init>":()V
+       4: return
+
+  static {};
+    Code:
+       0: ldc           #28                 // class org/apache/dubbo/common/timer/HashedWheelTimer
+       2: invokevirtual #29                 // Method java/lang/Class.desiredAssertionStatus:()Z
+       5: ifne          12
+       8: iconst_1
+       9: goto          13
+      12: iconst_0
+      13: putstatic     #3                  // Field $assertionsDisabled:Z
+      16: return
+}

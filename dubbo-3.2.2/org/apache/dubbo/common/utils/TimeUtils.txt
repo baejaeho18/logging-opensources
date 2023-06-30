@@ -1,0 +1,103 @@
+Compiled from "TimeUtils.java"
+public final class org.apache.dubbo.common.utils.TimeUtils {
+  private static volatile long currentTimeMillis;
+
+  private static volatile boolean isTickerAlive;
+
+  private static volatile boolean isFallback;
+
+  private org.apache.dubbo.common.utils.TimeUtils();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static long currentTimeMillis();
+    Code:
+       0: getstatic     #2                  // Field isFallback:Z
+       3: ifeq          10
+       6: invokestatic  #3                  // Method java/lang/System.currentTimeMillis:()J
+       9: lreturn
+      10: getstatic     #4                  // Field isTickerAlive:Z
+      13: ifne          27
+      16: invokestatic  #5                  // Method startTicker:()V
+      19: goto          27
+      22: astore_0
+      23: iconst_1
+      24: putstatic     #2                  // Field isFallback:Z
+      27: getstatic     #7                  // Field currentTimeMillis:J
+      30: lreturn
+    Exception table:
+       from    to  target type
+          16    19    22   Class java/lang/Exception
+
+  private static synchronized void startTicker();
+    Code:
+       0: getstatic     #4                  // Field isTickerAlive:Z
+       3: ifne          63
+       6: invokestatic  #3                  // Method java/lang/System.currentTimeMillis:()J
+       9: putstatic     #7                  // Field currentTimeMillis:J
+      12: new           #8                  // class java/lang/Thread
+      15: dup
+      16: invokedynamic #9,  0              // InvokeDynamic #0:run:()Ljava/lang/Runnable;
+      21: invokespecial #10                 // Method java/lang/Thread."<init>":(Ljava/lang/Runnable;)V
+      24: astore_0
+      25: aload_0
+      26: iconst_1
+      27: invokevirtual #11                 // Method java/lang/Thread.setDaemon:(Z)V
+      30: aload_0
+      31: ldc           #12                 // String time-millis-ticker-thread
+      33: invokevirtual #13                 // Method java/lang/Thread.setName:(Ljava/lang/String;)V
+      36: aload_0
+      37: invokevirtual #14                 // Method java/lang/Thread.start:()V
+      40: invokestatic  #15                 // Method java/lang/Runtime.getRuntime:()Ljava/lang/Runtime;
+      43: new           #8                  // class java/lang/Thread
+      46: dup
+      47: aload_0
+      48: invokedynamic #16,  0             // InvokeDynamic #1:run:(Ljava/lang/Thread;)Ljava/lang/Runnable;
+      53: invokespecial #10                 // Method java/lang/Thread."<init>":(Ljava/lang/Runnable;)V
+      56: invokevirtual #17                 // Method java/lang/Runtime.addShutdownHook:(Ljava/lang/Thread;)V
+      59: iconst_1
+      60: putstatic     #4                  // Field isTickerAlive:Z
+      63: return
+
+  private static void lambda$startTicker$1(java.lang.Thread);
+    Code:
+       0: iconst_1
+       1: putstatic     #2                  // Field isFallback:Z
+       4: aload_0
+       5: invokevirtual #18                 // Method java/lang/Thread.interrupt:()V
+       8: return
+
+  private static void lambda$startTicker$0();
+    Code:
+       0: getstatic     #4                  // Field isTickerAlive:Z
+       3: ifeq          40
+       6: invokestatic  #3                  // Method java/lang/System.currentTimeMillis:()J
+       9: putstatic     #7                  // Field currentTimeMillis:J
+      12: getstatic     #19                 // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+      15: lconst_1
+      16: invokevirtual #20                 // Method java/util/concurrent/TimeUnit.sleep:(J)V
+      19: goto          0
+      22: astore_0
+      23: iconst_0
+      24: putstatic     #4                  // Field isTickerAlive:Z
+      27: invokestatic  #22                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+      30: invokevirtual #18                 // Method java/lang/Thread.interrupt:()V
+      33: goto          0
+      36: astore_0
+      37: goto          0
+      40: return
+    Exception table:
+       from    to  target type
+          12    19    22   Class java/lang/InterruptedException
+          12    19    36   Class java/lang/Exception
+
+  static {};
+    Code:
+       0: iconst_0
+       1: putstatic     #4                  // Field isTickerAlive:Z
+       4: iconst_0
+       5: putstatic     #2                  // Field isFallback:Z
+       8: return
+}

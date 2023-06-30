@@ -1,0 +1,142 @@
+Compiled from "TypeDefinitionBuilder.java"
+public class org.apache.dubbo.metadata.definition.TypeDefinitionBuilder {
+  private static final org.apache.dubbo.common.logger.Logger logger;
+
+  public static java.util.List<org.apache.dubbo.metadata.definition.builder.TypeBuilder> BUILDERS;
+
+  private final java.util.Map<java.lang.String, org.apache.dubbo.metadata.definition.model.TypeDefinition> typeCache;
+
+  public org.apache.dubbo.metadata.definition.TypeDefinitionBuilder();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #2                  // class java/util/HashMap
+       8: dup
+       9: invokespecial #3                  // Method java/util/HashMap."<init>":()V
+      12: putfield      #4                  // Field typeCache:Ljava/util/Map;
+      15: return
+
+  public static void initBuilders(org.apache.dubbo.rpc.model.FrameworkModel);
+    Code:
+       0: aload_0
+       1: ldc           #5                  // class org/apache/dubbo/metadata/definition/builder/TypeBuilder
+       3: invokevirtual #6                  // Method org/apache/dubbo/rpc/model/FrameworkModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+       6: invokevirtual #7                  // Method org/apache/dubbo/common/extension/ExtensionLoader.getSupportedExtensionInstances:()Ljava/util/Set;
+       9: astore_1
+      10: new           #8                  // class java/util/ArrayList
+      13: dup
+      14: aload_1
+      15: invokespecial #9                  // Method java/util/ArrayList."<init>":(Ljava/util/Collection;)V
+      18: putstatic     #10                 // Field BUILDERS:Ljava/util/List;
+      21: return
+
+  public static org.apache.dubbo.metadata.definition.model.TypeDefinition build(java.lang.reflect.Type, java.lang.Class<?>, java.util.Map<java.lang.String, org.apache.dubbo.metadata.definition.model.TypeDefinition>);
+    Code:
+       0: aload_1
+       1: invokestatic  #11                 // Method getGenericTypeBuilder:(Ljava/lang/Class;)Lorg/apache/dubbo/metadata/definition/builder/TypeBuilder;
+       4: astore_3
+       5: aload_1
+       6: invokevirtual #12                 // Method java/lang/Class.isPrimitive:()Z
+       9: ifne          19
+      12: aload_1
+      13: invokestatic  #13                 // Method org/apache/dubbo/common/utils/ClassUtils.isSimpleType:(Ljava/lang/Class;)Z
+      16: ifeq          48
+      19: new           #14                 // class org/apache/dubbo/metadata/definition/model/TypeDefinition
+      22: dup
+      23: aload_1
+      24: invokevirtual #15                 // Method java/lang/Class.getCanonicalName:()Ljava/lang/String;
+      27: invokespecial #16                 // Method org/apache/dubbo/metadata/definition/model/TypeDefinition."<init>":(Ljava/lang/String;)V
+      30: astore        4
+      32: aload_2
+      33: aload_1
+      34: invokevirtual #15                 // Method java/lang/Class.getCanonicalName:()Ljava/lang/String;
+      37: aload         4
+      39: invokeinterface #17,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      44: pop
+      45: goto          73
+      48: aload_3
+      49: ifnull        66
+      52: aload_3
+      53: aload_0
+      54: aload_1
+      55: aload_2
+      56: invokeinterface #18,  4           // InterfaceMethod org/apache/dubbo/metadata/definition/builder/TypeBuilder.build:(Ljava/lang/reflect/Type;Ljava/lang/Class;Ljava/util/Map;)Lorg/apache/dubbo/metadata/definition/model/TypeDefinition;
+      61: astore        4
+      63: goto          73
+      66: aload_1
+      67: aload_2
+      68: invokestatic  #19                 // Method org/apache/dubbo/metadata/definition/builder/DefaultTypeBuilder.build:(Ljava/lang/Class;Ljava/util/Map;)Lorg/apache/dubbo/metadata/definition/model/TypeDefinition;
+      71: astore        4
+      73: aload         4
+      75: areturn
+
+  private static org.apache.dubbo.metadata.definition.builder.TypeBuilder getGenericTypeBuilder(java.lang.Class<?>);
+    Code:
+       0: getstatic     #10                 // Field BUILDERS:Ljava/util/List;
+       3: invokeinterface #20,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       8: astore_1
+       9: aload_1
+      10: invokeinterface #21,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      15: ifeq          89
+      18: aload_1
+      19: invokeinterface #22,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      24: checkcast     #5                  // class org/apache/dubbo/metadata/definition/builder/TypeBuilder
+      27: astore_2
+      28: aload_2
+      29: aload_0
+      30: invokeinterface #23,  2           // InterfaceMethod org/apache/dubbo/metadata/definition/builder/TypeBuilder.accept:(Ljava/lang/Class;)Z
+      35: ifeq          40
+      38: aload_2
+      39: areturn
+      40: goto          86
+      43: astore_3
+      44: getstatic     #25                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+      47: new           #26                 // class java/lang/StringBuilder
+      50: dup
+      51: invokespecial #27                 // Method java/lang/StringBuilder."<init>":()V
+      54: ldc           #28                 // String Throw classNotFound (
+      56: invokevirtual #29                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      59: aload_3
+      60: invokevirtual #30                 // Method java/lang/NoClassDefFoundError.getMessage:()Ljava/lang/String;
+      63: invokevirtual #29                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      66: ldc           #31                 // String ) in
+      68: invokevirtual #29                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      71: aload_2
+      72: invokevirtual #32                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      75: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      78: invokevirtual #34                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      81: invokeinterface #35,  2           // InterfaceMethod org/apache/dubbo/common/logger/Logger.info:(Ljava/lang/String;)V
+      86: goto          9
+      89: aconst_null
+      90: areturn
+    Exception table:
+       from    to  target type
+          28    39    43   Class java/lang/NoClassDefFoundError
+
+  public org.apache.dubbo.metadata.definition.model.TypeDefinition build(java.lang.reflect.Type, java.lang.Class<?>);
+    Code:
+       0: aload_1
+       1: aload_2
+       2: aload_0
+       3: getfield      #4                  // Field typeCache:Ljava/util/Map;
+       6: invokestatic  #36                 // Method build:(Ljava/lang/reflect/Type;Ljava/lang/Class;Ljava/util/Map;)Lorg/apache/dubbo/metadata/definition/model/TypeDefinition;
+       9: areturn
+
+  public java.util.List<org.apache.dubbo.metadata.definition.model.TypeDefinition> getTypeDefinitions();
+    Code:
+       0: new           #8                  // class java/util/ArrayList
+       3: dup
+       4: aload_0
+       5: getfield      #4                  // Field typeCache:Ljava/util/Map;
+       8: invokeinterface #37,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+      13: invokespecial #9                  // Method java/util/ArrayList."<init>":(Ljava/util/Collection;)V
+      16: areturn
+
+  static {};
+    Code:
+       0: ldc           #38                 // class org/apache/dubbo/metadata/definition/TypeDefinitionBuilder
+       2: invokestatic  #39                 // Method org/apache/dubbo/common/logger/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/Logger;
+       5: putstatic     #25                 // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+       8: return
+}

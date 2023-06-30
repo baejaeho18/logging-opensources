@@ -1,0 +1,230 @@
+Compiled from "DubboConfigBeanInitializer.java"
+public class org.apache.dubbo.config.spring.context.DubboConfigBeanInitializer implements org.springframework.beans.factory.BeanFactoryAware,org.springframework.beans.factory.InitializingBean {
+  public static java.lang.String BEAN_NAME;
+
+  private final org.apache.dubbo.common.logger.Logger logger;
+
+  private final java.util.concurrent.atomic.AtomicBoolean initialized;
+
+  private org.springframework.beans.factory.config.ConfigurableListableBeanFactory beanFactory;
+
+  private org.apache.dubbo.config.spring.reference.ReferenceBeanManager referenceBeanManager;
+
+  private org.apache.dubbo.config.context.ConfigManager configManager;
+
+  private org.apache.dubbo.rpc.model.ModuleModel moduleModel;
+
+  public org.apache.dubbo.config.spring.context.DubboConfigBeanInitializer();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_0
+       6: invokevirtual #2                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       9: invokestatic  #3                  // Method org/apache/dubbo/common/logger/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/Logger;
+      12: putfield      #4                  // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+      15: aload_0
+      16: new           #5                  // class java/util/concurrent/atomic/AtomicBoolean
+      19: dup
+      20: iconst_0
+      21: invokespecial #6                  // Method java/util/concurrent/atomic/AtomicBoolean."<init>":(Z)V
+      24: putfield      #7                  // Field initialized:Ljava/util/concurrent/atomic/AtomicBoolean;
+      27: return
+
+  public void setBeanFactory(org.springframework.beans.factory.BeanFactory) throws org.springframework.beans.BeansException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: checkcast     #8                  // class org/springframework/beans/factory/config/ConfigurableListableBeanFactory
+       5: putfield      #9                  // Field beanFactory:Lorg/springframework/beans/factory/config/ConfigurableListableBeanFactory;
+       8: return
+
+  public void afterPropertiesSet() throws java.lang.Exception;
+    Code:
+       0: aload_0
+       1: invokespecial #10                 // Method init:()V
+       4: return
+
+  private void init();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field initialized:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: iconst_0
+       5: iconst_1
+       6: invokevirtual #11                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+       9: ifeq          58
+      12: aload_0
+      13: aload_0
+      14: getfield      #9                  // Field beanFactory:Lorg/springframework/beans/factory/config/ConfigurableListableBeanFactory;
+      17: ldc           #13                 // String dubboReferenceBeanManager
+      19: ldc           #12                 // class org/apache/dubbo/config/spring/reference/ReferenceBeanManager
+      21: invokeinterface #14,  3           // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.getBean:(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;
+      26: checkcast     #12                 // class org/apache/dubbo/config/spring/reference/ReferenceBeanManager
+      29: putfield      #15                 // Field referenceBeanManager:Lorg/apache/dubbo/config/spring/reference/ReferenceBeanManager;
+      32: aload_0
+      33: invokespecial #16                 // Method prepareDubboConfigBeans:()V
+      36: aload_0
+      37: getfield      #15                 // Field referenceBeanManager:Lorg/apache/dubbo/config/spring/reference/ReferenceBeanManager;
+      40: invokevirtual #17                 // Method org/apache/dubbo/config/spring/reference/ReferenceBeanManager.prepareReferenceBeans:()V
+      43: goto          58
+      46: astore_1
+      47: new           #19                 // class org/springframework/beans/FatalBeanException
+      50: dup
+      51: ldc           #20                 // String Initialization dubbo config beans failed
+      53: aload_1
+      54: invokespecial #21                 // Method org/springframework/beans/FatalBeanException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      57: athrow
+      58: return
+    Exception table:
+       from    to  target type
+          32    43    46   Class java/lang/Throwable
+
+  private void prepareDubboConfigBeans();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+       4: ldc           #22                 // String loading dubbo config beans ...
+       6: invokeinterface #23,  2           // InterfaceMethod org/apache/dubbo/common/logger/Logger.info:(Ljava/lang/String;)V
+      11: aload_0
+      12: ldc           #24                 // class org/apache/dubbo/config/ApplicationConfig
+      14: aload_0
+      15: getfield      #25                 // Field configManager:Lorg/apache/dubbo/config/context/ConfigManager;
+      18: invokespecial #26                 // Method loadConfigBeansOfType:(Ljava/lang/Class;Lorg/apache/dubbo/config/context/AbstractConfigManager;)V
+      21: aload_0
+      22: ldc           #27                 // class org/apache/dubbo/config/RegistryConfig
+      24: aload_0
+      25: getfield      #25                 // Field configManager:Lorg/apache/dubbo/config/context/ConfigManager;
+      28: invokespecial #26                 // Method loadConfigBeansOfType:(Ljava/lang/Class;Lorg/apache/dubbo/config/context/AbstractConfigManager;)V
+      31: aload_0
+      32: ldc           #28                 // class org/apache/dubbo/config/ProtocolConfig
+      34: aload_0
+      35: getfield      #25                 // Field configManager:Lorg/apache/dubbo/config/context/ConfigManager;
+      38: invokespecial #26                 // Method loadConfigBeansOfType:(Ljava/lang/Class;Lorg/apache/dubbo/config/context/AbstractConfigManager;)V
+      41: aload_0
+      42: ldc           #29                 // class org/apache/dubbo/config/MonitorConfig
+      44: aload_0
+      45: getfield      #25                 // Field configManager:Lorg/apache/dubbo/config/context/ConfigManager;
+      48: invokespecial #26                 // Method loadConfigBeansOfType:(Ljava/lang/Class;Lorg/apache/dubbo/config/context/AbstractConfigManager;)V
+      51: aload_0
+      52: ldc           #30                 // class org/apache/dubbo/config/spring/ConfigCenterBean
+      54: aload_0
+      55: getfield      #25                 // Field configManager:Lorg/apache/dubbo/config/context/ConfigManager;
+      58: invokespecial #26                 // Method loadConfigBeansOfType:(Ljava/lang/Class;Lorg/apache/dubbo/config/context/AbstractConfigManager;)V
+      61: aload_0
+      62: ldc           #31                 // class org/apache/dubbo/config/MetadataReportConfig
+      64: aload_0
+      65: getfield      #25                 // Field configManager:Lorg/apache/dubbo/config/context/ConfigManager;
+      68: invokespecial #26                 // Method loadConfigBeansOfType:(Ljava/lang/Class;Lorg/apache/dubbo/config/context/AbstractConfigManager;)V
+      71: aload_0
+      72: ldc           #32                 // class org/apache/dubbo/config/MetricsConfig
+      74: aload_0
+      75: getfield      #25                 // Field configManager:Lorg/apache/dubbo/config/context/ConfigManager;
+      78: invokespecial #26                 // Method loadConfigBeansOfType:(Ljava/lang/Class;Lorg/apache/dubbo/config/context/AbstractConfigManager;)V
+      81: aload_0
+      82: ldc           #33                 // class org/apache/dubbo/config/TracingConfig
+      84: aload_0
+      85: getfield      #25                 // Field configManager:Lorg/apache/dubbo/config/context/ConfigManager;
+      88: invokespecial #26                 // Method loadConfigBeansOfType:(Ljava/lang/Class;Lorg/apache/dubbo/config/context/AbstractConfigManager;)V
+      91: aload_0
+      92: ldc           #34                 // class org/apache/dubbo/config/SslConfig
+      94: aload_0
+      95: getfield      #25                 // Field configManager:Lorg/apache/dubbo/config/context/ConfigManager;
+      98: invokespecial #26                 // Method loadConfigBeansOfType:(Ljava/lang/Class;Lorg/apache/dubbo/config/context/AbstractConfigManager;)V
+     101: aload_0
+     102: ldc           #35                 // class org/apache/dubbo/config/ModuleConfig
+     104: aload_0
+     105: getfield      #36                 // Field moduleModel:Lorg/apache/dubbo/rpc/model/ModuleModel;
+     108: invokevirtual #37                 // Method org/apache/dubbo/rpc/model/ModuleModel.getConfigManager:()Lorg/apache/dubbo/config/context/ModuleConfigManager;
+     111: invokespecial #26                 // Method loadConfigBeansOfType:(Ljava/lang/Class;Lorg/apache/dubbo/config/context/AbstractConfigManager;)V
+     114: aload_0
+     115: ldc           #38                 // class org/apache/dubbo/config/ProviderConfig
+     117: aload_0
+     118: getfield      #36                 // Field moduleModel:Lorg/apache/dubbo/rpc/model/ModuleModel;
+     121: invokevirtual #37                 // Method org/apache/dubbo/rpc/model/ModuleModel.getConfigManager:()Lorg/apache/dubbo/config/context/ModuleConfigManager;
+     124: invokespecial #26                 // Method loadConfigBeansOfType:(Ljava/lang/Class;Lorg/apache/dubbo/config/context/AbstractConfigManager;)V
+     127: aload_0
+     128: ldc           #39                 // class org/apache/dubbo/config/ConsumerConfig
+     130: aload_0
+     131: getfield      #36                 // Field moduleModel:Lorg/apache/dubbo/rpc/model/ModuleModel;
+     134: invokevirtual #37                 // Method org/apache/dubbo/rpc/model/ModuleModel.getConfigManager:()Lorg/apache/dubbo/config/context/ModuleConfigManager;
+     137: invokespecial #26                 // Method loadConfigBeansOfType:(Ljava/lang/Class;Lorg/apache/dubbo/config/context/AbstractConfigManager;)V
+     140: aload_0
+     141: getfield      #25                 // Field configManager:Lorg/apache/dubbo/config/context/ConfigManager;
+     144: ldc           #30                 // class org/apache/dubbo/config/spring/ConfigCenterBean
+     146: invokevirtual #40                 // Method org/apache/dubbo/config/context/ConfigManager.loadConfigsOfTypeFromProps:(Ljava/lang/Class;)Ljava/util/List;
+     149: astore_1
+     150: aload_1
+     151: invokeinterface #41,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     156: astore_2
+     157: aload_2
+     158: invokeinterface #42,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     163: ifeq          210
+     166: aload_2
+     167: invokeinterface #43,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     172: checkcast     #30                 // class org/apache/dubbo/config/spring/ConfigCenterBean
+     175: astore_3
+     176: aload_3
+     177: invokevirtual #44                 // Method org/apache/dubbo/config/spring/ConfigCenterBean.getId:()Ljava/lang/String;
+     180: ifnull        190
+     183: aload_3
+     184: invokevirtual #44                 // Method org/apache/dubbo/config/spring/ConfigCenterBean.getId:()Ljava/lang/String;
+     187: goto          192
+     190: ldc           #45                 // String configCenterBean
+     192: astore        4
+     194: aload_0
+     195: getfield      #9                  // Field beanFactory:Lorg/springframework/beans/factory/config/ConfigurableListableBeanFactory;
+     198: aload_3
+     199: aload         4
+     201: invokeinterface #46,  3           // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.initializeBean:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+     206: pop
+     207: goto          157
+     210: aload_0
+     211: getfield      #4                  // Field logger:Lorg/apache/dubbo/common/logger/Logger;
+     214: ldc           #47                 // String dubbo config beans are loaded.
+     216: invokeinterface #23,  2           // InterfaceMethod org/apache/dubbo/common/logger/Logger.info:(Ljava/lang/String;)V
+     221: return
+
+  private void loadConfigBeansOfType(java.lang.Class<? extends org.apache.dubbo.config.AbstractConfig>, org.apache.dubbo.config.context.AbstractConfigManager);
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field beanFactory:Lorg/springframework/beans/factory/config/ConfigurableListableBeanFactory;
+       4: aload_1
+       5: iconst_1
+       6: iconst_0
+       7: invokeinterface #48,  4           // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.getBeanNamesForType:(Ljava/lang/Class;ZZ)[Ljava/lang/String;
+      12: astore_3
+      13: aload_3
+      14: astore        4
+      16: aload         4
+      18: arraylength
+      19: istore        5
+      21: iconst_0
+      22: istore        6
+      24: iload         6
+      26: iload         5
+      28: if_icmpge     68
+      31: aload         4
+      33: iload         6
+      35: aaload
+      36: astore        7
+      38: aload_0
+      39: getfield      #9                  // Field beanFactory:Lorg/springframework/beans/factory/config/ConfigurableListableBeanFactory;
+      42: aload         7
+      44: aload_1
+      45: invokeinterface #14,  3           // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.getBean:(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;
+      50: checkcast     #49                 // class org/apache/dubbo/config/AbstractConfig
+      53: astore        8
+      55: aload_2
+      56: aload         8
+      58: invokevirtual #50                 // Method org/apache/dubbo/config/context/AbstractConfigManager.addConfig:(Lorg/apache/dubbo/config/AbstractConfig;)Lorg/apache/dubbo/config/AbstractConfig;
+      61: pop
+      62: iinc          6, 1
+      65: goto          24
+      68: return
+
+  static {};
+    Code:
+       0: ldc           #51                 // String dubboConfigBeanInitializer
+       2: putstatic     #52                 // Field BEAN_NAME:Ljava/lang/String;
+       5: return
+}

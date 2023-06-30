@@ -1,0 +1,1140 @@
+Compiled from "ReferenceAnnotationBeanPostProcessor.java"
+public class org.apache.dubbo.config.spring.beans.factory.annotation.ReferenceAnnotationBeanPostProcessor extends org.apache.dubbo.config.spring.beans.factory.annotation.AbstractAnnotationBeanPostProcessor implements org.springframework.context.ApplicationContextAware,org.springframework.beans.factory.config.BeanFactoryPostProcessor {
+  public static final java.lang.String BEAN_NAME;
+
+  private static final int CACHE_SIZE;
+
+  private final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final java.util.concurrent.ConcurrentMap<org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement, java.lang.String> injectedFieldReferenceBeanCache;
+
+  private final java.util.concurrent.ConcurrentMap<org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement, java.lang.String> injectedMethodReferenceBeanCache;
+
+  private org.springframework.context.ApplicationContext applicationContext;
+
+  private org.apache.dubbo.config.spring.reference.ReferenceBeanManager referenceBeanManager;
+
+  private org.springframework.beans.factory.support.BeanDefinitionRegistry beanDefinitionRegistry;
+
+  public org.apache.dubbo.config.spring.beans.factory.annotation.ReferenceAnnotationBeanPostProcessor();
+    Code:
+       0: aload_0
+       1: iconst_3
+       2: anewarray     #2                  // class java/lang/Class
+       5: dup
+       6: iconst_0
+       7: ldc           #3                  // class org/apache/dubbo/config/annotation/DubboReference
+       9: aastore
+      10: dup
+      11: iconst_1
+      12: ldc           #4                  // class org/apache/dubbo/config/annotation/Reference
+      14: aastore
+      15: dup
+      16: iconst_2
+      17: ldc           #5                  // class com/alibaba/dubbo/config/annotation/Reference
+      19: aastore
+      20: invokespecial #6                  // Method org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor."<init>":([Ljava/lang/Class;)V
+      23: aload_0
+      24: aload_0
+      25: invokevirtual #7                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      28: invokestatic  #8                  // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      31: putfield      #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      34: aload_0
+      35: new           #10                 // class java/util/concurrent/ConcurrentHashMap
+      38: dup
+      39: getstatic     #11                 // Field CACHE_SIZE:I
+      42: invokespecial #12                 // Method java/util/concurrent/ConcurrentHashMap."<init>":(I)V
+      45: putfield      #13                 // Field injectedFieldReferenceBeanCache:Ljava/util/concurrent/ConcurrentMap;
+      48: aload_0
+      49: new           #10                 // class java/util/concurrent/ConcurrentHashMap
+      52: dup
+      53: getstatic     #11                 // Field CACHE_SIZE:I
+      56: invokespecial #12                 // Method java/util/concurrent/ConcurrentHashMap."<init>":(I)V
+      59: putfield      #14                 // Field injectedMethodReferenceBeanCache:Ljava/util/concurrent/ConcurrentMap;
+      62: return
+
+  public void postProcessBeanFactory(org.springframework.beans.factory.config.ConfigurableListableBeanFactory) throws org.springframework.beans.BeansException;
+    Code:
+       0: aload_1
+       1: invokeinterface #15,  1           // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.getBeanDefinitionNames:()[Ljava/lang/String;
+       6: astore_2
+       7: aload_2
+       8: astore_3
+       9: aload_3
+      10: arraylength
+      11: istore        4
+      13: iconst_0
+      14: istore        5
+      16: iload         5
+      18: iload         4
+      20: if_icmpge     168
+      23: aload_3
+      24: iload         5
+      26: aaload
+      27: astore        6
+      29: aload_1
+      30: aload         6
+      32: invokeinterface #16,  2           // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.isFactoryBean:(Ljava/lang/String;)Z
+      37: ifeq          108
+      40: aload_1
+      41: aload         6
+      43: invokeinterface #17,  2           // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.getBeanDefinition:(Ljava/lang/String;)Lorg/springframework/beans/factory/config/BeanDefinition;
+      48: astore        8
+      50: aload_0
+      51: aload         8
+      53: invokespecial #18                 // Method isReferenceBean:(Lorg/springframework/beans/factory/config/BeanDefinition;)Z
+      56: ifeq          62
+      59: goto          162
+      62: aload_0
+      63: aload         8
+      65: invokespecial #19                 // Method isAnnotatedReferenceBean:(Lorg/springframework/beans/factory/config/BeanDefinition;)Z
+      68: ifeq          85
+      71: aload_0
+      72: aload         6
+      74: aload         8
+      76: checkcast     #20                 // class org/springframework/beans/factory/annotation/AnnotatedBeanDefinition
+      79: invokespecial #21                 // Method processReferenceAnnotatedBeanDefinition:(Ljava/lang/String;Lorg/springframework/beans/factory/annotation/AnnotatedBeanDefinition;)V
+      82: goto          162
+      85: aload         8
+      87: invokeinterface #22,  1           // InterfaceMethod org/springframework/beans/factory/config/BeanDefinition.getBeanClassName:()Ljava/lang/String;
+      92: astore        9
+      94: aload         9
+      96: aload_0
+      97: invokevirtual #23                 // Method getClassLoader:()Ljava/lang/ClassLoader;
+     100: invokestatic  #24                 // Method org/apache/dubbo/common/utils/ClassUtils.resolveClass:(Ljava/lang/String;Ljava/lang/ClassLoader;)Ljava/lang/Class;
+     103: astore        7
+     105: goto          118
+     108: aload_1
+     109: aload         6
+     111: invokeinterface #25,  2           // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.getType:(Ljava/lang/String;)Ljava/lang/Class;
+     116: astore        7
+     118: aload         7
+     120: ifnull        162
+     123: aload_0
+     124: aload         6
+     126: aload         7
+     128: aconst_null
+     129: invokevirtual #26                 // Method findInjectionMetadata:(Ljava/lang/String;Ljava/lang/Class;Lorg/springframework/beans/PropertyValues;)Lorg/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedInjectionMetadata;
+     132: astore        8
+     134: aload_0
+     135: aload         8
+     137: invokevirtual #27                 // Method prepareInjection:(Lorg/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedInjectionMetadata;)V
+     140: goto          162
+     143: astore        9
+     145: aload         9
+     147: athrow
+     148: astore        9
+     150: new           #30                 // class java/lang/IllegalStateException
+     153: dup
+     154: ldc           #31                 // String Prepare dubbo reference injection element failed
+     156: aload         9
+     158: invokespecial #32                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     161: athrow
+     162: iinc          5, 1
+     165: goto          16
+     168: aload_1
+     169: instanceof    #33                 // class org/springframework/beans/factory/support/AbstractBeanFactory
+     172: ifeq          236
+     175: aload_1
+     176: checkcast     #33                 // class org/springframework/beans/factory/support/AbstractBeanFactory
+     179: invokevirtual #34                 // Method org/springframework/beans/factory/support/AbstractBeanFactory.getBeanPostProcessors:()Ljava/util/List;
+     182: astore_3
+     183: aload_3
+     184: invokeinterface #35,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     189: astore        4
+     191: aload         4
+     193: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     198: ifeq          236
+     201: aload         4
+     203: invokeinterface #37,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     208: checkcast     #38                 // class org/springframework/beans/factory/config/BeanPostProcessor
+     211: astore        5
+     213: aload         5
+     215: aload_0
+     216: if_acmpne     233
+     219: aload_0
+     220: getfield      #39                 // Field beanDefinitionRegistry:Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;
+     223: ldc           #41                 // String referenceAnnotationBeanPostProcessor
+     225: invokeinterface #42,  2           // InterfaceMethod org/springframework/beans/factory/support/BeanDefinitionRegistry.removeBeanDefinition:(Ljava/lang/String;)V
+     230: goto          236
+     233: goto          191
+     236: aload_0
+     237: getfield      #43                 // Field applicationContext:Lorg/springframework/context/ApplicationContext;
+     240: new           #44                 // class org/apache/dubbo/config/spring/context/event/DubboConfigInitEvent
+     243: dup
+     244: aload_0
+     245: getfield      #43                 // Field applicationContext:Lorg/springframework/context/ApplicationContext;
+     248: invokespecial #45                 // Method org/apache/dubbo/config/spring/context/event/DubboConfigInitEvent."<init>":(Lorg/springframework/context/ApplicationContext;)V
+     251: invokeinterface #46,  2           // InterfaceMethod org/springframework/context/ApplicationContext.publishEvent:(Lorg/springframework/context/ApplicationEvent;)V
+     256: goto          294
+     259: astore_3
+     260: aload_0
+     261: getfield      #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     264: ldc           #47                 // String 5-39
+     266: ldc           #48                 // String
+     268: ldc           #48                 // String
+     270: new           #49                 // class java/lang/StringBuilder
+     273: dup
+     274: invokespecial #50                 // Method java/lang/StringBuilder."<init>":()V
+     277: ldc           #51                 // String publish early application event failed, please upgrade spring version to 4.2.x or later:
+     279: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     282: aload_3
+     283: invokevirtual #53                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     286: invokevirtual #54                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     289: invokeinterface #55,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     294: return
+    Exception table:
+       from    to  target type
+         134   140   143   Class org/springframework/beans/BeansException
+         134   140   148   Class java/lang/Exception
+         236   256   259   Class java/lang/Exception
+
+  private boolean isAnnotatedReferenceBean(org.springframework.beans.factory.config.BeanDefinition);
+    Code:
+       0: aload_1
+       1: instanceof    #20                 // class org/springframework/beans/factory/annotation/AnnotatedBeanDefinition
+       4: ifeq          35
+       7: aload_1
+       8: checkcast     #20                 // class org/springframework/beans/factory/annotation/AnnotatedBeanDefinition
+      11: astore_2
+      12: aload_2
+      13: invokestatic  #56                 // Method org/apache/dubbo/config/spring/util/SpringCompatUtils.getFactoryMethodReturnType:(Lorg/springframework/beans/factory/annotation/AnnotatedBeanDefinition;)Ljava/lang/String;
+      16: astore_3
+      17: aload_3
+      18: ifnull        35
+      21: ldc           #57                 // class org/apache/dubbo/config/spring/ReferenceBean
+      23: invokevirtual #58                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      26: aload_3
+      27: invokevirtual #59                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      30: ifeq          35
+      33: iconst_1
+      34: ireturn
+      35: iconst_0
+      36: ireturn
+
+  private void processReferenceAnnotatedBeanDefinition(java.lang.String, org.springframework.beans.factory.annotation.AnnotatedBeanDefinition);
+    Code:
+       0: aload_2
+       1: invokestatic  #60                 // Method org/apache/dubbo/config/spring/util/SpringCompatUtils.getFactoryMethodMetadata:(Lorg/springframework/beans/factory/annotation/AnnotatedBeanDefinition;)Lorg/springframework/core/type/MethodMetadata;
+       4: astore_3
+       5: aload_0
+       6: invokevirtual #61                 // Method getBeanFactory:()Lorg/springframework/beans/factory/config/ConfigurableListableBeanFactory;
+       9: aload_1
+      10: invokeinterface #25,  2           // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.getType:(Ljava/lang/String;)Ljava/lang/Class;
+      15: astore        4
+      17: aload         4
+      19: ldc           #62                 // class java/lang/Object
+      21: if_acmpne     30
+      24: aload_3
+      25: invokestatic  #63                 // Method org/apache/dubbo/config/spring/util/SpringCompatUtils.getGenericTypeOfReturnType:(Lorg/springframework/core/type/MethodMetadata;)Ljava/lang/Class;
+      28: astore        4
+      30: aload         4
+      32: ldc           #62                 // class java/lang/Object
+      34: if_acmpne     38
+      37: return
+      38: aload         4
+      40: ifnonnull     111
+      43: new           #49                 // class java/lang/StringBuilder
+      46: dup
+      47: invokespecial #50                 // Method java/lang/StringBuilder."<init>":()V
+      50: aload_3
+      51: invokeinterface #64,  1           // InterfaceMethod org/springframework/core/type/MethodMetadata.getDeclaringClassName:()Ljava/lang/String;
+      56: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      59: ldc           #65                 // String #
+      61: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      64: aload_3
+      65: invokeinterface #66,  1           // InterfaceMethod org/springframework/core/type/MethodMetadata.getMethodName:()Ljava/lang/String;
+      70: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      73: ldc           #67                 // String ()
+      75: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      78: invokevirtual #54                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      81: astore        5
+      83: new           #68                 // class org/springframework/beans/factory/BeanCreationException
+      86: dup
+      87: new           #49                 // class java/lang/StringBuilder
+      90: dup
+      91: invokespecial #50                 // Method java/lang/StringBuilder."<init>":()V
+      94: ldc           #69                 // String The ReferenceBean is missing necessary generic type, which returned by the @Bean method of Java-config class. The generic type of the returned ReferenceBean must be specified as the referenced interface type, such as ReferenceBean<DemoService>. Please check bean method:
+      96: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      99: aload         5
+     101: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     104: invokevirtual #54                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     107: invokespecial #70                 // Method org/springframework/beans/factory/BeanCreationException."<init>":(Ljava/lang/String;)V
+     110: athrow
+     111: aconst_null
+     112: astore        5
+     114: aload_0
+     115: invokevirtual #71                 // Method getAnnotationTypes:()[Ljava/lang/Class;
+     118: astore        6
+     120: aload         6
+     122: arraylength
+     123: istore        7
+     125: iconst_0
+     126: istore        8
+     128: iload         8
+     130: iload         7
+     132: if_icmpge     187
+     135: aload         6
+     137: iload         8
+     139: aaload
+     140: astore        9
+     142: aload_3
+     143: aload         9
+     145: invokevirtual #58                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     148: invokeinterface #72,  2           // InterfaceMethod org/springframework/core/type/MethodMetadata.isAnnotated:(Ljava/lang/String;)Z
+     153: ifeq          181
+     156: aload_3
+     157: aload         9
+     159: invokevirtual #58                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     162: invokeinterface #73,  2           // InterfaceMethod org/springframework/core/type/MethodMetadata.getAnnotationAttributes:(Ljava/lang/String;)Ljava/util/Map;
+     167: astore        5
+     169: aload         9
+     171: aload         5
+     173: invokestatic  #74                 // InterfaceMethod org/apache/dubbo/common/utils/AnnotationUtils.filterDefaultValues:(Ljava/lang/Class;Ljava/util/Map;)Ljava/util/Map;
+     176: astore        5
+     178: goto          187
+     181: iinc          8, 1
+     184: goto          128
+     187: aload         5
+     189: ifnull        379
+     192: new           #75                 // class java/util/LinkedHashMap
+     195: dup
+     196: aload         5
+     198: invokespecial #76                 // Method java/util/LinkedHashMap."<init>":(Ljava/util/Map;)V
+     201: astore        6
+     203: aload         6
+     205: ldc           #78                 // String id
+     207: aload_1
+     208: invokevirtual #79                 // Method java/util/LinkedHashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     211: pop
+     212: aload         6
+     214: aload         4
+     216: invokestatic  #80                 // Method org/apache/dubbo/config/spring/reference/ReferenceBeanSupport.convertReferenceProps:(Ljava/util/Map;Ljava/lang/Class;)V
+     219: aload         6
+     221: ldc           #81                 // String interface
+     223: invokevirtual #82                 // Method java/util/LinkedHashMap.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     226: checkcast     #83                 // class java/lang/String
+     229: astore        7
+     231: aload         7
+     233: aload         4
+     235: invokevirtual #58                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     238: invokestatic  #84                 // Method org/apache/dubbo/common/utils/StringUtils.isEquals:(Ljava/lang/String;Ljava/lang/String;)Z
+     241: ifne          342
+     244: aload         4
+     246: ldc           #85                 // class org/apache/dubbo/rpc/service/GenericService
+     248: if_acmpeq     342
+     251: new           #49                 // class java/lang/StringBuilder
+     254: dup
+     255: invokespecial #50                 // Method java/lang/StringBuilder."<init>":()V
+     258: aload_3
+     259: invokeinterface #64,  1           // InterfaceMethod org/springframework/core/type/MethodMetadata.getDeclaringClassName:()Ljava/lang/String;
+     264: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     267: ldc           #65                 // String #
+     269: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     272: aload_3
+     273: invokeinterface #66,  1           // InterfaceMethod org/springframework/core/type/MethodMetadata.getMethodName:()Ljava/lang/String;
+     278: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     281: ldc           #67                 // String ()
+     283: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     286: invokevirtual #54                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     289: astore        8
+     291: new           #68                 // class org/springframework/beans/factory/BeanCreationException
+     294: dup
+     295: new           #49                 // class java/lang/StringBuilder
+     298: dup
+     299: invokespecial #50                 // Method java/lang/StringBuilder."<init>":()V
+     302: ldc           #86                 // String The \'interfaceClass\' or \'interfaceName\' attribute value of @DubboReference annotation is inconsistent with the generic type of the ReferenceBean returned by the bean method. The interface class of @DubboReference is:
+     304: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     307: aload         7
+     309: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     312: ldc           #87                 // String , but return ReferenceBean<
+     314: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     317: aload         4
+     319: invokevirtual #58                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     322: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     325: ldc           #88                 // String >. Please remove the \'interfaceClass\' and \'interfaceName\' attributes from @DubboReference annotation. Please check bean method:
+     327: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     330: aload         8
+     332: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     335: invokevirtual #54                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     338: invokespecial #70                 // Method org/springframework/beans/factory/BeanCreationException."<init>":(Ljava/lang/String;)V
+     341: athrow
+     342: aload         4
+     344: astore        8
+     346: aload_2
+     347: ldc           #90                 // String referenceProps
+     349: aload         6
+     351: invokeinterface #91,  3           // InterfaceMethod org/springframework/beans/factory/annotation/AnnotatedBeanDefinition.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+     356: aload_2
+     357: ldc           #92                 // String interfaceClass
+     359: aload         8
+     361: invokeinterface #91,  3           // InterfaceMethod org/springframework/beans/factory/annotation/AnnotatedBeanDefinition.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+     366: aload_2
+     367: ldc           #93                 // String interfaceName
+     369: aload         7
+     371: invokeinterface #91,  3           // InterfaceMethod org/springframework/beans/factory/annotation/AnnotatedBeanDefinition.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+     376: goto          409
+     379: aload_2
+     380: ldc           #92                 // String interfaceClass
+     382: aload         4
+     384: invokeinterface #91,  3           // InterfaceMethod org/springframework/beans/factory/annotation/AnnotatedBeanDefinition.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+     389: aload         4
+     391: ldc           #85                 // class org/apache/dubbo/rpc/service/GenericService
+     393: if_acmpeq     409
+     396: aload_2
+     397: ldc           #93                 // String interfaceName
+     399: aload         4
+     401: invokevirtual #58                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     404: invokeinterface #91,  3           // InterfaceMethod org/springframework/beans/factory/annotation/AnnotatedBeanDefinition.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+     409: aload_2
+     410: invokeinterface #94,  1           // InterfaceMethod org/springframework/beans/factory/annotation/AnnotatedBeanDefinition.getPropertyValues:()Lorg/springframework/beans/MutablePropertyValues;
+     415: ldc           #78                 // String id
+     417: aload_1
+     418: invokevirtual #95                 // Method org/springframework/beans/MutablePropertyValues.add:(Ljava/lang/String;Ljava/lang/Object;)Lorg/springframework/beans/MutablePropertyValues;
+     421: pop
+     422: return
+
+  public void postProcessMergedBeanDefinition(org.springframework.beans.factory.support.RootBeanDefinition, java.lang.Class<?>, java.lang.String);
+    Code:
+       0: aload_2
+       1: ifnull        113
+       4: aload_0
+       5: aload_1
+       6: invokespecial #18                 // Method isReferenceBean:(Lorg/springframework/beans/factory/config/BeanDefinition;)Z
+       9: ifeq          64
+      12: aload_1
+      13: invokevirtual #96                 // Method org/springframework/beans/factory/support/RootBeanDefinition.getPropertyValues:()Lorg/springframework/beans/MutablePropertyValues;
+      16: invokevirtual #97                 // Method org/springframework/beans/MutablePropertyValues.getPropertyValueList:()Ljava/util/List;
+      19: astore        4
+      21: aload         4
+      23: invokeinterface #35,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      28: astore        5
+      30: aload         5
+      32: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      37: ifeq          61
+      40: aload         5
+      42: invokeinterface #37,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      47: checkcast     #98                 // class org/springframework/beans/PropertyValue
+      50: astore        6
+      52: aload         6
+      54: iconst_1
+      55: invokevirtual #99                 // Method org/springframework/beans/PropertyValue.setOptional:(Z)V
+      58: goto          30
+      61: goto          113
+      64: aload_0
+      65: aload_1
+      66: invokespecial #19                 // Method isAnnotatedReferenceBean:(Lorg/springframework/beans/factory/config/BeanDefinition;)Z
+      69: ifeq          75
+      72: goto          113
+      75: aload_0
+      76: aload_3
+      77: aload_2
+      78: aconst_null
+      79: invokevirtual #26                 // Method findInjectionMetadata:(Ljava/lang/String;Ljava/lang/Class;Lorg/springframework/beans/PropertyValues;)Lorg/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedInjectionMetadata;
+      82: astore        4
+      84: aload         4
+      86: aload_1
+      87: invokevirtual #100                // Method org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedInjectionMetadata.checkConfigMembers:(Lorg/springframework/beans/factory/support/RootBeanDefinition;)V
+      90: aload_0
+      91: aload         4
+      93: invokevirtual #27                 // Method prepareInjection:(Lorg/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedInjectionMetadata;)V
+      96: goto          113
+      99: astore        5
+     101: new           #30                 // class java/lang/IllegalStateException
+     104: dup
+     105: ldc           #31                 // String Prepare dubbo reference injection element failed
+     107: aload         5
+     109: invokespecial #32                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     112: athrow
+     113: return
+    Exception table:
+       from    to  target type
+          90    96    99   Class java/lang/Exception
+
+  public org.springframework.beans.PropertyValues postProcessPropertyValues(org.springframework.beans.PropertyValues, java.beans.PropertyDescriptor[], java.lang.Object, java.lang.String) throws org.springframework.beans.BeansException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_3
+       3: aload         4
+       5: invokevirtual #101                // Method postProcessProperties:(Lorg/springframework/beans/PropertyValues;Ljava/lang/Object;Ljava/lang/String;)Lorg/springframework/beans/PropertyValues;
+       8: areturn
+
+  public org.springframework.beans.PropertyValues postProcessProperties(org.springframework.beans.PropertyValues, java.lang.Object, java.lang.String) throws org.springframework.beans.BeansException;
+    Code:
+       0: aload_0
+       1: aload_3
+       2: aload_2
+       3: invokevirtual #7                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       6: aload_1
+       7: invokevirtual #26                 // Method findInjectionMetadata:(Ljava/lang/String;Ljava/lang/Class;Lorg/springframework/beans/PropertyValues;)Lorg/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedInjectionMetadata;
+      10: astore        4
+      12: aload_0
+      13: aload         4
+      15: invokevirtual #27                 // Method prepareInjection:(Lorg/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedInjectionMetadata;)V
+      18: aload         4
+      20: aload_2
+      21: aload_3
+      22: aload_1
+      23: invokevirtual #102                // Method org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedInjectionMetadata.inject:(Ljava/lang/Object;Ljava/lang/String;Lorg/springframework/beans/PropertyValues;)V
+      26: goto          77
+      29: astore        4
+      31: aload         4
+      33: athrow
+      34: astore        4
+      36: new           #68                 // class org/springframework/beans/factory/BeanCreationException
+      39: dup
+      40: aload_3
+      41: new           #49                 // class java/lang/StringBuilder
+      44: dup
+      45: invokespecial #50                 // Method java/lang/StringBuilder."<init>":()V
+      48: ldc           #104                // String Injection of @
+      50: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      53: aload_0
+      54: invokevirtual #105                // Method getAnnotationType:()Ljava/lang/Class;
+      57: invokevirtual #106                // Method java/lang/Class.getSimpleName:()Ljava/lang/String;
+      60: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      63: ldc           #107                // String  dependencies is failed
+      65: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      68: invokevirtual #54                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      71: aload         4
+      73: invokespecial #108                // Method org/springframework/beans/factory/BeanCreationException."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      76: athrow
+      77: aload_1
+      78: areturn
+    Exception table:
+       from    to  target type
+           0    26    29   Class org/springframework/beans/BeansException
+           0    26    34   Class java/lang/Throwable
+
+  private boolean isReferenceBean(org.springframework.beans.factory.config.BeanDefinition);
+    Code:
+       0: ldc           #57                 // class org/apache/dubbo/config/spring/ReferenceBean
+       2: invokevirtual #58                 // Method java/lang/Class.getName:()Ljava/lang/String;
+       5: aload_1
+       6: invokeinterface #22,  1           // InterfaceMethod org/springframework/beans/factory/config/BeanDefinition.getBeanClassName:()Ljava/lang/String;
+      11: invokevirtual #59                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      14: ireturn
+
+  protected void prepareInjection(org.apache.dubbo.config.spring.beans.factory.annotation.AbstractAnnotationBeanPostProcessor$AnnotatedInjectionMetadata) throws org.springframework.beans.BeansException;
+    Code:
+       0: aload_1
+       1: invokevirtual #109                // Method org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedInjectionMetadata.getFieldElements:()Ljava/util/Collection;
+       4: invokeinterface #110,  1          // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+       9: astore_2
+      10: aload_2
+      11: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      16: ifeq          94
+      19: aload_2
+      20: invokeinterface #37,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      25: checkcast     #111                // class org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedFieldElement
+      28: astore_3
+      29: aload_3
+      30: getfield      #112                // Field org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedFieldElement.injectedObject:Ljava/lang/Object;
+      33: ifnull        39
+      36: goto          10
+      39: aload_3
+      40: getfield      #113                // Field org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedFieldElement.field:Ljava/lang/reflect/Field;
+      43: invokevirtual #114                // Method java/lang/reflect/Field.getType:()Ljava/lang/Class;
+      46: astore        4
+      48: aload_3
+      49: getfield      #115                // Field org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedFieldElement.attributes:Lorg/springframework/core/annotation/AnnotationAttributes;
+      52: astore        5
+      54: aload_0
+      55: aload_3
+      56: invokevirtual #116                // Method org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedFieldElement.getPropertyName:()Ljava/lang/String;
+      59: aload         4
+      61: aload         5
+      63: aload_3
+      64: getfield      #113                // Field org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedFieldElement.field:Ljava/lang/reflect/Field;
+      67: invokevirtual #117                // Method registerReferenceBean:(Ljava/lang/String;Ljava/lang/Class;Ljava/util/Map;Ljava/lang/reflect/Member;)Ljava/lang/String;
+      70: astore        6
+      72: aload_3
+      73: aload         6
+      75: putfield      #112                // Field org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedFieldElement.injectedObject:Ljava/lang/Object;
+      78: aload_0
+      79: getfield      #13                 // Field injectedFieldReferenceBeanCache:Ljava/util/concurrent/ConcurrentMap;
+      82: aload_3
+      83: aload         6
+      85: invokeinterface #118,  3          // InterfaceMethod java/util/concurrent/ConcurrentMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      90: pop
+      91: goto          10
+      94: aload_1
+      95: invokevirtual #119                // Method org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedInjectionMetadata.getMethodElements:()Ljava/util/Collection;
+      98: invokeinterface #110,  1          // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+     103: astore_2
+     104: aload_2
+     105: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     110: ifeq          185
+     113: aload_2
+     114: invokeinterface #37,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     119: checkcast     #120                // class org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedMethodElement
+     122: astore_3
+     123: aload_3
+     124: getfield      #121                // Field org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedMethodElement.injectedObject:Ljava/lang/Object;
+     127: ifnull        133
+     130: goto          104
+     133: aload_3
+     134: invokevirtual #122                // Method org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedMethodElement.getInjectedType:()Ljava/lang/Class;
+     137: astore        4
+     139: aload_3
+     140: getfield      #123                // Field org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedMethodElement.attributes:Lorg/springframework/core/annotation/AnnotationAttributes;
+     143: astore        5
+     145: aload_0
+     146: aload_3
+     147: invokevirtual #124                // Method org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedMethodElement.getPropertyName:()Ljava/lang/String;
+     150: aload         4
+     152: aload         5
+     154: aload_3
+     155: getfield      #125                // Field org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedMethodElement.method:Ljava/lang/reflect/Method;
+     158: invokevirtual #117                // Method registerReferenceBean:(Ljava/lang/String;Ljava/lang/Class;Ljava/util/Map;Ljava/lang/reflect/Member;)Ljava/lang/String;
+     161: astore        6
+     163: aload_3
+     164: aload         6
+     166: putfield      #121                // Field org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedMethodElement.injectedObject:Ljava/lang/Object;
+     169: aload_0
+     170: getfield      #14                 // Field injectedMethodReferenceBeanCache:Ljava/util/concurrent/ConcurrentMap;
+     173: aload_3
+     174: aload         6
+     176: invokeinterface #118,  3          // InterfaceMethod java/util/concurrent/ConcurrentMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     181: pop
+     182: goto          104
+     185: goto          200
+     188: astore_2
+     189: new           #68                 // class org/springframework/beans/factory/BeanCreationException
+     192: dup
+     193: ldc           #127                // String prepare reference annotation failed
+     195: aload_2
+     196: invokespecial #128                // Method org/springframework/beans/factory/BeanCreationException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     199: athrow
+     200: return
+    Exception table:
+       from    to  target type
+           0   185   188   Class java/lang/ClassNotFoundException
+
+  public java.lang.String registerReferenceBean(java.lang.String, java.lang.Class<?>, java.util.Map<java.lang.String, java.lang.Object>, java.lang.reflect.Member) throws org.springframework.beans.BeansException;
+    Code:
+       0: iconst_1
+       1: istore        5
+       3: aload_3
+       4: ldc           #78                 // String id
+       6: invokestatic  #129                // Method com/alibaba/spring/util/AnnotationUtils.getAttribute:(Ljava/util/Map;Ljava/lang/String;)Ljava/lang/Object;
+       9: checkcast     #83                 // class java/lang/String
+      12: astore        6
+      14: aload         6
+      16: invokestatic  #130                // Method org/springframework/util/StringUtils.hasText:(Ljava/lang/String;)Z
+      19: ifeq          28
+      22: iconst_0
+      23: istore        5
+      25: goto          31
+      28: aload_1
+      29: astore        6
+      31: new           #49                 // class java/lang/StringBuilder
+      34: dup
+      35: invokespecial #50                 // Method java/lang/StringBuilder."<init>":()V
+      38: ldc           #131                // String Please check
+      40: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      43: aload         4
+      45: invokevirtual #132                // Method java/lang/Object.toString:()Ljava/lang/String;
+      48: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      51: invokevirtual #54                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      54: astore        7
+      56: aload_3
+      57: aload_2
+      58: invokestatic  #80                 // Method org/apache/dubbo/config/spring/reference/ReferenceBeanSupport.convertReferenceProps:(Ljava/util/Map;Ljava/lang/Class;)V
+      61: aload_3
+      62: ldc           #81                 // String interface
+      64: invokeinterface #133,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      69: checkcast     #83                 // class java/lang/String
+      72: astore        8
+      74: aload         8
+      76: invokestatic  #134                // Method org/apache/dubbo/common/utils/StringUtils.isBlank:(Ljava/lang/CharSequence;)Z
+      79: ifeq          110
+      82: new           #68                 // class org/springframework/beans/factory/BeanCreationException
+      85: dup
+      86: new           #49                 // class java/lang/StringBuilder
+      89: dup
+      90: invokespecial #50                 // Method java/lang/StringBuilder."<init>":()V
+      93: ldc           #135                // String Need to specify the \'interfaceName\' or \'interfaceClass\' attribute of \'@DubboReference\' if enable generic.
+      95: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      98: aload         7
+     100: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     103: invokevirtual #54                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     106: invokespecial #70                 // Method org/springframework/beans/factory/BeanCreationException."<init>":(Ljava/lang/String;)V
+     109: athrow
+     110: aload_3
+     111: aload_0
+     112: getfield      #43                 // Field applicationContext:Lorg/springframework/context/ApplicationContext;
+     115: invokestatic  #136                // Method org/apache/dubbo/config/spring/reference/ReferenceBeanSupport.generateReferenceKey:(Ljava/util/Map;Lorg/springframework/context/ApplicationContext;)Ljava/lang/String;
+     118: astore        9
+     120: aload_0
+     121: getfield      #137                // Field referenceBeanManager:Lorg/apache/dubbo/config/spring/reference/ReferenceBeanManager;
+     124: aload         9
+     126: invokevirtual #138                // Method org/apache/dubbo/config/spring/reference/ReferenceBeanManager.getBeanNamesByKey:(Ljava/lang/String;)Ljava/util/List;
+     129: astore        10
+     131: aload         10
+     133: invokeinterface #139,  1          // InterfaceMethod java/util/List.size:()I
+     138: ifle          156
+     141: aload         10
+     143: aload         6
+     145: invokeinterface #140,  2          // InterfaceMethod java/util/List.contains:(Ljava/lang/Object;)Z
+     150: ifeq          156
+     153: aload         6
+     155: areturn
+     156: aload_0
+     157: getfield      #39                 // Field beanDefinitionRegistry:Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;
+     160: aload         6
+     162: invokeinterface #141,  2          // InterfaceMethod org/springframework/beans/factory/support/BeanDefinitionRegistry.containsBeanDefinition:(Ljava/lang/String;)Z
+     167: dup
+     168: istore        11
+     170: ifne          187
+     173: aload_0
+     174: getfield      #39                 // Field beanDefinitionRegistry:Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;
+     177: aload         6
+     179: invokeinterface #142,  2          // InterfaceMethod org/springframework/beans/factory/support/BeanDefinitionRegistry.isAlias:(Ljava/lang/String;)Z
+     184: ifeq          686
+     187: aload         6
+     189: astore        12
+     191: iload         11
+     193: ifne          270
+     196: aload_0
+     197: getfield      #39                 // Field beanDefinitionRegistry:Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;
+     200: aload         6
+     202: invokeinterface #143,  2          // InterfaceMethod org/springframework/beans/factory/support/BeanDefinitionRegistry.getAliases:(Ljava/lang/String;)[Ljava/lang/String;
+     207: astore        13
+     209: aload         13
+     211: invokestatic  #144                // Method org/apache/dubbo/common/utils/ArrayUtils.isNotEmpty:([Ljava/lang/Object;)Z
+     214: ifeq          270
+     217: aload         13
+     219: astore        14
+     221: aload         14
+     223: arraylength
+     224: istore        15
+     226: iconst_0
+     227: istore        16
+     229: iload         16
+     231: iload         15
+     233: if_icmpge     270
+     236: aload         14
+     238: iload         16
+     240: aaload
+     241: astore        17
+     243: aload_0
+     244: getfield      #39                 // Field beanDefinitionRegistry:Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;
+     247: aload         17
+     249: invokeinterface #141,  2          // InterfaceMethod org/springframework/beans/factory/support/BeanDefinitionRegistry.containsBeanDefinition:(Ljava/lang/String;)Z
+     254: ifeq          264
+     257: aload         17
+     259: astore        12
+     261: goto          270
+     264: iinc          16, 1
+     267: goto          229
+     270: aload_0
+     271: getfield      #39                 // Field beanDefinitionRegistry:Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;
+     274: aload         12
+     276: invokeinterface #145,  2          // InterfaceMethod org/springframework/beans/factory/support/BeanDefinitionRegistry.getBeanDefinition:(Ljava/lang/String;)Lorg/springframework/beans/factory/config/BeanDefinition;
+     281: astore        13
+     283: aload         13
+     285: invokeinterface #22,  1           // InterfaceMethod org/springframework/beans/factory/config/BeanDefinition.getBeanClassName:()Ljava/lang/String;
+     290: astore        14
+     292: new           #49                 // class java/lang/StringBuilder
+     295: dup
+     296: invokespecial #50                 // Method java/lang/StringBuilder."<init>":()V
+     299: aload         6
+     301: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     304: ldc           #146                // String [
+     306: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     309: aload         14
+     311: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     314: ldc           #147                // String ]
+     316: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     319: invokevirtual #54                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     322: astore        15
+     324: new           #49                 // class java/lang/StringBuilder
+     327: dup
+     328: invokespecial #50                 // Method java/lang/StringBuilder."<init>":()V
+     331: aload         6
+     333: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     336: ldc           #146                // String [
+     338: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     341: aload         9
+     343: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     346: ldc           #147                // String ]
+     348: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     351: invokevirtual #54                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     354: astore        16
+     356: aload_0
+     357: aload         13
+     359: invokespecial #18                 // Method isReferenceBean:(Lorg/springframework/beans/factory/config/BeanDefinition;)Z
+     362: ifeq          428
+     365: aload         13
+     367: aload_0
+     368: getfield      #43                 // Field applicationContext:Lorg/springframework/context/ApplicationContext;
+     371: invokestatic  #148                // Method org/apache/dubbo/config/spring/reference/ReferenceBeanSupport.generateReferenceKey:(Lorg/springframework/beans/factory/config/BeanDefinition;Lorg/springframework/context/ApplicationContext;)Ljava/lang/String;
+     374: astore        17
+     376: aload         17
+     378: aload         9
+     380: invokestatic  #84                 // Method org/apache/dubbo/common/utils/StringUtils.isEquals:(Ljava/lang/String;Ljava/lang/String;)Z
+     383: ifeq          389
+     386: aload         6
+     388: areturn
+     389: aload         13
+     391: ldc           #149                // String The interface class of ReferenceBean is not initialized
+     393: invokestatic  #150                // Method org/apache/dubbo/common/utils/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+     396: new           #49                 // class java/lang/StringBuilder
+     399: dup
+     400: invokespecial #50                 // Method java/lang/StringBuilder."<init>":()V
+     403: aload         6
+     405: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     408: ldc           #146                // String [
+     410: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     413: aload         17
+     415: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     418: ldc           #147                // String ]
+     420: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     423: invokevirtual #54                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     426: astore        15
+     428: iload         5
+     430: ifne          491
+     433: new           #68                 // class org/springframework/beans/factory/BeanCreationException
+     436: dup
+     437: new           #49                 // class java/lang/StringBuilder
+     440: dup
+     441: invokespecial #50                 // Method java/lang/StringBuilder."<init>":()V
+     444: ldc           #151                // String Already exists another bean definition with the same bean name [
+     446: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     449: aload         6
+     451: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     454: ldc           #152                // String ], but cannot rename the reference bean name (specify the id attribute or java-config bean), please modify the name of one of the beans: prev:
+     456: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     459: aload         15
+     461: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     464: ldc           #153                // String , new:
+     466: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     469: aload         16
+     471: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     474: ldc           #154                // String .
+     476: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     479: aload         7
+     481: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     484: invokevirtual #54                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     487: invokespecial #70                 // Method org/springframework/beans/factory/BeanCreationException."<init>":(Ljava/lang/String;)V
+     490: athrow
+     491: iconst_2
+     492: istore        17
+     494: aconst_null
+     495: astore        18
+     497: aload         18
+     499: ifnull        530
+     502: aload_0
+     503: getfield      #39                 // Field beanDefinitionRegistry:Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;
+     506: aload         18
+     508: invokeinterface #141,  2          // InterfaceMethod org/springframework/beans/factory/support/BeanDefinitionRegistry.containsBeanDefinition:(Ljava/lang/String;)Z
+     513: ifne          530
+     516: aload_0
+     517: getfield      #39                 // Field beanDefinitionRegistry:Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;
+     520: aload         18
+     522: invokeinterface #142,  2          // InterfaceMethod org/springframework/beans/factory/support/BeanDefinitionRegistry.isAlias:(Ljava/lang/String;)Z
+     527: ifeq          575
+     530: new           #49                 // class java/lang/StringBuilder
+     533: dup
+     534: invokespecial #50                 // Method java/lang/StringBuilder."<init>":()V
+     537: aload         6
+     539: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     542: ldc           #65                 // String #
+     544: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     547: iload         17
+     549: invokevirtual #155                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     552: invokevirtual #54                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     555: astore        18
+     557: iinc          17, 1
+     560: aload         10
+     562: aload         18
+     564: invokeinterface #140,  2          // InterfaceMethod java/util/List.contains:(Ljava/lang/Object;)Z
+     569: ifeq          497
+     572: aload         18
+     574: areturn
+     575: new           #49                 // class java/lang/StringBuilder
+     578: dup
+     579: invokespecial #50                 // Method java/lang/StringBuilder."<init>":()V
+     582: aload         18
+     584: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     587: ldc           #146                // String [
+     589: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     592: aload         9
+     594: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     597: ldc           #147                // String ]
+     599: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     602: invokevirtual #54                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     605: astore        16
+     607: aload_0
+     608: getfield      #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     611: ldc           #47                 // String 5-39
+     613: ldc           #48                 // String
+     615: ldc           #48                 // String
+     617: new           #49                 // class java/lang/StringBuilder
+     620: dup
+     621: invokespecial #50                 // Method java/lang/StringBuilder."<init>":()V
+     624: ldc           #151                // String Already exists another bean definition with the same bean name [
+     626: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     629: aload         6
+     631: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     634: ldc           #156                // String ], rename dubbo reference bean to [
+     636: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     639: aload         18
+     641: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     644: ldc           #157                // String ]. It is recommended to modify the name of one of the beans to avoid injection problems. prev:
+     646: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     649: aload         15
+     651: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     654: ldc           #153                // String , new:
+     656: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     659: aload         16
+     661: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     664: ldc           #154                // String .
+     666: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     669: aload         7
+     671: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     674: invokevirtual #54                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     677: invokeinterface #55,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     682: aload         18
+     684: astore        6
+     686: aload_3
+     687: ldc           #78                 // String id
+     689: aload         6
+     691: invokeinterface #158,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     696: pop
+     697: aload         10
+     699: invokeinterface #139,  1          // InterfaceMethod java/util/List.size:()I
+     704: ifle          743
+     707: aload_0
+     708: getfield      #39                 // Field beanDefinitionRegistry:Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;
+     711: aload         10
+     713: iconst_0
+     714: invokeinterface #159,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     719: checkcast     #83                 // class java/lang/String
+     722: aload         6
+     724: invokeinterface #160,  3          // InterfaceMethod org/springframework/beans/factory/support/BeanDefinitionRegistry.registerAlias:(Ljava/lang/String;Ljava/lang/String;)V
+     729: aload_0
+     730: getfield      #137                // Field referenceBeanManager:Lorg/apache/dubbo/config/spring/reference/ReferenceBeanManager;
+     733: aload         9
+     735: aload         6
+     737: invokevirtual #161                // Method org/apache/dubbo/config/spring/reference/ReferenceBeanManager.registerReferenceKeyAndBeanName:(Ljava/lang/String;Ljava/lang/String;)V
+     740: aload         6
+     742: areturn
+     743: aload_2
+     744: astore        12
+     746: new           #162                // class org/springframework/beans/factory/support/RootBeanDefinition
+     749: dup
+     750: invokespecial #163                // Method org/springframework/beans/factory/support/RootBeanDefinition."<init>":()V
+     753: astore        13
+     755: aload         13
+     757: ldc           #57                 // class org/apache/dubbo/config/spring/ReferenceBean
+     759: invokevirtual #58                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     762: invokevirtual #164                // Method org/springframework/beans/factory/support/RootBeanDefinition.setBeanClassName:(Ljava/lang/String;)V
+     765: aload         13
+     767: invokevirtual #96                 // Method org/springframework/beans/factory/support/RootBeanDefinition.getPropertyValues:()Lorg/springframework/beans/MutablePropertyValues;
+     770: ldc           #78                 // String id
+     772: aload         6
+     774: invokevirtual #95                 // Method org/springframework/beans/MutablePropertyValues.add:(Ljava/lang/String;Ljava/lang/Object;)Lorg/springframework/beans/MutablePropertyValues;
+     777: pop
+     778: aload         13
+     780: ldc           #90                 // String referenceProps
+     782: aload_3
+     783: invokevirtual #165                // Method org/springframework/beans/factory/support/RootBeanDefinition.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+     786: aload         13
+     788: ldc           #92                 // String interfaceClass
+     790: aload         12
+     792: invokevirtual #165                // Method org/springframework/beans/factory/support/RootBeanDefinition.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+     795: aload         13
+     797: ldc           #93                 // String interfaceName
+     799: aload         8
+     801: invokevirtual #165                // Method org/springframework/beans/factory/support/RootBeanDefinition.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+     804: new           #166                // class org/springframework/beans/factory/support/GenericBeanDefinition
+     807: dup
+     808: invokespecial #167                // Method org/springframework/beans/factory/support/GenericBeanDefinition."<init>":()V
+     811: astore        14
+     813: aload         14
+     815: aload         12
+     817: invokevirtual #168                // Method org/springframework/beans/factory/support/GenericBeanDefinition.setBeanClass:(Ljava/lang/Class;)V
+     820: aload         13
+     822: new           #169                // class org/springframework/beans/factory/config/BeanDefinitionHolder
+     825: dup
+     826: aload         14
+     828: new           #49                 // class java/lang/StringBuilder
+     831: dup
+     832: invokespecial #50                 // Method java/lang/StringBuilder."<init>":()V
+     835: aload         6
+     837: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     840: ldc           #170                // String _decorated
+     842: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     845: invokevirtual #54                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     848: invokespecial #171                // Method org/springframework/beans/factory/config/BeanDefinitionHolder."<init>":(Lorg/springframework/beans/factory/config/BeanDefinition;Ljava/lang/String;)V
+     851: invokevirtual #172                // Method org/springframework/beans/factory/support/RootBeanDefinition.setDecoratedDefinition:(Lorg/springframework/beans/factory/config/BeanDefinitionHolder;)V
+     854: aload         13
+     856: ldc           #173                // String factoryBeanObjectType
+     858: aload         12
+     860: invokevirtual #165                // Method org/springframework/beans/factory/support/RootBeanDefinition.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+     863: aload_0
+     864: getfield      #39                 // Field beanDefinitionRegistry:Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;
+     867: aload         6
+     869: aload         13
+     871: invokeinterface #174,  3          // InterfaceMethod org/springframework/beans/factory/support/BeanDefinitionRegistry.registerBeanDefinition:(Ljava/lang/String;Lorg/springframework/beans/factory/config/BeanDefinition;)V
+     876: aload_0
+     877: getfield      #137                // Field referenceBeanManager:Lorg/apache/dubbo/config/spring/reference/ReferenceBeanManager;
+     880: aload         9
+     882: aload         6
+     884: invokevirtual #161                // Method org/apache/dubbo/config/spring/reference/ReferenceBeanManager.registerReferenceKeyAndBeanName:(Ljava/lang/String;Ljava/lang/String;)V
+     887: aload_0
+     888: getfield      #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     891: new           #49                 // class java/lang/StringBuilder
+     894: dup
+     895: invokespecial #50                 // Method java/lang/StringBuilder."<init>":()V
+     898: ldc           #175                // String Register dubbo reference bean:
+     900: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     903: aload         6
+     905: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     908: ldc           #176                // String  =
+     910: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     913: aload         9
+     915: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     918: ldc           #177                // String  at
+     920: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     923: aload         4
+     925: invokevirtual #53                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     928: invokevirtual #54                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     931: invokeinterface #178,  2          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+     936: aload         6
+     938: areturn
+
+  protected java.lang.Object doGetInjectedBean(org.springframework.core.annotation.AnnotationAttributes, java.lang.Object, java.lang.String, java.lang.Class<?>, org.apache.dubbo.config.spring.beans.factory.annotation.AbstractAnnotationBeanPostProcessor$AnnotatedInjectElement) throws java.lang.Exception;
+    Code:
+       0: aload         5
+       2: getfield      #179                // Field org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedInjectElement.injectedObject:Ljava/lang/Object;
+       5: ifnonnull     18
+       8: new           #30                 // class java/lang/IllegalStateException
+      11: dup
+      12: ldc           #180                // String The AnnotatedInjectElement of @DubboReference should be inited before injection
+      14: invokespecial #181                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      17: athrow
+      18: aload_0
+      19: invokevirtual #61                 // Method getBeanFactory:()Lorg/springframework/beans/factory/config/ConfigurableListableBeanFactory;
+      22: aload         5
+      24: getfield      #179                // Field org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor$AnnotatedInjectElement.injectedObject:Ljava/lang/Object;
+      27: checkcast     #83                 // class java/lang/String
+      30: invokeinterface #182,  2          // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.getBean:(Ljava/lang/String;)Ljava/lang/Object;
+      35: areturn
+
+  public void setApplicationContext(org.springframework.context.ApplicationContext) throws org.springframework.beans.BeansException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #43                 // Field applicationContext:Lorg/springframework/context/ApplicationContext;
+       5: aload_0
+       6: aload_1
+       7: ldc           #184                // String dubboReferenceBeanManager
+       9: ldc           #183                // class org/apache/dubbo/config/spring/reference/ReferenceBeanManager
+      11: invokeinterface #185,  3          // InterfaceMethod org/springframework/context/ApplicationContext.getBean:(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;
+      16: checkcast     #183                // class org/apache/dubbo/config/spring/reference/ReferenceBeanManager
+      19: putfield      #137                // Field referenceBeanManager:Lorg/apache/dubbo/config/spring/reference/ReferenceBeanManager;
+      22: aload_0
+      23: aload_1
+      24: invokeinterface #186,  1          // InterfaceMethod org/springframework/context/ApplicationContext.getAutowireCapableBeanFactory:()Lorg/springframework/beans/factory/config/AutowireCapableBeanFactory;
+      29: checkcast     #187                // class org/springframework/beans/factory/support/BeanDefinitionRegistry
+      32: putfield      #39                 // Field beanDefinitionRegistry:Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;
+      35: return
+
+  public void destroy() throws java.lang.Exception;
+    Code:
+       0: aload_0
+       1: invokespecial #188                // Method org/apache/dubbo/config/spring/beans/factory/annotation/AbstractAnnotationBeanPostProcessor.destroy:()V
+       4: aload_0
+       5: getfield      #13                 // Field injectedFieldReferenceBeanCache:Ljava/util/concurrent/ConcurrentMap;
+       8: invokeinterface #189,  1          // InterfaceMethod java/util/concurrent/ConcurrentMap.clear:()V
+      13: aload_0
+      14: getfield      #14                 // Field injectedMethodReferenceBeanCache:Ljava/util/concurrent/ConcurrentMap;
+      17: invokeinterface #189,  1          // InterfaceMethod java/util/concurrent/ConcurrentMap.clear:()V
+      22: return
+
+  public java.util.Collection<org.apache.dubbo.config.spring.ReferenceBean<?>> getReferenceBeans();
+    Code:
+       0: invokestatic  #190                // Method java/util/Collections.emptyList:()Ljava/util/List;
+       3: areturn
+
+  public java.util.Map<org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement, org.apache.dubbo.config.spring.ReferenceBean<?>> getInjectedFieldReferenceBeanMap();
+    Code:
+       0: new           #191                // class java/util/HashMap
+       3: dup
+       4: invokespecial #192                // Method java/util/HashMap."<init>":()V
+       7: astore_1
+       8: aload_0
+       9: getfield      #13                 // Field injectedFieldReferenceBeanCache:Ljava/util/concurrent/ConcurrentMap;
+      12: invokeinterface #193,  1          // InterfaceMethod java/util/concurrent/ConcurrentMap.entrySet:()Ljava/util/Set;
+      17: invokeinterface #194,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      22: astore_2
+      23: aload_2
+      24: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      29: ifeq          74
+      32: aload_2
+      33: invokeinterface #37,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      38: checkcast     #195                // class java/util/Map$Entry
+      41: astore_3
+      42: aload_1
+      43: aload_3
+      44: invokeinterface #196,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+      49: aload_0
+      50: getfield      #137                // Field referenceBeanManager:Lorg/apache/dubbo/config/spring/reference/ReferenceBeanManager;
+      53: aload_3
+      54: invokeinterface #197,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+      59: checkcast     #83                 // class java/lang/String
+      62: invokevirtual #198                // Method org/apache/dubbo/config/spring/reference/ReferenceBeanManager.getById:(Ljava/lang/String;)Lorg/apache/dubbo/config/spring/ReferenceBean;
+      65: invokeinterface #158,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      70: pop
+      71: goto          23
+      74: aload_1
+      75: invokestatic  #199                // Method java/util/Collections.unmodifiableMap:(Ljava/util/Map;)Ljava/util/Map;
+      78: areturn
+
+  public java.util.Map<org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement, org.apache.dubbo.config.spring.ReferenceBean<?>> getInjectedMethodReferenceBeanMap();
+    Code:
+       0: new           #191                // class java/util/HashMap
+       3: dup
+       4: invokespecial #192                // Method java/util/HashMap."<init>":()V
+       7: astore_1
+       8: aload_0
+       9: getfield      #14                 // Field injectedMethodReferenceBeanCache:Ljava/util/concurrent/ConcurrentMap;
+      12: invokeinterface #193,  1          // InterfaceMethod java/util/concurrent/ConcurrentMap.entrySet:()Ljava/util/Set;
+      17: invokeinterface #194,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      22: astore_2
+      23: aload_2
+      24: invokeinterface #36,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      29: ifeq          74
+      32: aload_2
+      33: invokeinterface #37,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      38: checkcast     #195                // class java/util/Map$Entry
+      41: astore_3
+      42: aload_1
+      43: aload_3
+      44: invokeinterface #196,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+      49: aload_0
+      50: getfield      #137                // Field referenceBeanManager:Lorg/apache/dubbo/config/spring/reference/ReferenceBeanManager;
+      53: aload_3
+      54: invokeinterface #197,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+      59: checkcast     #83                 // class java/lang/String
+      62: invokevirtual #198                // Method org/apache/dubbo/config/spring/reference/ReferenceBeanManager.getById:(Ljava/lang/String;)Lorg/apache/dubbo/config/spring/ReferenceBean;
+      65: invokeinterface #158,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      70: pop
+      71: goto          23
+      74: aload_1
+      75: invokestatic  #199                // Method java/util/Collections.unmodifiableMap:(Ljava/util/Map;)Ljava/util/Map;
+      78: areturn
+
+  static {};
+    Code:
+       0: ldc           #200                // String referenceAnnotationBeanPostProcessor.cache.size
+       2: bipush        32
+       4: invokestatic  #201                // Method java/lang/Integer.getInteger:(Ljava/lang/String;I)Ljava/lang/Integer;
+       7: invokevirtual #202                // Method java/lang/Integer.intValue:()I
+      10: putstatic     #11                 // Field CACHE_SIZE:I
+      13: return
+}

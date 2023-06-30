@@ -1,0 +1,170 @@
+Compiled from "ConfigCenterBean.java"
+public class org.apache.dubbo.config.spring.ConfigCenterBean extends org.apache.dubbo.config.ConfigCenterConfig implements org.springframework.context.ApplicationContextAware,org.springframework.beans.factory.DisposableBean,org.springframework.context.EnvironmentAware {
+  private transient org.springframework.context.ApplicationContext applicationContext;
+
+  private java.lang.Boolean includeSpringEnv;
+
+  public org.apache.dubbo.config.spring.ConfigCenterBean();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method org/apache/dubbo/config/ConfigCenterConfig."<init>":()V
+       4: aload_0
+       5: iconst_0
+       6: invokestatic  #2                  // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+       9: putfield      #3                  // Field includeSpringEnv:Ljava/lang/Boolean;
+      12: return
+
+  public org.apache.dubbo.config.spring.ConfigCenterBean(org.apache.dubbo.rpc.model.ApplicationModel);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #4                  // Method org/apache/dubbo/config/ConfigCenterConfig."<init>":(Lorg/apache/dubbo/rpc/model/ApplicationModel;)V
+       5: aload_0
+       6: iconst_0
+       7: invokestatic  #2                  // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      10: putfield      #3                  // Field includeSpringEnv:Ljava/lang/Boolean;
+      13: return
+
+  public void setApplicationContext(org.springframework.context.ApplicationContext);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #5                  // Field applicationContext:Lorg/springframework/context/ApplicationContext;
+       5: return
+
+  public void destroy() throws java.lang.Exception;
+    Code:
+       0: return
+
+  public void setEnvironment(org.springframework.core.env.Environment);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field includeSpringEnv:Ljava/lang/Boolean;
+       4: invokevirtual #6                  // Method java/lang/Boolean.booleanValue:()Z
+       7: ifeq          71
+      10: aload_0
+      11: aload_0
+      12: aload_0
+      13: invokevirtual #7                  // Method getConfigFile:()Ljava/lang/String;
+      16: aload_1
+      17: invokespecial #8                  // Method getConfigurations:(Ljava/lang/String;Lorg/springframework/core/env/Environment;)Ljava/util/Map;
+      20: invokevirtual #9                  // Method setExternalConfig:(Ljava/util/Map;)V
+      23: aload_0
+      24: aload_0
+      25: aload_0
+      26: invokevirtual #10                 // Method getAppConfigFile:()Ljava/lang/String;
+      29: invokestatic  #11                 // Method org/apache/dubbo/common/utils/StringUtils.isNotEmpty:(Ljava/lang/String;)Z
+      32: ifeq          42
+      35: aload_0
+      36: invokevirtual #10                 // Method getAppConfigFile:()Ljava/lang/String;
+      39: goto          64
+      42: new           #12                 // class java/lang/StringBuilder
+      45: dup
+      46: invokespecial #13                 // Method java/lang/StringBuilder."<init>":()V
+      49: ldc           #14                 // String application.
+      51: invokevirtual #15                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      54: aload_0
+      55: invokevirtual #7                  // Method getConfigFile:()Ljava/lang/String;
+      58: invokevirtual #15                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      61: invokevirtual #16                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      64: aload_1
+      65: invokespecial #8                  // Method getConfigurations:(Ljava/lang/String;Lorg/springframework/core/env/Environment;)Ljava/util/Map;
+      68: invokevirtual #17                 // Method setAppExternalConfig:(Ljava/util/Map;)V
+      71: return
+
+  private java.util.Map<java.lang.String, java.lang.String> getConfigurations(java.lang.String, org.springframework.core.env.Environment);
+    Code:
+       0: aload_2
+       1: aload_1
+       2: ldc           #18                 // class java/lang/Object
+       4: invokeinterface #19,  3           // InterfaceMethod org/springframework/core/env/Environment.getProperty:(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;
+       9: astore_3
+      10: new           #20                 // class java/util/HashMap
+      13: dup
+      14: invokespecial #21                 // Method java/util/HashMap."<init>":()V
+      17: astore        4
+      19: aload_3
+      20: instanceof    #22                 // class java/util/Map
+      23: ifeq          40
+      26: aload         4
+      28: aload_3
+      29: checkcast     #22                 // class java/util/Map
+      32: invokeinterface #23,  2           // InterfaceMethod java/util/Map.putAll:(Ljava/util/Map;)V
+      37: goto          61
+      40: aload_3
+      41: instanceof    #24                 // class java/lang/String
+      44: ifeq          61
+      47: aload         4
+      49: aload_3
+      50: checkcast     #24                 // class java/lang/String
+      53: invokestatic  #25                 // Method org/apache/dubbo/common/config/ConfigurationUtils.parseProperties:(Ljava/lang/String;)Ljava/util/Map;
+      56: invokeinterface #23,  2           // InterfaceMethod java/util/Map.putAll:(Ljava/util/Map;)V
+      61: aload_2
+      62: instanceof    #26                 // class org/springframework/core/env/ConfigurableEnvironment
+      65: ifeq          134
+      68: aload         4
+      70: invokeinterface #27,  1           // InterfaceMethod java/util/Map.isEmpty:()Z
+      75: ifeq          134
+      78: aload_2
+      79: checkcast     #26                 // class org/springframework/core/env/ConfigurableEnvironment
+      82: astore        5
+      84: aload         5
+      86: invokeinterface #28,  1           // InterfaceMethod org/springframework/core/env/ConfigurableEnvironment.getPropertySources:()Lorg/springframework/core/env/MutablePropertySources;
+      91: aload_1
+      92: invokevirtual #29                 // Method org/springframework/core/env/MutablePropertySources.get:(Ljava/lang/String;)Lorg/springframework/core/env/PropertySource;
+      95: astore        6
+      97: aload         6
+      99: ifnull        134
+     102: aload         6
+     104: invokevirtual #30                 // Method org/springframework/core/env/PropertySource.getSource:()Ljava/lang/Object;
+     107: astore        7
+     109: aload         7
+     111: instanceof    #22                 // class java/util/Map
+     114: ifeq          134
+     117: aload         7
+     119: checkcast     #22                 // class java/util/Map
+     122: aload         4
+     124: invokedynamic #31,  0             // InvokeDynamic #0:accept:(Ljava/util/Map;)Ljava/util/function/BiConsumer;
+     129: invokeinterface #32,  2           // InterfaceMethod java/util/Map.forEach:(Ljava/util/function/BiConsumer;)V
+     134: goto          149
+     137: astore        5
+     139: new           #34                 // class java/lang/IllegalStateException
+     142: dup
+     143: aload         5
+     145: invokespecial #35                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/Throwable;)V
+     148: athrow
+     149: aload         4
+     151: areturn
+    Exception table:
+       from    to  target type
+          19   134   137   Class java/lang/Exception
+
+  public org.springframework.context.ApplicationContext getApplicationContext();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field applicationContext:Lorg/springframework/context/ApplicationContext;
+       4: areturn
+
+  public java.lang.Boolean getIncludeSpringEnv();
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field includeSpringEnv:Ljava/lang/Boolean;
+       4: areturn
+
+  public void setIncludeSpringEnv(java.lang.Boolean);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #3                  // Field includeSpringEnv:Ljava/lang/Boolean;
+       5: return
+
+  private static void lambda$getConfigurations$0(java.util.Map, java.lang.String, java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: checkcast     #24                 // class java/lang/String
+       6: invokeinterface #36,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      11: pop
+      12: return
+}

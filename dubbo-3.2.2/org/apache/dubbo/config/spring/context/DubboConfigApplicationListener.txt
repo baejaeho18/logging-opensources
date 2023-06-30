@@ -1,0 +1,100 @@
+Compiled from "DubboConfigApplicationListener.java"
+public class org.apache.dubbo.config.spring.context.DubboConfigApplicationListener implements org.springframework.context.ApplicationListener<org.apache.dubbo.config.spring.context.event.DubboConfigInitEvent>, org.springframework.context.ApplicationContextAware {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private org.springframework.context.ApplicationContext applicationContext;
+
+  private org.apache.dubbo.rpc.model.ModuleModel moduleModel;
+
+  private final java.util.concurrent.atomic.AtomicBoolean initialized;
+
+  public org.apache.dubbo.config.spring.context.DubboConfigApplicationListener();
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #3                  // class java/util/concurrent/atomic/AtomicBoolean
+       8: dup
+       9: invokespecial #4                  // Method java/util/concurrent/atomic/AtomicBoolean."<init>":()V
+      12: putfield      #5                  // Field initialized:Ljava/util/concurrent/atomic/AtomicBoolean;
+      15: return
+
+  public void setApplicationContext(org.springframework.context.ApplicationContext) throws org.springframework.beans.BeansException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #6                  // Field applicationContext:Lorg/springframework/context/ApplicationContext;
+       5: aload_0
+       6: aload_1
+       7: invokestatic  #7                  // InterfaceMethod org/apache/dubbo/config/spring/util/DubboBeanUtils.getModuleModel:(Lorg/springframework/beans/factory/BeanFactory;)Lorg/apache/dubbo/rpc/model/ModuleModel;
+      10: putfield      #8                  // Field moduleModel:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      13: return
+
+  public void onApplicationEvent(org.apache.dubbo.config.spring.context.event.DubboConfigInitEvent);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field applicationContext:Lorg/springframework/context/ApplicationContext;
+       4: aload_1
+       5: invokevirtual #9                  // Method org/apache/dubbo/config/spring/context/event/DubboConfigInitEvent.getSource:()Ljava/lang/Object;
+       8: invokestatic  #10                 // Method org/springframework/util/ObjectUtils.nullSafeEquals:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      11: ifeq          30
+      14: aload_0
+      15: getfield      #5                  // Field initialized:Ljava/util/concurrent/atomic/AtomicBoolean;
+      18: iconst_0
+      19: iconst_1
+      20: invokevirtual #11                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+      23: ifeq          30
+      26: aload_0
+      27: invokespecial #12                 // Method initDubboConfigBeans:()V
+      30: return
+
+  private void initDubboConfigBeans();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field applicationContext:Lorg/springframework/context/ApplicationContext;
+       4: getstatic     #13                 // Field org/apache/dubbo/config/spring/context/DubboConfigBeanInitializer.BEAN_NAME:Ljava/lang/String;
+       7: invokeinterface #14,  2           // InterfaceMethod org/springframework/context/ApplicationContext.containsBean:(Ljava/lang/String;)Z
+      12: ifeq          33
+      15: aload_0
+      16: getfield      #6                  // Field applicationContext:Lorg/springframework/context/ApplicationContext;
+      19: getstatic     #13                 // Field org/apache/dubbo/config/spring/context/DubboConfigBeanInitializer.BEAN_NAME:Ljava/lang/String;
+      22: ldc           #15                 // class org/apache/dubbo/config/spring/context/DubboConfigBeanInitializer
+      24: invokeinterface #16,  3           // InterfaceMethod org/springframework/context/ApplicationContext.getBean:(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;
+      29: pop
+      30: goto          73
+      33: getstatic     #17                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      36: ldc           #18                 // String 5-40
+      38: ldc           #19                 // String
+      40: ldc           #19                 // String
+      42: new           #20                 // class java/lang/StringBuilder
+      45: dup
+      46: invokespecial #21                 // Method java/lang/StringBuilder."<init>":()V
+      49: ldc           #22                 // String Bean \'
+      51: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      54: getstatic     #13                 // Field org/apache/dubbo/config/spring/context/DubboConfigBeanInitializer.BEAN_NAME:Ljava/lang/String;
+      57: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      60: ldc           #24                 // String \' was not found
+      62: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      65: invokevirtual #25                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      68: invokeinterface #26,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      73: aload_0
+      74: getfield      #8                  // Field moduleModel:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      77: invokevirtual #27                 // Method org/apache/dubbo/rpc/model/ModuleModel.getDeployer:()Lorg/apache/dubbo/common/deploy/ModuleDeployer;
+      80: invokeinterface #28,  1           // InterfaceMethod org/apache/dubbo/common/deploy/ModuleDeployer.prepare:()V
+      85: return
+
+  public void onApplicationEvent(org.springframework.context.ApplicationEvent);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: checkcast     #29                 // class org/apache/dubbo/config/spring/context/event/DubboConfigInitEvent
+       5: invokevirtual #30                 // Method onApplicationEvent:(Lorg/apache/dubbo/config/spring/context/event/DubboConfigInitEvent;)V
+       8: return
+
+  static {};
+    Code:
+       0: ldc           #31                 // class org/apache/dubbo/config/spring/context/DubboConfigApplicationListener
+       2: invokestatic  #32                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #17                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}
