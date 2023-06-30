@@ -1,0 +1,47 @@
+Compiled from "StreamQueueCommand.java"
+public abstract class org.apache.dubbo.rpc.protocol.tri.command.StreamQueueCommand extends org.apache.dubbo.rpc.protocol.tri.command.QueuedCommand {
+  protected final org.apache.dubbo.rpc.protocol.tri.stream.TripleStreamChannelFuture streamChannelFuture;
+
+  protected org.apache.dubbo.rpc.protocol.tri.command.StreamQueueCommand(org.apache.dubbo.rpc.protocol.tri.stream.TripleStreamChannelFuture);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method org/apache/dubbo/rpc/protocol/tri/command/QueuedCommand."<init>":()V
+       4: aload_1
+       5: ldc           #2                  // String streamChannelFuture cannot be null.
+       7: invokestatic  #3                  // Method org/apache/dubbo/common/utils/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      10: aload_0
+      11: aload_1
+      12: putfield      #4                  // Field streamChannelFuture:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleStreamChannelFuture;
+      15: aload_0
+      16: aload_1
+      17: invokevirtual #5                  // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleStreamChannelFuture.getParentChannel:()Lio/netty/channel/Channel;
+      20: invokeinterface #6,  1            // InterfaceMethod io/netty/channel/Channel.newPromise:()Lio/netty/channel/ChannelPromise;
+      25: invokevirtual #7                  // Method promise:(Lio/netty/channel/ChannelPromise;)V
+      28: return
+
+  public void run(io.netty.channel.Channel);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field streamChannelFuture:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleStreamChannelFuture;
+       4: invokevirtual #8                  // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleStreamChannelFuture.isSuccess:()Z
+       7: ifeq          16
+      10: aload_0
+      11: aload_1
+      12: invokespecial #9                  // Method org/apache/dubbo/rpc/protocol/tri/command/QueuedCommand.run:(Lio/netty/channel/Channel;)V
+      15: return
+      16: aload_0
+      17: invokevirtual #10                 // Method promise:()Lio/netty/channel/ChannelPromise;
+      20: aload_0
+      21: getfield      #4                  // Field streamChannelFuture:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleStreamChannelFuture;
+      24: invokevirtual #11                 // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleStreamChannelFuture.cause:()Ljava/lang/Throwable;
+      27: invokeinterface #12,  2           // InterfaceMethod io/netty/channel/ChannelPromise.setFailure:(Ljava/lang/Throwable;)Lio/netty/channel/ChannelPromise;
+      32: pop
+      33: return
+
+  public io.netty.channel.Channel channel();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field streamChannelFuture:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleStreamChannelFuture;
+       4: invokevirtual #13                 // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleStreamChannelFuture.getNow:()Lio/netty/handler/codec/http2/Http2StreamChannel;
+       7: areturn
+}

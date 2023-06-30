@@ -1,0 +1,229 @@
+Compiled from "ExceptionMapper.java"
+public class org.apache.dubbo.rpc.protocol.rest.exception.mapper.ExceptionMapper {
+  private final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final java.util.Map<java.lang.Class<?>, org.apache.dubbo.rpc.protocol.rest.exception.mapper.ExceptionHandler> exceptionHandlerMap;
+
+  public org.apache.dubbo.rpc.protocol.rest.exception.mapper.ExceptionMapper();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_0
+       6: invokevirtual #2                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       9: invokestatic  #3                  // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      12: putfield      #4                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      15: aload_0
+      16: new           #5                  // class java/util/concurrent/ConcurrentHashMap
+      19: dup
+      20: invokespecial #6                  // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      23: putfield      #7                  // Field exceptionHandlerMap:Ljava/util/Map;
+      26: return
+
+  public java.lang.Object exceptionToResult(java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #2                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       5: invokevirtual #8                  // Method getExceptionHandler:(Ljava/lang/Class;)Lorg/apache/dubbo/rpc/protocol/rest/exception/mapper/ExceptionHandler;
+       8: astore_2
+       9: aload_2
+      10: ifnonnull     15
+      13: aload_1
+      14: areturn
+      15: aload_2
+      16: aload_1
+      17: checkcast     #9                  // class java/lang/Throwable
+      20: invokeinterface #10,  2           // InterfaceMethod org/apache/dubbo/rpc/protocol/rest/exception/mapper/ExceptionHandler.result:(Ljava/lang/Throwable;)Ljava/lang/Object;
+      25: areturn
+
+  public org.apache.dubbo.rpc.protocol.rest.exception.mapper.ExceptionHandler getExceptionHandler(java.lang.Class);
+    Code:
+       0: aconst_null
+       1: astore_2
+       2: aload_1
+       3: ifnull        35
+       6: aload_0
+       7: getfield      #7                  // Field exceptionHandlerMap:Ljava/util/Map;
+      10: aload_1
+      11: invokeinterface #11,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      16: checkcast     #12                 // class org/apache/dubbo/rpc/protocol/rest/exception/mapper/ExceptionHandler
+      19: astore_2
+      20: aload_2
+      21: ifnull        27
+      24: goto          35
+      27: aload_1
+      28: invokevirtual #13                 // Method java/lang/Class.getSuperclass:()Ljava/lang/Class;
+      31: astore_1
+      32: goto          2
+      35: aload_2
+      36: areturn
+
+  public boolean hasExceptionMapper(java.lang.Object);
+    Code:
+       0: aload_1
+       1: ifnonnull     6
+       4: iconst_0
+       5: ireturn
+       6: aload_0
+       7: aload_1
+       8: invokevirtual #2                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      11: invokevirtual #8                  // Method getExceptionHandler:(Ljava/lang/Class;)Lorg/apache/dubbo/rpc/protocol/rest/exception/mapper/ExceptionHandler;
+      14: ifnull        21
+      17: iconst_1
+      18: goto          22
+      21: iconst_0
+      22: ireturn
+
+  public void registerMapper(java.lang.Class<?>);
+    Code:
+       0: ldc           #12                 // class org/apache/dubbo/rpc/protocol/rest/exception/mapper/ExceptionHandler
+       2: aload_1
+       3: invokevirtual #14                 // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+       6: ifne          10
+       9: return
+      10: aload_1
+      11: ldc           #15                 // String result
+      13: invokestatic  #16                 // Method org/apache/dubbo/rpc/protocol/rest/util/ReflectUtils.getMethodByNameList:(Ljava/lang/Class;Ljava/lang/String;)Ljava/util/List;
+      16: astore_2
+      17: new           #17                 // class java/util/HashSet
+      20: dup
+      21: invokespecial #18                 // Method java/util/HashSet."<init>":()V
+      24: astore_3
+      25: aload_2
+      26: invokeinterface #19,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      31: astore        4
+      33: aload         4
+      35: invokeinterface #20,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      40: ifeq          89
+      43: aload         4
+      45: invokeinterface #21,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      50: checkcast     #22                 // class java/lang/reflect/Method
+      53: astore        5
+      55: aload         5
+      57: invokevirtual #23                 // Method java/lang/reflect/Method.getParameterTypes:()[Ljava/lang/Class;
+      60: iconst_0
+      61: aaload
+      62: astore        6
+      64: ldc           #9                  // class java/lang/Throwable
+      66: aload         6
+      68: invokevirtual #14                 // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+      71: ifne          77
+      74: goto          33
+      77: aload_3
+      78: aload         6
+      80: invokeinterface #24,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      85: pop
+      86: goto          33
+      89: new           #25                 // class java/util/ArrayList
+      92: dup
+      93: aload_3
+      94: invokespecial #26                 // Method java/util/ArrayList."<init>":(Ljava/util/Collection;)V
+      97: astore        4
+      99: aload         4
+     101: invokevirtual #27                 // Method java/util/ArrayList.size:()I
+     104: iconst_1
+     105: if_icmpeq     117
+     108: aload_3
+     109: ldc           #9                  // class java/lang/Throwable
+     111: invokeinterface #28,  2           // InterfaceMethod java/util/Set.remove:(Ljava/lang/Object;)Z
+     116: pop
+     117: aload_1
+     118: invokestatic  #29                 // Method org/apache/dubbo/rpc/protocol/rest/util/ReflectUtils.getConstructList:(Ljava/lang/Class;)Ljava/util/List;
+     121: astore        5
+     123: aload         5
+     125: invokeinterface #30,  1           // InterfaceMethod java/util/List.isEmpty:()Z
+     130: ifeq          160
+     133: new           #31                 // class java/lang/RuntimeException
+     136: dup
+     137: new           #32                 // class java/lang/StringBuilder
+     140: dup
+     141: invokespecial #33                 // Method java/lang/StringBuilder."<init>":()V
+     144: ldc           #34                 // String dubbo rest exception mapper register mapper need exception handler exist no  construct declare, current class is:
+     146: invokevirtual #35                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     149: aload_1
+     150: invokevirtual #36                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     153: invokevirtual #37                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     156: invokespecial #38                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;)V
+     159: athrow
+     160: aload         5
+     162: iconst_0
+     163: invokeinterface #39,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     168: checkcast     #40                 // class java/lang/reflect/Constructor
+     171: aload         5
+     173: iconst_0
+     174: invokeinterface #39,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     179: checkcast     #40                 // class java/lang/reflect/Constructor
+     182: invokevirtual #41                 // Method java/lang/reflect/Constructor.getParameterCount:()I
+     185: anewarray     #42                 // class java/lang/Object
+     188: invokevirtual #43                 // Method java/lang/reflect/Constructor.newInstance:([Ljava/lang/Object;)Ljava/lang/Object;
+     191: astore        6
+     193: aload_3
+     194: invokeinterface #44,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     199: astore        7
+     201: aload         7
+     203: invokeinterface #20,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     208: ifeq          243
+     211: aload         7
+     213: invokeinterface #21,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     218: checkcast     #45                 // class java/lang/Class
+     221: astore        8
+     223: aload_0
+     224: getfield      #7                  // Field exceptionHandlerMap:Ljava/util/Map;
+     227: aload         8
+     229: aload         6
+     231: checkcast     #12                 // class org/apache/dubbo/rpc/protocol/rest/exception/mapper/ExceptionHandler
+     234: invokeinterface #46,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     239: pop
+     240: goto          201
+     243: goto          258
+     246: astore_2
+     247: new           #31                 // class java/lang/RuntimeException
+     250: dup
+     251: ldc           #48                 // String dubbo rest protocol exception mapper register error
+     253: aload_2
+     254: invokespecial #49                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     257: athrow
+     258: return
+    Exception table:
+       from    to  target type
+           0     9   246   Class java/lang/Exception
+          10   243   246   Class java/lang/Exception
+
+  public void registerMapper(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #50                 // Method org/apache/dubbo/rpc/protocol/rest/util/ReflectUtils.findClass:(Ljava/lang/String;)Ljava/lang/Class;
+       5: invokevirtual #51                 // Method registerMapper:(Ljava/lang/Class;)V
+       8: goto          48
+      11: astore_2
+      12: aload_0
+      13: getfield      #4                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      16: ldc           #52                 // String
+      18: aload_2
+      19: invokevirtual #53                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      22: ldc           #52                 // String
+      24: new           #32                 // class java/lang/StringBuilder
+      27: dup
+      28: invokespecial #33                 // Method java/lang/StringBuilder."<init>":()V
+      31: ldc           #54                 // String dubbo rest protocol exception mapper register error ,and current exception mapper is  :
+      33: invokevirtual #35                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      36: aload_1
+      37: invokevirtual #35                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      40: invokevirtual #37                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      43: invokeinterface #55,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      48: return
+    Exception table:
+       from    to  target type
+           0     8    11   Class java/lang/Exception
+
+  public void unRegisterMapper(java.lang.Class<?>);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field exceptionHandlerMap:Ljava/util/Map;
+       4: aload_1
+       5: invokeinterface #56,  2           // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      10: pop
+      11: return
+}

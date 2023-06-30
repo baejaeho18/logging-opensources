@@ -1,0 +1,289 @@
+Compiled from "DeadlineFuture.java"
+public class org.apache.dubbo.rpc.protocol.tri.DeadlineFuture extends java.util.concurrent.CompletableFuture<org.apache.dubbo.rpc.AppResponse> {
+  private static final org.apache.dubbo.common.logger.Logger LOGGER;
+
+  private final java.lang.String serviceName;
+
+  private final java.lang.String methodName;
+
+  private final java.lang.String address;
+
+  private final int timeout;
+
+  private final long start;
+
+  private final java.util.List<java.lang.Runnable> timeoutListeners;
+
+  private final org.apache.dubbo.common.timer.Timeout timeoutTask;
+
+  private java.util.concurrent.Executor executor;
+
+  private static final org.apache.dubbo.common.resource.GlobalResourceInitializer<org.apache.dubbo.common.timer.Timer> TIME_OUT_TIMER;
+
+  private org.apache.dubbo.rpc.protocol.tri.DeadlineFuture(java.lang.String, java.lang.String, java.lang.String, int);
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method java/util/concurrent/CompletableFuture."<init>":()V
+       4: aload_0
+       5: invokestatic  #4                  // Method java/lang/System.currentTimeMillis:()J
+       8: putfield      #5                  // Field start:J
+      11: aload_0
+      12: new           #6                  // class java/util/ArrayList
+      15: dup
+      16: invokespecial #7                  // Method java/util/ArrayList."<init>":()V
+      19: putfield      #8                  // Field timeoutListeners:Ljava/util/List;
+      22: aload_0
+      23: aload_1
+      24: putfield      #9                  // Field serviceName:Ljava/lang/String;
+      27: aload_0
+      28: aload_2
+      29: putfield      #10                 // Field methodName:Ljava/lang/String;
+      32: aload_0
+      33: aload_3
+      34: putfield      #11                 // Field address:Ljava/lang/String;
+      37: aload_0
+      38: iload         4
+      40: putfield      #12                 // Field timeout:I
+      43: new           #13                 // class org/apache/dubbo/rpc/protocol/tri/DeadlineFuture$TimeoutCheckTask
+      46: dup
+      47: aload_0
+      48: aconst_null
+      49: invokespecial #14                 // Method org/apache/dubbo/rpc/protocol/tri/DeadlineFuture$TimeoutCheckTask."<init>":(Lorg/apache/dubbo/rpc/protocol/tri/DeadlineFuture;Lorg/apache/dubbo/rpc/protocol/tri/DeadlineFuture$1;)V
+      52: astore        5
+      54: aload_0
+      55: getstatic     #15                 // Field TIME_OUT_TIMER:Lorg/apache/dubbo/common/resource/GlobalResourceInitializer;
+      58: invokevirtual #16                 // Method org/apache/dubbo/common/resource/GlobalResourceInitializer.get:()Ljava/lang/Object;
+      61: checkcast     #17                 // class org/apache/dubbo/common/timer/Timer
+      64: aload         5
+      66: iload         4
+      68: i2l
+      69: getstatic     #18                 // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+      72: invokeinterface #19,  5           // InterfaceMethod org/apache/dubbo/common/timer/Timer.newTimeout:(Lorg/apache/dubbo/common/timer/TimerTask;JLjava/util/concurrent/TimeUnit;)Lorg/apache/dubbo/common/timer/Timeout;
+      77: putfield      #20                 // Field timeoutTask:Lorg/apache/dubbo/common/timer/Timeout;
+      80: return
+
+  public static void destroy();
+    Code:
+       0: getstatic     #15                 // Field TIME_OUT_TIMER:Lorg/apache/dubbo/common/resource/GlobalResourceInitializer;
+       3: invokedynamic #21,  0             // InvokeDynamic #0:accept:()Ljava/util/function/Consumer;
+       8: invokevirtual #22                 // Method org/apache/dubbo/common/resource/GlobalResourceInitializer.remove:(Ljava/util/function/Consumer;)Ljava/lang/Object;
+      11: pop
+      12: return
+
+  public static org.apache.dubbo.rpc.protocol.tri.DeadlineFuture newFuture(java.lang.String, java.lang.String, java.lang.String, int, java.util.concurrent.Executor);
+    Code:
+       0: new           #23                 // class org/apache/dubbo/rpc/protocol/tri/DeadlineFuture
+       3: dup
+       4: aload_0
+       5: aload_1
+       6: aload_2
+       7: iload_3
+       8: invokespecial #24                 // Method "<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
+      11: astore        5
+      13: aload         5
+      15: aload         4
+      17: invokevirtual #25                 // Method setExecutor:(Ljava/util/concurrent/Executor;)V
+      20: aload         5
+      22: areturn
+
+  public void received(org.apache.dubbo.rpc.TriRpcStatus, org.apache.dubbo.rpc.AppResponse);
+    Code:
+       0: aload_1
+       1: getfield      #26                 // Field org/apache/dubbo/rpc/TriRpcStatus.code:Lorg/apache/dubbo/rpc/TriRpcStatus$Code;
+       4: getstatic     #27                 // Field org/apache/dubbo/rpc/TriRpcStatus$Code.DEADLINE_EXCEEDED:Lorg/apache/dubbo/rpc/TriRpcStatus$Code;
+       7: if_acmpeq     32
+      10: aload_0
+      11: getfield      #20                 // Field timeoutTask:Lorg/apache/dubbo/common/timer/Timeout;
+      14: invokeinterface #28,  1           // InterfaceMethod org/apache/dubbo/common/timer/Timeout.isCancelled:()Z
+      19: ifne          32
+      22: aload_0
+      23: getfield      #20                 // Field timeoutTask:Lorg/apache/dubbo/common/timer/Timeout;
+      26: invokeinterface #29,  1           // InterfaceMethod org/apache/dubbo/common/timer/Timeout.cancel:()Z
+      31: pop
+      32: aload_0
+      33: invokevirtual #30                 // Method getExecutor:()Ljava/util/concurrent/Executor;
+      36: ifnull        59
+      39: aload_0
+      40: invokevirtual #30                 // Method getExecutor:()Ljava/util/concurrent/Executor;
+      43: aload_0
+      44: aload_1
+      45: aload_2
+      46: invokedynamic #31,  0             // InvokeDynamic #1:run:(Lorg/apache/dubbo/rpc/protocol/tri/DeadlineFuture;Lorg/apache/dubbo/rpc/TriRpcStatus;Lorg/apache/dubbo/rpc/AppResponse;)Ljava/lang/Runnable;
+      51: invokeinterface #32,  2           // InterfaceMethod java/util/concurrent/Executor.execute:(Ljava/lang/Runnable;)V
+      56: goto          65
+      59: aload_0
+      60: aload_1
+      61: aload_2
+      62: invokespecial #1                  // Method doReceived:(Lorg/apache/dubbo/rpc/TriRpcStatus;Lorg/apache/dubbo/rpc/AppResponse;)V
+      65: return
+
+  public void addTimeoutListener(java.lang.Runnable);
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field timeoutListeners:Ljava/util/List;
+       4: aload_1
+       5: invokeinterface #33,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      10: pop
+      11: return
+
+  public java.util.List<java.lang.Runnable> getTimeoutListeners();
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field timeoutListeners:Ljava/util/List;
+       4: areturn
+
+  public java.util.concurrent.Executor getExecutor();
+    Code:
+       0: aload_0
+       1: getfield      #34                 // Field executor:Ljava/util/concurrent/Executor;
+       4: areturn
+
+  public void setExecutor(java.util.concurrent.Executor);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #34                 // Field executor:Ljava/util/concurrent/Executor;
+       5: return
+
+  public boolean cancel(boolean);
+    Code:
+       0: aload_0
+       1: getfield      #20                 // Field timeoutTask:Lorg/apache/dubbo/common/timer/Timeout;
+       4: invokeinterface #29,  1           // InterfaceMethod org/apache/dubbo/common/timer/Timeout.cancel:()Z
+       9: pop
+      10: aload_0
+      11: getstatic     #35                 // Field org/apache/dubbo/rpc/TriRpcStatus.CANCELLED:Lorg/apache/dubbo/rpc/TriRpcStatus;
+      14: new           #36                 // class org/apache/dubbo/rpc/AppResponse
+      17: dup
+      18: getstatic     #35                 // Field org/apache/dubbo/rpc/TriRpcStatus.CANCELLED:Lorg/apache/dubbo/rpc/TriRpcStatus;
+      21: invokevirtual #37                 // Method org/apache/dubbo/rpc/TriRpcStatus.asException:()Lorg/apache/dubbo/rpc/StatusRpcException;
+      24: invokespecial #38                 // Method org/apache/dubbo/rpc/AppResponse."<init>":(Ljava/lang/Throwable;)V
+      27: invokespecial #1                  // Method doReceived:(Lorg/apache/dubbo/rpc/TriRpcStatus;Lorg/apache/dubbo/rpc/AppResponse;)V
+      30: iconst_1
+      31: ireturn
+
+  public void cancel();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: invokevirtual #39                 // Method cancel:(Z)Z
+       5: pop
+       6: return
+
+  private void doReceived(org.apache.dubbo.rpc.TriRpcStatus, org.apache.dubbo.rpc.AppResponse);
+    Code:
+       0: aload_0
+       1: invokevirtual #40                 // Method isDone:()Z
+       4: ifne          21
+       7: aload_0
+       8: invokevirtual #41                 // Method isCancelled:()Z
+      11: ifne          21
+      14: aload_0
+      15: invokevirtual #42                 // Method isCompletedExceptionally:()Z
+      18: ifeq          22
+      21: return
+      22: aload_0
+      23: aload_2
+      24: invokevirtual #43                 // Method complete:(Ljava/lang/Object;)Z
+      27: pop
+      28: return
+
+  private java.lang.String getTimeoutMessage();
+    Code:
+       0: invokestatic  #4                  // Method java/lang/System.currentTimeMillis:()J
+       3: lstore_1
+       4: new           #44                 // class java/lang/StringBuilder
+       7: dup
+       8: invokespecial #45                 // Method java/lang/StringBuilder."<init>":()V
+      11: ldc           #46                 // String Waiting server-side response timeout by scan timer. start time:
+      13: invokevirtual #47                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      16: new           #48                 // class java/text/SimpleDateFormat
+      19: dup
+      20: ldc           #49                 // String yyyy-MM-dd HH:mm:ss.SSS
+      22: invokespecial #50                 // Method java/text/SimpleDateFormat."<init>":(Ljava/lang/String;)V
+      25: new           #51                 // class java/util/Date
+      28: dup
+      29: aload_0
+      30: getfield      #5                  // Field start:J
+      33: invokespecial #52                 // Method java/util/Date."<init>":(J)V
+      36: invokevirtual #53                 // Method java/text/SimpleDateFormat.format:(Ljava/util/Date;)Ljava/lang/String;
+      39: invokevirtual #47                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      42: ldc           #54                 // String , end time:
+      44: invokevirtual #47                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      47: new           #48                 // class java/text/SimpleDateFormat
+      50: dup
+      51: ldc           #49                 // String yyyy-MM-dd HH:mm:ss.SSS
+      53: invokespecial #50                 // Method java/text/SimpleDateFormat."<init>":(Ljava/lang/String;)V
+      56: new           #51                 // class java/util/Date
+      59: dup
+      60: lload_1
+      61: invokespecial #52                 // Method java/util/Date."<init>":(J)V
+      64: invokevirtual #53                 // Method java/text/SimpleDateFormat.format:(Ljava/util/Date;)Ljava/lang/String;
+      67: invokevirtual #47                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      70: ldc           #55                 // String , timeout:
+      72: invokevirtual #47                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      75: aload_0
+      76: getfield      #12                 // Field timeout:I
+      79: invokevirtual #56                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      82: ldc           #57                 // String  ms, service:
+      84: invokevirtual #47                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      87: aload_0
+      88: getfield      #9                  // Field serviceName:Ljava/lang/String;
+      91: invokevirtual #47                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      94: ldc           #58                 // String , method:
+      96: invokevirtual #47                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      99: aload_0
+     100: getfield      #10                 // Field methodName:Ljava/lang/String;
+     103: invokevirtual #47                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     106: invokevirtual #59                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     109: areturn
+
+  private static org.apache.dubbo.common.timer.Timer lambda$static$1() throws java.lang.Exception;
+    Code:
+       0: new           #60                 // class org/apache/dubbo/common/timer/HashedWheelTimer
+       3: dup
+       4: new           #61                 // class org/apache/dubbo/common/utils/NamedThreadFactory
+       7: dup
+       8: ldc           #62                 // String dubbo-future-timeout
+      10: iconst_1
+      11: invokespecial #63                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;Z)V
+      14: ldc2_w        #64                 // long 30l
+      17: getstatic     #18                 // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+      20: invokespecial #66                 // Method org/apache/dubbo/common/timer/HashedWheelTimer."<init>":(Ljava/util/concurrent/ThreadFactory;JLjava/util/concurrent/TimeUnit;)V
+      23: areturn
+
+  private void lambda$received$0(org.apache.dubbo.rpc.TriRpcStatus, org.apache.dubbo.rpc.AppResponse);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #1                  // Method doReceived:(Lorg/apache/dubbo/rpc/TriRpcStatus;Lorg/apache/dubbo/rpc/AppResponse;)V
+       6: return
+
+  static java.lang.String access$100(org.apache.dubbo.rpc.protocol.tri.DeadlineFuture);
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method getTimeoutMessage:()Ljava/lang/String;
+       4: areturn
+
+  static void access$200(org.apache.dubbo.rpc.protocol.tri.DeadlineFuture, org.apache.dubbo.rpc.TriRpcStatus, org.apache.dubbo.rpc.AppResponse);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #1                  // Method doReceived:(Lorg/apache/dubbo/rpc/TriRpcStatus;Lorg/apache/dubbo/rpc/AppResponse;)V
+       6: return
+
+  static {};
+    Code:
+       0: ldc           #23                 // class org/apache/dubbo/rpc/protocol/tri/DeadlineFuture
+       2: invokestatic  #67                 // Method org/apache/dubbo/common/logger/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/Logger;
+       5: putstatic     #68                 // Field LOGGER:Lorg/apache/dubbo/common/logger/Logger;
+       8: new           #69                 // class org/apache/dubbo/common/resource/GlobalResourceInitializer
+      11: dup
+      12: invokedynamic #70,  0             // InvokeDynamic #2:call:()Ljava/util/concurrent/Callable;
+      17: invokedynamic #71,  0             // InvokeDynamic #3:destroy:()Lorg/apache/dubbo/common/resource/Disposable;
+      22: invokespecial #72                 // Method org/apache/dubbo/common/resource/GlobalResourceInitializer."<init>":(Ljava/util/concurrent/Callable;Lorg/apache/dubbo/common/resource/Disposable;)V
+      25: putstatic     #15                 // Field TIME_OUT_TIMER:Lorg/apache/dubbo/common/resource/GlobalResourceInitializer;
+      28: return
+}

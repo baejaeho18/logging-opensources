@@ -1,0 +1,290 @@
+Compiled from "NettyServer.java"
+public class org.apache.dubbo.rpc.protocol.rest.netty.NettyServer {
+  protected io.netty.bootstrap.ServerBootstrap bootstrap;
+
+  protected java.lang.String hostname;
+
+  protected int configuredPort;
+
+  protected int runtimePort;
+
+  private io.netty.channel.EventLoopGroup eventLoopGroup;
+
+  private io.netty.channel.EventLoopGroup workerLoopGroup;
+
+  private int ioWorkerCount;
+
+  private java.util.List<io.netty.channel.ChannelHandler> channelHandlers;
+
+  private java.util.Map<io.netty.channel.ChannelOption, java.lang.Object> channelOptions;
+
+  private java.util.Map<io.netty.channel.ChannelOption, java.lang.Object> childChannelOptions;
+
+  private org.apache.dubbo.rpc.protocol.rest.netty.UnSharedHandlerCreator unSharedHandlerCallBack;
+
+  public org.apache.dubbo.rpc.protocol.rest.netty.NettyServer();
+    Code:
+       0: aload_0
+       1: invokespecial #4                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #5                  // class io/netty/bootstrap/ServerBootstrap
+       8: dup
+       9: invokespecial #6                  // Method io/netty/bootstrap/ServerBootstrap."<init>":()V
+      12: putfield      #7                  // Field bootstrap:Lio/netty/bootstrap/ServerBootstrap;
+      15: aload_0
+      16: aconst_null
+      17: putfield      #8                  // Field hostname:Ljava/lang/String;
+      20: aload_0
+      21: sipush        8080
+      24: putfield      #9                  // Field configuredPort:I
+      27: aload_0
+      28: iconst_m1
+      29: putfield      #10                 // Field runtimePort:I
+      32: aload_0
+      33: invokestatic  #11                 // Method java/lang/Runtime.getRuntime:()Ljava/lang/Runtime;
+      36: invokevirtual #12                 // Method java/lang/Runtime.availableProcessors:()I
+      39: iconst_2
+      40: imul
+      41: putfield      #13                 // Field ioWorkerCount:I
+      44: aload_0
+      45: invokestatic  #14                 // Method java/util/Collections.emptyList:()Ljava/util/List;
+      48: putfield      #3                  // Field channelHandlers:Ljava/util/List;
+      51: aload_0
+      52: invokestatic  #15                 // Method java/util/Collections.emptyMap:()Ljava/util/Map;
+      55: putfield      #16                 // Field channelOptions:Ljava/util/Map;
+      58: aload_0
+      59: invokestatic  #15                 // Method java/util/Collections.emptyMap:()Ljava/util/Map;
+      62: putfield      #17                 // Field childChannelOptions:Ljava/util/Map;
+      65: return
+
+  public void setIoWorkerCount(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: putfield      #13                 // Field ioWorkerCount:I
+       5: return
+
+  public java.lang.String getHostname();
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field hostname:Ljava/lang/String;
+       4: areturn
+
+  public void setHostname(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #8                  // Field hostname:Ljava/lang/String;
+       5: return
+
+  public int getPort();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field runtimePort:I
+       4: ifle          14
+       7: aload_0
+       8: getfield      #10                 // Field runtimePort:I
+      11: goto          18
+      14: aload_0
+      15: getfield      #9                  // Field configuredPort:I
+      18: ireturn
+
+  public void setPort(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: putfield      #9                  // Field configuredPort:I
+       5: return
+
+  public void setChannelHandlers(java.util.List<io.netty.channel.ChannelHandler>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: ifnonnull     11
+       5: invokestatic  #14                 // Method java/util/Collections.emptyList:()Ljava/util/List;
+       8: goto          12
+      11: aload_1
+      12: putfield      #3                  // Field channelHandlers:Ljava/util/List;
+      15: return
+
+  public void setChannelOptions(java.util.Map<io.netty.channel.ChannelOption, java.lang.Object>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: ifnonnull     11
+       5: invokestatic  #15                 // Method java/util/Collections.emptyMap:()Ljava/util/Map;
+       8: goto          12
+      11: aload_1
+      12: putfield      #16                 // Field channelOptions:Ljava/util/Map;
+      15: return
+
+  public void setChildChannelOptions(java.util.Map<io.netty.channel.ChannelOption, java.lang.Object>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: ifnonnull     11
+       5: invokestatic  #15                 // Method java/util/Collections.emptyMap:()Ljava/util/Map;
+       8: goto          12
+      11: aload_1
+      12: putfield      #17                 // Field childChannelOptions:Ljava/util/Map;
+      15: return
+
+  public void setUnSharedHandlerCallBack(org.apache.dubbo.rpc.protocol.rest.netty.UnSharedHandlerCreator);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #2                  // Field unSharedHandlerCallBack:Lorg/apache/dubbo/rpc/protocol/rest/netty/UnSharedHandlerCreator;
+       5: return
+
+  public void start(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: new           #18                 // class io/netty/channel/nio/NioEventLoopGroup
+       4: dup
+       5: iconst_1
+       6: new           #19                 // class org/apache/dubbo/common/utils/NamedThreadFactory
+       9: dup
+      10: ldc           #20                 // String NettyServerBoss
+      12: invokespecial #21                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;)V
+      15: invokespecial #22                 // Method io/netty/channel/nio/NioEventLoopGroup."<init>":(ILjava/util/concurrent/ThreadFactory;)V
+      18: putfield      #23                 // Field eventLoopGroup:Lio/netty/channel/EventLoopGroup;
+      21: aload_0
+      22: new           #18                 // class io/netty/channel/nio/NioEventLoopGroup
+      25: dup
+      26: aload_0
+      27: getfield      #13                 // Field ioWorkerCount:I
+      30: new           #19                 // class org/apache/dubbo/common/utils/NamedThreadFactory
+      33: dup
+      34: ldc           #24                 // String NettyServerWorker
+      36: invokespecial #21                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;)V
+      39: invokespecial #22                 // Method io/netty/channel/nio/NioEventLoopGroup."<init>":(ILjava/util/concurrent/ThreadFactory;)V
+      42: putfield      #25                 // Field workerLoopGroup:Lio/netty/channel/EventLoopGroup;
+      45: aload_0
+      46: getfield      #7                  // Field bootstrap:Lio/netty/bootstrap/ServerBootstrap;
+      49: aload_0
+      50: getfield      #23                 // Field eventLoopGroup:Lio/netty/channel/EventLoopGroup;
+      53: aload_0
+      54: getfield      #25                 // Field workerLoopGroup:Lio/netty/channel/EventLoopGroup;
+      57: invokevirtual #26                 // Method io/netty/bootstrap/ServerBootstrap.group:(Lio/netty/channel/EventLoopGroup;Lio/netty/channel/EventLoopGroup;)Lio/netty/bootstrap/ServerBootstrap;
+      60: ldc           #27                 // class io/netty/channel/socket/nio/NioServerSocketChannel
+      62: invokevirtual #28                 // Method io/netty/bootstrap/ServerBootstrap.channel:(Ljava/lang/Class;)Lio/netty/bootstrap/AbstractBootstrap;
+      65: checkcast     #5                  // class io/netty/bootstrap/ServerBootstrap
+      68: aload_0
+      69: aload_1
+      70: invokevirtual #29                 // Method setupHandlers:(Lorg/apache/dubbo/common/URL;)Lio/netty/channel/ChannelHandler;
+      73: invokevirtual #30                 // Method io/netty/bootstrap/ServerBootstrap.childHandler:(Lio/netty/channel/ChannelHandler;)Lio/netty/bootstrap/ServerBootstrap;
+      76: pop
+      77: aload_0
+      78: getfield      #16                 // Field channelOptions:Ljava/util/Map;
+      81: invokeinterface #31,  1           // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+      86: invokeinterface #32,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      91: astore_2
+      92: aload_2
+      93: invokeinterface #33,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      98: ifeq          137
+     101: aload_2
+     102: invokeinterface #34,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     107: checkcast     #35                 // class java/util/Map$Entry
+     110: astore_3
+     111: aload_0
+     112: getfield      #7                  // Field bootstrap:Lio/netty/bootstrap/ServerBootstrap;
+     115: aload_3
+     116: invokeinterface #36,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     121: checkcast     #37                 // class io/netty/channel/ChannelOption
+     124: aload_3
+     125: invokeinterface #38,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     130: invokevirtual #39                 // Method io/netty/bootstrap/ServerBootstrap.option:(Lio/netty/channel/ChannelOption;Ljava/lang/Object;)Lio/netty/bootstrap/AbstractBootstrap;
+     133: pop
+     134: goto          92
+     137: aload_0
+     138: getfield      #17                 // Field childChannelOptions:Ljava/util/Map;
+     141: invokeinterface #31,  1           // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+     146: invokeinterface #32,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     151: astore_2
+     152: aload_2
+     153: invokeinterface #33,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     158: ifeq          197
+     161: aload_2
+     162: invokeinterface #34,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     167: checkcast     #35                 // class java/util/Map$Entry
+     170: astore_3
+     171: aload_0
+     172: getfield      #7                  // Field bootstrap:Lio/netty/bootstrap/ServerBootstrap;
+     175: aload_3
+     176: invokeinterface #36,  1           // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     181: checkcast     #37                 // class io/netty/channel/ChannelOption
+     184: aload_3
+     185: invokeinterface #38,  1           // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     190: invokevirtual #40                 // Method io/netty/bootstrap/ServerBootstrap.childOption:(Lio/netty/channel/ChannelOption;Ljava/lang/Object;)Lio/netty/bootstrap/ServerBootstrap;
+     193: pop
+     194: goto          152
+     197: aconst_null
+     198: aload_0
+     199: invokevirtual #41                 // Method getHostname:()Ljava/lang/String;
+     202: if_acmpeq     215
+     205: aload_0
+     206: invokevirtual #41                 // Method getHostname:()Ljava/lang/String;
+     209: invokevirtual #42                 // Method java/lang/String.isEmpty:()Z
+     212: ifeq          230
+     215: new           #43                 // class java/net/InetSocketAddress
+     218: dup
+     219: aload_0
+     220: getfield      #9                  // Field configuredPort:I
+     223: invokespecial #44                 // Method java/net/InetSocketAddress."<init>":(I)V
+     226: astore_2
+     227: goto          246
+     230: new           #43                 // class java/net/InetSocketAddress
+     233: dup
+     234: aload_0
+     235: getfield      #8                  // Field hostname:Ljava/lang/String;
+     238: aload_0
+     239: getfield      #9                  // Field configuredPort:I
+     242: invokespecial #45                 // Method java/net/InetSocketAddress."<init>":(Ljava/lang/String;I)V
+     245: astore_2
+     246: aload_0
+     247: getfield      #7                  // Field bootstrap:Lio/netty/bootstrap/ServerBootstrap;
+     250: aload_2
+     251: invokevirtual #46                 // Method io/netty/bootstrap/ServerBootstrap.bind:(Ljava/net/SocketAddress;)Lio/netty/channel/ChannelFuture;
+     254: invokeinterface #47,  1           // InterfaceMethod io/netty/channel/ChannelFuture.syncUninterruptibly:()Lio/netty/channel/ChannelFuture;
+     259: invokeinterface #48,  1           // InterfaceMethod io/netty/channel/ChannelFuture.channel:()Lio/netty/channel/Channel;
+     264: astore_3
+     265: aload_0
+     266: aload_3
+     267: invokeinterface #49,  1           // InterfaceMethod io/netty/channel/Channel.localAddress:()Ljava/net/SocketAddress;
+     272: checkcast     #43                 // class java/net/InetSocketAddress
+     275: invokevirtual #50                 // Method java/net/InetSocketAddress.getPort:()I
+     278: putfield      #10                 // Field runtimePort:I
+     281: return
+
+  protected io.netty.channel.ChannelHandler setupHandlers(org.apache.dubbo.common.URL);
+    Code:
+       0: new           #51                 // class org/apache/dubbo/rpc/protocol/rest/netty/NettyServer$1
+       3: dup
+       4: aload_0
+       5: aload_1
+       6: invokespecial #52                 // Method org/apache/dubbo/rpc/protocol/rest/netty/NettyServer$1."<init>":(Lorg/apache/dubbo/rpc/protocol/rest/netty/NettyServer;Lorg/apache/dubbo/common/URL;)V
+       9: areturn
+
+  public void stop();
+    Code:
+       0: aload_0
+       1: iconst_m1
+       2: putfield      #10                 // Field runtimePort:I
+       5: aload_0
+       6: getfield      #23                 // Field eventLoopGroup:Lio/netty/channel/EventLoopGroup;
+       9: invokeinterface #53,  1           // InterfaceMethod io/netty/channel/EventLoopGroup.shutdownGracefully:()Lio/netty/util/concurrent/Future;
+      14: pop
+      15: return
+
+  static java.util.List access$000(org.apache.dubbo.rpc.protocol.rest.netty.NettyServer);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field channelHandlers:Ljava/util/List;
+       4: areturn
+
+  static org.apache.dubbo.rpc.protocol.rest.netty.UnSharedHandlerCreator access$100(org.apache.dubbo.rpc.protocol.rest.netty.NettyServer);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field unSharedHandlerCallBack:Lorg/apache/dubbo/rpc/protocol/rest/netty/UnSharedHandlerCreator;
+       4: areturn
+}

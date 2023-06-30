@@ -1,0 +1,174 @@
+Compiled from "TripleHttp2ClientResponseHandler.java"
+public final class org.apache.dubbo.rpc.protocol.tri.transport.TripleHttp2ClientResponseHandler extends io.netty.channel.SimpleChannelInboundHandler<io.netty.handler.codec.http2.Http2StreamFrame> {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger LOGGER;
+
+  private final org.apache.dubbo.rpc.protocol.tri.transport.H2TransportListener transportListener;
+
+  public org.apache.dubbo.rpc.protocol.tri.transport.TripleHttp2ClientResponseHandler(org.apache.dubbo.rpc.protocol.tri.transport.H2TransportListener);
+    Code:
+       0: aload_0
+       1: iconst_0
+       2: invokespecial #2                  // Method io/netty/channel/SimpleChannelInboundHandler."<init>":(Z)V
+       5: aload_0
+       6: aload_1
+       7: putfield      #3                  // Field transportListener:Lorg/apache/dubbo/rpc/protocol/tri/transport/H2TransportListener;
+      10: return
+
+  public void userEventTriggered(io.netty.channel.ChannelHandlerContext, java.lang.Object) throws java.lang.Exception;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #4                  // Method io/netty/channel/SimpleChannelInboundHandler.userEventTriggered:(Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Object;)V
+       6: aload_2
+       7: instanceof    #5                  // class io/netty/handler/codec/http2/Http2GoAwayFrame
+      10: ifeq          74
+      13: aload_2
+      14: checkcast     #5                  // class io/netty/handler/codec/http2/Http2GoAwayFrame
+      17: astore_3
+      18: aload_1
+      19: invokeinterface #6,  1            // InterfaceMethod io/netty/channel/ChannelHandlerContext.close:()Lio/netty/channel/ChannelFuture;
+      24: pop
+      25: getstatic     #7                  // Field LOGGER:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      28: new           #8                  // class java/lang/StringBuilder
+      31: dup
+      32: invokespecial #9                  // Method java/lang/StringBuilder."<init>":()V
+      35: ldc           #10                 // String Event triggered, event name is:
+      37: invokevirtual #11                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      40: aload_3
+      41: invokeinterface #12,  1           // InterfaceMethod io/netty/handler/codec/http2/Http2GoAwayFrame.name:()Ljava/lang/String;
+      46: invokevirtual #11                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      49: ldc           #13                 // String , last stream id is:
+      51: invokevirtual #11                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      54: aload_3
+      55: invokeinterface #14,  1           // InterfaceMethod io/netty/handler/codec/http2/Http2GoAwayFrame.lastStreamId:()I
+      60: invokevirtual #15                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      63: invokevirtual #16                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      66: invokeinterface #17,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.debug:(Ljava/lang/String;)V
+      71: goto          90
+      74: aload_2
+      75: instanceof    #18                 // class io/netty/handler/codec/http2/Http2ResetFrame
+      78: ifeq          90
+      81: aload_0
+      82: aload_1
+      83: aload_2
+      84: checkcast     #18                 // class io/netty/handler/codec/http2/Http2ResetFrame
+      87: invokespecial #19                 // Method onResetRead:(Lio/netty/channel/ChannelHandlerContext;Lio/netty/handler/codec/http2/Http2ResetFrame;)V
+      90: return
+
+  protected void channelRead0(io.netty.channel.ChannelHandlerContext, io.netty.handler.codec.http2.Http2StreamFrame) throws java.lang.Exception;
+    Code:
+       0: aload_2
+       1: instanceof    #20                 // class io/netty/handler/codec/http2/Http2HeadersFrame
+       4: ifeq          36
+       7: aload_2
+       8: checkcast     #20                 // class io/netty/handler/codec/http2/Http2HeadersFrame
+      11: astore_3
+      12: aload_0
+      13: getfield      #3                  // Field transportListener:Lorg/apache/dubbo/rpc/protocol/tri/transport/H2TransportListener;
+      16: aload_3
+      17: invokeinterface #21,  1           // InterfaceMethod io/netty/handler/codec/http2/Http2HeadersFrame.headers:()Lio/netty/handler/codec/http2/Http2Headers;
+      22: aload_3
+      23: invokeinterface #22,  1           // InterfaceMethod io/netty/handler/codec/http2/Http2HeadersFrame.isEndStream:()Z
+      28: invokeinterface #23,  3           // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/transport/H2TransportListener.onHeader:(Lio/netty/handler/codec/http2/Http2Headers;Z)V
+      33: goto          78
+      36: aload_2
+      37: instanceof    #24                 // class io/netty/handler/codec/http2/Http2DataFrame
+      40: ifeq          72
+      43: aload_2
+      44: checkcast     #24                 // class io/netty/handler/codec/http2/Http2DataFrame
+      47: astore_3
+      48: aload_0
+      49: getfield      #3                  // Field transportListener:Lorg/apache/dubbo/rpc/protocol/tri/transport/H2TransportListener;
+      52: aload_3
+      53: invokeinterface #25,  1           // InterfaceMethod io/netty/handler/codec/http2/Http2DataFrame.content:()Lio/netty/buffer/ByteBuf;
+      58: aload_3
+      59: invokeinterface #26,  1           // InterfaceMethod io/netty/handler/codec/http2/Http2DataFrame.isEndStream:()Z
+      64: invokeinterface #27,  3           // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/transport/H2TransportListener.onData:(Lio/netty/buffer/ByteBuf;Z)V
+      69: goto          78
+      72: aload_0
+      73: aload_1
+      74: aload_2
+      75: invokespecial #28                 // Method io/netty/channel/SimpleChannelInboundHandler.channelRead:(Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Object;)V
+      78: return
+
+  private void onResetRead(io.netty.channel.ChannelHandlerContext, io.netty.handler.codec.http2.Http2ResetFrame);
+    Code:
+       0: getstatic     #7                  // Field LOGGER:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       3: ldc           #29                 // String 4-10
+       5: ldc           #30                 // String
+       7: ldc           #30                 // String
+       9: new           #8                  // class java/lang/StringBuilder
+      12: dup
+      13: invokespecial #9                  // Method java/lang/StringBuilder."<init>":()V
+      16: ldc           #31                 // String Triple Client received remote reset errorCode=
+      18: invokevirtual #11                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      21: aload_2
+      22: invokeinterface #32,  1           // InterfaceMethod io/netty/handler/codec/http2/Http2ResetFrame.errorCode:()J
+      27: invokevirtual #33                 // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+      30: invokevirtual #16                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      33: invokeinterface #34,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      38: aload_0
+      39: getfield      #3                  // Field transportListener:Lorg/apache/dubbo/rpc/protocol/tri/transport/H2TransportListener;
+      42: aload_2
+      43: invokeinterface #32,  1           // InterfaceMethod io/netty/handler/codec/http2/Http2ResetFrame.errorCode:()J
+      48: invokeinterface #35,  3           // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/transport/H2TransportListener.cancelByRemote:(J)V
+      53: aload_1
+      54: invokeinterface #6,  1            // InterfaceMethod io/netty/channel/ChannelHandlerContext.close:()Lio/netty/channel/ChannelFuture;
+      59: pop
+      60: return
+
+  public void channelInactive(io.netty.channel.ChannelHandlerContext);
+    Code:
+       0: aload_1
+       1: invokeinterface #6,  1            // InterfaceMethod io/netty/channel/ChannelHandlerContext.close:()Lio/netty/channel/ChannelFuture;
+       6: pop
+       7: return
+
+  public void exceptionCaught(io.netty.channel.ChannelHandlerContext, java.lang.Throwable);
+    Code:
+       0: getstatic     #36                 // Field org/apache/dubbo/rpc/TriRpcStatus.INTERNAL:Lorg/apache/dubbo/rpc/TriRpcStatus;
+       3: aload_2
+       4: invokevirtual #37                 // Method org/apache/dubbo/rpc/TriRpcStatus.withCause:(Ljava/lang/Throwable;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+       7: astore_3
+       8: getstatic     #7                  // Field LOGGER:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      11: ldc           #29                 // String 4-10
+      13: ldc           #30                 // String
+      15: ldc           #30                 // String
+      17: new           #8                  // class java/lang/StringBuilder
+      20: dup
+      21: invokespecial #9                  // Method java/lang/StringBuilder."<init>":()V
+      24: ldc           #38                 // String Meet Exception on ClientResponseHandler, status code is:
+      26: invokevirtual #11                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      29: aload_3
+      30: getfield      #39                 // Field org/apache/dubbo/rpc/TriRpcStatus.code:Lorg/apache/dubbo/rpc/TriRpcStatus$Code;
+      33: invokevirtual #40                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      36: invokevirtual #16                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      39: aload_2
+      40: invokeinterface #41,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      45: aload_0
+      46: getfield      #3                  // Field transportListener:Lorg/apache/dubbo/rpc/protocol/tri/transport/H2TransportListener;
+      49: getstatic     #42                 // Field io/netty/handler/codec/http2/Http2Error.INTERNAL_ERROR:Lio/netty/handler/codec/http2/Http2Error;
+      52: invokevirtual #43                 // Method io/netty/handler/codec/http2/Http2Error.code:()J
+      55: invokeinterface #35,  3           // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/transport/H2TransportListener.cancelByRemote:(J)V
+      60: aload_1
+      61: invokeinterface #6,  1            // InterfaceMethod io/netty/channel/ChannelHandlerContext.close:()Lio/netty/channel/ChannelFuture;
+      66: pop
+      67: return
+
+  protected void channelRead0(io.netty.channel.ChannelHandlerContext, java.lang.Object) throws java.lang.Exception;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: checkcast     #44                 // class io/netty/handler/codec/http2/Http2StreamFrame
+       6: invokevirtual #45                 // Method channelRead0:(Lio/netty/channel/ChannelHandlerContext;Lio/netty/handler/codec/http2/Http2StreamFrame;)V
+       9: return
+
+  static {};
+    Code:
+       0: ldc           #46                 // class org/apache/dubbo/rpc/protocol/tri/transport/TripleHttp2ClientResponseHandler
+       2: invokestatic  #47                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #7                  // Field LOGGER:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

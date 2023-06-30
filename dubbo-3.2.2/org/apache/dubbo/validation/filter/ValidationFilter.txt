@@ -1,0 +1,69 @@
+Compiled from "ValidationFilter.java"
+public class org.apache.dubbo.validation.filter.ValidationFilter implements org.apache.dubbo.rpc.Filter {
+  private org.apache.dubbo.validation.Validation validation;
+
+  public org.apache.dubbo.validation.filter.ValidationFilter();
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public void setValidation(org.apache.dubbo.validation.Validation);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #3                  // Field validation:Lorg/apache/dubbo/validation/Validation;
+       5: return
+
+  public org.apache.dubbo.rpc.Result invoke(org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field validation:Lorg/apache/dubbo/validation/Validation;
+       4: ifnull        101
+       7: aload_2
+       8: invokeinterface #4,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+      13: ldc           #5                  // String $
+      15: invokevirtual #6                  // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+      18: ifne          101
+      21: aload_1
+      22: invokeinterface #7,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+      27: aload_2
+      28: invokeinterface #4,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+      33: ldc           #8                  // String validation
+      35: invokevirtual #9                  // Method org/apache/dubbo/common/URL.getMethodParameter:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      38: invokestatic  #10                 // Method org/apache/dubbo/common/utils/ConfigUtils.isNotEmpty:(Ljava/lang/String;)Z
+      41: ifeq          101
+      44: aload_0
+      45: getfield      #3                  // Field validation:Lorg/apache/dubbo/validation/Validation;
+      48: aload_1
+      49: invokeinterface #7,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+      54: invokeinterface #11,  2           // InterfaceMethod org/apache/dubbo/validation/Validation.getValidator:(Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/validation/Validator;
+      59: astore_3
+      60: aload_3
+      61: ifnull        88
+      64: aload_3
+      65: aload_2
+      66: invokeinterface #4,  1            // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+      71: aload_2
+      72: invokeinterface #12,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getParameterTypes:()[Ljava/lang/Class;
+      77: aload_2
+      78: invokeinterface #13,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getArguments:()[Ljava/lang/Object;
+      83: invokeinterface #14,  4           // InterfaceMethod org/apache/dubbo/validation/Validator.validate:(Ljava/lang/String;[Ljava/lang/Class;[Ljava/lang/Object;)V
+      88: goto          101
+      91: astore_3
+      92: aload_3
+      93: athrow
+      94: astore_3
+      95: aload_3
+      96: aload_2
+      97: invokestatic  #17                 // Method org/apache/dubbo/rpc/AsyncRpcResult.newDefaultAsyncResult:(Ljava/lang/Throwable;Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/AsyncRpcResult;
+     100: areturn
+     101: aload_1
+     102: aload_2
+     103: invokeinterface #18,  2           // InterfaceMethod org/apache/dubbo/rpc/Invoker.invoke:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+     108: areturn
+    Exception table:
+       from    to  target type
+          44    88    91   Class org/apache/dubbo/rpc/RpcException
+          44    88    94   Class java/lang/Throwable
+}

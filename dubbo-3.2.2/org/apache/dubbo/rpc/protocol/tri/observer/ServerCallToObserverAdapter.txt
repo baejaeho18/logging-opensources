@@ -1,0 +1,221 @@
+Compiled from "ServerCallToObserverAdapter.java"
+public class org.apache.dubbo.rpc.protocol.tri.observer.ServerCallToObserverAdapter<T> extends org.apache.dubbo.rpc.protocol.tri.CancelableStreamObserver<T> implements org.apache.dubbo.rpc.protocol.tri.ServerStreamObserver<T> {
+  private static final org.apache.dubbo.common.logger.Logger LOGGER;
+
+  public final org.apache.dubbo.rpc.CancellationContext cancellationContext;
+
+  private final org.apache.dubbo.rpc.protocol.tri.call.AbstractServerCall call;
+
+  private java.util.Map<java.lang.String, java.lang.Object> attachments;
+
+  private boolean terminated;
+
+  private boolean isNeedReturnException;
+
+  private java.lang.Integer exceptionCode;
+
+  public java.lang.Integer getExceptionCode();
+    Code:
+       0: aload_0
+       1: getfield      #1                  // Field exceptionCode:Ljava/lang/Integer;
+       4: areturn
+
+  public void setExceptionCode(java.lang.Integer);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #1                  // Field exceptionCode:Ljava/lang/Integer;
+       5: return
+
+  public boolean isNeedReturnException();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field isNeedReturnException:Z
+       4: ireturn
+
+  public void setNeedReturnException(boolean);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: putfield      #2                  // Field isNeedReturnException:Z
+       5: return
+
+  public org.apache.dubbo.rpc.protocol.tri.observer.ServerCallToObserverAdapter(org.apache.dubbo.rpc.protocol.tri.call.AbstractServerCall, org.apache.dubbo.rpc.CancellationContext);
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method org/apache/dubbo/rpc/protocol/tri/CancelableStreamObserver."<init>":()V
+       4: aload_0
+       5: iconst_0
+       6: putfield      #4                  // Field terminated:Z
+       9: aload_0
+      10: iconst_0
+      11: putfield      #2                  // Field isNeedReturnException:Z
+      14: aload_0
+      15: getstatic     #5                  // Field org/apache/dubbo/common/constants/CommonConstants.TRI_EXCEPTION_CODE_NOT_EXISTS:Ljava/lang/Integer;
+      18: putfield      #1                  // Field exceptionCode:Ljava/lang/Integer;
+      21: aload_0
+      22: aload_1
+      23: putfield      #6                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall;
+      26: aload_0
+      27: aload_2
+      28: putfield      #7                  // Field cancellationContext:Lorg/apache/dubbo/rpc/CancellationContext;
+      31: return
+
+  public boolean isAutoRequestN();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall;
+       4: invokevirtual #8                  // Method org/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall.isAutoRequestN:()Z
+       7: ireturn
+
+  public boolean isTerminated();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field terminated:Z
+       4: ireturn
+
+  private void setTerminated();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: putfield      #4                  // Field terminated:Z
+       5: return
+
+  public void onNext(java.lang.Object);
+    Code:
+       0: aload_0
+       1: invokevirtual #9                  // Method isTerminated:()Z
+       4: ifeq          17
+       7: new           #10                 // class java/lang/IllegalStateException
+      10: dup
+      11: ldc           #11                 // String Stream observer has been terminated, no more data is allowed
+      13: invokespecial #12                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: aload_0
+      18: getfield      #6                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall;
+      21: aload_0
+      22: getfield      #1                  // Field exceptionCode:Ljava/lang/Integer;
+      25: invokevirtual #13                 // Method org/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall.setExceptionCode:(Ljava/lang/Integer;)V
+      28: aload_0
+      29: getfield      #6                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall;
+      32: aload_0
+      33: getfield      #2                  // Field isNeedReturnException:Z
+      36: invokevirtual #14                 // Method org/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall.setNeedReturnException:(Z)V
+      39: aload_0
+      40: getfield      #6                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall;
+      43: aload_1
+      44: invokevirtual #15                 // Method org/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall.sendMessage:(Ljava/lang/Object;)V
+      47: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_1
+       1: invokestatic  #16                 // Method org/apache/dubbo/rpc/TriRpcStatus.getStatus:(Ljava/lang/Throwable;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+       4: astore_2
+       5: aload_0
+       6: aload_2
+       7: invokevirtual #17                 // Method onCompleted:(Lorg/apache/dubbo/rpc/TriRpcStatus;)V
+      10: return
+
+  public void onCompleted(org.apache.dubbo.rpc.TriRpcStatus);
+    Code:
+       0: aload_0
+       1: invokevirtual #9                  // Method isTerminated:()Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: getfield      #6                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall;
+      12: aload_0
+      13: getfield      #1                  // Field exceptionCode:Ljava/lang/Integer;
+      16: invokevirtual #13                 // Method org/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall.setExceptionCode:(Ljava/lang/Integer;)V
+      19: aload_0
+      20: getfield      #6                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall;
+      23: aload_0
+      24: getfield      #2                  // Field isNeedReturnException:Z
+      27: invokevirtual #14                 // Method org/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall.setNeedReturnException:(Z)V
+      30: aload_0
+      31: getfield      #6                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall;
+      34: aload_1
+      35: aload_0
+      36: getfield      #18                 // Field attachments:Ljava/util/Map;
+      39: invokevirtual #19                 // Method org/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall.close:(Lorg/apache/dubbo/rpc/TriRpcStatus;Ljava/util/Map;)V
+      42: aload_0
+      43: invokespecial #20                 // Method setTerminated:()V
+      46: return
+
+  public void onCompleted();
+    Code:
+       0: aload_0
+       1: getstatic     #21                 // Field org/apache/dubbo/rpc/TriRpcStatus.OK:Lorg/apache/dubbo/rpc/TriRpcStatus;
+       4: invokevirtual #17                 // Method onCompleted:(Lorg/apache/dubbo/rpc/TriRpcStatus;)V
+       7: return
+
+  public void setResponseAttachments(java.util.Map<java.lang.String, java.lang.Object>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #18                 // Field attachments:Ljava/util/Map;
+       5: return
+
+  public void setCompression(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall;
+       4: aload_1
+       5: invokevirtual #22                 // Method org/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall.setCompression:(Ljava/lang/String;)V
+       8: return
+
+  public void cancel(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field terminated:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: invokespecial #20                 // Method setTerminated:()V
+      12: aload_0
+      13: getfield      #6                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall;
+      16: aload_1
+      17: invokevirtual #23                 // Method org/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall.cancelByLocal:(Ljava/lang/Throwable;)V
+      20: return
+
+  public boolean isTimeout(long);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall;
+       4: getfield      #24                 // Field org/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall.timeout:Ljava/lang/Long;
+       7: ifnull        29
+      10: aload_0
+      11: getfield      #6                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall;
+      14: getfield      #24                 // Field org/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall.timeout:Ljava/lang/Long;
+      17: invokevirtual #25                 // Method java/lang/Long.longValue:()J
+      20: lload_1
+      21: lcmp
+      22: ifge          29
+      25: iconst_1
+      26: goto          30
+      29: iconst_0
+      30: ireturn
+
+  public void disableAutoFlowControl();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall;
+       4: invokevirtual #26                 // Method org/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall.disableAutoRequestN:()V
+       7: return
+
+  public void request(int);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall;
+       4: iload_1
+       5: invokevirtual #27                 // Method org/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall.request:(I)V
+       8: return
+
+  static {};
+    Code:
+       0: ldc           #28                 // class org/apache/dubbo/rpc/protocol/tri/CancelableStreamObserver
+       2: invokestatic  #29                 // Method org/apache/dubbo/common/logger/LoggerFactory.getLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/Logger;
+       5: putstatic     #30                 // Field LOGGER:Lorg/apache/dubbo/common/logger/Logger;
+       8: return
+}

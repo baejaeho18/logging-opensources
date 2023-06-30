@@ -1,0 +1,98 @@
+Compiled from "ClientCallToObserverAdapter.java"
+public class org.apache.dubbo.rpc.protocol.tri.observer.ClientCallToObserverAdapter<T> extends org.apache.dubbo.rpc.protocol.tri.CancelableStreamObserver<T> implements org.apache.dubbo.rpc.protocol.tri.ClientStreamObserver<T> {
+  private final org.apache.dubbo.rpc.protocol.tri.call.ClientCall call;
+
+  private boolean terminated;
+
+  public org.apache.dubbo.rpc.protocol.tri.observer.ClientCallToObserverAdapter(org.apache.dubbo.rpc.protocol.tri.call.ClientCall);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method org/apache/dubbo/rpc/protocol/tri/CancelableStreamObserver."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/ClientCall;
+       9: return
+
+  public boolean isAutoRequestEnabled();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/ClientCall;
+       4: invokeinterface #3,  1            // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/call/ClientCall.isAutoRequest:()Z
+       9: ireturn
+
+  public void onNext(java.lang.Object);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field terminated:Z
+       4: ifeq          17
+       7: new           #5                  // class java/lang/IllegalStateException
+      10: dup
+      11: ldc           #6                  // String Stream observer has been terminated, no more data is allowed
+      13: invokespecial #7                  // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: aload_0
+      18: getfield      #2                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/ClientCall;
+      21: aload_1
+      22: invokeinterface #8,  2            // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/call/ClientCall.sendMessage:(Ljava/lang/Object;)V
+      27: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/ClientCall;
+       4: aload_1
+       5: invokeinterface #9,  2            // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/call/ClientCall.cancelByLocal:(Ljava/lang/Throwable;)V
+      10: aload_0
+      11: iconst_1
+      12: putfield      #4                  // Field terminated:Z
+      15: return
+
+  public void onCompleted();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field terminated:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: getfield      #2                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/ClientCall;
+      12: invokeinterface #10,  1           // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/call/ClientCall.halfClose:()V
+      17: aload_0
+      18: iconst_1
+      19: putfield      #4                  // Field terminated:Z
+      22: return
+
+  public void cancel(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/ClientCall;
+       4: aload_1
+       5: invokeinterface #9,  2            // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/call/ClientCall.cancelByLocal:(Ljava/lang/Throwable;)V
+      10: aload_0
+      11: iconst_1
+      12: putfield      #4                  // Field terminated:Z
+      15: return
+
+  public void setCompression(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/ClientCall;
+       4: aload_1
+       5: invokeinterface #11,  2           // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/call/ClientCall.setCompression:(Ljava/lang/String;)V
+      10: return
+
+  public void request(int);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/ClientCall;
+       4: iload_1
+       5: invokeinterface #12,  2           // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/call/ClientCall.request:(I)V
+      10: return
+
+  public void disableAutoFlowControl();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/ClientCall;
+       4: iconst_0
+       5: invokeinterface #13,  2           // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/call/ClientCall.setAutoRequest:(Z)V
+      10: return
+}

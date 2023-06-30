@@ -1,0 +1,209 @@
+Compiled from "ObjectMapperCodec.java"
+public class org.apache.dubbo.spring.security.jackson.ObjectMapperCodec {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final com.fasterxml.jackson.databind.ObjectMapper mapper;
+
+  public org.apache.dubbo.spring.security.jackson.ObjectMapperCodec();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #2                  // class com/fasterxml/jackson/databind/ObjectMapper
+       8: dup
+       9: invokespecial #3                  // Method com/fasterxml/jackson/databind/ObjectMapper."<init>":()V
+      12: putfield      #4                  // Field mapper:Lcom/fasterxml/jackson/databind/ObjectMapper;
+      15: aload_0
+      16: invokespecial #5                  // Method registerDefaultModule:()V
+      19: return
+
+  public <T> T deserialize(byte[], java.lang.Class<T>);
+    Code:
+       0: aload_1
+       1: ifnull        9
+       4: aload_1
+       5: arraylength
+       6: ifne          11
+       9: aconst_null
+      10: areturn
+      11: aload_0
+      12: getfield      #4                  // Field mapper:Lcom/fasterxml/jackson/databind/ObjectMapper;
+      15: aload_1
+      16: aload_2
+      17: invokevirtual #6                  // Method com/fasterxml/jackson/databind/ObjectMapper.readValue:([BLjava/lang/Class;)Ljava/lang/Object;
+      20: areturn
+      21: astore_3
+      22: getstatic     #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      25: ldc           #10                 // String 0-23
+      27: ldc           #11                 // String objectMapper! deserialize error, you can try to customize the ObjectMapperCodecCustomer.
+      29: ldc           #12                 // String
+      31: ldc           #12                 // String
+      33: aload_3
+      34: invokeinterface #13,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      39: aconst_null
+      40: areturn
+    Exception table:
+       from    to  target type
+           0    10    21   Class java/lang/Exception
+          11    20    21   Class java/lang/Exception
+
+  public <T> T deserialize(java.lang.String, java.lang.Class<T>);
+    Code:
+       0: aload_1
+       1: invokestatic  #14                 // Method org/apache/dubbo/common/utils/StringUtils.isBlank:(Ljava/lang/CharSequence;)Z
+       4: ifeq          9
+       7: aconst_null
+       8: areturn
+       9: aload_0
+      10: aload_1
+      11: invokevirtual #15                 // Method java/lang/String.getBytes:()[B
+      14: aload_2
+      15: invokevirtual #16                 // Method deserialize:([BLjava/lang/Class;)Ljava/lang/Object;
+      18: areturn
+
+  public java.lang.String serialize(java.lang.Object);
+    Code:
+       0: aload_1
+       1: ifnonnull     6
+       4: aconst_null
+       5: areturn
+       6: aload_0
+       7: getfield      #4                  // Field mapper:Lcom/fasterxml/jackson/databind/ObjectMapper;
+      10: aload_1
+      11: invokevirtual #17                 // Method com/fasterxml/jackson/databind/ObjectMapper.writeValueAsString:(Ljava/lang/Object;)Ljava/lang/String;
+      14: areturn
+      15: astore_2
+      16: getstatic     #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      19: ldc           #10                 // String 0-23
+      21: ldc           #18                 // String objectMapper! serialize error, you can try to customize the ObjectMapperCodecCustomer.
+      23: ldc           #12                 // String
+      25: ldc           #12                 // String
+      27: aload_2
+      28: invokeinterface #13,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      33: aconst_null
+      34: areturn
+    Exception table:
+       from    to  target type
+           0     5    15   Class java/lang/Exception
+           6    14    15   Class java/lang/Exception
+
+  public org.apache.dubbo.spring.security.jackson.ObjectMapperCodec addModule(com.fasterxml.jackson.databind.module.SimpleModule);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field mapper:Lcom/fasterxml/jackson/databind/ObjectMapper;
+       4: aload_1
+       5: invokevirtual #19                 // Method com/fasterxml/jackson/databind/ObjectMapper.registerModule:(Lcom/fasterxml/jackson/databind/Module;)Lcom/fasterxml/jackson/databind/ObjectMapper;
+       8: pop
+       9: aload_0
+      10: areturn
+
+  public org.apache.dubbo.spring.security.jackson.ObjectMapperCodec configureMapper(java.util.function.Consumer<com.fasterxml.jackson.databind.ObjectMapper>);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: getfield      #4                  // Field mapper:Lcom/fasterxml/jackson/databind/ObjectMapper;
+       5: invokeinterface #20,  2           // InterfaceMethod java/util/function/Consumer.accept:(Ljava/lang/Object;)V
+      10: aload_0
+      11: areturn
+
+  private void registerDefaultModule();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field mapper:Lcom/fasterxml/jackson/databind/ObjectMapper;
+       4: new           #21                 // class org/springframework/security/jackson2/CoreJackson2Module
+       7: dup
+       8: invokespecial #22                 // Method org/springframework/security/jackson2/CoreJackson2Module."<init>":()V
+      11: invokevirtual #19                 // Method com/fasterxml/jackson/databind/ObjectMapper.registerModule:(Lcom/fasterxml/jackson/databind/Module;)Lcom/fasterxml/jackson/databind/ObjectMapper;
+      14: pop
+      15: aload_0
+      16: getfield      #4                  // Field mapper:Lcom/fasterxml/jackson/databind/ObjectMapper;
+      19: new           #23                 // class com/fasterxml/jackson/datatype/jsr310/JavaTimeModule
+      22: dup
+      23: invokespecial #24                 // Method com/fasterxml/jackson/datatype/jsr310/JavaTimeModule."<init>":()V
+      26: invokevirtual #19                 // Method com/fasterxml/jackson/databind/ObjectMapper.registerModule:(Lcom/fasterxml/jackson/databind/Module;)Lcom/fasterxml/jackson/databind/ObjectMapper;
+      29: pop
+      30: new           #25                 // class java/util/ArrayList
+      33: dup
+      34: invokespecial #26                 // Method java/util/ArrayList."<init>":()V
+      37: astore_1
+      38: aload_1
+      39: ldc           #27                 // String org.springframework.security.oauth2.server.authorization.jackson2.OAuth2AuthorizationServerJackson2Module
+      41: invokeinterface #28,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      46: pop
+      47: aload_1
+      48: ldc           #29                 // String org.springframework.security.oauth2.client.jackson2.OAuth2ClientJackson2Module
+      50: invokeinterface #28,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      55: pop
+      56: aload_1
+      57: ldc           #30                 // String org.springframework.security.web.server.jackson2.WebServerJackson2Module
+      59: invokeinterface #28,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      64: pop
+      65: aload_1
+      66: ldc           #31                 // String com.fasterxml.jackson.module.paramnames.ParameterNamesModule
+      68: invokeinterface #28,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      73: pop
+      74: aload_1
+      75: ldc           #32                 // String org.springframework.security.web.jackson2.WebServletJackson2Module
+      77: invokeinterface #28,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      82: pop
+      83: aload_1
+      84: ldc           #33                 // String org.springframework.security.web.jackson2.WebJackson2Module
+      86: invokeinterface #28,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      91: pop
+      92: aload_1
+      93: ldc           #34                 // String org.springframework.boot.jackson.JsonMixinModule
+      95: invokeinterface #28,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     100: pop
+     101: aload_1
+     102: ldc           #35                 // String org.springframework.security.ldap.jackson2.LdapJackson2Module
+     104: invokeinterface #28,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     109: pop
+     110: aload_0
+     111: aload_1
+     112: invokespecial #36                 // Method loadModuleIfPresent:(Ljava/util/List;)V
+     115: return
+
+  private void loadModuleIfPresent(java.util.List<java.lang.String>);
+    Code:
+       0: aload_1
+       1: invokeinterface #37,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       6: astore_2
+       7: aload_2
+       8: invokeinterface #38,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      13: ifeq          72
+      16: aload_2
+      17: invokeinterface #39,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      22: checkcast     #40                 // class java/lang/String
+      25: astore_3
+      26: aload_3
+      27: ldc           #41                 // class org/apache/dubbo/spring/security/jackson/ObjectMapperCodec
+      29: invokevirtual #42                 // Method java/lang/Class.getClassLoader:()Ljava/lang/ClassLoader;
+      32: invokestatic  #43                 // Method org/apache/dubbo/common/utils/ClassUtils.forName:(Ljava/lang/String;Ljava/lang/ClassLoader;)Ljava/lang/Class;
+      35: iconst_0
+      36: anewarray     #44                 // class java/lang/Class
+      39: invokevirtual #45                 // Method java/lang/Class.getDeclaredConstructor:([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;
+      42: iconst_0
+      43: anewarray     #46                 // class java/lang/Object
+      46: invokevirtual #47                 // Method java/lang/reflect/Constructor.newInstance:([Ljava/lang/Object;)Ljava/lang/Object;
+      49: checkcast     #48                 // class com/fasterxml/jackson/databind/module/SimpleModule
+      52: astore        4
+      54: aload_0
+      55: getfield      #4                  // Field mapper:Lcom/fasterxml/jackson/databind/ObjectMapper;
+      58: aload         4
+      60: invokevirtual #19                 // Method com/fasterxml/jackson/databind/ObjectMapper.registerModule:(Lcom/fasterxml/jackson/databind/Module;)Lcom/fasterxml/jackson/databind/ObjectMapper;
+      63: pop
+      64: goto          69
+      67: astore        4
+      69: goto          7
+      72: return
+    Exception table:
+       from    to  target type
+          26    64    67   Class java/lang/Throwable
+
+  static {};
+    Code:
+       0: ldc           #41                 // class org/apache/dubbo/spring/security/jackson/ObjectMapperCodec
+       2: invokestatic  #50                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #8                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

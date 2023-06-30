@@ -1,0 +1,70 @@
+Compiled from "ConstraintViolationExceptionConvert.java"
+public class org.apache.dubbo.rpc.protocol.rest.util.ConstraintViolationExceptionConvert {
+  public org.apache.dubbo.rpc.protocol.rest.util.ConstraintViolationExceptionConvert();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static java.lang.Object handleConstraintViolationException(org.apache.dubbo.rpc.RpcException);
+    Code:
+       0: aload_0
+       1: invokevirtual #2                  // Method org/apache/dubbo/rpc/RpcException.getCause:()Ljava/lang/Throwable;
+       4: checkcast     #3                  // class javax/validation/ConstraintViolationException
+       7: astore_1
+       8: new           #4                  // class org/apache/dubbo/rpc/protocol/rest/ViolationReport
+      11: dup
+      12: invokespecial #5                  // Method org/apache/dubbo/rpc/protocol/rest/ViolationReport."<init>":()V
+      15: astore_2
+      16: aload_1
+      17: invokevirtual #6                  // Method javax/validation/ConstraintViolationException.getConstraintViolations:()Ljava/util/Set;
+      20: invokeinterface #7,  1            // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      25: astore_3
+      26: aload_3
+      27: invokeinterface #8,  1            // InterfaceMethod java/util/Iterator.hasNext:()Z
+      32: ifeq          102
+      35: aload_3
+      36: invokeinterface #9,  1            // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      41: checkcast     #10                 // class javax/validation/ConstraintViolation
+      44: astore        4
+      46: aload_2
+      47: new           #11                 // class org/apache/dubbo/rpc/protocol/rest/RestConstraintViolation
+      50: dup
+      51: aload         4
+      53: invokeinterface #12,  1           // InterfaceMethod javax/validation/ConstraintViolation.getPropertyPath:()Ljavax/validation/Path;
+      58: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+      61: aload         4
+      63: invokeinterface #14,  1           // InterfaceMethod javax/validation/ConstraintViolation.getMessage:()Ljava/lang/String;
+      68: aload         4
+      70: invokeinterface #15,  1           // InterfaceMethod javax/validation/ConstraintViolation.getInvalidValue:()Ljava/lang/Object;
+      75: ifnonnull     83
+      78: ldc           #16                 // String null
+      80: goto          93
+      83: aload         4
+      85: invokeinterface #15,  1           // InterfaceMethod javax/validation/ConstraintViolation.getInvalidValue:()Ljava/lang/Object;
+      90: invokevirtual #13                 // Method java/lang/Object.toString:()Ljava/lang/String;
+      93: invokespecial #17                 // Method org/apache/dubbo/rpc/protocol/rest/RestConstraintViolation."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      96: invokevirtual #18                 // Method org/apache/dubbo/rpc/protocol/rest/ViolationReport.addConstraintViolation:(Lorg/apache/dubbo/rpc/protocol/rest/RestConstraintViolation;)V
+      99: goto          26
+     102: aload_2
+     103: areturn
+
+  public static boolean needConvert(org.apache.dubbo.rpc.RpcException);
+    Code:
+       0: aload_0
+       1: invokestatic  #19                 // Method isConstraintViolationException:(Lorg/apache/dubbo/rpc/RpcException;)Z
+       4: ireturn
+
+  private static boolean isConstraintViolationException(org.apache.dubbo.rpc.RpcException);
+    Code:
+       0: aload_0
+       1: invokevirtual #2                  // Method org/apache/dubbo/rpc/RpcException.getCause:()Ljava/lang/Throwable;
+       4: instanceof    #3                  // class javax/validation/ConstraintViolationException
+       7: ireturn
+       8: astore_1
+       9: iconst_0
+      10: ireturn
+    Exception table:
+       from    to  target type
+           0     7     8   Class java/lang/Throwable
+}

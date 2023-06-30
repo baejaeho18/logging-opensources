@@ -1,0 +1,137 @@
+Compiled from "GracefulShutdown.java"
+public class org.apache.dubbo.rpc.protocol.tri.transport.GracefulShutdown {
+  static final long GRACEFUL_SHUTDOWN_PING;
+
+  private static final long GRACEFUL_SHUTDOWN_PING_TIMEOUT_NANOS;
+
+  private final io.netty.channel.ChannelHandlerContext ctx;
+
+  private final io.netty.channel.ChannelPromise originPromise;
+
+  private final java.lang.String goAwayMessage;
+
+  private boolean pingAckedOrTimeout;
+
+  private io.netty.util.concurrent.Future<?> pingFuture;
+
+  public org.apache.dubbo.rpc.protocol.tri.transport.GracefulShutdown(io.netty.channel.ChannelHandlerContext, java.lang.String, io.netty.channel.ChannelPromise);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field ctx:Lio/netty/channel/ChannelHandlerContext;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field goAwayMessage:Ljava/lang/String;
+      14: aload_0
+      15: aload_3
+      16: putfield      #4                  // Field originPromise:Lio/netty/channel/ChannelPromise;
+      19: return
+
+  public void gracefulShutdown();
+    Code:
+       0: new           #5                  // class io/netty/handler/codec/http2/DefaultHttp2GoAwayFrame
+       3: dup
+       4: getstatic     #6                  // Field io/netty/handler/codec/http2/Http2Error.NO_ERROR:Lio/netty/handler/codec/http2/Http2Error;
+       7: aload_0
+       8: getfield      #2                  // Field ctx:Lio/netty/channel/ChannelHandlerContext;
+      11: invokeinterface #7,  1            // InterfaceMethod io/netty/channel/ChannelHandlerContext.alloc:()Lio/netty/buffer/ByteBufAllocator;
+      16: aload_0
+      17: getfield      #3                  // Field goAwayMessage:Ljava/lang/String;
+      20: invokestatic  #8                  // Method io/netty/buffer/ByteBufUtil.writeAscii:(Lio/netty/buffer/ByteBufAllocator;Ljava/lang/CharSequence;)Lio/netty/buffer/ByteBuf;
+      23: invokespecial #9                  // Method io/netty/handler/codec/http2/DefaultHttp2GoAwayFrame."<init>":(Lio/netty/handler/codec/http2/Http2Error;Lio/netty/buffer/ByteBuf;)V
+      26: astore_1
+      27: aload_1
+      28: ldc           #11                 // int 2147483647
+      30: invokeinterface #12,  2           // InterfaceMethod io/netty/handler/codec/http2/Http2GoAwayFrame.setExtraStreamIds:(I)Lio/netty/handler/codec/http2/Http2GoAwayFrame;
+      35: pop
+      36: aload_0
+      37: getfield      #2                  // Field ctx:Lio/netty/channel/ChannelHandlerContext;
+      40: aload_1
+      41: invokeinterface #13,  2           // InterfaceMethod io/netty/channel/ChannelHandlerContext.writeAndFlush:(Ljava/lang/Object;)Lio/netty/channel/ChannelFuture;
+      46: pop
+      47: aload_0
+      48: aload_0
+      49: getfield      #2                  // Field ctx:Lio/netty/channel/ChannelHandlerContext;
+      52: invokeinterface #14,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.executor:()Lio/netty/util/concurrent/EventExecutor;
+      57: aload_0
+      58: invokedynamic #15,  0             // InvokeDynamic #0:run:(Lorg/apache/dubbo/rpc/protocol/tri/transport/GracefulShutdown;)Ljava/lang/Runnable;
+      63: getstatic     #16                 // Field GRACEFUL_SHUTDOWN_PING_TIMEOUT_NANOS:J
+      66: getstatic     #17                 // Field java/util/concurrent/TimeUnit.NANOSECONDS:Ljava/util/concurrent/TimeUnit;
+      69: invokeinterface #18,  5           // InterfaceMethod io/netty/util/concurrent/EventExecutor.schedule:(Ljava/lang/Runnable;JLjava/util/concurrent/TimeUnit;)Lio/netty/util/concurrent/ScheduledFuture;
+      74: putfield      #19                 // Field pingFuture:Lio/netty/util/concurrent/Future;
+      77: new           #20                 // class io/netty/handler/codec/http2/DefaultHttp2PingFrame
+      80: dup
+      81: ldc2_w        #22                 // long 40715087873l
+      84: iconst_0
+      85: invokespecial #24                 // Method io/netty/handler/codec/http2/DefaultHttp2PingFrame."<init>":(JZ)V
+      88: astore_2
+      89: aload_0
+      90: getfield      #2                  // Field ctx:Lio/netty/channel/ChannelHandlerContext;
+      93: aload_2
+      94: invokeinterface #13,  2           // InterfaceMethod io/netty/channel/ChannelHandlerContext.writeAndFlush:(Ljava/lang/Object;)Lio/netty/channel/ChannelFuture;
+      99: pop
+     100: return
+
+  void secondGoAwayAndClose(io.netty.channel.ChannelHandlerContext);
+    Code:
+       0: aload_0
+       1: getfield      #25                 // Field pingAckedOrTimeout:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: iconst_1
+      10: putfield      #25                 // Field pingAckedOrTimeout:Z
+      13: aload_0
+      14: getfield      #19                 // Field pingFuture:Lio/netty/util/concurrent/Future;
+      17: iconst_0
+      18: invokeinterface #26,  2           // InterfaceMethod io/netty/util/concurrent/Future.cancel:(Z)Z
+      23: pop
+      24: new           #5                  // class io/netty/handler/codec/http2/DefaultHttp2GoAwayFrame
+      27: dup
+      28: getstatic     #6                  // Field io/netty/handler/codec/http2/Http2Error.NO_ERROR:Lio/netty/handler/codec/http2/Http2Error;
+      31: aload_0
+      32: getfield      #2                  // Field ctx:Lio/netty/channel/ChannelHandlerContext;
+      35: invokeinterface #7,  1            // InterfaceMethod io/netty/channel/ChannelHandlerContext.alloc:()Lio/netty/buffer/ByteBufAllocator;
+      40: aload_0
+      41: getfield      #3                  // Field goAwayMessage:Ljava/lang/String;
+      44: invokestatic  #8                  // Method io/netty/buffer/ByteBufUtil.writeAscii:(Lio/netty/buffer/ByteBufAllocator;Ljava/lang/CharSequence;)Lio/netty/buffer/ByteBuf;
+      47: invokespecial #9                  // Method io/netty/handler/codec/http2/DefaultHttp2GoAwayFrame."<init>":(Lio/netty/handler/codec/http2/Http2Error;Lio/netty/buffer/ByteBuf;)V
+      50: astore_2
+      51: aload_1
+      52: aload_2
+      53: invokeinterface #13,  2           // InterfaceMethod io/netty/channel/ChannelHandlerContext.writeAndFlush:(Ljava/lang/Object;)Lio/netty/channel/ChannelFuture;
+      58: pop
+      59: aload_1
+      60: aload_0
+      61: getfield      #4                  // Field originPromise:Lio/netty/channel/ChannelPromise;
+      64: invokeinterface #27,  2           // InterfaceMethod io/netty/channel/ChannelHandlerContext.close:(Lio/netty/channel/ChannelPromise;)Lio/netty/channel/ChannelFuture;
+      69: pop
+      70: goto          82
+      73: astore_2
+      74: aload_1
+      75: aload_2
+      76: invokeinterface #29,  2           // InterfaceMethod io/netty/channel/ChannelHandlerContext.fireExceptionCaught:(Ljava/lang/Throwable;)Lio/netty/channel/ChannelHandlerContext;
+      81: pop
+      82: return
+    Exception table:
+       from    to  target type
+          24    70    73   Class java/lang/Exception
+
+  private void lambda$gracefulShutdown$0();
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #2                  // Field ctx:Lio/netty/channel/ChannelHandlerContext;
+       5: invokevirtual #30                 // Method secondGoAwayAndClose:(Lio/netty/channel/ChannelHandlerContext;)V
+       8: return
+
+  static {};
+    Code:
+       0: getstatic     #31                 // Field java/util/concurrent/TimeUnit.SECONDS:Ljava/util/concurrent/TimeUnit;
+       3: ldc2_w        #32                 // long 10l
+       6: invokevirtual #34                 // Method java/util/concurrent/TimeUnit.toNanos:(J)J
+       9: putstatic     #16                 // Field GRACEFUL_SHUTDOWN_PING_TIMEOUT_NANOS:J
+      12: return
+}

@@ -1,0 +1,190 @@
+Compiled from "AbstractServerCallListener.java"
+public abstract class org.apache.dubbo.rpc.protocol.tri.call.AbstractServerCallListener implements org.apache.dubbo.rpc.protocol.tri.call.ServerCall$Listener {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger LOGGER;
+
+  public final org.apache.dubbo.rpc.CancellationContext cancellationContext;
+
+  final org.apache.dubbo.rpc.RpcInvocation invocation;
+
+  final org.apache.dubbo.rpc.Invoker<?> invoker;
+
+  final org.apache.dubbo.rpc.protocol.tri.observer.ServerCallToObserverAdapter<java.lang.Object> responseObserver;
+
+  public org.apache.dubbo.rpc.protocol.tri.call.AbstractServerCallListener(org.apache.dubbo.rpc.RpcInvocation, org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.protocol.tri.observer.ServerCallToObserverAdapter<java.lang.Object>);
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #4                  // Field invocation:Lorg/apache/dubbo/rpc/RpcInvocation;
+       9: aload_0
+      10: aload_2
+      11: putfield      #5                  // Field invoker:Lorg/apache/dubbo/rpc/Invoker;
+      14: aload_0
+      15: aload_3
+      16: getfield      #6                  // Field org/apache/dubbo/rpc/protocol/tri/observer/ServerCallToObserverAdapter.cancellationContext:Lorg/apache/dubbo/rpc/CancellationContext;
+      19: putfield      #7                  // Field cancellationContext:Lorg/apache/dubbo/rpc/CancellationContext;
+      22: aload_0
+      23: aload_3
+      24: putfield      #8                  // Field responseObserver:Lorg/apache/dubbo/rpc/protocol/tri/observer/ServerCallToObserverAdapter;
+      27: return
+
+  public void invoke();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field cancellationContext:Lorg/apache/dubbo/rpc/CancellationContext;
+       4: invokestatic  #9                  // Method org/apache/dubbo/rpc/RpcContext.restoreCancellationContext:(Lorg/apache/dubbo/rpc/CancellationContext;)V
+       7: aload_0
+       8: getfield      #4                  // Field invocation:Lorg/apache/dubbo/rpc/RpcInvocation;
+      11: invokevirtual #10                 // Method org/apache/dubbo/rpc/RpcInvocation.getAttributes:()Ljava/util/Map;
+      14: ldc           #12                 // String tri.remote.address
+      16: invokeinterface #13,  2           // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      21: checkcast     #14                 // class java/net/InetSocketAddress
+      24: astore_1
+      25: invokestatic  #15                 // Method org/apache/dubbo/rpc/RpcContext.getServiceContext:()Lorg/apache/dubbo/rpc/RpcServiceContext;
+      28: aload_1
+      29: invokevirtual #16                 // Method org/apache/dubbo/rpc/RpcServiceContext.setRemoteAddress:(Ljava/net/InetSocketAddress;)Lorg/apache/dubbo/rpc/RpcServiceContext;
+      32: pop
+      33: aload_0
+      34: getfield      #4                  // Field invocation:Lorg/apache/dubbo/rpc/RpcInvocation;
+      37: invokevirtual #10                 // Method org/apache/dubbo/rpc/RpcInvocation.getAttributes:()Ljava/util/Map;
+      40: getstatic     #17                 // Field org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.CONSUMER_APP_NAME_KEY:Lorg/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum;
+      43: invokeinterface #13,  2           // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      48: checkcast     #18                 // class java/lang/String
+      51: astore_2
+      52: aconst_null
+      53: aload_2
+      54: if_acmpeq     75
+      57: invokestatic  #15                 // Method org/apache/dubbo/rpc/RpcContext.getServiceContext:()Lorg/apache/dubbo/rpc/RpcServiceContext;
+      60: aload_2
+      61: invokevirtual #19                 // Method org/apache/dubbo/rpc/RpcServiceContext.setRemoteApplicationName:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/RpcServiceContext;
+      64: pop
+      65: aload_0
+      66: getfield      #4                  // Field invocation:Lorg/apache/dubbo/rpc/RpcInvocation;
+      69: ldc           #20                 // String remote.application
+      71: aload_2
+      72: invokevirtual #21                 // Method org/apache/dubbo/rpc/RpcInvocation.setAttachmentIfAbsent:(Ljava/lang/String;Ljava/lang/String;)V
+      75: invokestatic  #22                 // Method java/lang/System.currentTimeMillis:()J
+      78: lstore_3
+      79: aload_0
+      80: getfield      #5                  // Field invoker:Lorg/apache/dubbo/rpc/Invoker;
+      83: aload_0
+      84: getfield      #4                  // Field invocation:Lorg/apache/dubbo/rpc/RpcInvocation;
+      87: invokeinterface #23,  2           // InterfaceMethod org/apache/dubbo/rpc/Invoker.invoke:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+      92: astore        5
+      94: aload         5
+      96: aload_0
+      97: aload         5
+      99: lload_3
+     100: invokedynamic #24,  0             // InvokeDynamic #0:accept:(Lorg/apache/dubbo/rpc/protocol/tri/call/AbstractServerCallListener;Lorg/apache/dubbo/rpc/Result;J)Ljava/util/function/BiConsumer;
+     105: invokeinterface #25,  2           // InterfaceMethod org/apache/dubbo/rpc/Result.whenCompleteWithContext:(Ljava/util/function/BiConsumer;)Lorg/apache/dubbo/rpc/Result;
+     110: pop
+     111: invokestatic  #26                 // Method org/apache/dubbo/rpc/RpcContext.removeCancellationContext:()V
+     114: invokestatic  #27                 // Method org/apache/dubbo/rpc/RpcContext.removeContext:()V
+     117: goto          151
+     120: astore        5
+     122: aload_0
+     123: getfield      #8                  // Field responseObserver:Lorg/apache/dubbo/rpc/protocol/tri/observer/ServerCallToObserverAdapter;
+     126: aload         5
+     128: invokevirtual #29                 // Method org/apache/dubbo/rpc/protocol/tri/observer/ServerCallToObserverAdapter.onError:(Ljava/lang/Throwable;)V
+     131: invokestatic  #26                 // Method org/apache/dubbo/rpc/RpcContext.removeCancellationContext:()V
+     134: invokestatic  #27                 // Method org/apache/dubbo/rpc/RpcContext.removeContext:()V
+     137: goto          151
+     140: astore        6
+     142: invokestatic  #26                 // Method org/apache/dubbo/rpc/RpcContext.removeCancellationContext:()V
+     145: invokestatic  #27                 // Method org/apache/dubbo/rpc/RpcContext.removeContext:()V
+     148: aload         6
+     150: athrow
+     151: return
+    Exception table:
+       from    to  target type
+          79   111   120   Class java/lang/Exception
+          79   111   140   any
+         120   131   140   any
+         140   142   140   any
+
+  protected void doOnResponseHasException(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field responseObserver:Lorg/apache/dubbo/rpc/protocol/tri/observer/ServerCallToObserverAdapter;
+       4: aload_1
+       5: invokevirtual #29                 // Method org/apache/dubbo/rpc/protocol/tri/observer/ServerCallToObserverAdapter.onError:(Ljava/lang/Throwable;)V
+       8: return
+
+  public abstract void onReturn(java.lang.Object);
+
+  private void lambda$invoke$0(org.apache.dubbo.rpc.Result, long, org.apache.dubbo.rpc.Result, java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field responseObserver:Lorg/apache/dubbo/rpc/protocol/tri/observer/ServerCallToObserverAdapter;
+       4: aload_1
+       5: invokeinterface #30,  1           // InterfaceMethod org/apache/dubbo/rpc/Result.getObjectAttachments:()Ljava/util/Map;
+      10: invokevirtual #31                 // Method org/apache/dubbo/rpc/protocol/tri/observer/ServerCallToObserverAdapter.setResponseAttachments:(Ljava/util/Map;)V
+      13: aload         5
+      15: ifnull        28
+      18: aload_0
+      19: getfield      #8                  // Field responseObserver:Lorg/apache/dubbo/rpc/protocol/tri/observer/ServerCallToObserverAdapter;
+      22: aload         5
+      24: invokevirtual #29                 // Method org/apache/dubbo/rpc/protocol/tri/observer/ServerCallToObserverAdapter.onError:(Ljava/lang/Throwable;)V
+      27: return
+      28: aload_1
+      29: invokeinterface #32,  1           // InterfaceMethod org/apache/dubbo/rpc/Result.hasException:()Z
+      34: ifeq          48
+      37: aload_0
+      38: aload_1
+      39: invokeinterface #33,  1           // InterfaceMethod org/apache/dubbo/rpc/Result.getException:()Ljava/lang/Throwable;
+      44: invokevirtual #34                 // Method doOnResponseHasException:(Ljava/lang/Throwable;)V
+      47: return
+      48: invokestatic  #22                 // Method java/lang/System.currentTimeMillis:()J
+      51: lload_2
+      52: lsub
+      53: lstore        6
+      55: aload_0
+      56: getfield      #8                  // Field responseObserver:Lorg/apache/dubbo/rpc/protocol/tri/observer/ServerCallToObserverAdapter;
+      59: lload         6
+      61: invokevirtual #35                 // Method org/apache/dubbo/rpc/protocol/tri/observer/ServerCallToObserverAdapter.isTimeout:(J)Z
+      64: ifeq          129
+      67: getstatic     #36                 // Field LOGGER:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      70: ldc           #37                 // String 4-13
+      72: ldc           #38                 // String
+      74: ldc           #38                 // String
+      76: ldc           #39                 // String Invoke timeout at server side, ignored to send response. service=%s method=%s cost=%s
+      78: iconst_3
+      79: anewarray     #40                 // class java/lang/Object
+      82: dup
+      83: iconst_0
+      84: aload_0
+      85: getfield      #4                  // Field invocation:Lorg/apache/dubbo/rpc/RpcInvocation;
+      88: invokevirtual #41                 // Method org/apache/dubbo/rpc/RpcInvocation.getTargetServiceUniqueName:()Ljava/lang/String;
+      91: aastore
+      92: dup
+      93: iconst_1
+      94: aload_0
+      95: getfield      #4                  // Field invocation:Lorg/apache/dubbo/rpc/RpcInvocation;
+      98: invokevirtual #42                 // Method org/apache/dubbo/rpc/RpcInvocation.getMethodName:()Ljava/lang/String;
+     101: aastore
+     102: dup
+     103: iconst_2
+     104: lload         6
+     106: invokestatic  #43                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+     109: aastore
+     110: invokestatic  #44                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+     113: invokeinterface #45,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     118: aload_0
+     119: getfield      #8                  // Field responseObserver:Lorg/apache/dubbo/rpc/protocol/tri/observer/ServerCallToObserverAdapter;
+     122: getstatic     #46                 // Field org/apache/dubbo/rpc/TriRpcStatus.DEADLINE_EXCEEDED:Lorg/apache/dubbo/rpc/TriRpcStatus;
+     125: invokevirtual #47                 // Method org/apache/dubbo/rpc/protocol/tri/observer/ServerCallToObserverAdapter.onCompleted:(Lorg/apache/dubbo/rpc/TriRpcStatus;)V
+     128: return
+     129: aload_0
+     130: aload         4
+     132: invokeinterface #48,  1           // InterfaceMethod org/apache/dubbo/rpc/Result.getValue:()Ljava/lang/Object;
+     137: invokevirtual #49                 // Method onReturn:(Ljava/lang/Object;)V
+     140: return
+
+  static {};
+    Code:
+       0: ldc           #50                 // class org/apache/dubbo/rpc/protocol/tri/call/AbstractServerCallListener
+       2: invokestatic  #51                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #36                 // Field LOGGER:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

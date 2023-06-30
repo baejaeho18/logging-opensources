@@ -1,0 +1,59 @@
+Compiled from "AuthenticationExceptionTranslatorFilter.java"
+public class org.apache.dubbo.spring.security.filter.AuthenticationExceptionTranslatorFilter implements org.apache.dubbo.rpc.Filter,org.apache.dubbo.rpc.BaseFilter$Listener {
+  public org.apache.dubbo.spring.security.filter.AuthenticationExceptionTranslatorFilter();
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public org.apache.dubbo.rpc.Result invoke(org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aload_1
+       1: aload_2
+       2: invokeinterface #3,  2            // InterfaceMethod org/apache/dubbo/rpc/Invoker.invoke:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+       7: areturn
+
+  public void onResponse(org.apache.dubbo.rpc.Result, org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #4                  // Method isTranslate:(Lorg/apache/dubbo/rpc/Result;)Z
+       5: ifeq          41
+       8: new           #1                  // class org/apache/dubbo/rpc/RpcException
+      11: dup
+      12: aload_1
+      13: invokeinterface #5,  1            // InterfaceMethod org/apache/dubbo/rpc/Result.getException:()Ljava/lang/Throwable;
+      18: invokevirtual #6                  // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+      21: invokespecial #7                  // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;)V
+      24: astore        4
+      26: aload         4
+      28: bipush        13
+      30: invokevirtual #8                  // Method org/apache/dubbo/rpc/RpcException.setCode:(I)V
+      33: aload_1
+      34: aload         4
+      36: invokeinterface #9,  2            // InterfaceMethod org/apache/dubbo/rpc/Result.setException:(Ljava/lang/Throwable;)V
+      41: return
+
+  public void onError(java.lang.Throwable, org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: return
+
+  private boolean isTranslate(org.apache.dubbo.rpc.Result);
+    Code:
+       0: aload_1
+       1: invokeinterface #5,  1            // InterfaceMethod org/apache/dubbo/rpc/Result.getException:()Ljava/lang/Throwable;
+       6: astore_2
+       7: aload_1
+       8: invokeinterface #10,  1           // InterfaceMethod org/apache/dubbo/rpc/Result.hasException:()Z
+      13: ifeq          34
+      16: aload_2
+      17: instanceof    #11                 // class org/springframework/security/core/AuthenticationException
+      20: ifne          30
+      23: aload_2
+      24: instanceof    #12                 // class org/springframework/security/access/AccessDeniedException
+      27: ifeq          34
+      30: iconst_1
+      31: goto          35
+      34: iconst_0
+      35: ireturn
+}

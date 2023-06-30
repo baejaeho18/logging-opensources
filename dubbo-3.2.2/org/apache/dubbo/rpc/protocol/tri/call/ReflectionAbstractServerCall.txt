@@ -1,0 +1,418 @@
+Compiled from "ReflectionAbstractServerCall.java"
+public class org.apache.dubbo.rpc.protocol.tri.call.ReflectionAbstractServerCall extends org.apache.dubbo.rpc.protocol.tri.call.AbstractServerCall {
+  private final java.util.List<org.apache.dubbo.rpc.HeaderFilter> headerFilters;
+
+  private java.util.List<org.apache.dubbo.rpc.model.MethodDescriptor> methodDescriptors;
+
+  public org.apache.dubbo.rpc.protocol.tri.call.ReflectionAbstractServerCall(org.apache.dubbo.rpc.Invoker<?>, org.apache.dubbo.rpc.protocol.tri.stream.ServerStream, org.apache.dubbo.rpc.model.FrameworkModel, java.lang.String, java.lang.String, java.lang.String, java.util.List<org.apache.dubbo.rpc.HeaderFilter>, java.util.concurrent.Executor);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: aload_3
+       4: aload_1
+       5: invokeinterface #2,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+      10: invokestatic  #3                  // Method getServiceDescriptor:(Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/rpc/model/ServiceDescriptor;
+      13: aload         4
+      15: aload         5
+      17: aload         6
+      19: aload         8
+      21: invokespecial #4                  // Method org/apache/dubbo/rpc/protocol/tri/call/AbstractServerCall."<init>":(Lorg/apache/dubbo/rpc/Invoker;Lorg/apache/dubbo/rpc/protocol/tri/stream/ServerStream;Lorg/apache/dubbo/rpc/model/FrameworkModel;Lorg/apache/dubbo/rpc/model/ServiceDescriptor;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/concurrent/Executor;)V
+      24: aload_0
+      25: aload         7
+      27: putfield      #5                  // Field headerFilters:Ljava/util/List;
+      30: return
+
+  private static org.apache.dubbo.rpc.model.ServiceDescriptor getServiceDescriptor(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: invokevirtual #6                  // Method org/apache/dubbo/common/URL.getServiceModel:()Lorg/apache/dubbo/rpc/model/ServiceModel;
+       4: checkcast     #7                  // class org/apache/dubbo/rpc/model/ProviderModel
+       7: astore_1
+       8: aload_1
+       9: ifnull        19
+      12: aload_1
+      13: invokevirtual #8                  // Method org/apache/dubbo/rpc/model/ProviderModel.getServiceModel:()Lorg/apache/dubbo/rpc/model/ServiceDescriptor;
+      16: ifnonnull     21
+      19: aconst_null
+      20: areturn
+      21: aload_1
+      22: invokevirtual #8                  // Method org/apache/dubbo/rpc/model/ProviderModel.getServiceModel:()Lorg/apache/dubbo/rpc/model/ServiceDescriptor;
+      25: areturn
+
+  private boolean isEcho(java.lang.String);
+    Code:
+       0: ldc           #9                  // String $echo
+       2: aload_1
+       3: invokevirtual #10                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       6: ireturn
+
+  private boolean isGeneric(java.lang.String);
+    Code:
+       0: ldc           #11                 // String $invoke
+       2: aload_1
+       3: invokevirtual #10                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       6: ifne          18
+       9: ldc           #12                 // String $invokeAsync
+      11: aload_1
+      12: invokevirtual #10                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      15: ifeq          22
+      18: iconst_1
+      19: goto          23
+      22: iconst_0
+      23: ireturn
+
+  public void startCall();
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #13                 // Field methodName:Ljava/lang/String;
+       5: invokespecial #14                 // Method isGeneric:(Ljava/lang/String;)Z
+       8: ifeq          39
+      11: aload_0
+      12: invokestatic  #15                 // Method org/apache/dubbo/rpc/service/ServiceDescriptorInternalCache.genericService:()Lorg/apache/dubbo/rpc/model/ServiceDescriptor;
+      15: aload_0
+      16: getfield      #13                 // Field methodName:Ljava/lang/String;
+      19: invokeinterface #16,  2           // InterfaceMethod org/apache/dubbo/rpc/model/ServiceDescriptor.getMethods:(Ljava/lang/String;)Ljava/util/List;
+      24: iconst_0
+      25: invokeinterface #17,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+      30: checkcast     #18                 // class org/apache/dubbo/rpc/model/MethodDescriptor
+      33: putfield      #19                 // Field methodDescriptor:Lorg/apache/dubbo/rpc/model/MethodDescriptor;
+      36: goto          338
+      39: aload_0
+      40: aload_0
+      41: getfield      #13                 // Field methodName:Ljava/lang/String;
+      44: invokespecial #20                 // Method isEcho:(Ljava/lang/String;)Z
+      47: ifeq          78
+      50: aload_0
+      51: invokestatic  #21                 // Method org/apache/dubbo/rpc/service/ServiceDescriptorInternalCache.echoService:()Lorg/apache/dubbo/rpc/model/ServiceDescriptor;
+      54: aload_0
+      55: getfield      #13                 // Field methodName:Ljava/lang/String;
+      58: invokeinterface #16,  2           // InterfaceMethod org/apache/dubbo/rpc/model/ServiceDescriptor.getMethods:(Ljava/lang/String;)Ljava/util/List;
+      63: iconst_0
+      64: invokeinterface #17,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+      69: checkcast     #18                 // class org/apache/dubbo/rpc/model/MethodDescriptor
+      72: putfield      #19                 // Field methodDescriptor:Lorg/apache/dubbo/rpc/model/MethodDescriptor;
+      75: goto          338
+      78: aload_0
+      79: aload_0
+      80: getfield      #22                 // Field serviceDescriptor:Lorg/apache/dubbo/rpc/model/ServiceDescriptor;
+      83: aload_0
+      84: getfield      #13                 // Field methodName:Ljava/lang/String;
+      87: invokeinterface #16,  2           // InterfaceMethod org/apache/dubbo/rpc/model/ServiceDescriptor.getMethods:(Ljava/lang/String;)Ljava/util/List;
+      92: putfield      #23                 // Field methodDescriptors:Ljava/util/List;
+      95: aload_0
+      96: getfield      #23                 // Field methodDescriptors:Ljava/util/List;
+      99: invokestatic  #24                 // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+     102: ifeq          155
+     105: new           #25                 // class java/lang/StringBuilder
+     108: dup
+     109: invokespecial #26                 // Method java/lang/StringBuilder."<init>":()V
+     112: aload_0
+     113: getfield      #13                 // Field methodName:Ljava/lang/String;
+     116: iconst_0
+     117: invokevirtual #27                 // Method java/lang/String.charAt:(I)C
+     120: invokestatic  #28                 // Method java/lang/Character.toLowerCase:(C)C
+     123: invokevirtual #29                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     126: aload_0
+     127: getfield      #13                 // Field methodName:Ljava/lang/String;
+     130: iconst_1
+     131: invokevirtual #30                 // Method java/lang/String.substring:(I)Ljava/lang/String;
+     134: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     137: invokevirtual #32                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     140: astore_1
+     141: aload_0
+     142: aload_0
+     143: getfield      #22                 // Field serviceDescriptor:Lorg/apache/dubbo/rpc/model/ServiceDescriptor;
+     146: aload_1
+     147: invokeinterface #16,  2           // InterfaceMethod org/apache/dubbo/rpc/model/ServiceDescriptor.getMethods:(Ljava/lang/String;)Ljava/util/List;
+     152: putfield      #23                 // Field methodDescriptors:Ljava/util/List;
+     155: aload_0
+     156: getfield      #23                 // Field methodDescriptors:Ljava/util/List;
+     159: invokestatic  #24                 // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+     162: ifeq          210
+     165: aload_0
+     166: getstatic     #33                 // Field org/apache/dubbo/rpc/TriRpcStatus.UNIMPLEMENTED:Lorg/apache/dubbo/rpc/TriRpcStatus;
+     169: new           #25                 // class java/lang/StringBuilder
+     172: dup
+     173: invokespecial #26                 // Method java/lang/StringBuilder."<init>":()V
+     176: ldc           #34                 // String Method :
+     178: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     181: aload_0
+     182: getfield      #13                 // Field methodName:Ljava/lang/String;
+     185: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     188: ldc           #35                 // String  not found of service:
+     190: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     193: aload_0
+     194: getfield      #36                 // Field serviceName:Ljava/lang/String;
+     197: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     200: invokevirtual #32                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     203: invokevirtual #37                 // Method org/apache/dubbo/rpc/TriRpcStatus.withDescription:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+     206: invokevirtual #38                 // Method responseErr:(Lorg/apache/dubbo/rpc/TriRpcStatus;)V
+     209: return
+     210: aload_0
+     211: getfield      #23                 // Field methodDescriptors:Ljava/util/List;
+     214: invokeinterface #39,  1           // InterfaceMethod java/util/List.size:()I
+     219: iconst_1
+     220: if_icmpne     240
+     223: aload_0
+     224: aload_0
+     225: getfield      #23                 // Field methodDescriptors:Ljava/util/List;
+     228: iconst_0
+     229: invokeinterface #17,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     234: checkcast     #18                 // class org/apache/dubbo/rpc/model/MethodDescriptor
+     237: putfield      #19                 // Field methodDescriptor:Lorg/apache/dubbo/rpc/model/MethodDescriptor;
+     240: aload_0
+     241: getfield      #23                 // Field methodDescriptors:Ljava/util/List;
+     244: invokeinterface #39,  1           // InterfaceMethod java/util/List.size:()I
+     249: iconst_2
+     250: if_icmpne     338
+     253: aload_0
+     254: getfield      #23                 // Field methodDescriptors:Ljava/util/List;
+     257: iconst_1
+     258: invokeinterface #17,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     263: checkcast     #18                 // class org/apache/dubbo/rpc/model/MethodDescriptor
+     266: invokeinterface #40,  1           // InterfaceMethod org/apache/dubbo/rpc/model/MethodDescriptor.getRpcType:()Lorg/apache/dubbo/rpc/model/MethodDescriptor$RpcType;
+     271: getstatic     #41                 // Field org/apache/dubbo/rpc/model/MethodDescriptor$RpcType.SERVER_STREAM:Lorg/apache/dubbo/rpc/model/MethodDescriptor$RpcType;
+     274: if_acmpne     297
+     277: aload_0
+     278: aload_0
+     279: getfield      #23                 // Field methodDescriptors:Ljava/util/List;
+     282: iconst_0
+     283: invokeinterface #17,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     288: checkcast     #18                 // class org/apache/dubbo/rpc/model/MethodDescriptor
+     291: putfield      #19                 // Field methodDescriptor:Lorg/apache/dubbo/rpc/model/MethodDescriptor;
+     294: goto          338
+     297: aload_0
+     298: getfield      #23                 // Field methodDescriptors:Ljava/util/List;
+     301: iconst_0
+     302: invokeinterface #17,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     307: checkcast     #18                 // class org/apache/dubbo/rpc/model/MethodDescriptor
+     310: invokeinterface #40,  1           // InterfaceMethod org/apache/dubbo/rpc/model/MethodDescriptor.getRpcType:()Lorg/apache/dubbo/rpc/model/MethodDescriptor$RpcType;
+     315: getstatic     #41                 // Field org/apache/dubbo/rpc/model/MethodDescriptor$RpcType.SERVER_STREAM:Lorg/apache/dubbo/rpc/model/MethodDescriptor$RpcType;
+     318: if_acmpne     338
+     321: aload_0
+     322: aload_0
+     323: getfield      #23                 // Field methodDescriptors:Ljava/util/List;
+     326: iconst_1
+     327: invokeinterface #17,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     332: checkcast     #18                 // class org/apache/dubbo/rpc/model/MethodDescriptor
+     335: putfield      #19                 // Field methodDescriptor:Lorg/apache/dubbo/rpc/model/MethodDescriptor;
+     338: aload_0
+     339: getfield      #19                 // Field methodDescriptor:Lorg/apache/dubbo/rpc/model/MethodDescriptor;
+     342: ifnull        418
+     345: aload_0
+     346: getfield      #42                 // Field invoker:Lorg/apache/dubbo/rpc/Invoker;
+     349: invokeinterface #2,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+     354: astore_1
+     355: aload_0
+     356: aload_0
+     357: getfield      #43                 // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+     360: ldc           #44                 // class org/apache/dubbo/rpc/model/PackableMethodFactory
+     362: invokevirtual #45                 // Method org/apache/dubbo/rpc/model/FrameworkModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+     365: aload_1
+     366: invokevirtual #46                 // Method org/apache/dubbo/common/URL.getApplicationModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     369: invokestatic  #47                 // Method org/apache/dubbo/common/config/ConfigurationUtils.getGlobalConfiguration:(Lorg/apache/dubbo/rpc/model/ScopeModel;)Lorg/apache/dubbo/common/config/Configuration;
+     372: ldc           #48                 // String dubbo.application.parameters.serialize.packable.factory
+     374: ldc           #49                 // String default
+     376: invokeinterface #50,  3           // InterfaceMethod org/apache/dubbo/common/config/Configuration.getString:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     381: invokevirtual #51                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getExtension:(Ljava/lang/String;)Ljava/lang/Object;
+     384: checkcast     #44                 // class org/apache/dubbo/rpc/model/PackableMethodFactory
+     387: aload_0
+     388: getfield      #19                 // Field methodDescriptor:Lorg/apache/dubbo/rpc/model/MethodDescriptor;
+     391: aload_1
+     392: aload_0
+     393: getfield      #52                 // Field requestMetadata:Ljava/util/Map;
+     396: getstatic     #53                 // Field io/netty/handler/codec/http/HttpHeaderNames.CONTENT_TYPE:Lio/netty/util/AsciiString;
+     399: invokevirtual #54                 // Method io/netty/util/AsciiString.toString:()Ljava/lang/String;
+     402: invokeinterface #55,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     407: checkcast     #56                 // class java/lang/String
+     410: invokeinterface #57,  4           // InterfaceMethod org/apache/dubbo/rpc/model/PackableMethodFactory.create:(Lorg/apache/dubbo/rpc/model/MethodDescriptor;Lorg/apache/dubbo/common/URL;Ljava/lang/String;)Lorg/apache/dubbo/rpc/model/PackableMethod;
+     415: putfield      #58                 // Field packableMethod:Lorg/apache/dubbo/rpc/model/PackableMethod;
+     418: aload_0
+     419: invokespecial #59                 // Method trySetListener:()V
+     422: aload_0
+     423: getfield      #60                 // Field listener:Lorg/apache/dubbo/rpc/protocol/tri/call/ServerCall$Listener;
+     426: ifnonnull     434
+     429: aload_0
+     430: iconst_1
+     431: invokevirtual #61                 // Method request:(I)V
+     434: return
+
+  private void trySetListener();
+    Code:
+       0: aload_0
+       1: getfield      #60                 // Field listener:Lorg/apache/dubbo/rpc/protocol/tri/call/ServerCall$Listener;
+       4: ifnull        8
+       7: return
+       8: aload_0
+       9: getfield      #19                 // Field methodDescriptor:Lorg/apache/dubbo/rpc/model/MethodDescriptor;
+      12: ifnonnull     16
+      15: return
+      16: aload_0
+      17: invokevirtual #62                 // Method isClosed:()Z
+      20: ifeq          24
+      23: return
+      24: aload_0
+      25: aload_0
+      26: getfield      #19                 // Field methodDescriptor:Lorg/apache/dubbo/rpc/model/MethodDescriptor;
+      29: invokevirtual #63                 // Method buildInvocation:(Lorg/apache/dubbo/rpc/model/MethodDescriptor;)Lorg/apache/dubbo/rpc/RpcInvocation;
+      32: astore_1
+      33: aload_0
+      34: invokevirtual #62                 // Method isClosed:()Z
+      37: ifeq          41
+      40: return
+      41: aload_0
+      42: getfield      #5                  // Field headerFilters:Ljava/util/List;
+      45: aload_0
+      46: aload_1
+      47: invokedynamic #64,  0             // InvokeDynamic #0:accept:(Lorg/apache/dubbo/rpc/protocol/tri/call/ReflectionAbstractServerCall;Lorg/apache/dubbo/rpc/RpcInvocation;)Ljava/util/function/Consumer;
+      52: invokeinterface #65,  2           // InterfaceMethod java/util/List.forEach:(Ljava/util/function/Consumer;)V
+      57: aload_0
+      58: invokevirtual #62                 // Method isClosed:()Z
+      61: ifeq          65
+      64: return
+      65: aload_0
+      66: aload_0
+      67: aload_1
+      68: aload_0
+      69: getfield      #19                 // Field methodDescriptor:Lorg/apache/dubbo/rpc/model/MethodDescriptor;
+      72: aload_0
+      73: getfield      #42                 // Field invoker:Lorg/apache/dubbo/rpc/Invoker;
+      76: invokevirtual #66                 // Method startInternalCall:(Lorg/apache/dubbo/rpc/RpcInvocation;Lorg/apache/dubbo/rpc/model/MethodDescriptor;Lorg/apache/dubbo/rpc/Invoker;)Lorg/apache/dubbo/rpc/protocol/tri/call/ServerCall$Listener;
+      79: putfield      #60                 // Field listener:Lorg/apache/dubbo/rpc/protocol/tri/call/ServerCall$Listener;
+      82: return
+
+  protected java.lang.Object parseSingleMessage(byte[]) throws java.lang.Exception;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #67                 // Method trySetMethodDescriptor:([B)V
+       5: aload_0
+       6: invokespecial #59                 // Method trySetListener:()V
+       9: aload_0
+      10: invokevirtual #62                 // Method isClosed:()Z
+      13: ifeq          18
+      16: aconst_null
+      17: areturn
+      18: aload_0
+      19: getfield      #42                 // Field invoker:Lorg/apache/dubbo/rpc/Invoker;
+      22: invokeinterface #2,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+      27: invokevirtual #6                  // Method org/apache/dubbo/common/URL.getServiceModel:()Lorg/apache/dubbo/rpc/model/ServiceModel;
+      30: invokevirtual #68                 // Method org/apache/dubbo/rpc/model/ServiceModel.getClassLoader:()Ljava/lang/ClassLoader;
+      33: invokestatic  #69                 // Method org/apache/dubbo/rpc/protocol/tri/ClassLoadUtil.switchContextLoader:(Ljava/lang/ClassLoader;)V
+      36: aload_0
+      37: getfield      #58                 // Field packableMethod:Lorg/apache/dubbo/rpc/model/PackableMethod;
+      40: invokeinterface #70,  1           // InterfaceMethod org/apache/dubbo/rpc/model/PackableMethod.getRequestUnpack:()Lorg/apache/dubbo/rpc/model/UnPack;
+      45: aload_1
+      46: invokeinterface #71,  2           // InterfaceMethod org/apache/dubbo/rpc/model/UnPack.unpack:([B)Ljava/lang/Object;
+      51: areturn
+
+  private void trySetMethodDescriptor(byte[]);
+    Code:
+       0: aload_0
+       1: getfield      #19                 // Field methodDescriptor:Lorg/apache/dubbo/rpc/model/MethodDescriptor;
+       4: ifnull        8
+       7: return
+       8: aload_1
+       9: invokestatic  #72                 // Method org/apache/dubbo/rpc/protocol/tri/TripleCustomerProtocolWapper$TripleRequestWrapper.parseFrom:([B)Lorg/apache/dubbo/rpc/protocol/tri/TripleCustomerProtocolWapper$TripleRequestWrapper;
+      12: astore_2
+      13: aload_2
+      14: invokevirtual #73                 // Method org/apache/dubbo/rpc/protocol/tri/TripleCustomerProtocolWapper$TripleRequestWrapper.getArgTypes:()Ljava/util/List;
+      17: aload_2
+      18: invokevirtual #74                 // Method org/apache/dubbo/rpc/protocol/tri/TripleCustomerProtocolWapper$TripleRequestWrapper.getArgs:()Ljava/util/List;
+      21: invokeinterface #39,  1           // InterfaceMethod java/util/List.size:()I
+      26: anewarray     #56                 // class java/lang/String
+      29: invokeinterface #75,  2           // InterfaceMethod java/util/List.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;
+      34: checkcast     #76                 // class "[Ljava/lang/String;"
+      37: astore_3
+      38: aload_0
+      39: getfield      #23                 // Field methodDescriptors:Ljava/util/List;
+      42: invokeinterface #77,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      47: astore        4
+      49: aload         4
+      51: invokeinterface #78,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      56: ifeq          97
+      59: aload         4
+      61: invokeinterface #79,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      66: checkcast     #18                 // class org/apache/dubbo/rpc/model/MethodDescriptor
+      69: astore        5
+      71: aload         5
+      73: invokeinterface #80,  1           // InterfaceMethod org/apache/dubbo/rpc/model/MethodDescriptor.getCompatibleParamSignatures:()[Ljava/lang/String;
+      78: aload_3
+      79: invokestatic  #81                 // Method java/util/Arrays.equals:([Ljava/lang/Object;[Ljava/lang/Object;)Z
+      82: ifeq          94
+      85: aload_0
+      86: aload         5
+      88: putfield      #19                 // Field methodDescriptor:Lorg/apache/dubbo/rpc/model/MethodDescriptor;
+      91: goto          97
+      94: goto          49
+      97: aload_0
+      98: getfield      #19                 // Field methodDescriptor:Lorg/apache/dubbo/rpc/model/MethodDescriptor;
+     101: ifnonnull     167
+     104: aload_0
+     105: getstatic     #33                 // Field org/apache/dubbo/rpc/TriRpcStatus.UNIMPLEMENTED:Lorg/apache/dubbo/rpc/TriRpcStatus;
+     108: new           #25                 // class java/lang/StringBuilder
+     111: dup
+     112: invokespecial #26                 // Method java/lang/StringBuilder."<init>":()V
+     115: ldc           #82                 // String Method :
+     117: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     120: aload_0
+     121: getfield      #13                 // Field methodName:Ljava/lang/String;
+     124: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     127: ldc           #83                 // String [
+     129: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     132: aload_3
+     133: invokestatic  #84                 // Method java/util/Arrays.toString:([Ljava/lang/Object;)Ljava/lang/String;
+     136: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     139: ldc           #85                 // String ] not found of service:
+     141: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     144: aload_0
+     145: getfield      #22                 // Field serviceDescriptor:Lorg/apache/dubbo/rpc/model/ServiceDescriptor;
+     148: invokeinterface #86,  1           // InterfaceMethod org/apache/dubbo/rpc/model/ServiceDescriptor.getInterfaceName:()Ljava/lang/String;
+     153: invokevirtual #31                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     156: invokevirtual #32                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     159: invokevirtual #37                 // Method org/apache/dubbo/rpc/TriRpcStatus.withDescription:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+     162: aconst_null
+     163: invokevirtual #87                 // Method close:(Lorg/apache/dubbo/rpc/TriRpcStatus;Ljava/util/Map;)V
+     166: return
+     167: aload_0
+     168: getfield      #42                 // Field invoker:Lorg/apache/dubbo/rpc/Invoker;
+     171: invokeinterface #2,  1            // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+     176: astore        4
+     178: aload_0
+     179: aload_0
+     180: getfield      #43                 // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+     183: ldc           #44                 // class org/apache/dubbo/rpc/model/PackableMethodFactory
+     185: invokevirtual #45                 // Method org/apache/dubbo/rpc/model/FrameworkModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+     188: aload         4
+     190: invokevirtual #46                 // Method org/apache/dubbo/common/URL.getApplicationModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     193: invokestatic  #47                 // Method org/apache/dubbo/common/config/ConfigurationUtils.getGlobalConfiguration:(Lorg/apache/dubbo/rpc/model/ScopeModel;)Lorg/apache/dubbo/common/config/Configuration;
+     196: ldc           #48                 // String dubbo.application.parameters.serialize.packable.factory
+     198: ldc           #49                 // String default
+     200: invokeinterface #50,  3           // InterfaceMethod org/apache/dubbo/common/config/Configuration.getString:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     205: invokevirtual #51                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getExtension:(Ljava/lang/String;)Ljava/lang/Object;
+     208: checkcast     #44                 // class org/apache/dubbo/rpc/model/PackableMethodFactory
+     211: aload_0
+     212: getfield      #19                 // Field methodDescriptor:Lorg/apache/dubbo/rpc/model/MethodDescriptor;
+     215: aload         4
+     217: aload_0
+     218: getfield      #52                 // Field requestMetadata:Ljava/util/Map;
+     221: getstatic     #53                 // Field io/netty/handler/codec/http/HttpHeaderNames.CONTENT_TYPE:Lio/netty/util/AsciiString;
+     224: invokevirtual #54                 // Method io/netty/util/AsciiString.toString:()Ljava/lang/String;
+     227: invokeinterface #55,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     232: checkcast     #56                 // class java/lang/String
+     235: invokeinterface #57,  4           // InterfaceMethod org/apache/dubbo/rpc/model/PackableMethodFactory.create:(Lorg/apache/dubbo/rpc/model/MethodDescriptor;Lorg/apache/dubbo/common/URL;Ljava/lang/String;)Lorg/apache/dubbo/rpc/model/PackableMethod;
+     240: putfield      #58                 // Field packableMethod:Lorg/apache/dubbo/rpc/model/PackableMethod;
+     243: return
+
+  private void lambda$trySetListener$0(org.apache.dubbo.rpc.RpcInvocation, org.apache.dubbo.rpc.HeaderFilter);
+    Code:
+       0: aload_2
+       1: aload_0
+       2: getfield      #42                 // Field invoker:Lorg/apache/dubbo/rpc/Invoker;
+       5: aload_1
+       6: invokeinterface #88,  3           // InterfaceMethod org/apache/dubbo/rpc/HeaderFilter.invoke:(Lorg/apache/dubbo/rpc/Invoker;Lorg/apache/dubbo/rpc/RpcInvocation;)Lorg/apache/dubbo/rpc/RpcInvocation;
+      11: pop
+      12: return
+}

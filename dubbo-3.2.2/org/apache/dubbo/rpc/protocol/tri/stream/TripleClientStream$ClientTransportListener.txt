@@ -1,0 +1,720 @@
+Compiled from "TripleClientStream.java"
+class org.apache.dubbo.rpc.protocol.tri.stream.TripleClientStream$ClientTransportListener extends org.apache.dubbo.rpc.protocol.tri.transport.AbstractH2TransportListener implements org.apache.dubbo.rpc.protocol.tri.transport.H2TransportListener {
+  private org.apache.dubbo.rpc.TriRpcStatus transportError;
+
+  private org.apache.dubbo.rpc.protocol.tri.compressor.DeCompressor decompressor;
+
+  private boolean headerReceived;
+
+  private io.netty.handler.codec.http2.Http2Headers trailers;
+
+  final org.apache.dubbo.rpc.protocol.tri.stream.TripleClientStream this$0;
+
+  org.apache.dubbo.rpc.protocol.tri.stream.TripleClientStream$ClientTransportListener(org.apache.dubbo.rpc.protocol.tri.stream.TripleClientStream);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+       5: aload_0
+       6: invokespecial #5                  // Method org/apache/dubbo/rpc/protocol/tri/transport/AbstractH2TransportListener."<init>":()V
+       9: return
+
+  void handleH2TransportError(org.apache.dubbo.rpc.TriRpcStatus);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+       4: invokestatic  #6                  // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.access$200:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;)Lorg/apache/dubbo/rpc/protocol/tri/transport/TripleWriteQueue;
+       7: aload_0
+       8: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+      11: invokestatic  #7                  // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.access$100:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;)Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleStreamChannelFuture;
+      14: getstatic     #8                  // Field io/netty/handler/codec/http2/Http2Error.NO_ERROR:Lio/netty/handler/codec/http2/Http2Error;
+      17: invokestatic  #9                  // Method org/apache/dubbo/rpc/protocol/tri/command/CancelQueueCommand.createCommand:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleStreamChannelFuture;Lio/netty/handler/codec/http2/Http2Error;)Lorg/apache/dubbo/rpc/protocol/tri/command/CancelQueueCommand;
+      20: invokevirtual #10                 // Method org/apache/dubbo/rpc/protocol/tri/transport/TripleWriteQueue.enqueue:(Lorg/apache/dubbo/rpc/protocol/tri/command/QueuedCommand;)Lio/netty/channel/ChannelFuture;
+      23: pop
+      24: aload_0
+      25: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+      28: iconst_1
+      29: invokestatic  #11                 // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.access$302:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;Z)Z
+      32: pop
+      33: aload_0
+      34: aload_1
+      35: aconst_null
+      36: iconst_0
+      37: invokevirtual #12                 // Method finishProcess:(Lorg/apache/dubbo/rpc/TriRpcStatus;Lio/netty/handler/codec/http2/Http2Headers;Z)V
+      40: return
+
+  void finishProcess(org.apache.dubbo.rpc.TriRpcStatus, io.netty.handler.codec.http2.Http2Headers, boolean);
+    Code:
+       0: aload_0
+       1: aload_2
+       2: invokevirtual #13                 // Method filterReservedHeaders:(Lio/netty/handler/codec/http2/Http2Headers;)Ljava/util/Map;
+       5: astore        4
+       7: aload_0
+       8: aload_2
+       9: aload         4
+      11: invokedynamic #14,  0             // InvokeDynamic #0:get:(Ljava/util/Map;)Ljava/util/function/Supplier;
+      16: invokevirtual #15                 // Method headersToMap:(Lio/netty/handler/codec/http2/Http2Headers;Ljava/util/function/Supplier;)Ljava/util/Map;
+      19: astore        5
+      21: aload_0
+      22: aload         4
+      24: invokespecial #16                 // Method getStatusFromTrailers:(Ljava/util/Map;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+      27: astore        7
+      29: aload         7
+      31: ifnull        41
+      34: aload         7
+      36: astore        6
+      38: goto          44
+      41: aload_1
+      42: astore        6
+      44: aload_0
+      45: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+      48: getfield      #17                 // Field org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.listener:Lorg/apache/dubbo/rpc/protocol/tri/stream/ClientStream$Listener;
+      51: aload         6
+      53: aload         5
+      55: aload         4
+      57: iload_3
+      58: invokeinterface #18,  5           // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/stream/ClientStream$Listener.onComplete:(Lorg/apache/dubbo/rpc/TriRpcStatus;Ljava/util/Map;Ljava/util/Map;Z)V
+      63: return
+
+  private org.apache.dubbo.rpc.TriRpcStatus validateHeaderStatus(io.netty.handler.codec.http2.Http2Headers);
+    Code:
+       0: aload_1
+       1: invokeinterface #19,  1           // InterfaceMethod io/netty/handler/codec/http2/Http2Headers.status:()Ljava/lang/CharSequence;
+       6: ifnonnull     13
+       9: aconst_null
+      10: goto          30
+      13: aload_1
+      14: invokeinterface #19,  1           // InterfaceMethod io/netty/handler/codec/http2/Http2Headers.status:()Ljava/lang/CharSequence;
+      19: invokeinterface #20,  1           // InterfaceMethod java/lang/CharSequence.toString:()Ljava/lang/String;
+      24: invokestatic  #21                 // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+      27: invokestatic  #22                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      30: astore_2
+      31: aload_2
+      32: ifnonnull     44
+      35: getstatic     #23                 // Field org/apache/dubbo/rpc/TriRpcStatus.INTERNAL:Lorg/apache/dubbo/rpc/TriRpcStatus;
+      38: ldc           #24                 // String Missing HTTP status code
+      40: invokevirtual #25                 // Method org/apache/dubbo/rpc/TriRpcStatus.withDescription:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+      43: areturn
+      44: aload_1
+      45: getstatic     #26                 // Field org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.CONTENT_TYPE_KEY:Lorg/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum;
+      48: invokevirtual #27                 // Method org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.getHeader:()Ljava/lang/String;
+      51: invokeinterface #28,  2           // InterfaceMethod io/netty/handler/codec/http2/Http2Headers.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      56: checkcast     #29                 // class java/lang/CharSequence
+      59: astore_3
+      60: aload_3
+      61: ifnull        82
+      64: aload_3
+      65: invokeinterface #20,  1           // InterfaceMethod java/lang/CharSequence.toString:()Ljava/lang/String;
+      70: getstatic     #30                 // Field org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.APPLICATION_GRPC:Lorg/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum;
+      73: invokevirtual #27                 // Method org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.getHeader:()Ljava/lang/String;
+      76: invokevirtual #31                 // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+      79: ifne          115
+      82: aload_2
+      83: invokevirtual #32                 // Method java/lang/Integer.intValue:()I
+      86: invokestatic  #33                 // Method org/apache/dubbo/rpc/TriRpcStatus.httpStatusToGrpcCode:(I)Lorg/apache/dubbo/rpc/TriRpcStatus$Code;
+      89: invokestatic  #34                 // Method org/apache/dubbo/rpc/TriRpcStatus.fromCode:(Lorg/apache/dubbo/rpc/TriRpcStatus$Code;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+      92: new           #35                 // class java/lang/StringBuilder
+      95: dup
+      96: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+      99: ldc           #37                 // String invalid content-type:
+     101: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     104: aload_3
+     105: invokevirtual #39                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     108: invokevirtual #40                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     111: invokevirtual #25                 // Method org/apache/dubbo/rpc/TriRpcStatus.withDescription:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+     114: areturn
+     115: aconst_null
+     116: areturn
+
+  void onHeaderReceived(io.netty.handler.codec.http2.Http2Headers);
+    Code:
+       0: aload_0
+       1: getfield      #41                 // Field transportError:Lorg/apache/dubbo/rpc/TriRpcStatus;
+       4: ifnull        35
+       7: aload_0
+       8: getfield      #41                 // Field transportError:Lorg/apache/dubbo/rpc/TriRpcStatus;
+      11: new           #35                 // class java/lang/StringBuilder
+      14: dup
+      15: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+      18: ldc           #42                 // String headers:
+      20: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      23: aload_1
+      24: invokevirtual #39                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      27: invokevirtual #40                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      30: invokevirtual #43                 // Method org/apache/dubbo/rpc/TriRpcStatus.appendDescription:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+      33: pop
+      34: return
+      35: aload_0
+      36: getfield      #44                 // Field headerReceived:Z
+      39: ifeq          55
+      42: aload_0
+      43: getstatic     #23                 // Field org/apache/dubbo/rpc/TriRpcStatus.INTERNAL:Lorg/apache/dubbo/rpc/TriRpcStatus;
+      46: ldc           #45                 // String Received headers twice
+      48: invokevirtual #25                 // Method org/apache/dubbo/rpc/TriRpcStatus.withDescription:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+      51: putfield      #41                 // Field transportError:Lorg/apache/dubbo/rpc/TriRpcStatus;
+      54: return
+      55: aload_1
+      56: invokeinterface #19,  1           // InterfaceMethod io/netty/handler/codec/http2/Http2Headers.status:()Ljava/lang/CharSequence;
+      61: ifnonnull     68
+      64: aconst_null
+      65: goto          85
+      68: aload_1
+      69: invokeinterface #19,  1           // InterfaceMethod io/netty/handler/codec/http2/Http2Headers.status:()Ljava/lang/CharSequence;
+      74: invokeinterface #20,  1           // InterfaceMethod java/lang/CharSequence.toString:()Ljava/lang/String;
+      79: invokestatic  #21                 // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+      82: invokestatic  #22                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      85: astore_2
+      86: aload_2
+      87: ifnull        113
+      90: aload_2
+      91: invokevirtual #46                 // Method java/lang/Integer.toString:()Ljava/lang/String;
+      94: invokestatic  #21                 // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+      97: bipush        100
+      99: if_icmple     113
+     102: aload_2
+     103: invokevirtual #32                 // Method java/lang/Integer.intValue:()I
+     106: sipush        200
+     109: if_icmpge     113
+     112: return
+     113: aload_0
+     114: iconst_1
+     115: putfield      #44                 // Field headerReceived:Z
+     118: aload_0
+     119: aload_0
+     120: aload_1
+     121: invokespecial #47                 // Method validateHeaderStatus:(Lio/netty/handler/codec/http2/Http2Headers;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+     124: putfield      #41                 // Field transportError:Lorg/apache/dubbo/rpc/TriRpcStatus;
+     127: aload_1
+     128: getstatic     #48                 // Field org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.GRPC_ENCODING:Lorg/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum;
+     131: invokevirtual #27                 // Method org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.getHeader:()Ljava/lang/String;
+     134: invokeinterface #28,  2           // InterfaceMethod io/netty/handler/codec/http2/Http2Headers.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     139: checkcast     #29                 // class java/lang/CharSequence
+     142: astore_3
+     143: aload_1
+     144: getstatic     #49                 // Field org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.TRI_EXCEPTION_CODE:Lorg/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum;
+     147: invokevirtual #27                 // Method org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.getHeader:()Ljava/lang/String;
+     150: invokeinterface #28,  2           // InterfaceMethod io/netty/handler/codec/http2/Http2Headers.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     155: checkcast     #29                 // class java/lang/CharSequence
+     158: astore        4
+     160: aload         4
+     162: ifnull        200
+     165: aload         4
+     167: invokeinterface #20,  1           // InterfaceMethod java/lang/CharSequence.toString:()Ljava/lang/String;
+     172: invokestatic  #21                 // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+     175: invokestatic  #22                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     178: astore        5
+     180: aload         5
+     182: getstatic     #50                 // Field org/apache/dubbo/common/constants/CommonConstants.TRI_EXCEPTION_CODE_NOT_EXISTS:Ljava/lang/Integer;
+     185: invokevirtual #51                 // Method java/lang/Integer.equals:(Ljava/lang/Object;)Z
+     188: ifne          200
+     191: aload_0
+     192: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+     195: iconst_1
+     196: invokestatic  #52                 // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.access$402:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;Z)Z
+     199: pop
+     200: aconst_null
+     201: aload_3
+     202: if_acmpeq     277
+     205: aload_3
+     206: invokeinterface #20,  1           // InterfaceMethod java/lang/CharSequence.toString:()Ljava/lang/String;
+     211: astore        5
+     213: getstatic     #53                 // Field org/apache/dubbo/rpc/protocol/tri/compressor/Identity.IDENTITY:Lorg/apache/dubbo/rpc/protocol/tri/compressor/Identity;
+     216: invokevirtual #54                 // Method org/apache/dubbo/rpc/protocol/tri/compressor/Identity.getMessageEncoding:()Ljava/lang/String;
+     219: aload         5
+     221: invokevirtual #55                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     224: ifne          277
+     227: aload_0
+     228: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+     231: getfield      #56                 // Field org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+     234: aload         5
+     236: invokestatic  #57                 // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/compressor/DeCompressor.getCompressor:(Lorg/apache/dubbo/rpc/model/FrameworkModel;Ljava/lang/String;)Lorg/apache/dubbo/rpc/protocol/tri/compressor/DeCompressor;
+     239: astore        6
+     241: aconst_null
+     242: aload         6
+     244: if_acmpne     271
+     247: getstatic     #58                 // Field org/apache/dubbo/rpc/TriRpcStatus.UNIMPLEMENTED:Lorg/apache/dubbo/rpc/TriRpcStatus;
+     250: ldc           #59                 // String Grpc-encoding \'%s\' is not supported
+     252: iconst_1
+     253: anewarray     #60                 // class java/lang/Object
+     256: dup
+     257: iconst_0
+     258: aload         5
+     260: aastore
+     261: invokestatic  #61                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+     264: invokevirtual #25                 // Method org/apache/dubbo/rpc/TriRpcStatus.withDescription:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+     267: invokevirtual #62                 // Method org/apache/dubbo/rpc/TriRpcStatus.asException:()Lorg/apache/dubbo/rpc/StatusRpcException;
+     270: athrow
+     271: aload_0
+     272: aload         6
+     274: putfield      #63                 // Field decompressor:Lorg/apache/dubbo/rpc/protocol/tri/compressor/DeCompressor;
+     277: new           #64                 // class org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream$ClientTransportListener$1
+     280: dup
+     281: aload_0
+     282: invokespecial #65                 // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream$ClientTransportListener$1."<init>":(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream$ClientTransportListener;)V
+     285: astore        5
+     287: aload_0
+     288: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+     291: new           #66                 // class org/apache/dubbo/rpc/protocol/tri/frame/TriDecoder
+     294: dup
+     295: aload_0
+     296: getfield      #63                 // Field decompressor:Lorg/apache/dubbo/rpc/protocol/tri/compressor/DeCompressor;
+     299: aload         5
+     301: invokespecial #67                 // Method org/apache/dubbo/rpc/protocol/tri/frame/TriDecoder."<init>":(Lorg/apache/dubbo/rpc/protocol/tri/compressor/DeCompressor;Lorg/apache/dubbo/rpc/protocol/tri/frame/TriDecoder$Listener;)V
+     304: invokestatic  #68                 // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.access$702:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;Lorg/apache/dubbo/rpc/protocol/tri/frame/Deframer;)Lorg/apache/dubbo/rpc/protocol/tri/frame/Deframer;
+     307: pop
+     308: aload_0
+     309: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+     312: getfield      #17                 // Field org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.listener:Lorg/apache/dubbo/rpc/protocol/tri/stream/ClientStream$Listener;
+     315: invokeinterface #69,  1           // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/stream/ClientStream$Listener.onStart:()V
+     320: return
+
+  void onTrailersReceived(io.netty.handler.codec.http2.Http2Headers);
+    Code:
+       0: aload_0
+       1: getfield      #41                 // Field transportError:Lorg/apache/dubbo/rpc/TriRpcStatus;
+       4: ifnonnull     23
+       7: aload_0
+       8: getfield      #44                 // Field headerReceived:Z
+      11: ifne          23
+      14: aload_0
+      15: aload_0
+      16: aload_1
+      17: invokespecial #47                 // Method validateHeaderStatus:(Lio/netty/handler/codec/http2/Http2Headers;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+      20: putfield      #41                 // Field transportError:Lorg/apache/dubbo/rpc/TriRpcStatus;
+      23: aload_0
+      24: getfield      #41                 // Field transportError:Lorg/apache/dubbo/rpc/TriRpcStatus;
+      27: ifnull        63
+      30: aload_0
+      31: aload_0
+      32: getfield      #41                 // Field transportError:Lorg/apache/dubbo/rpc/TriRpcStatus;
+      35: new           #35                 // class java/lang/StringBuilder
+      38: dup
+      39: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+      42: ldc           #70                 // String trailers:
+      44: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      47: aload_1
+      48: invokevirtual #39                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      51: invokevirtual #40                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      54: invokevirtual #43                 // Method org/apache/dubbo/rpc/TriRpcStatus.appendDescription:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+      57: putfield      #41                 // Field transportError:Lorg/apache/dubbo/rpc/TriRpcStatus;
+      60: goto          113
+      63: aload_0
+      64: aload_1
+      65: putfield      #3                  // Field trailers:Lio/netty/handler/codec/http2/Http2Headers;
+      68: aload_0
+      69: aload_1
+      70: invokespecial #2                  // Method statusFromTrailers:(Lio/netty/handler/codec/http2/Http2Headers;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+      73: astore_2
+      74: aload_0
+      75: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+      78: invokestatic  #71                 // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.access$700:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;)Lorg/apache/dubbo/rpc/protocol/tri/frame/Deframer;
+      81: ifnonnull     91
+      84: aload_0
+      85: aload_2
+      86: aload_1
+      87: iconst_0
+      88: invokevirtual #12                 // Method finishProcess:(Lorg/apache/dubbo/rpc/TriRpcStatus;Lio/netty/handler/codec/http2/Http2Headers;Z)V
+      91: aload_0
+      92: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+      95: invokestatic  #71                 // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.access$700:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;)Lorg/apache/dubbo/rpc/protocol/tri/frame/Deframer;
+      98: ifnull        113
+     101: aload_0
+     102: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+     105: invokestatic  #71                 // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.access$700:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;)Lorg/apache/dubbo/rpc/protocol/tri/frame/Deframer;
+     108: invokeinterface #72,  1           // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/frame/Deframer.close:()V
+     113: return
+
+  private org.apache.dubbo.rpc.TriRpcStatus statusFromTrailers(io.netty.handler.codec.http2.Http2Headers);
+    Code:
+       0: aload_1
+       1: getstatic     #73                 // Field org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.STATUS_KEY:Lorg/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum;
+       4: invokevirtual #27                 // Method org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.getHeader:()Ljava/lang/String;
+       7: invokeinterface #74,  2           // InterfaceMethod io/netty/handler/codec/http2/Http2Headers.getInt:(Ljava/lang/Object;)Ljava/lang/Integer;
+      12: astore_2
+      13: aload_2
+      14: ifnonnull     21
+      17: aconst_null
+      18: goto          28
+      21: aload_2
+      22: invokevirtual #32                 // Method java/lang/Integer.intValue:()I
+      25: invokestatic  #75                 // Method org/apache/dubbo/rpc/TriRpcStatus.fromCode:(I)Lorg/apache/dubbo/rpc/TriRpcStatus;
+      28: astore_3
+      29: aload_3
+      30: ifnull        76
+      33: aload_1
+      34: getstatic     #76                 // Field org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.MESSAGE_KEY:Lorg/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum;
+      37: invokevirtual #27                 // Method org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.getHeader:()Ljava/lang/String;
+      40: invokeinterface #28,  2           // InterfaceMethod io/netty/handler/codec/http2/Http2Headers.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      45: checkcast     #29                 // class java/lang/CharSequence
+      48: astore        4
+      50: aload         4
+      52: ifnull        74
+      55: aload         4
+      57: invokeinterface #20,  1           // InterfaceMethod java/lang/CharSequence.toString:()Ljava/lang/String;
+      62: invokestatic  #77                 // Method org/apache/dubbo/rpc/TriRpcStatus.decodeMessage:(Ljava/lang/String;)Ljava/lang/String;
+      65: astore        5
+      67: aload_3
+      68: aload         5
+      70: invokevirtual #25                 // Method org/apache/dubbo/rpc/TriRpcStatus.withDescription:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+      73: astore_3
+      74: aload_3
+      75: areturn
+      76: aload_0
+      77: getfield      #44                 // Field headerReceived:Z
+      80: ifeq          92
+      83: getstatic     #78                 // Field org/apache/dubbo/rpc/TriRpcStatus.UNKNOWN:Lorg/apache/dubbo/rpc/TriRpcStatus;
+      86: ldc           #79                 // String missing GRPC status in response
+      88: invokevirtual #25                 // Method org/apache/dubbo/rpc/TriRpcStatus.withDescription:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+      91: areturn
+      92: aload_1
+      93: invokeinterface #19,  1           // InterfaceMethod io/netty/handler/codec/http2/Http2Headers.status:()Ljava/lang/CharSequence;
+      98: ifnonnull     105
+     101: aconst_null
+     102: goto          122
+     105: aload_1
+     106: invokeinterface #19,  1           // InterfaceMethod io/netty/handler/codec/http2/Http2Headers.status:()Ljava/lang/CharSequence;
+     111: invokeinterface #20,  1           // InterfaceMethod java/lang/CharSequence.toString:()Ljava/lang/String;
+     116: invokestatic  #21                 // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+     119: invokestatic  #22                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     122: astore        4
+     124: aload         4
+     126: ifnull        144
+     129: aload         4
+     131: invokevirtual #32                 // Method java/lang/Integer.intValue:()I
+     134: invokestatic  #33                 // Method org/apache/dubbo/rpc/TriRpcStatus.httpStatusToGrpcCode:(I)Lorg/apache/dubbo/rpc/TriRpcStatus$Code;
+     137: invokestatic  #34                 // Method org/apache/dubbo/rpc/TriRpcStatus.fromCode:(Lorg/apache/dubbo/rpc/TriRpcStatus$Code;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+     140: astore_3
+     141: goto          153
+     144: getstatic     #23                 // Field org/apache/dubbo/rpc/TriRpcStatus.INTERNAL:Lorg/apache/dubbo/rpc/TriRpcStatus;
+     147: ldc           #80                 // String missing HTTP status code
+     149: invokevirtual #25                 // Method org/apache/dubbo/rpc/TriRpcStatus.withDescription:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+     152: astore_3
+     153: aload_3
+     154: ldc           #81                 // String missing GRPC status, inferred error from HTTP status code
+     156: invokevirtual #43                 // Method org/apache/dubbo/rpc/TriRpcStatus.appendDescription:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+     159: areturn
+
+  private org.apache.dubbo.rpc.TriRpcStatus getStatusFromTrailers(java.util.Map<java.lang.String, java.lang.String>);
+    Code:
+       0: aconst_null
+       1: aload_1
+       2: if_acmpne     7
+       5: aconst_null
+       6: areturn
+       7: invokestatic  #82                 // Method org/apache/dubbo/rpc/protocol/tri/stream/AbstractStream.getGrpcStatusDetailEnabled:()Z
+      10: ifne          15
+      13: aconst_null
+      14: areturn
+      15: aload_1
+      16: getstatic     #83                 // Field org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.STATUS_DETAIL_KEY:Lorg/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum;
+      19: invokevirtual #27                 // Method org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.getHeader:()Ljava/lang/String;
+      22: invokeinterface #84,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      27: ifne          32
+      30: aconst_null
+      31: areturn
+      32: aload_1
+      33: getstatic     #83                 // Field org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.STATUS_DETAIL_KEY:Lorg/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum;
+      36: invokevirtual #27                 // Method org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.getHeader:()Ljava/lang/String;
+      39: invokeinterface #85,  2           // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      44: checkcast     #86                 // class java/lang/String
+      47: astore_2
+      48: aload_2
+      49: invokestatic  #87                 // Method org/apache/dubbo/rpc/protocol/tri/stream/StreamUtils.decodeASCIIByte:(Ljava/lang/CharSequence;)[B
+      52: astore_3
+      53: invokestatic  #88                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+      56: invokevirtual #89                 // Method java/lang/Thread.getContextClassLoader:()Ljava/lang/ClassLoader;
+      59: astore        4
+      61: aload_3
+      62: invokestatic  #90                 // Method com/google/rpc/Status.parseFrom:([B)Lcom/google/rpc/Status;
+      65: astore        5
+      67: aload         5
+      69: invokevirtual #91                 // Method com/google/rpc/Status.getDetailsList:()Ljava/util/List;
+      72: astore        6
+      74: aload_0
+      75: aload         6
+      77: invokespecial #92                 // Method tranFromStatusDetails:(Ljava/util/List;)Ljava/util/Map;
+      80: astore        7
+      82: aload         5
+      84: invokevirtual #93                 // Method com/google/rpc/Status.getCode:()I
+      87: invokestatic  #75                 // Method org/apache/dubbo/rpc/TriRpcStatus.fromCode:(I)Lorg/apache/dubbo/rpc/TriRpcStatus;
+      90: aload         5
+      92: invokevirtual #94                 // Method com/google/rpc/Status.getMessage:()Ljava/lang/String;
+      95: invokestatic  #77                 // Method org/apache/dubbo/rpc/TriRpcStatus.decodeMessage:(Ljava/lang/String;)Ljava/lang/String;
+      98: invokevirtual #25                 // Method org/apache/dubbo/rpc/TriRpcStatus.withDescription:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+     101: astore        8
+     103: aload         7
+     105: ldc           #95                 // class com/google/rpc/DebugInfo
+     107: invokeinterface #96,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     112: checkcast     #95                 // class com/google/rpc/DebugInfo
+     115: astore        9
+     117: aload         9
+     119: ifnull        141
+     122: aload         9
+     124: invokevirtual #97                 // Method com/google/rpc/DebugInfo.getStackEntriesList:()Lcom/google/protobuf/ProtocolStringList;
+     127: invokestatic  #98                 // Method org/apache/dubbo/rpc/protocol/tri/ExceptionUtils.getStackFrameString:(Ljava/util/List;)Ljava/lang/String;
+     130: astore        10
+     132: aload         8
+     134: aload         10
+     136: invokevirtual #43                 // Method org/apache/dubbo/rpc/TriRpcStatus.appendDescription:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+     139: astore        8
+     141: aload         8
+     143: astore        10
+     145: aload         4
+     147: invokestatic  #99                 // Method org/apache/dubbo/rpc/protocol/tri/ClassLoadUtil.switchContextLoader:(Ljava/lang/ClassLoader;)V
+     150: aload         10
+     152: areturn
+     153: astore        5
+     155: aconst_null
+     156: astore        6
+     158: aload         4
+     160: invokestatic  #99                 // Method org/apache/dubbo/rpc/protocol/tri/ClassLoadUtil.switchContextLoader:(Ljava/lang/ClassLoader;)V
+     163: aload         6
+     165: areturn
+     166: astore        11
+     168: aload         4
+     170: invokestatic  #99                 // Method org/apache/dubbo/rpc/protocol/tri/ClassLoadUtil.switchContextLoader:(Ljava/lang/ClassLoader;)V
+     173: aload         11
+     175: athrow
+    Exception table:
+       from    to  target type
+          61   145   153   Class java/io/IOException
+          61   145   166   any
+         153   158   166   any
+         166   168   166   any
+
+  private java.util.Map<java.lang.Class<?>, java.lang.Object> tranFromStatusDetails(java.util.List<com.google.protobuf.Any>);
+    Code:
+       0: new           #101                // class java/util/HashMap
+       3: dup
+       4: aload_1
+       5: invokeinterface #102,  1          // InterfaceMethod java/util/List.size:()I
+      10: invokespecial #103                // Method java/util/HashMap."<init>":(I)V
+      13: astore_2
+      14: aload_1
+      15: invokeinterface #104,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      20: astore_3
+      21: aload_3
+      22: invokeinterface #105,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      27: ifeq          113
+      30: aload_3
+      31: invokeinterface #106,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      36: checkcast     #107                // class com/google/protobuf/Any
+      39: astore        4
+      41: aload         4
+      43: ldc           #108                // class com/google/rpc/ErrorInfo
+      45: invokevirtual #109                // Method com/google/protobuf/Any.is:(Ljava/lang/Class;)Z
+      48: ifeq          77
+      51: aload         4
+      53: ldc           #108                // class com/google/rpc/ErrorInfo
+      55: invokevirtual #110                // Method com/google/protobuf/Any.unpack:(Ljava/lang/Class;)Lcom/google/protobuf/Message;
+      58: checkcast     #108                // class com/google/rpc/ErrorInfo
+      61: astore        5
+      63: aload_2
+      64: ldc           #108                // class com/google/rpc/ErrorInfo
+      66: aload         5
+      68: invokeinterface #111,  3          // InterfaceMethod java/util/Map.putIfAbsent:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      73: pop
+      74: goto          110
+      77: aload         4
+      79: ldc           #95                 // class com/google/rpc/DebugInfo
+      81: invokevirtual #109                // Method com/google/protobuf/Any.is:(Ljava/lang/Class;)Z
+      84: ifeq          110
+      87: aload         4
+      89: ldc           #95                 // class com/google/rpc/DebugInfo
+      91: invokevirtual #110                // Method com/google/protobuf/Any.unpack:(Ljava/lang/Class;)Lcom/google/protobuf/Message;
+      94: checkcast     #95                 // class com/google/rpc/DebugInfo
+      97: astore        5
+      99: aload_2
+     100: ldc           #95                 // class com/google/rpc/DebugInfo
+     102: aload         5
+     104: invokeinterface #111,  3          // InterfaceMethod java/util/Map.putIfAbsent:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     109: pop
+     110: goto          21
+     113: goto          134
+     116: astore_3
+     117: invokestatic  #113                // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.access$800:()Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     120: ldc           #114                // String 4-14
+     122: ldc           #115                // String
+     124: ldc           #115                // String
+     126: ldc           #116                // String tran from grpc-status-details error
+     128: aload_3
+     129: invokeinterface #117,  6          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     134: aload_2
+     135: areturn
+    Exception table:
+       from    to  target type
+          14   113   116   Class java/lang/Throwable
+
+  public void onHeader(io.netty.handler.codec.http2.Http2Headers, boolean);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+       4: getfield      #118                // Field org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.executor:Ljava/util/concurrent/Executor;
+       7: aload_0
+       8: iload_2
+       9: aload_1
+      10: invokedynamic #119,  0            // InvokeDynamic #1:run:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream$ClientTransportListener;ZLio/netty/handler/codec/http2/Http2Headers;)Ljava/lang/Runnable;
+      15: invokeinterface #120,  2          // InterfaceMethod java/util/concurrent/Executor.execute:(Ljava/lang/Runnable;)V
+      20: return
+
+  public void onData(io.netty.buffer.ByteBuf, boolean);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+       4: getfield      #118                // Field org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.executor:Ljava/util/concurrent/Executor;
+       7: aload_0
+       8: aload_1
+       9: iload_2
+      10: invokedynamic #121,  0            // InvokeDynamic #2:run:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream$ClientTransportListener;Lio/netty/buffer/ByteBuf;Z)Ljava/lang/Runnable;
+      15: invokeinterface #120,  2          // InterfaceMethod java/util/concurrent/Executor.execute:(Ljava/lang/Runnable;)V
+      20: return
+
+  public void cancelByRemote(long);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+       4: getfield      #118                // Field org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.executor:Ljava/util/concurrent/Executor;
+       7: aload_0
+       8: lload_1
+       9: invokedynamic #122,  0            // InvokeDynamic #3:run:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream$ClientTransportListener;J)Ljava/lang/Runnable;
+      14: invokeinterface #120,  2          // InterfaceMethod java/util/concurrent/Executor.execute:(Ljava/lang/Runnable;)V
+      19: return
+
+  private void lambda$cancelByRemote$3(long);
+    Code:
+       0: aload_0
+       1: getstatic     #123                // Field org/apache/dubbo/rpc/TriRpcStatus.CANCELLED:Lorg/apache/dubbo/rpc/TriRpcStatus;
+       4: new           #35                 // class java/lang/StringBuilder
+       7: dup
+       8: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+      11: ldc           #124                // String Canceled by remote peer, errorCode=
+      13: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      16: lload_1
+      17: invokevirtual #125                // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+      20: invokevirtual #40                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      23: invokevirtual #25                 // Method org/apache/dubbo/rpc/TriRpcStatus.withDescription:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+      26: putfield      #41                 // Field transportError:Lorg/apache/dubbo/rpc/TriRpcStatus;
+      29: aload_0
+      30: aload_0
+      31: getfield      #41                 // Field transportError:Lorg/apache/dubbo/rpc/TriRpcStatus;
+      34: aconst_null
+      35: iconst_0
+      36: invokevirtual #12                 // Method finishProcess:(Lorg/apache/dubbo/rpc/TriRpcStatus;Lio/netty/handler/codec/http2/Http2Headers;Z)V
+      39: return
+
+  private void lambda$onData$2(io.netty.buffer.ByteBuf, boolean);
+    Code:
+       0: aload_0
+       1: getfield      #41                 // Field transportError:Lorg/apache/dubbo/rpc/TriRpcStatus;
+       4: ifnull        74
+       7: aload_0
+       8: getfield      #41                 // Field transportError:Lorg/apache/dubbo/rpc/TriRpcStatus;
+      11: new           #35                 // class java/lang/StringBuilder
+      14: dup
+      15: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+      18: ldc           #126                // String Data:
+      20: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      23: aload_1
+      24: getstatic     #127                // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+      27: invokevirtual #128                // Method io/netty/buffer/ByteBuf.toString:(Ljava/nio/charset/Charset;)Ljava/lang/String;
+      30: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      33: invokevirtual #40                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      36: invokevirtual #43                 // Method org/apache/dubbo/rpc/TriRpcStatus.appendDescription:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+      39: pop
+      40: aload_1
+      41: invokestatic  #129                // Method io/netty/util/ReferenceCountUtil.release:(Ljava/lang/Object;)Z
+      44: pop
+      45: aload_0
+      46: getfield      #41                 // Field transportError:Lorg/apache/dubbo/rpc/TriRpcStatus;
+      49: getfield      #130                // Field org/apache/dubbo/rpc/TriRpcStatus.description:Ljava/lang/String;
+      52: invokevirtual #131                // Method java/lang/String.length:()I
+      55: sipush        512
+      58: if_icmpgt     65
+      61: iload_2
+      62: ifeq          73
+      65: aload_0
+      66: aload_0
+      67: getfield      #41                 // Field transportError:Lorg/apache/dubbo/rpc/TriRpcStatus;
+      70: invokevirtual #132                // Method handleH2TransportError:(Lorg/apache/dubbo/rpc/TriRpcStatus;)V
+      73: return
+      74: aload_0
+      75: getfield      #44                 // Field headerReceived:Z
+      78: ifne          94
+      81: aload_0
+      82: getstatic     #23                 // Field org/apache/dubbo/rpc/TriRpcStatus.INTERNAL:Lorg/apache/dubbo/rpc/TriRpcStatus;
+      85: ldc           #133                // String headers not received before payload
+      87: invokevirtual #25                 // Method org/apache/dubbo/rpc/TriRpcStatus.withDescription:(Ljava/lang/String;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+      90: invokevirtual #132                // Method handleH2TransportError:(Lorg/apache/dubbo/rpc/TriRpcStatus;)V
+      93: return
+      94: aload_0
+      95: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+      98: invokestatic  #71                 // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.access$700:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;)Lorg/apache/dubbo/rpc/protocol/tri/frame/Deframer;
+     101: aload_1
+     102: invokeinterface #134,  2          // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/frame/Deframer.deframe:(Lio/netty/buffer/ByteBuf;)V
+     107: return
+
+  private void lambda$onHeader$1(boolean, io.netty.handler.codec.http2.Http2Headers);
+    Code:
+       0: iload_1
+       1: ifeq          85
+       4: aload_0
+       5: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+       8: invokestatic  #135                // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.access$900:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;)Z
+      11: ifne          77
+      14: aload_0
+      15: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+      18: invokestatic  #7                  // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.access$100:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;)Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleStreamChannelFuture;
+      21: invokevirtual #136                // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleStreamChannelFuture.getNow:()Lio/netty/handler/codec/http2/Http2StreamChannel;
+      24: astore_3
+      25: aload_3
+      26: invokeinterface #137,  1          // InterfaceMethod io/netty/handler/codec/http2/Http2StreamChannel.isActive:()Z
+      31: ifeq          77
+      34: aload_0
+      35: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+      38: invokestatic  #138                // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.access$300:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;)Z
+      41: ifne          77
+      44: aload_0
+      45: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+      48: invokestatic  #6                  // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.access$200:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;)Lorg/apache/dubbo/rpc/protocol/tri/transport/TripleWriteQueue;
+      51: aload_0
+      52: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+      55: invokestatic  #7                  // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.access$100:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;)Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleStreamChannelFuture;
+      58: getstatic     #139                // Field io/netty/handler/codec/http2/Http2Error.CANCEL:Lio/netty/handler/codec/http2/Http2Error;
+      61: invokestatic  #9                  // Method org/apache/dubbo/rpc/protocol/tri/command/CancelQueueCommand.createCommand:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleStreamChannelFuture;Lio/netty/handler/codec/http2/Http2Error;)Lorg/apache/dubbo/rpc/protocol/tri/command/CancelQueueCommand;
+      64: invokevirtual #10                 // Method org/apache/dubbo/rpc/protocol/tri/transport/TripleWriteQueue.enqueue:(Lorg/apache/dubbo/rpc/protocol/tri/command/QueuedCommand;)Lio/netty/channel/ChannelFuture;
+      67: pop
+      68: aload_0
+      69: getfield      #4                  // Field this$0:Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;
+      72: iconst_1
+      73: invokestatic  #11                 // Method org/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream.access$302:(Lorg/apache/dubbo/rpc/protocol/tri/stream/TripleClientStream;Z)Z
+      76: pop
+      77: aload_0
+      78: aload_2
+      79: invokevirtual #140                // Method onTrailersReceived:(Lio/netty/handler/codec/http2/Http2Headers;)V
+      82: goto          90
+      85: aload_0
+      86: aload_2
+      87: invokevirtual #141                // Method onHeaderReceived:(Lio/netty/handler/codec/http2/Http2Headers;)V
+      90: return
+
+  private static java.lang.Object lambda$finishProcess$0(java.util.Map);
+    Code:
+       0: aload_0
+       1: getstatic     #142                // Field org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.TRI_HEADER_CONVERT:Lorg/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum;
+       4: invokevirtual #27                 // Method org/apache/dubbo/rpc/protocol/tri/TripleHeaderEnum.getHeader:()Ljava/lang/String;
+       7: invokeinterface #96,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      12: areturn
+
+  static io.netty.handler.codec.http2.Http2Headers access$500(org.apache.dubbo.rpc.protocol.tri.stream.TripleClientStream$ClientTransportListener);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field trailers:Lio/netty/handler/codec/http2/Http2Headers;
+       4: areturn
+
+  static org.apache.dubbo.rpc.TriRpcStatus access$600(org.apache.dubbo.rpc.protocol.tri.stream.TripleClientStream$ClientTransportListener, io.netty.handler.codec.http2.Http2Headers);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #2                  // Method statusFromTrailers:(Lio/netty/handler/codec/http2/Http2Headers;)Lorg/apache/dubbo/rpc/TriRpcStatus;
+       5: areturn
+}

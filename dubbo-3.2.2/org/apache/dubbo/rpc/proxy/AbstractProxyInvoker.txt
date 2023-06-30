@@ -1,0 +1,352 @@
+Compiled from "AbstractProxyInvoker.java"
+public abstract class org.apache.dubbo.rpc.proxy.AbstractProxyInvoker<T> implements org.apache.dubbo.rpc.Invoker<T> {
+  org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final T proxy;
+
+  private final java.lang.Class<T> type;
+
+  private final org.apache.dubbo.common.URL url;
+
+  public org.apache.dubbo.rpc.proxy.AbstractProxyInvoker(T, java.lang.Class<T>, org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: ldc           #4                  // class org/apache/dubbo/rpc/proxy/AbstractProxyInvoker
+       7: invokestatic  #5                  // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      10: putfield      #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      13: aload_1
+      14: ifnonnull     27
+      17: new           #7                  // class java/lang/IllegalArgumentException
+      20: dup
+      21: ldc           #8                  // String proxy == null
+      23: invokespecial #9                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      26: athrow
+      27: aload_2
+      28: ifnonnull     41
+      31: new           #7                  // class java/lang/IllegalArgumentException
+      34: dup
+      35: ldc           #10                 // String interface == null
+      37: invokespecial #9                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      40: athrow
+      41: aload_2
+      42: aload_1
+      43: invokevirtual #11                 // Method java/lang/Class.isInstance:(Ljava/lang/Object;)Z
+      46: ifne          86
+      49: new           #7                  // class java/lang/IllegalArgumentException
+      52: dup
+      53: new           #12                 // class java/lang/StringBuilder
+      56: dup
+      57: invokespecial #13                 // Method java/lang/StringBuilder."<init>":()V
+      60: aload_1
+      61: invokevirtual #14                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      64: invokevirtual #15                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      67: invokevirtual #16                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      70: ldc           #17                 // String  not implement interface
+      72: invokevirtual #16                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      75: aload_2
+      76: invokevirtual #18                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      79: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      82: invokespecial #9                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      85: athrow
+      86: aload_0
+      87: aload_1
+      88: putfield      #20                 // Field proxy:Ljava/lang/Object;
+      91: aload_0
+      92: aload_2
+      93: putfield      #21                 // Field type:Ljava/lang/Class;
+      96: aload_0
+      97: aload_3
+      98: putfield      #22                 // Field url:Lorg/apache/dubbo/common/URL;
+     101: return
+
+  public java.lang.Class<T> getInterface();
+    Code:
+       0: aload_0
+       1: getfield      #21                 // Field type:Ljava/lang/Class;
+       4: areturn
+
+  public org.apache.dubbo.common.URL getUrl();
+    Code:
+       0: aload_0
+       1: getfield      #22                 // Field url:Lorg/apache/dubbo/common/URL;
+       4: areturn
+
+  public boolean isAvailable();
+    Code:
+       0: iconst_1
+       1: ireturn
+
+  public void destroy();
+    Code:
+       0: return
+
+  public org.apache.dubbo.rpc.Result invoke(org.apache.dubbo.rpc.Invocation) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aconst_null
+       1: astore_2
+       2: invokestatic  #23                 // Method org/apache/dubbo/common/profiler/ProfilerSwitch.isEnableSimpleProfiler:()Z
+       5: ifeq          52
+       8: aload_1
+       9: ldc           #25                 // String DUBBO_INVOKE_PROFILER
+      11: invokeinterface #26,  2           // InterfaceMethod org/apache/dubbo/rpc/Invocation.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      16: astore_3
+      17: aload_3
+      18: instanceof    #27                 // class org/apache/dubbo/common/profiler/ProfilerEntry
+      21: ifeq          52
+      24: aload_3
+      25: checkcast     #27                 // class org/apache/dubbo/common/profiler/ProfilerEntry
+      28: ldc           #28                 // String Receive request. Server biz impl invoke begin.
+      30: invokestatic  #29                 // Method org/apache/dubbo/common/profiler/Profiler.enter:(Lorg/apache/dubbo/common/profiler/ProfilerEntry;Ljava/lang/String;)Lorg/apache/dubbo/common/profiler/ProfilerEntry;
+      33: astore        4
+      35: aload_1
+      36: ldc           #25                 // String DUBBO_INVOKE_PROFILER
+      38: aload         4
+      40: invokeinterface #30,  3           // InterfaceMethod org/apache/dubbo/rpc/Invocation.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      45: pop
+      46: aload         4
+      48: invokestatic  #31                 // Method org/apache/dubbo/common/profiler/Profiler.setToBizProfiler:(Lorg/apache/dubbo/common/profiler/ProfilerEntry;)Lorg/apache/dubbo/common/profiler/ProfilerEntry;
+      51: astore_2
+      52: aload_0
+      53: aload_0
+      54: getfield      #20                 // Field proxy:Ljava/lang/Object;
+      57: aload_1
+      58: invokeinterface #32,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+      63: aload_1
+      64: invokeinterface #33,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getParameterTypes:()[Ljava/lang/Class;
+      69: aload_1
+      70: invokeinterface #34,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getArguments:()[Ljava/lang/Object;
+      75: invokevirtual #35                 // Method doInvoke:(Ljava/lang/Object;Ljava/lang/String;[Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/Object;
+      78: astore_3
+      79: aload_0
+      80: aload_3
+      81: aload_1
+      82: invokespecial #36                 // Method wrapWithFuture:(Ljava/lang/Object;Lorg/apache/dubbo/rpc/Invocation;)Ljava/util/concurrent/CompletableFuture;
+      85: astore        4
+      87: aload         4
+      89: aload_1
+      90: invokedynamic #37,  0             // InvokeDynamic #0:apply:(Lorg/apache/dubbo/rpc/Invocation;)Ljava/util/function/BiFunction;
+      95: invokevirtual #38                 // Method java/util/concurrent/CompletableFuture.handle:(Ljava/util/function/BiFunction;)Ljava/util/concurrent/CompletableFuture;
+      98: astore        5
+     100: new           #39                 // class org/apache/dubbo/rpc/AsyncRpcResult
+     103: dup
+     104: aload         5
+     106: aload_1
+     107: invokespecial #40                 // Method org/apache/dubbo/rpc/AsyncRpcResult."<init>":(Ljava/util/concurrent/CompletableFuture;Lorg/apache/dubbo/rpc/Invocation;)V
+     110: astore        6
+     112: invokestatic  #23                 // Method org/apache/dubbo/common/profiler/ProfilerSwitch.isEnableSimpleProfiler:()Z
+     115: ifeq          157
+     118: aload_1
+     119: ldc           #25                 // String DUBBO_INVOKE_PROFILER
+     121: invokeinterface #26,  2           // InterfaceMethod org/apache/dubbo/rpc/Invocation.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     126: astore        7
+     128: aload         7
+     130: instanceof    #27                 // class org/apache/dubbo/common/profiler/ProfilerEntry
+     133: ifeq          157
+     136: aload         7
+     138: checkcast     #27                 // class org/apache/dubbo/common/profiler/ProfilerEntry
+     141: invokestatic  #41                 // Method org/apache/dubbo/common/profiler/Profiler.release:(Lorg/apache/dubbo/common/profiler/ProfilerEntry;)Lorg/apache/dubbo/common/profiler/ProfilerEntry;
+     144: astore        8
+     146: aload_1
+     147: ldc           #25                 // String DUBBO_INVOKE_PROFILER
+     149: aload         8
+     151: invokeinterface #30,  3           // InterfaceMethod org/apache/dubbo/rpc/Invocation.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     156: pop
+     157: invokestatic  #42                 // Method org/apache/dubbo/common/profiler/Profiler.removeBizProfiler:()V
+     160: aload_2
+     161: ifnull        169
+     164: aload_2
+     165: invokestatic  #31                 // Method org/apache/dubbo/common/profiler/Profiler.setToBizProfiler:(Lorg/apache/dubbo/common/profiler/ProfilerEntry;)Lorg/apache/dubbo/common/profiler/ProfilerEntry;
+     168: pop
+     169: aload         6
+     171: areturn
+     172: astore_3
+     173: invokestatic  #44                 // Method org/apache/dubbo/rpc/RpcContext.getServiceContext:()Lorg/apache/dubbo/rpc/RpcServiceContext;
+     176: invokevirtual #45                 // Method org/apache/dubbo/rpc/RpcServiceContext.isAsyncStarted:()Z
+     179: ifeq          209
+     182: invokestatic  #44                 // Method org/apache/dubbo/rpc/RpcContext.getServiceContext:()Lorg/apache/dubbo/rpc/RpcServiceContext;
+     185: invokevirtual #46                 // Method org/apache/dubbo/rpc/RpcServiceContext.stopAsync:()Z
+     188: ifne          209
+     191: aload_0
+     192: getfield      #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     195: ldc           #47                 // String 3-5
+     197: ldc           #48                 // String
+     199: ldc           #48                 // String
+     201: ldc           #49                 // String Provider async started, but got an exception from the original method, cannot write the exception back to consumer because an async result may have returned the new thread.
+     203: aload_3
+     204: invokeinterface #50,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     209: aconst_null
+     210: aload_3
+     211: invokevirtual #51                 // Method java/lang/reflect/InvocationTargetException.getTargetException:()Ljava/lang/Throwable;
+     214: aload_1
+     215: invokestatic  #52                 // Method org/apache/dubbo/rpc/AsyncRpcResult.newDefaultAsyncResult:(Ljava/lang/Object;Ljava/lang/Throwable;Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/AsyncRpcResult;
+     218: astore        4
+     220: invokestatic  #23                 // Method org/apache/dubbo/common/profiler/ProfilerSwitch.isEnableSimpleProfiler:()Z
+     223: ifeq          265
+     226: aload_1
+     227: ldc           #25                 // String DUBBO_INVOKE_PROFILER
+     229: invokeinterface #26,  2           // InterfaceMethod org/apache/dubbo/rpc/Invocation.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     234: astore        5
+     236: aload         5
+     238: instanceof    #27                 // class org/apache/dubbo/common/profiler/ProfilerEntry
+     241: ifeq          265
+     244: aload         5
+     246: checkcast     #27                 // class org/apache/dubbo/common/profiler/ProfilerEntry
+     249: invokestatic  #41                 // Method org/apache/dubbo/common/profiler/Profiler.release:(Lorg/apache/dubbo/common/profiler/ProfilerEntry;)Lorg/apache/dubbo/common/profiler/ProfilerEntry;
+     252: astore        6
+     254: aload_1
+     255: ldc           #25                 // String DUBBO_INVOKE_PROFILER
+     257: aload         6
+     259: invokeinterface #30,  3           // InterfaceMethod org/apache/dubbo/rpc/Invocation.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     264: pop
+     265: invokestatic  #42                 // Method org/apache/dubbo/common/profiler/Profiler.removeBizProfiler:()V
+     268: aload_2
+     269: ifnull        277
+     272: aload_2
+     273: invokestatic  #31                 // Method org/apache/dubbo/common/profiler/Profiler.setToBizProfiler:(Lorg/apache/dubbo/common/profiler/ProfilerEntry;)Lorg/apache/dubbo/common/profiler/ProfilerEntry;
+     276: pop
+     277: aload         4
+     279: areturn
+     280: astore_3
+     281: new           #54                 // class org/apache/dubbo/rpc/RpcException
+     284: dup
+     285: new           #12                 // class java/lang/StringBuilder
+     288: dup
+     289: invokespecial #13                 // Method java/lang/StringBuilder."<init>":()V
+     292: ldc           #55                 // String Failed to invoke remote proxy method
+     294: invokevirtual #16                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     297: aload_1
+     298: invokeinterface #32,  1           // InterfaceMethod org/apache/dubbo/rpc/Invocation.getMethodName:()Ljava/lang/String;
+     303: invokevirtual #16                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     306: ldc           #56                 // String  to
+     308: invokevirtual #16                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     311: aload_0
+     312: invokevirtual #57                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+     315: invokevirtual #18                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     318: ldc           #58                 // String , cause:
+     320: invokevirtual #16                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     323: aload_3
+     324: invokevirtual #59                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     327: invokevirtual #16                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     330: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     333: aload_3
+     334: invokespecial #60                 // Method org/apache/dubbo/rpc/RpcException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     337: athrow
+     338: astore        9
+     340: invokestatic  #23                 // Method org/apache/dubbo/common/profiler/ProfilerSwitch.isEnableSimpleProfiler:()Z
+     343: ifeq          385
+     346: aload_1
+     347: ldc           #25                 // String DUBBO_INVOKE_PROFILER
+     349: invokeinterface #26,  2           // InterfaceMethod org/apache/dubbo/rpc/Invocation.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     354: astore        10
+     356: aload         10
+     358: instanceof    #27                 // class org/apache/dubbo/common/profiler/ProfilerEntry
+     361: ifeq          385
+     364: aload         10
+     366: checkcast     #27                 // class org/apache/dubbo/common/profiler/ProfilerEntry
+     369: invokestatic  #41                 // Method org/apache/dubbo/common/profiler/Profiler.release:(Lorg/apache/dubbo/common/profiler/ProfilerEntry;)Lorg/apache/dubbo/common/profiler/ProfilerEntry;
+     372: astore        11
+     374: aload_1
+     375: ldc           #25                 // String DUBBO_INVOKE_PROFILER
+     377: aload         11
+     379: invokeinterface #30,  3           // InterfaceMethod org/apache/dubbo/rpc/Invocation.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     384: pop
+     385: invokestatic  #42                 // Method org/apache/dubbo/common/profiler/Profiler.removeBizProfiler:()V
+     388: aload_2
+     389: ifnull        397
+     392: aload_2
+     393: invokestatic  #31                 // Method org/apache/dubbo/common/profiler/Profiler.setToBizProfiler:(Lorg/apache/dubbo/common/profiler/ProfilerEntry;)Lorg/apache/dubbo/common/profiler/ProfilerEntry;
+     396: pop
+     397: aload         9
+     399: athrow
+    Exception table:
+       from    to  target type
+           2   112   172   Class java/lang/reflect/InvocationTargetException
+           2   112   280   Class java/lang/Throwable
+           2   112   338   any
+         172   220   338   any
+         280   340   338   any
+
+  private java.util.concurrent.CompletableFuture<java.lang.Object> wrapWithFuture(java.lang.Object, org.apache.dubbo.rpc.Invocation);
+    Code:
+       0: aload_1
+       1: instanceof    #61                 // class java/util/concurrent/CompletableFuture
+       4: ifeq          24
+       7: aload_2
+       8: ldc           #62                 // String PROVIDER_ASYNC
+      10: getstatic     #63                 // Field java/lang/Boolean.TRUE:Ljava/lang/Boolean;
+      13: invokeinterface #30,  3           // InterfaceMethod org/apache/dubbo/rpc/Invocation.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      18: pop
+      19: aload_1
+      20: checkcast     #61                 // class java/util/concurrent/CompletableFuture
+      23: areturn
+      24: invokestatic  #64                 // Method org/apache/dubbo/rpc/RpcContext.getServerAttachment:()Lorg/apache/dubbo/rpc/RpcContextAttachment;
+      27: invokevirtual #65                 // Method org/apache/dubbo/rpc/RpcContextAttachment.isAsyncStarted:()Z
+      30: ifeq          61
+      33: aload_2
+      34: ldc           #62                 // String PROVIDER_ASYNC
+      36: getstatic     #63                 // Field java/lang/Boolean.TRUE:Ljava/lang/Boolean;
+      39: invokeinterface #30,  3           // InterfaceMethod org/apache/dubbo/rpc/Invocation.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      44: pop
+      45: invokestatic  #64                 // Method org/apache/dubbo/rpc/RpcContext.getServerAttachment:()Lorg/apache/dubbo/rpc/RpcContextAttachment;
+      48: invokevirtual #66                 // Method org/apache/dubbo/rpc/RpcContextAttachment.getAsyncContext:()Lorg/apache/dubbo/rpc/AsyncContext;
+      51: checkcast     #67                 // class org/apache/dubbo/rpc/AsyncContextImpl
+      54: checkcast     #67                 // class org/apache/dubbo/rpc/AsyncContextImpl
+      57: invokevirtual #68                 // Method org/apache/dubbo/rpc/AsyncContextImpl.getInternalFuture:()Ljava/util/concurrent/CompletableFuture;
+      60: areturn
+      61: aload_1
+      62: invokestatic  #69                 // Method java/util/concurrent/CompletableFuture.completedFuture:(Ljava/lang/Object;)Ljava/util/concurrent/CompletableFuture;
+      65: areturn
+
+  protected abstract java.lang.Object doInvoke(T, java.lang.String, java.lang.Class<?>[], java.lang.Object[]) throws java.lang.Throwable;
+
+  public java.lang.String toString();
+    Code:
+       0: new           #12                 // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #13                 // Method java/lang/StringBuilder."<init>":()V
+       7: aload_0
+       8: invokevirtual #70                 // Method getInterface:()Ljava/lang/Class;
+      11: invokevirtual #18                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      14: ldc           #71                 // String  ->
+      16: invokevirtual #16                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      19: aload_0
+      20: invokevirtual #57                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+      23: ifnonnull     31
+      26: ldc           #72                 // String
+      28: goto          38
+      31: aload_0
+      32: invokevirtual #57                 // Method getUrl:()Lorg/apache/dubbo/common/URL;
+      35: invokevirtual #73                 // Method org/apache/dubbo/common/URL.toString:()Ljava/lang/String;
+      38: invokevirtual #16                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      41: invokevirtual #19                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      44: areturn
+
+  private static org.apache.dubbo.rpc.AppResponse lambda$invoke$0(org.apache.dubbo.rpc.Invocation, java.lang.Object, java.lang.Throwable);
+    Code:
+       0: new           #74                 // class org/apache/dubbo/rpc/AppResponse
+       3: dup
+       4: aload_0
+       5: invokespecial #75                 // Method org/apache/dubbo/rpc/AppResponse."<init>":(Lorg/apache/dubbo/rpc/Invocation;)V
+       8: astore_3
+       9: aload_2
+      10: ifnull        39
+      13: aload_2
+      14: instanceof    #76                 // class java/util/concurrent/CompletionException
+      17: ifeq          31
+      20: aload_3
+      21: aload_2
+      22: invokevirtual #77                 // Method java/lang/Throwable.getCause:()Ljava/lang/Throwable;
+      25: invokevirtual #78                 // Method org/apache/dubbo/rpc/AppResponse.setException:(Ljava/lang/Throwable;)V
+      28: goto          44
+      31: aload_3
+      32: aload_2
+      33: invokevirtual #78                 // Method org/apache/dubbo/rpc/AppResponse.setException:(Ljava/lang/Throwable;)V
+      36: goto          44
+      39: aload_3
+      40: aload_1
+      41: invokevirtual #79                 // Method org/apache/dubbo/rpc/AppResponse.setValue:(Ljava/lang/Object;)V
+      44: aload_3
+      45: areturn
+}

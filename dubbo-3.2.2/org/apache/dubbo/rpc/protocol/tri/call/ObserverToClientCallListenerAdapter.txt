@@ -1,0 +1,80 @@
+Compiled from "ObserverToClientCallListenerAdapter.java"
+public class org.apache.dubbo.rpc.protocol.tri.call.ObserverToClientCallListenerAdapter implements org.apache.dubbo.rpc.protocol.tri.call.ClientCall$Listener {
+  private final org.apache.dubbo.common.stream.StreamObserver<java.lang.Object> delegate;
+
+  private org.apache.dubbo.rpc.protocol.tri.call.ClientCall call;
+
+  private java.util.function.Consumer<org.apache.dubbo.rpc.protocol.tri.call.ClientCall> onStartConsumer;
+
+  public org.apache.dubbo.rpc.protocol.tri.call.ObserverToClientCallListenerAdapter(org.apache.dubbo.common.stream.StreamObserver<java.lang.Object>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: invokedynamic #2,  0              // InvokeDynamic #0:accept:()Ljava/util/function/Consumer;
+      10: putfield      #3                  // Field onStartConsumer:Ljava/util/function/Consumer;
+      13: aload_0
+      14: aload_1
+      15: putfield      #4                  // Field delegate:Lorg/apache/dubbo/common/stream/StreamObserver;
+      18: return
+
+  public void setOnStartConsumer(java.util.function.Consumer<org.apache.dubbo.rpc.protocol.tri.call.ClientCall>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #3                  // Field onStartConsumer:Ljava/util/function/Consumer;
+       5: return
+
+  public void onMessage(java.lang.Object);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field delegate:Lorg/apache/dubbo/common/stream/StreamObserver;
+       4: aload_1
+       5: invokeinterface #5,  2            // InterfaceMethod org/apache/dubbo/common/stream/StreamObserver.onNext:(Ljava/lang/Object;)V
+      10: aload_0
+      11: getfield      #6                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/ClientCall;
+      14: invokeinterface #7,  1            // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/call/ClientCall.isAutoRequest:()Z
+      19: ifeq          32
+      22: aload_0
+      23: getfield      #6                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/ClientCall;
+      26: iconst_1
+      27: invokeinterface #8,  2            // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/call/ClientCall.request:(I)V
+      32: return
+
+  public void onClose(org.apache.dubbo.rpc.TriRpcStatus, java.util.Map<java.lang.String, java.lang.Object>, boolean);
+    Code:
+       0: aload_1
+       1: invokevirtual #9                  // Method org/apache/dubbo/rpc/TriRpcStatus.isOk:()Z
+       4: ifeq          19
+       7: aload_0
+       8: getfield      #4                  // Field delegate:Lorg/apache/dubbo/common/stream/StreamObserver;
+      11: invokeinterface #10,  1           // InterfaceMethod org/apache/dubbo/common/stream/StreamObserver.onCompleted:()V
+      16: goto          32
+      19: aload_0
+      20: getfield      #4                  // Field delegate:Lorg/apache/dubbo/common/stream/StreamObserver;
+      23: aload_1
+      24: invokevirtual #11                 // Method org/apache/dubbo/rpc/TriRpcStatus.asException:()Lorg/apache/dubbo/rpc/StatusRpcException;
+      27: invokeinterface #12,  2           // InterfaceMethod org/apache/dubbo/common/stream/StreamObserver.onError:(Ljava/lang/Throwable;)V
+      32: return
+
+  public void onStart(org.apache.dubbo.rpc.protocol.tri.call.ClientCall);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #6                  // Field call:Lorg/apache/dubbo/rpc/protocol/tri/call/ClientCall;
+       5: aload_1
+       6: invokeinterface #7,  1            // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/call/ClientCall.isAutoRequest:()Z
+      11: ifeq          21
+      14: aload_1
+      15: iconst_1
+      16: invokeinterface #8,  2            // InterfaceMethod org/apache/dubbo/rpc/protocol/tri/call/ClientCall.request:(I)V
+      21: aload_0
+      22: getfield      #3                  // Field onStartConsumer:Ljava/util/function/Consumer;
+      25: aload_1
+      26: invokeinterface #13,  2           // InterfaceMethod java/util/function/Consumer.accept:(Ljava/lang/Object;)V
+      31: return
+
+  private static void lambda$new$0(org.apache.dubbo.rpc.protocol.tri.call.ClientCall);
+    Code:
+       0: return
+}

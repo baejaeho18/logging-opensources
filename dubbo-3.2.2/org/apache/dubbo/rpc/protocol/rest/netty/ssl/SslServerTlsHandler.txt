@@ -1,0 +1,212 @@
+Compiled from "SslServerTlsHandler.java"
+public class org.apache.dubbo.rpc.protocol.rest.netty.ssl.SslServerTlsHandler extends io.netty.handler.codec.ByteToMessageDecoder {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final org.apache.dubbo.common.URL url;
+
+  private final boolean sslDetected;
+
+  public org.apache.dubbo.rpc.protocol.rest.netty.ssl.SslServerTlsHandler(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method io/netty/handler/codec/ByteToMessageDecoder."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #3                  // Field url:Lorg/apache/dubbo/common/URL;
+       9: aload_0
+      10: iconst_0
+      11: putfield      #4                  // Field sslDetected:Z
+      14: return
+
+  public org.apache.dubbo.rpc.protocol.rest.netty.ssl.SslServerTlsHandler(org.apache.dubbo.common.URL, boolean);
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method io/netty/handler/codec/ByteToMessageDecoder."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #3                  // Field url:Lorg/apache/dubbo/common/URL;
+       9: aload_0
+      10: iload_2
+      11: putfield      #4                  // Field sslDetected:Z
+      14: return
+
+  public void exceptionCaught(io.netty.channel.ChannelHandlerContext, java.lang.Throwable) throws java.lang.Exception;
+    Code:
+       0: getstatic     #5                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       3: ldc           #6                  // String 99-0
+       5: ldc           #7                  // String unknown error in remoting module
+       7: ldc           #8                  // String
+       9: ldc           #9                  // String TLS negotiation failed when trying to accept new connection.
+      11: aload_2
+      12: invokeinterface #10,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      17: return
+
+  public void userEventTriggered(io.netty.channel.ChannelHandlerContext, java.lang.Object) throws java.lang.Exception;
+    Code:
+       0: aload_2
+       1: instanceof    #11                 // class io/netty/handler/ssl/SslHandshakeCompletionEvent
+       4: ifeq          119
+       7: aload_2
+       8: checkcast     #11                 // class io/netty/handler/ssl/SslHandshakeCompletionEvent
+      11: astore_3
+      12: aload_3
+      13: invokevirtual #12                 // Method io/netty/handler/ssl/SslHandshakeCompletionEvent.isSuccess:()Z
+      16: ifeq          92
+      19: aload_1
+      20: invokeinterface #13,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.pipeline:()Lio/netty/channel/ChannelPipeline;
+      25: ldc           #14                 // class io/netty/handler/ssl/SslHandler
+      27: invokeinterface #15,  2           // InterfaceMethod io/netty/channel/ChannelPipeline.get:(Ljava/lang/Class;)Lio/netty/channel/ChannelHandler;
+      32: checkcast     #14                 // class io/netty/handler/ssl/SslHandler
+      35: invokevirtual #16                 // Method io/netty/handler/ssl/SslHandler.engine:()Ljavax/net/ssl/SSLEngine;
+      38: invokevirtual #17                 // Method javax/net/ssl/SSLEngine.getSession:()Ljavax/net/ssl/SSLSession;
+      41: astore        4
+      43: getstatic     #5                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      46: new           #18                 // class java/lang/StringBuilder
+      49: dup
+      50: invokespecial #19                 // Method java/lang/StringBuilder."<init>":()V
+      53: ldc           #20                 // String TLS negotiation succeed with:
+      55: invokevirtual #21                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      58: aload         4
+      60: invokeinterface #22,  1           // InterfaceMethod javax/net/ssl/SSLSession.getPeerHost:()Ljava/lang/String;
+      65: invokevirtual #21                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      68: invokevirtual #23                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      71: invokeinterface #24,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      76: aload_1
+      77: invokeinterface #13,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.pipeline:()Lio/netty/channel/ChannelPipeline;
+      82: aload_0
+      83: invokeinterface #25,  2           // InterfaceMethod io/netty/channel/ChannelPipeline.remove:(Lio/netty/channel/ChannelHandler;)Lio/netty/channel/ChannelPipeline;
+      88: pop
+      89: goto          119
+      92: getstatic     #5                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      95: ldc           #6                  // String 99-0
+      97: ldc           #8                  // String
+      99: ldc           #8                  // String
+     101: ldc           #9                  // String TLS negotiation failed when trying to accept new connection.
+     103: aload_3
+     104: invokevirtual #26                 // Method io/netty/handler/ssl/SslHandshakeCompletionEvent.cause:()Ljava/lang/Throwable;
+     107: invokeinterface #10,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     112: aload_1
+     113: invokeinterface #27,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.close:()Lio/netty/channel/ChannelFuture;
+     118: pop
+     119: aload_0
+     120: aload_1
+     121: aload_2
+     122: invokespecial #28                 // Method io/netty/handler/codec/ByteToMessageDecoder.userEventTriggered:(Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Object;)V
+     125: return
+
+  protected void decode(io.netty.channel.ChannelHandlerContext, io.netty.buffer.ByteBuf, java.util.List<java.lang.Object>) throws java.lang.Exception;
+    Code:
+       0: aload_2
+       1: invokevirtual #29                 // Method io/netty/buffer/ByteBuf.readableBytes:()I
+       4: iconst_5
+       5: if_icmpge     9
+       8: return
+       9: aload_0
+      10: getfield      #4                  // Field sslDetected:Z
+      13: ifeq          17
+      16: return
+      17: aload_0
+      18: getfield      #3                  // Field url:Lorg/apache/dubbo/common/URL;
+      21: invokevirtual #30                 // Method org/apache/dubbo/common/URL.getOrDefaultFrameworkModel:()Lorg/apache/dubbo/rpc/model/FrameworkModel;
+      24: invokevirtual #31                 // Method org/apache/dubbo/rpc/model/FrameworkModel.getBeanFactory:()Lorg/apache/dubbo/common/beans/factory/ScopeBeanFactory;
+      27: ldc           #32                 // class org/apache/dubbo/common/ssl/CertManager
+      29: invokevirtual #33                 // Method org/apache/dubbo/common/beans/factory/ScopeBeanFactory.getBean:(Ljava/lang/Class;)Ljava/lang/Object;
+      32: checkcast     #32                 // class org/apache/dubbo/common/ssl/CertManager
+      35: astore        4
+      37: aload         4
+      39: aload_0
+      40: getfield      #3                  // Field url:Lorg/apache/dubbo/common/URL;
+      43: aload_1
+      44: invokeinterface #34,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.channel:()Lio/netty/channel/Channel;
+      49: invokeinterface #35,  1           // InterfaceMethod io/netty/channel/Channel.remoteAddress:()Ljava/net/SocketAddress;
+      54: invokevirtual #36                 // Method org/apache/dubbo/common/ssl/CertManager.getProviderConnectionConfig:(Lorg/apache/dubbo/common/URL;Ljava/net/SocketAddress;)Lorg/apache/dubbo/common/ssl/ProviderCert;
+      57: astore        5
+      59: aload         5
+      61: ifnonnull     82
+      64: aload_1
+      65: invokeinterface #13,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.pipeline:()Lio/netty/channel/ChannelPipeline;
+      70: astore        6
+      72: aload         6
+      74: aload_0
+      75: invokeinterface #25,  2           // InterfaceMethod io/netty/channel/ChannelPipeline.remove:(Lio/netty/channel/ChannelHandler;)Lio/netty/channel/ChannelPipeline;
+      80: pop
+      81: return
+      82: aload_0
+      83: aload_2
+      84: invokespecial #37                 // Method isSsl:(Lio/netty/buffer/ByteBuf;)Z
+      87: ifeq          105
+      90: aload         5
+      92: invokestatic  #38                 // Method org/apache/dubbo/rpc/protocol/rest/netty/ssl/SslContexts.buildServerSslContext:(Lorg/apache/dubbo/common/ssl/ProviderCert;)Lio/netty/handler/ssl/SslContext;
+      95: astore        6
+      97: aload_0
+      98: aload_1
+      99: aload         6
+     101: invokespecial #39                 // Method enableSsl:(Lio/netty/channel/ChannelHandlerContext;Lio/netty/handler/ssl/SslContext;)V
+     104: return
+     105: aload         5
+     107: invokevirtual #40                 // Method org/apache/dubbo/common/ssl/ProviderCert.getAuthPolicy:()Lorg/apache/dubbo/common/ssl/AuthPolicy;
+     110: getstatic     #41                 // Field org/apache/dubbo/common/ssl/AuthPolicy.NONE:Lorg/apache/dubbo/common/ssl/AuthPolicy;
+     113: if_acmpne     133
+     116: aload_1
+     117: invokeinterface #13,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.pipeline:()Lio/netty/channel/ChannelPipeline;
+     122: astore        6
+     124: aload         6
+     126: aload_0
+     127: invokeinterface #25,  2           // InterfaceMethod io/netty/channel/ChannelPipeline.remove:(Lio/netty/channel/ChannelHandler;)Lio/netty/channel/ChannelPipeline;
+     132: pop
+     133: getstatic     #5                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     136: ldc           #6                  // String 99-0
+     138: ldc           #8                  // String
+     140: ldc           #8                  // String
+     142: ldc           #9                  // String TLS negotiation failed when trying to accept new connection.
+     144: invokeinterface #42,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     149: aload_1
+     150: invokeinterface #27,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.close:()Lio/netty/channel/ChannelFuture;
+     155: pop
+     156: return
+
+  private boolean isSsl(io.netty.buffer.ByteBuf);
+    Code:
+       0: aload_1
+       1: invokestatic  #43                 // Method io/netty/handler/ssl/SslHandler.isEncrypted:(Lio/netty/buffer/ByteBuf;)Z
+       4: ireturn
+
+  private void enableSsl(io.netty.channel.ChannelHandlerContext, io.netty.handler.ssl.SslContext);
+    Code:
+       0: aload_1
+       1: invokeinterface #13,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.pipeline:()Lio/netty/channel/ChannelPipeline;
+       6: astore_3
+       7: aload_1
+       8: invokeinterface #13,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.pipeline:()Lio/netty/channel/ChannelPipeline;
+      13: aload_1
+      14: invokeinterface #44,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.name:()Ljava/lang/String;
+      19: aconst_null
+      20: aload_2
+      21: aload_1
+      22: invokeinterface #45,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.alloc:()Lio/netty/buffer/ByteBufAllocator;
+      27: invokevirtual #46                 // Method io/netty/handler/ssl/SslContext.newHandler:(Lio/netty/buffer/ByteBufAllocator;)Lio/netty/handler/ssl/SslHandler;
+      30: invokeinterface #47,  4           // InterfaceMethod io/netty/channel/ChannelPipeline.addAfter:(Ljava/lang/String;Ljava/lang/String;Lio/netty/channel/ChannelHandler;)Lio/netty/channel/ChannelPipeline;
+      35: pop
+      36: aload_3
+      37: ldc           #48                 // String unificationA
+      39: new           #49                 // class org/apache/dubbo/rpc/protocol/rest/netty/ssl/SslServerTlsHandler
+      42: dup
+      43: aload_0
+      44: getfield      #3                  // Field url:Lorg/apache/dubbo/common/URL;
+      47: iconst_1
+      48: invokespecial #50                 // Method "<init>":(Lorg/apache/dubbo/common/URL;Z)V
+      51: invokeinterface #51,  3           // InterfaceMethod io/netty/channel/ChannelPipeline.addLast:(Ljava/lang/String;Lio/netty/channel/ChannelHandler;)Lio/netty/channel/ChannelPipeline;
+      56: pop
+      57: aload_3
+      58: aload_0
+      59: invokeinterface #25,  2           // InterfaceMethod io/netty/channel/ChannelPipeline.remove:(Lio/netty/channel/ChannelHandler;)Lio/netty/channel/ChannelPipeline;
+      64: pop
+      65: return
+
+  static {};
+    Code:
+       0: ldc           #49                 // class org/apache/dubbo/rpc/protocol/rest/netty/ssl/SslServerTlsHandler
+       2: invokestatic  #52                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #5                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}
