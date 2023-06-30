@@ -1,0 +1,86 @@
+Compiled from "ForeignHostPermitHandler.java"
+public class org.apache.dubbo.qos.server.handler.ForeignHostPermitHandler extends io.netty.channel.ChannelHandlerAdapter {
+  private final boolean acceptForeignIp;
+
+  private final java.lang.String acceptForeignIpWhitelist;
+
+  private final java.util.function.Predicate<java.lang.String> whitelistPredicate;
+
+  private final org.apache.dubbo.qos.api.QosConfiguration qosConfiguration;
+
+  public org.apache.dubbo.qos.server.handler.ForeignHostPermitHandler(org.apache.dubbo.qos.api.QosConfiguration);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method io/netty/channel/ChannelHandlerAdapter."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field qosConfiguration:Lorg/apache/dubbo/qos/api/QosConfiguration;
+       9: aload_0
+      10: aload_1
+      11: invokevirtual #3                  // Method org/apache/dubbo/qos/api/QosConfiguration.isAcceptForeignIp:()Z
+      14: putfield      #4                  // Field acceptForeignIp:Z
+      17: aload_0
+      18: aload_1
+      19: invokevirtual #5                  // Method org/apache/dubbo/qos/api/QosConfiguration.getAcceptForeignIpWhitelist:()Ljava/lang/String;
+      22: putfield      #6                  // Field acceptForeignIpWhitelist:Ljava/lang/String;
+      25: aload_0
+      26: aload_1
+      27: invokevirtual #7                  // Method org/apache/dubbo/qos/api/QosConfiguration.getAcceptForeignIpWhitelistPredicate:()Ljava/util/function/Predicate;
+      30: putfield      #8                  // Field whitelistPredicate:Ljava/util/function/Predicate;
+      33: return
+
+  public void handlerAdded(io.netty.channel.ChannelHandlerContext) throws java.lang.Exception;
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field acceptForeignIp:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: getfield      #2                  // Field qosConfiguration:Lorg/apache/dubbo/qos/api/QosConfiguration;
+      12: invokevirtual #9                  // Method org/apache/dubbo/qos/api/QosConfiguration.isAllowAnonymousAccess:()Z
+      15: ifeq          19
+      18: return
+      19: aload_1
+      20: invokeinterface #10,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.channel:()Lio/netty/channel/Channel;
+      25: invokeinterface #11,  1           // InterfaceMethod io/netty/channel/Channel.remoteAddress:()Ljava/net/SocketAddress;
+      30: checkcast     #12                 // class java/net/InetSocketAddress
+      33: invokevirtual #13                 // Method java/net/InetSocketAddress.getAddress:()Ljava/net/InetAddress;
+      36: astore_2
+      37: aload_2
+      38: invokevirtual #14                 // Method java/net/InetAddress.isLoopbackAddress:()Z
+      41: ifeq          45
+      44: return
+      45: aload_0
+      46: aload_2
+      47: invokespecial #15                 // Method checkForeignIpInWhiteList:(Ljava/net/InetAddress;)Z
+      50: ifeq          54
+      53: return
+      54: ldc           #17                 // String \r\nForeign Ip Not Permitted, Consider Config It In Whitelist.\r\n
+      56: invokevirtual #18                 // Method java/lang/String.getBytes:()[B
+      59: invokestatic  #19                 // Method io/netty/buffer/Unpooled.wrappedBuffer:([B)Lio/netty/buffer/ByteBuf;
+      62: astore_3
+      63: aload_1
+      64: aload_3
+      65: invokeinterface #20,  2           // InterfaceMethod io/netty/channel/ChannelHandlerContext.writeAndFlush:(Ljava/lang/Object;)Lio/netty/channel/ChannelFuture;
+      70: getstatic     #21                 // Field io/netty/channel/ChannelFutureListener.CLOSE:Lio/netty/channel/ChannelFutureListener;
+      73: invokeinterface #22,  2           // InterfaceMethod io/netty/channel/ChannelFuture.addListener:(Lio/netty/util/concurrent/GenericFutureListener;)Lio/netty/channel/ChannelFuture;
+      78: pop
+      79: return
+
+  private boolean checkForeignIpInWhiteList(java.net.InetAddress);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field acceptForeignIpWhitelist:Ljava/lang/String;
+       4: invokestatic  #23                 // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+       7: ifeq          12
+      10: iconst_0
+      11: ireturn
+      12: aload_1
+      13: invokevirtual #24                 // Method java/net/InetAddress.getHostAddress:()Ljava/lang/String;
+      16: astore_2
+      17: aload_0
+      18: getfield      #8                  // Field whitelistPredicate:Ljava/util/function/Predicate;
+      21: aload_2
+      22: invokeinterface #25,  2           // InterfaceMethod java/util/function/Predicate.test:(Ljava/lang/Object;)Z
+      27: ireturn
+}

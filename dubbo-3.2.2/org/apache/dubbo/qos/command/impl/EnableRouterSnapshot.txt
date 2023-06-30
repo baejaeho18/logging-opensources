@@ -1,0 +1,86 @@
+Compiled from "EnableRouterSnapshot.java"
+public class org.apache.dubbo.qos.command.impl.EnableRouterSnapshot implements org.apache.dubbo.qos.api.BaseCommand {
+  private final org.apache.dubbo.rpc.cluster.router.RouterSnapshotSwitcher routerSnapshotSwitcher;
+
+  private final org.apache.dubbo.rpc.model.FrameworkModel frameworkModel;
+
+  public org.apache.dubbo.qos.command.impl.EnableRouterSnapshot(org.apache.dubbo.rpc.model.FrameworkModel);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+       9: aload_0
+      10: aload_1
+      11: invokevirtual #3                  // Method org/apache/dubbo/rpc/model/FrameworkModel.getBeanFactory:()Lorg/apache/dubbo/common/beans/factory/ScopeBeanFactory;
+      14: ldc           #4                  // class org/apache/dubbo/rpc/cluster/router/RouterSnapshotSwitcher
+      16: invokevirtual #5                  // Method org/apache/dubbo/common/beans/factory/ScopeBeanFactory.getBean:(Ljava/lang/Class;)Ljava/lang/Object;
+      19: checkcast     #4                  // class org/apache/dubbo/rpc/cluster/router/RouterSnapshotSwitcher
+      22: putfield      #6                  // Field routerSnapshotSwitcher:Lorg/apache/dubbo/rpc/cluster/router/RouterSnapshotSwitcher;
+      25: return
+
+  public java.lang.String execute(org.apache.dubbo.qos.api.CommandContext, java.lang.String[]);
+    Code:
+       0: aload_2
+       1: arraylength
+       2: iconst_1
+       3: if_icmpeq     9
+       6: ldc           #7                  // String args count should be 1. example enableRouterSnapshot xx.xx.xxx.service
+       8: areturn
+       9: aload_2
+      10: iconst_0
+      11: aaload
+      12: astore_3
+      13: iconst_0
+      14: istore        4
+      16: aload_0
+      17: getfield      #2                  // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+      20: invokevirtual #8                  // Method org/apache/dubbo/rpc/model/FrameworkModel.getServiceRepository:()Lorg/apache/dubbo/rpc/model/FrameworkServiceRepository;
+      23: invokevirtual #9                  // Method org/apache/dubbo/rpc/model/FrameworkServiceRepository.allConsumerModels:()Ljava/util/List;
+      26: invokeinterface #10,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      31: astore        5
+      33: aload         5
+      35: invokeinterface #11,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      40: ifeq          109
+      43: aload         5
+      45: invokeinterface #12,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      50: checkcast     #13                 // class org/apache/dubbo/rpc/model/ConsumerModel
+      53: astore        6
+      55: aload         6
+      57: invokevirtual #14                 // Method org/apache/dubbo/rpc/model/ConsumerModel.getServiceMetadata:()Lorg/apache/dubbo/rpc/model/ServiceMetadata;
+      60: astore        7
+      62: aload         7
+      64: invokevirtual #15                 // Method org/apache/dubbo/rpc/model/ServiceMetadata.getServiceKey:()Ljava/lang/String;
+      67: aload_3
+      68: invokevirtual #16                 // Method java/lang/String.matches:(Ljava/lang/String;)Z
+      71: ifne          86
+      74: aload         7
+      76: invokevirtual #17                 // Method org/apache/dubbo/rpc/model/ServiceMetadata.getDisplayServiceKey:()Ljava/lang/String;
+      79: aload_3
+      80: invokevirtual #16                 // Method java/lang/String.matches:(Ljava/lang/String;)Z
+      83: ifeq          101
+      86: aload_0
+      87: getfield      #6                  // Field routerSnapshotSwitcher:Lorg/apache/dubbo/rpc/cluster/router/RouterSnapshotSwitcher;
+      90: aload         7
+      92: invokevirtual #15                 // Method org/apache/dubbo/rpc/model/ServiceMetadata.getServiceKey:()Ljava/lang/String;
+      95: invokevirtual #18                 // Method org/apache/dubbo/rpc/cluster/router/RouterSnapshotSwitcher.addEnabledService:(Ljava/lang/String;)V
+      98: iinc          4, 1
+     101: goto          106
+     104: astore        7
+     106: goto          33
+     109: new           #20                 // class java/lang/StringBuilder
+     112: dup
+     113: invokespecial #21                 // Method java/lang/StringBuilder."<init>":()V
+     116: ldc           #22                 // String OK. Found service count:
+     118: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     121: iload         4
+     123: invokevirtual #24                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     126: ldc           #25                 // String . This will cause performance degradation, please be careful!
+     128: invokevirtual #23                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     131: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     134: areturn
+    Exception table:
+       from    to  target type
+          55   101   104   Class java/lang/Throwable
+}

@@ -1,0 +1,164 @@
+Compiled from "TelnetDetector.java"
+public class org.apache.dubbo.qos.pu.TelnetDetector implements org.apache.dubbo.remoting.api.ProtocolDetector {
+  private final org.apache.dubbo.rpc.model.FrameworkModel frameworkModel;
+
+  private final int MaxSize;
+
+  private final org.apache.dubbo.remoting.buffer.ChannelBuffer AytPreface;
+
+  public org.apache.dubbo.qos.pu.TelnetDetector(org.apache.dubbo.rpc.model.FrameworkModel);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: sipush        2048
+       8: putfield      #2                  // Field MaxSize:I
+      11: aload_0
+      12: new           #3                  // class org/apache/dubbo/remoting/buffer/HeapChannelBuffer
+      15: dup
+      16: iconst_2
+      17: newarray       byte
+      19: dup
+      20: iconst_0
+      21: iconst_m1
+      22: bastore
+      23: dup
+      24: iconst_1
+      25: bipush        -10
+      27: bastore
+      28: invokespecial #4                  // Method org/apache/dubbo/remoting/buffer/HeapChannelBuffer."<init>":([B)V
+      31: putfield      #5                  // Field AytPreface:Lorg/apache/dubbo/remoting/buffer/ChannelBuffer;
+      34: aload_0
+      35: aload_1
+      36: putfield      #6                  // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+      39: return
+
+  public org.apache.dubbo.remoting.api.ProtocolDetector$Result detect(org.apache.dubbo.remoting.buffer.ChannelBuffer);
+    Code:
+       0: aload_1
+       1: invokeinterface #7,  1            // InterfaceMethod org/apache/dubbo/remoting/buffer/ChannelBuffer.readableBytes:()I
+       6: sipush        2048
+       9: if_icmplt     16
+      12: getstatic     #9                  // Field org/apache/dubbo/remoting/api/ProtocolDetector$Result.UNRECOGNIZED:Lorg/apache/dubbo/remoting/api/ProtocolDetector$Result;
+      15: areturn
+      16: aload_0
+      17: aload_1
+      18: invokespecial #10                 // Method commandDetect:(Lorg/apache/dubbo/remoting/buffer/ChannelBuffer;)Lorg/apache/dubbo/remoting/api/ProtocolDetector$Result;
+      21: astore_2
+      22: aload_2
+      23: getstatic     #11                 // Field org/apache/dubbo/remoting/api/ProtocolDetector$Result.RECOGNIZED:Lorg/apache/dubbo/remoting/api/ProtocolDetector$Result;
+      26: invokevirtual #12                 // Method org/apache/dubbo/remoting/api/ProtocolDetector$Result.equals:(Ljava/lang/Object;)Z
+      29: ifeq          34
+      32: aload_2
+      33: areturn
+      34: aload_0
+      35: aload_1
+      36: invokespecial #13                 // Method telnetAytDetect:(Lorg/apache/dubbo/remoting/buffer/ChannelBuffer;)Lorg/apache/dubbo/remoting/api/ProtocolDetector$Result;
+      39: astore_3
+      40: aload_3
+      41: getstatic     #11                 // Field org/apache/dubbo/remoting/api/ProtocolDetector$Result.RECOGNIZED:Lorg/apache/dubbo/remoting/api/ProtocolDetector$Result;
+      44: invokevirtual #12                 // Method org/apache/dubbo/remoting/api/ProtocolDetector$Result.equals:(Ljava/lang/Object;)Z
+      47: ifeq          52
+      50: aload_3
+      51: areturn
+      52: aload_3
+      53: getstatic     #9                  // Field org/apache/dubbo/remoting/api/ProtocolDetector$Result.UNRECOGNIZED:Lorg/apache/dubbo/remoting/api/ProtocolDetector$Result;
+      56: invokevirtual #12                 // Method org/apache/dubbo/remoting/api/ProtocolDetector$Result.equals:(Ljava/lang/Object;)Z
+      59: ifeq          76
+      62: aload_2
+      63: getstatic     #9                  // Field org/apache/dubbo/remoting/api/ProtocolDetector$Result.UNRECOGNIZED:Lorg/apache/dubbo/remoting/api/ProtocolDetector$Result;
+      66: invokevirtual #12                 // Method org/apache/dubbo/remoting/api/ProtocolDetector$Result.equals:(Ljava/lang/Object;)Z
+      69: ifeq          76
+      72: getstatic     #9                  // Field org/apache/dubbo/remoting/api/ProtocolDetector$Result.UNRECOGNIZED:Lorg/apache/dubbo/remoting/api/ProtocolDetector$Result;
+      75: areturn
+      76: getstatic     #14                 // Field org/apache/dubbo/remoting/api/ProtocolDetector$Result.NEED_MORE_DATA:Lorg/apache/dubbo/remoting/api/ProtocolDetector$Result;
+      79: areturn
+
+  private org.apache.dubbo.remoting.api.ProtocolDetector$Result commandDetect(org.apache.dubbo.remoting.buffer.ChannelBuffer);
+    Code:
+       0: aload_1
+       1: invokeinterface #15,  1           // InterfaceMethod org/apache/dubbo/remoting/buffer/ChannelBuffer.copy:()Lorg/apache/dubbo/remoting/buffer/ChannelBuffer;
+       6: astore_2
+       7: aload_2
+       8: invokeinterface #7,  1            // InterfaceMethod org/apache/dubbo/remoting/buffer/ChannelBuffer.readableBytes:()I
+      13: newarray       byte
+      15: astore_3
+      16: aload_2
+      17: aload_2
+      18: invokeinterface #16,  1           // InterfaceMethod org/apache/dubbo/remoting/buffer/ChannelBuffer.readerIndex:()I
+      23: aload_3
+      24: invokeinterface #17,  3           // InterfaceMethod org/apache/dubbo/remoting/buffer/ChannelBuffer.getBytes:(I[B)V
+      29: aload_2
+      30: invokeinterface #18,  1           // InterfaceMethod org/apache/dubbo/remoting/buffer/ChannelBuffer.release:()V
+      35: goto          49
+      38: astore        4
+      40: aload_2
+      41: invokeinterface #18,  1           // InterfaceMethod org/apache/dubbo/remoting/buffer/ChannelBuffer.release:()V
+      46: aload         4
+      48: athrow
+      49: new           #19                 // class java/lang/String
+      52: dup
+      53: aload_3
+      54: getstatic     #20                 // Field io/netty/util/CharsetUtil.UTF_8:Ljava/nio/charset/Charset;
+      57: invokespecial #21                 // Method java/lang/String."<init>":([BLjava/nio/charset/Charset;)V
+      60: astore        4
+      62: aload         4
+      64: invokevirtual #22                 // Method java/lang/String.trim:()Ljava/lang/String;
+      67: astore        4
+      69: aload         4
+      71: invokestatic  #23                 // Method org/apache/dubbo/qos/command/decoder/TelnetCommandDecoder.decode:(Ljava/lang/String;)Lorg/apache/dubbo/qos/api/CommandContext;
+      74: astore        5
+      76: aload_0
+      77: getfield      #6                  // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+      80: ldc           #24                 // class org/apache/dubbo/qos/api/BaseCommand
+      82: invokevirtual #25                 // Method org/apache/dubbo/rpc/model/FrameworkModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      85: aload         5
+      87: invokevirtual #26                 // Method org/apache/dubbo/qos/api/CommandContext.getCommandName:()Ljava/lang/String;
+      90: invokevirtual #27                 // Method org/apache/dubbo/common/extension/ExtensionLoader.hasExtension:(Ljava/lang/String;)Z
+      93: ifeq          100
+      96: getstatic     #11                 // Field org/apache/dubbo/remoting/api/ProtocolDetector$Result.RECOGNIZED:Lorg/apache/dubbo/remoting/api/ProtocolDetector$Result;
+      99: areturn
+     100: getstatic     #9                  // Field org/apache/dubbo/remoting/api/ProtocolDetector$Result.UNRECOGNIZED:Lorg/apache/dubbo/remoting/api/ProtocolDetector$Result;
+     103: areturn
+    Exception table:
+       from    to  target type
+           7    29    38   any
+          38    40    38   any
+
+  private org.apache.dubbo.remoting.api.ProtocolDetector$Result telnetAytDetect(org.apache.dubbo.remoting.buffer.ChannelBuffer);
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field AytPreface:Lorg/apache/dubbo/remoting/buffer/ChannelBuffer;
+       4: invokeinterface #7,  1            // InterfaceMethod org/apache/dubbo/remoting/buffer/ChannelBuffer.readableBytes:()I
+       9: istore_2
+      10: aload_1
+      11: invokeinterface #7,  1            // InterfaceMethod org/apache/dubbo/remoting/buffer/ChannelBuffer.readableBytes:()I
+      16: iload_2
+      17: invokestatic  #28                 // Method java/lang/Math.min:(II)I
+      20: istore_3
+      21: iload_3
+      22: ifeq          37
+      25: aload_1
+      26: aload_0
+      27: getfield      #5                  // Field AytPreface:Lorg/apache/dubbo/remoting/buffer/ChannelBuffer;
+      30: iload_3
+      31: invokestatic  #29                 // Method org/apache/dubbo/remoting/buffer/ChannelBuffers.prefixEquals:(Lorg/apache/dubbo/remoting/buffer/ChannelBuffer;Lorg/apache/dubbo/remoting/buffer/ChannelBuffer;I)Z
+      34: ifne          41
+      37: getstatic     #9                  // Field org/apache/dubbo/remoting/api/ProtocolDetector$Result.UNRECOGNIZED:Lorg/apache/dubbo/remoting/api/ProtocolDetector$Result;
+      40: areturn
+      41: iload_3
+      42: iload_2
+      43: if_icmpne     72
+      46: aload_1
+      47: aload_0
+      48: getfield      #5                  // Field AytPreface:Lorg/apache/dubbo/remoting/buffer/ChannelBuffer;
+      51: invokeinterface #7,  1            // InterfaceMethod org/apache/dubbo/remoting/buffer/ChannelBuffer.readableBytes:()I
+      56: invokeinterface #30,  2           // InterfaceMethod org/apache/dubbo/remoting/buffer/ChannelBuffer.readBytes:(I)Lorg/apache/dubbo/remoting/buffer/ChannelBuffer;
+      61: pop
+      62: aload_1
+      63: invokeinterface #31,  1           // InterfaceMethod org/apache/dubbo/remoting/buffer/ChannelBuffer.markReaderIndex:()V
+      68: getstatic     #11                 // Field org/apache/dubbo/remoting/api/ProtocolDetector$Result.RECOGNIZED:Lorg/apache/dubbo/remoting/api/ProtocolDetector$Result;
+      71: areturn
+      72: getstatic     #14                 // Field org/apache/dubbo/remoting/api/ProtocolDetector$Result.NEED_MORE_DATA:Lorg/apache/dubbo/remoting/api/ProtocolDetector$Result;
+      75: areturn
+}

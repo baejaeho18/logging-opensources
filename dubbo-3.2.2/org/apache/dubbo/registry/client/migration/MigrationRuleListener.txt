@@ -1,0 +1,594 @@
+Compiled from "MigrationRuleListener.java"
+public class org.apache.dubbo.registry.client.migration.MigrationRuleListener implements org.apache.dubbo.registry.integration.RegistryProtocolListener,org.apache.dubbo.common.config.configcenter.ConfigurationListener {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private static final java.lang.String DUBBO_SERVICEDISCOVERY_MIGRATION;
+
+  private static final java.lang.String MIGRATION_DELAY_KEY;
+
+  private static final int MIGRATION_DEFAULT_DELAY_TIME;
+
+  private java.lang.String ruleKey;
+
+  protected final java.util.concurrent.ConcurrentMap<org.apache.dubbo.registry.client.migration.MigrationInvoker<?>, org.apache.dubbo.registry.client.migration.MigrationRuleHandler<?>> handlers;
+
+  protected final java.util.concurrent.LinkedBlockingQueue<java.lang.String> ruleQueue;
+
+  private final java.util.concurrent.atomic.AtomicBoolean executorSubmit;
+
+  private final java.util.concurrent.ExecutorService ruleManageExecutor;
+
+  protected java.util.concurrent.ScheduledFuture<?> localRuleMigrationFuture;
+
+  protected java.util.concurrent.Future<?> ruleMigrationFuture;
+
+  private org.apache.dubbo.common.config.configcenter.DynamicConfiguration configuration;
+
+  private volatile java.lang.String rawRule;
+
+  private volatile org.apache.dubbo.registry.client.migration.model.MigrationRule rule;
+
+  private final org.apache.dubbo.rpc.model.ModuleModel moduleModel;
+
+  public org.apache.dubbo.registry.client.migration.MigrationRuleListener(org.apache.dubbo.rpc.model.ModuleModel);
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #4                  // class java/util/concurrent/ConcurrentHashMap
+       8: dup
+       9: invokespecial #5                  // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      12: putfield      #6                  // Field handlers:Ljava/util/concurrent/ConcurrentMap;
+      15: aload_0
+      16: new           #7                  // class java/util/concurrent/LinkedBlockingQueue
+      19: dup
+      20: invokespecial #8                  // Method java/util/concurrent/LinkedBlockingQueue."<init>":()V
+      23: putfield      #9                  // Field ruleQueue:Ljava/util/concurrent/LinkedBlockingQueue;
+      26: aload_0
+      27: new           #10                 // class java/util/concurrent/atomic/AtomicBoolean
+      30: dup
+      31: iconst_0
+      32: invokespecial #11                 // Method java/util/concurrent/atomic/AtomicBoolean."<init>":(Z)V
+      35: putfield      #12                 // Field executorSubmit:Ljava/util/concurrent/atomic/AtomicBoolean;
+      38: aload_0
+      39: iconst_1
+      40: new           #13                 // class org/apache/dubbo/common/utils/NamedThreadFactory
+      43: dup
+      44: ldc           #14                 // String Dubbo-Migration-Listener
+      46: invokespecial #15                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;)V
+      49: invokestatic  #16                 // Method java/util/concurrent/Executors.newFixedThreadPool:(ILjava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ExecutorService;
+      52: putfield      #17                 // Field ruleManageExecutor:Ljava/util/concurrent/ExecutorService;
+      55: aload_0
+      56: aload_1
+      57: putfield      #18                 // Field moduleModel:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      60: aload_0
+      61: invokespecial #19                 // Method init:()V
+      64: return
+
+  private void init();
+    Code:
+       0: aload_0
+       1: new           #20                 // class java/lang/StringBuilder
+       4: dup
+       5: invokespecial #21                 // Method java/lang/StringBuilder."<init>":()V
+       8: aload_0
+       9: getfield      #18                 // Field moduleModel:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      12: invokevirtual #22                 // Method org/apache/dubbo/rpc/model/ModuleModel.getApplicationModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      15: invokevirtual #23                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getApplicationName:()Ljava/lang/String;
+      18: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      21: ldc           #25                 // String .migration
+      23: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      26: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      29: putfield      #27                 // Field ruleKey:Ljava/lang/String;
+      32: aload_0
+      33: aload_0
+      34: getfield      #18                 // Field moduleModel:Lorg/apache/dubbo/rpc/model/ModuleModel;
+      37: invokevirtual #28                 // Method org/apache/dubbo/rpc/model/ModuleModel.getModelEnvironment:()Lorg/apache/dubbo/common/config/ModuleEnvironment;
+      40: invokevirtual #29                 // Method org/apache/dubbo/common/config/ModuleEnvironment.getDynamicConfiguration:()Ljava/util/Optional;
+      43: aconst_null
+      44: invokevirtual #30                 // Method java/util/Optional.orElse:(Ljava/lang/Object;)Ljava/lang/Object;
+      47: checkcast     #31                 // class org/apache/dubbo/common/config/configcenter/DynamicConfiguration
+      50: putfield      #32                 // Field configuration:Lorg/apache/dubbo/common/config/configcenter/DynamicConfiguration;
+      53: aload_0
+      54: getfield      #32                 // Field configuration:Lorg/apache/dubbo/common/config/configcenter/DynamicConfiguration;
+      57: ifnull        150
+      60: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      63: new           #20                 // class java/lang/StringBuilder
+      66: dup
+      67: invokespecial #21                 // Method java/lang/StringBuilder."<init>":()V
+      70: ldc           #34                 // String Listening for migration rules on dataId
+      72: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      75: aload_0
+      76: getfield      #27                 // Field ruleKey:Ljava/lang/String;
+      79: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      82: ldc           #35                 // String , group
+      84: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      87: ldc           #37                 // String DUBBO_SERVICEDISCOVERY_MIGRATION
+      89: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      92: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      95: invokeinterface #38,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+     100: aload_0
+     101: getfield      #32                 // Field configuration:Lorg/apache/dubbo/common/config/configcenter/DynamicConfiguration;
+     104: aload_0
+     105: getfield      #27                 // Field ruleKey:Ljava/lang/String;
+     108: ldc           #37                 // String DUBBO_SERVICEDISCOVERY_MIGRATION
+     110: aload_0
+     111: invokeinterface #39,  4           // InterfaceMethod org/apache/dubbo/common/config/configcenter/DynamicConfiguration.addListener:(Ljava/lang/String;Ljava/lang/String;Lorg/apache/dubbo/common/config/configcenter/ConfigurationListener;)V
+     116: aload_0
+     117: getfield      #32                 // Field configuration:Lorg/apache/dubbo/common/config/configcenter/DynamicConfiguration;
+     120: aload_0
+     121: getfield      #27                 // Field ruleKey:Ljava/lang/String;
+     124: ldc           #37                 // String DUBBO_SERVICEDISCOVERY_MIGRATION
+     126: invokeinterface #40,  3           // InterfaceMethod org/apache/dubbo/common/config/configcenter/DynamicConfiguration.getConfig:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     131: astore_1
+     132: aload_1
+     133: invokestatic  #41                 // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+     136: ifeq          142
+     139: ldc           #42                 // String INIT
+     141: astore_1
+     142: aload_0
+     143: aload_1
+     144: invokevirtual #43                 // Method setRawRule:(Ljava/lang/String;)V
+     147: goto          183
+     150: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     153: invokeinterface #44,  1           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isWarnEnabled:()Z
+     158: ifeq          177
+     161: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     164: ldc           #45                 // String 1-4
+     166: ldc           #46                 // String
+     168: ldc           #46                 // String
+     170: ldc           #47                 // String Using default configuration rule because config center is not configured!
+     172: invokeinterface #48,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     177: aload_0
+     178: ldc           #42                 // String INIT
+     180: invokevirtual #43                 // Method setRawRule:(Ljava/lang/String;)V
+     183: aload_0
+     184: getfield      #18                 // Field moduleModel:Lorg/apache/dubbo/rpc/model/ModuleModel;
+     187: invokevirtual #28                 // Method org/apache/dubbo/rpc/model/ModuleModel.getModelEnvironment:()Lorg/apache/dubbo/common/config/ModuleEnvironment;
+     190: invokevirtual #49                 // Method org/apache/dubbo/common/config/ModuleEnvironment.getLocalMigrationRule:()Ljava/lang/String;
+     193: astore_1
+     194: aload_1
+     195: invokestatic  #41                 // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+     198: ifne          249
+     201: aload_0
+     202: aload_0
+     203: getfield      #18                 // Field moduleModel:Lorg/apache/dubbo/rpc/model/ModuleModel;
+     206: invokevirtual #22                 // Method org/apache/dubbo/rpc/model/ModuleModel.getApplicationModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     209: invokevirtual #50                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getFrameworkModel:()Lorg/apache/dubbo/rpc/model/FrameworkModel;
+     212: invokevirtual #51                 // Method org/apache/dubbo/rpc/model/FrameworkModel.getBeanFactory:()Lorg/apache/dubbo/common/beans/factory/ScopeBeanFactory;
+     215: ldc           #52                 // class org/apache/dubbo/common/threadpool/manager/FrameworkExecutorRepository
+     217: invokevirtual #53                 // Method org/apache/dubbo/common/beans/factory/ScopeBeanFactory.getBean:(Ljava/lang/Class;)Ljava/lang/Object;
+     220: checkcast     #52                 // class org/apache/dubbo/common/threadpool/manager/FrameworkExecutorRepository
+     223: invokevirtual #54                 // Method org/apache/dubbo/common/threadpool/manager/FrameworkExecutorRepository.getSharedScheduledExecutor:()Ljava/util/concurrent/ScheduledExecutorService;
+     226: aload_0
+     227: aload_1
+     228: invokedynamic #55,  0             // InvokeDynamic #0:run:(Lorg/apache/dubbo/registry/client/migration/MigrationRuleListener;Ljava/lang/String;)Ljava/lang/Runnable;
+     233: aload_0
+     234: invokespecial #56                 // Method getDelay:()I
+     237: i2l
+     238: getstatic     #57                 // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+     241: invokeinterface #58,  5           // InterfaceMethod java/util/concurrent/ScheduledExecutorService.schedule:(Ljava/lang/Runnable;JLjava/util/concurrent/TimeUnit;)Ljava/util/concurrent/ScheduledFuture;
+     246: putfield      #59                 // Field localRuleMigrationFuture:Ljava/util/concurrent/ScheduledFuture;
+     249: return
+
+  private int getDelay();
+    Code:
+       0: ldc           #60                 // int 60000
+       2: istore_1
+       3: aload_0
+       4: getfield      #18                 // Field moduleModel:Lorg/apache/dubbo/rpc/model/ModuleModel;
+       7: ldc           #61                 // String dubbo.application.migration.delay
+       9: invokestatic  #62                 // Method org/apache/dubbo/common/config/ConfigurationUtils.getProperty:(Lorg/apache/dubbo/rpc/model/ScopeModel;Ljava/lang/String;)Ljava/lang/String;
+      12: astore_2
+      13: aload_2
+      14: invokestatic  #41                 // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+      17: ifeq          22
+      20: iload_1
+      21: ireturn
+      22: aload_2
+      23: invokestatic  #63                 // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+      26: istore_1
+      27: goto          64
+      30: astore_3
+      31: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      34: ldc           #65                 // String 0-2
+      36: ldc           #46                 // String
+      38: ldc           #46                 // String
+      40: new           #20                 // class java/lang/StringBuilder
+      43: dup
+      44: invokespecial #21                 // Method java/lang/StringBuilder."<init>":()V
+      47: ldc           #66                 // String Invalid migration delay param
+      49: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      52: aload_2
+      53: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      56: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      59: invokeinterface #48,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      64: iload_1
+      65: ireturn
+    Exception table:
+       from    to  target type
+          22    27    30   Class java/lang/Exception
+
+  public synchronized void process(org.apache.dubbo.common.config.configcenter.ConfigChangedEvent);
+    Code:
+       0: aload_1
+       1: invokevirtual #67                 // Method org/apache/dubbo/common/config/configcenter/ConfigChangedEvent.getContent:()Ljava/lang/String;
+       4: astore_2
+       5: aload_2
+       6: invokestatic  #41                 // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+       9: ifeq          15
+      12: ldc           #42                 // String INIT
+      14: astore_2
+      15: aload_0
+      16: getfield      #9                  // Field ruleQueue:Ljava/util/concurrent/LinkedBlockingQueue;
+      19: aload_2
+      20: invokevirtual #68                 // Method java/util/concurrent/LinkedBlockingQueue.put:(Ljava/lang/Object;)V
+      23: goto          61
+      26: astore_3
+      27: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      30: ldc           #70                 // String 0-6
+      32: ldc           #46                 // String
+      34: ldc           #46                 // String
+      36: new           #20                 // class java/lang/StringBuilder
+      39: dup
+      40: invokespecial #21                 // Method java/lang/StringBuilder."<init>":()V
+      43: ldc           #71                 // String Put rawRule to rule management queue failed. rawRule:
+      45: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      48: aload_2
+      49: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      52: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      55: aload_3
+      56: invokeinterface #72,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      61: aload_0
+      62: getfield      #12                 // Field executorSubmit:Ljava/util/concurrent/atomic/AtomicBoolean;
+      65: iconst_0
+      66: iconst_1
+      67: invokevirtual #73                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+      70: ifeq          92
+      73: aload_0
+      74: aload_0
+      75: getfield      #17                 // Field ruleManageExecutor:Ljava/util/concurrent/ExecutorService;
+      78: aload_0
+      79: invokedynamic #74,  0             // InvokeDynamic #1:call:(Lorg/apache/dubbo/registry/client/migration/MigrationRuleListener;)Ljava/util/concurrent/Callable;
+      84: invokeinterface #75,  2           // InterfaceMethod java/util/concurrent/ExecutorService.submit:(Ljava/util/concurrent/Callable;)Ljava/util/concurrent/Future;
+      89: putfield      #76                 // Field ruleMigrationFuture:Ljava/util/concurrent/Future;
+      92: return
+    Exception table:
+       from    to  target type
+          15    23    26   Class java/lang/InterruptedException
+
+  public void setRawRule(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #77                 // Field rawRule:Ljava/lang/String;
+       5: aload_0
+       6: aload_0
+       7: aload_0
+       8: getfield      #77                 // Field rawRule:Ljava/lang/String;
+      11: invokespecial #78                 // Method parseRule:(Ljava/lang/String;)Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;
+      14: putfield      #79                 // Field rule:Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;
+      17: return
+
+  private org.apache.dubbo.registry.client.migration.model.MigrationRule parseRule(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #79                 // Field rule:Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;
+       4: ifnonnull     13
+       7: invokestatic  #80                 // Method org/apache/dubbo/registry/client/migration/model/MigrationRule.getInitRule:()Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;
+      10: goto          17
+      13: aload_0
+      14: getfield      #79                 // Field rule:Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;
+      17: astore_2
+      18: ldc           #42                 // String INIT
+      20: aload_1
+      21: invokevirtual #81                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      24: ifeq          34
+      27: invokestatic  #80                 // Method org/apache/dubbo/registry/client/migration/model/MigrationRule.getInitRule:()Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;
+      30: astore_2
+      31: goto          60
+      34: aload_1
+      35: invokestatic  #82                 // Method org/apache/dubbo/registry/client/migration/model/MigrationRule.parse:(Ljava/lang/String;)Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;
+      38: astore_2
+      39: goto          60
+      42: astore_3
+      43: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      46: ldc           #65                 // String 0-2
+      48: ldc           #46                 // String
+      50: ldc           #46                 // String
+      52: ldc           #83                 // String Failed to parse migration rule...
+      54: aload_3
+      55: invokeinterface #72,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      60: aload_2
+      61: areturn
+    Exception table:
+       from    to  target type
+          34    39    42   Class java/lang/Exception
+
+  public void onExport(org.apache.dubbo.registry.integration.RegistryProtocol, org.apache.dubbo.rpc.Exporter<?>);
+    Code:
+       0: return
+
+  public void onRefer(org.apache.dubbo.registry.integration.RegistryProtocol, org.apache.dubbo.rpc.cluster.ClusterInvoker<?>, org.apache.dubbo.common.URL, org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field handlers:Ljava/util/concurrent/ConcurrentMap;
+       4: aload_2
+       5: checkcast     #84                 // class org/apache/dubbo/registry/client/migration/MigrationInvoker
+       8: aload_0
+       9: aload_2
+      10: aload_3
+      11: invokedynamic #85,  0             // InvokeDynamic #2:apply:(Lorg/apache/dubbo/registry/client/migration/MigrationRuleListener;Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;Lorg/apache/dubbo/common/URL;)Ljava/util/function/Function;
+      16: invokestatic  #86                 // Method org/apache/dubbo/common/utils/ConcurrentHashMapUtils.computeIfAbsent:(Ljava/util/concurrent/ConcurrentMap;Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+      19: checkcast     #87                 // class org/apache/dubbo/registry/client/migration/MigrationRuleHandler
+      22: astore        5
+      24: aload         5
+      26: aload_0
+      27: getfield      #79                 // Field rule:Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;
+      30: invokevirtual #88                 // Method org/apache/dubbo/registry/client/migration/MigrationRuleHandler.doMigrate:(Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;)V
+      33: return
+
+  public void onDestroy();
+    Code:
+       0: aload_0
+       1: getfield      #32                 // Field configuration:Lorg/apache/dubbo/common/config/configcenter/DynamicConfiguration;
+       4: ifnull        23
+       7: aload_0
+       8: getfield      #32                 // Field configuration:Lorg/apache/dubbo/common/config/configcenter/DynamicConfiguration;
+      11: aload_0
+      12: getfield      #27                 // Field ruleKey:Ljava/lang/String;
+      15: ldc           #37                 // String DUBBO_SERVICEDISCOVERY_MIGRATION
+      17: aload_0
+      18: invokeinterface #89,  4           // InterfaceMethod org/apache/dubbo/common/config/configcenter/DynamicConfiguration.removeListener:(Ljava/lang/String;Ljava/lang/String;Lorg/apache/dubbo/common/config/configcenter/ConfigurationListener;)V
+      23: aload_0
+      24: getfield      #76                 // Field ruleMigrationFuture:Ljava/util/concurrent/Future;
+      27: ifnull        41
+      30: aload_0
+      31: getfield      #76                 // Field ruleMigrationFuture:Ljava/util/concurrent/Future;
+      34: iconst_1
+      35: invokeinterface #90,  2           // InterfaceMethod java/util/concurrent/Future.cancel:(Z)Z
+      40: pop
+      41: aload_0
+      42: getfield      #59                 // Field localRuleMigrationFuture:Ljava/util/concurrent/ScheduledFuture;
+      45: ifnull        59
+      48: aload_0
+      49: getfield      #59                 // Field localRuleMigrationFuture:Ljava/util/concurrent/ScheduledFuture;
+      52: iconst_1
+      53: invokeinterface #91,  2           // InterfaceMethod java/util/concurrent/ScheduledFuture.cancel:(Z)Z
+      58: pop
+      59: aload_0
+      60: getfield      #17                 // Field ruleManageExecutor:Ljava/util/concurrent/ExecutorService;
+      63: invokeinterface #92,  1           // InterfaceMethod java/util/concurrent/ExecutorService.shutdown:()V
+      68: aload_0
+      69: getfield      #9                  // Field ruleQueue:Ljava/util/concurrent/LinkedBlockingQueue;
+      72: invokevirtual #93                 // Method java/util/concurrent/LinkedBlockingQueue.clear:()V
+      75: return
+
+  public java.util.Map<org.apache.dubbo.registry.client.migration.MigrationInvoker<?>, org.apache.dubbo.registry.client.migration.MigrationRuleHandler<?>> getHandlers();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field handlers:Ljava/util/concurrent/ConcurrentMap;
+       4: areturn
+
+  protected void removeMigrationInvoker(org.apache.dubbo.registry.client.migration.MigrationInvoker<?>);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field handlers:Ljava/util/concurrent/ConcurrentMap;
+       4: aload_1
+       5: invokeinterface #94,  2           // InterfaceMethod java/util/concurrent/ConcurrentMap.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      10: pop
+      11: return
+
+  public org.apache.dubbo.registry.client.migration.model.MigrationRule getRule();
+    Code:
+       0: aload_0
+       1: getfield      #79                 // Field rule:Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;
+       4: areturn
+
+  private org.apache.dubbo.registry.client.migration.MigrationRuleHandler lambda$onRefer$3(org.apache.dubbo.rpc.cluster.ClusterInvoker, org.apache.dubbo.common.URL, org.apache.dubbo.registry.client.migration.MigrationInvoker);
+    Code:
+       0: aload_1
+       1: checkcast     #84                 // class org/apache/dubbo/registry/client/migration/MigrationInvoker
+       4: aload_0
+       5: invokevirtual #95                 // Method org/apache/dubbo/registry/client/migration/MigrationInvoker.setMigrationRuleListener:(Lorg/apache/dubbo/registry/client/migration/MigrationRuleListener;)V
+       8: new           #87                 // class org/apache/dubbo/registry/client/migration/MigrationRuleHandler
+      11: dup
+      12: aload_1
+      13: checkcast     #84                 // class org/apache/dubbo/registry/client/migration/MigrationInvoker
+      16: aload_2
+      17: invokespecial #96                 // Method org/apache/dubbo/registry/client/migration/MigrationRuleHandler."<init>":(Lorg/apache/dubbo/registry/client/migration/MigrationClusterInvoker;Lorg/apache/dubbo/common/URL;)V
+      20: areturn
+
+  private java.lang.Object lambda$process$2() throws java.lang.Exception;
+    Code:
+       0: ldc           #46                 // String
+       2: astore_1
+       3: aload_0
+       4: getfield      #9                  // Field ruleQueue:Ljava/util/concurrent/LinkedBlockingQueue;
+       7: invokevirtual #97                 // Method java/util/concurrent/LinkedBlockingQueue.take:()Ljava/lang/Object;
+      10: checkcast     #98                 // class java/lang/String
+      13: astore_1
+      14: aload_1
+      15: invokestatic  #41                 // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+      18: ifeq          27
+      21: ldc2_w        #99                 // long 1000l
+      24: invokestatic  #101                // Method java/lang/Thread.sleep:(J)V
+      27: goto          48
+      30: astore_2
+      31: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      34: ldc           #70                 // String 0-6
+      36: ldc           #46                 // String
+      38: ldc           #46                 // String
+      40: ldc           #102                // String Poll Rule from config center failed.
+      42: aload_2
+      43: invokeinterface #72,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      48: aload_1
+      49: invokestatic  #41                 // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+      52: ifeq          58
+      55: goto          0
+      58: aload_0
+      59: getfield      #77                 // Field rawRule:Ljava/lang/String;
+      62: aload_1
+      63: invokestatic  #103                // Method java/util/Objects.equals:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      66: ifeq          82
+      69: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      72: ldc           #104                // String Ignore duplicated rule
+      74: invokeinterface #38,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      79: goto          0
+      82: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      85: ldc           #105                // String Using the following migration rule to migrate:
+      87: invokeinterface #38,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      92: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      95: aload_1
+      96: invokeinterface #38,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+     101: aload_0
+     102: aload_1
+     103: invokevirtual #43                 // Method setRawRule:(Ljava/lang/String;)V
+     106: aload_0
+     107: getfield      #6                  // Field handlers:Ljava/util/concurrent/ConcurrentMap;
+     110: invokestatic  #106                // Method org/apache/dubbo/common/utils/CollectionUtils.isEmptyMap:(Ljava/util/Map;)Z
+     113: ifeq          119
+     116: goto          0
+     119: aconst_null
+     120: astore_2
+     121: aload_0
+     122: getfield      #6                  // Field handlers:Ljava/util/concurrent/ConcurrentMap;
+     125: invokeinterface #107,  1          // InterfaceMethod java/util/concurrent/ConcurrentMap.size:()I
+     130: bipush        100
+     132: invokestatic  #108                // Method java/lang/Math.min:(II)I
+     135: new           #13                 // class org/apache/dubbo/common/utils/NamedThreadFactory
+     138: dup
+     139: ldc           #109                // String Dubbo-Invoker-Migrate
+     141: invokespecial #15                 // Method org/apache/dubbo/common/utils/NamedThreadFactory."<init>":(Ljava/lang/String;)V
+     144: invokestatic  #16                 // Method java/util/concurrent/Executors.newFixedThreadPool:(ILjava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ExecutorService;
+     147: astore_2
+     148: new           #110                // class java/util/ArrayList
+     151: dup
+     152: aload_0
+     153: getfield      #6                  // Field handlers:Ljava/util/concurrent/ConcurrentMap;
+     156: invokeinterface #107,  1          // InterfaceMethod java/util/concurrent/ConcurrentMap.size:()I
+     161: invokespecial #111                // Method java/util/ArrayList."<init>":(I)V
+     164: astore_3
+     165: aload_0
+     166: getfield      #6                  // Field handlers:Ljava/util/concurrent/ConcurrentMap;
+     169: invokeinterface #112,  1          // InterfaceMethod java/util/concurrent/ConcurrentMap.values:()Ljava/util/Collection;
+     174: invokeinterface #113,  1          // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+     179: astore        4
+     181: aload         4
+     183: invokeinterface #114,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     188: ifeq          231
+     191: aload         4
+     193: invokeinterface #115,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     198: checkcast     #87                 // class org/apache/dubbo/registry/client/migration/MigrationRuleHandler
+     201: astore        5
+     203: aload_2
+     204: aload_0
+     205: aload         5
+     207: invokedynamic #116,  0            // InvokeDynamic #3:run:(Lorg/apache/dubbo/registry/client/migration/MigrationRuleListener;Lorg/apache/dubbo/registry/client/migration/MigrationRuleHandler;)Ljava/lang/Runnable;
+     212: invokeinterface #117,  2          // InterfaceMethod java/util/concurrent/ExecutorService.submit:(Ljava/lang/Runnable;)Ljava/util/concurrent/Future;
+     217: astore        6
+     219: aload_3
+     220: aload         6
+     222: invokeinterface #118,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     227: pop
+     228: goto          181
+     231: aload_3
+     232: invokeinterface #119,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     237: astore        4
+     239: aload         4
+     241: invokeinterface #114,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     246: ifeq          319
+     249: aload         4
+     251: invokeinterface #115,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     256: checkcast     #120                // class java/util/concurrent/Future
+     259: astore        5
+     261: aload         5
+     263: invokeinterface #121,  1          // InterfaceMethod java/util/concurrent/Future.get:()Ljava/lang/Object;
+     268: pop
+     269: goto          316
+     272: astore        6
+     274: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     277: ldc           #122                // String 99-0
+     279: ldc           #123                // String unknown error in registry module
+     281: ldc           #46                 // String
+     283: ldc           #124                // String Interrupted while waiting for migration async task to finish.
+     285: invokeinterface #48,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     290: goto          316
+     293: astore        6
+     295: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     298: ldc           #122                // String 99-0
+     300: ldc           #123                // String unknown error in registry module
+     302: ldc           #46                 // String
+     304: ldc           #126                // String Migration async task failed.
+     306: aload         6
+     308: invokevirtual #127                // Method java/util/concurrent/ExecutionException.getCause:()Ljava/lang/Throwable;
+     311: invokeinterface #72,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     316: goto          239
+     319: aload_2
+     320: ifnull        378
+     323: aload_2
+     324: invokeinterface #92,  1           // InterfaceMethod java/util/concurrent/ExecutorService.shutdown:()V
+     329: goto          378
+     332: astore_3
+     333: getstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     336: ldc           #122                // String 99-0
+     338: ldc           #123                // String unknown error in registry module
+     340: ldc           #46                 // String
+     342: ldc           #129                // String Error occurred when migration.
+     344: aload_3
+     345: invokeinterface #72,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     350: aload_2
+     351: ifnull        378
+     354: aload_2
+     355: invokeinterface #92,  1           // InterfaceMethod java/util/concurrent/ExecutorService.shutdown:()V
+     360: goto          378
+     363: astore        7
+     365: aload_2
+     366: ifnull        375
+     369: aload_2
+     370: invokeinterface #92,  1           // InterfaceMethod java/util/concurrent/ExecutorService.shutdown:()V
+     375: aload         7
+     377: athrow
+     378: goto          0
+    Exception table:
+       from    to  target type
+           3    27    30   Class java/lang/InterruptedException
+         261   269   272   Class java/lang/InterruptedException
+         261   269   293   Class java/util/concurrent/ExecutionException
+         121   319   332   Class java/lang/Throwable
+         121   319   363   any
+         332   350   363   any
+         363   365   363   any
+
+  private void lambda$null$1(org.apache.dubbo.registry.client.migration.MigrationRuleHandler);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: getfield      #79                 // Field rule:Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;
+       5: invokevirtual #88                 // Method org/apache/dubbo/registry/client/migration/MigrationRuleHandler.doMigrate:(Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;)V
+       8: return
+
+  private void lambda$init$0(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #77                 // Field rawRule:Ljava/lang/String;
+       4: ldc           #42                 // String INIT
+       6: invokevirtual #81                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       9: ifeq          26
+      12: aload_0
+      13: new           #130                // class org/apache/dubbo/common/config/configcenter/ConfigChangedEvent
+      16: dup
+      17: aconst_null
+      18: aconst_null
+      19: aload_1
+      20: invokespecial #131                // Method org/apache/dubbo/common/config/configcenter/ConfigChangedEvent."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      23: invokevirtual #132                // Method process:(Lorg/apache/dubbo/common/config/configcenter/ConfigChangedEvent;)V
+      26: return
+
+  static {};
+    Code:
+       0: ldc           #36                 // class org/apache/dubbo/registry/client/migration/MigrationRuleListener
+       2: invokestatic  #133                // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #33                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

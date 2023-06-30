@@ -1,0 +1,99 @@
+Compiled from "DefaultAnonymousAccessPermissionChecker.java"
+public class org.apache.dubbo.qos.permission.DefaultAnonymousAccessPermissionChecker implements org.apache.dubbo.qos.permission.PermissionChecker {
+  public static final org.apache.dubbo.qos.permission.DefaultAnonymousAccessPermissionChecker INSTANCE;
+
+  public org.apache.dubbo.qos.permission.DefaultAnonymousAccessPermissionChecker();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public boolean access(org.apache.dubbo.qos.api.CommandContext, org.apache.dubbo.qos.api.PermissionLevel);
+    Code:
+       0: aload_1
+       1: invokevirtual #2                  // Method org/apache/dubbo/qos/api/CommandContext.getRemote:()Lio/netty/channel/Channel;
+       4: invokestatic  #3                  // Method java/util/Optional.ofNullable:(Ljava/lang/Object;)Ljava/util/Optional;
+       7: invokedynamic #4,  0              // InvokeDynamic #0:apply:()Ljava/util/function/Function;
+      12: invokevirtual #5                  // Method java/util/Optional.map:(Ljava/util/function/Function;)Ljava/util/Optional;
+      15: ldc           #6                  // class java/net/InetSocketAddress
+      17: dup
+      18: invokevirtual #7                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      21: pop
+      22: invokedynamic #8,  0              // InvokeDynamic #1:apply:(Ljava/lang/Class;)Ljava/util/function/Function;
+      27: invokevirtual #5                  // Method java/util/Optional.map:(Ljava/util/function/Function;)Ljava/util/Optional;
+      30: invokedynamic #9,  0              // InvokeDynamic #2:apply:()Ljava/util/function/Function;
+      35: invokevirtual #5                  // Method java/util/Optional.map:(Ljava/util/function/Function;)Ljava/util/Optional;
+      38: aconst_null
+      39: invokevirtual #10                 // Method java/util/Optional.orElse:(Ljava/lang/Object;)Ljava/lang/Object;
+      42: checkcast     #11                 // class java/net/InetAddress
+      45: astore_3
+      46: aload_1
+      47: invokevirtual #12                 // Method org/apache/dubbo/qos/api/CommandContext.getQosConfiguration:()Lorg/apache/dubbo/qos/api/QosConfiguration;
+      50: astore        4
+      52: aload         4
+      54: invokevirtual #13                 // Method org/apache/dubbo/qos/api/QosConfiguration.getAnonymousAllowCommands:()Ljava/lang/String;
+      57: astore        5
+      59: aload         5
+      61: invokestatic  #14                 // Method org/apache/dubbo/common/utils/StringUtils.isNotEmpty:(Ljava/lang/String;)Z
+      64: ifeq          113
+      67: aload         5
+      69: ldc           #15                 // String ,
+      71: invokevirtual #16                 // Method java/lang/String.split:(Ljava/lang/String;)[Ljava/lang/String;
+      74: invokestatic  #17                 // Method java/util/Arrays.stream:([Ljava/lang/Object;)Ljava/util/stream/Stream;
+      77: invokedynamic #18,  0             // InvokeDynamic #3:test:()Ljava/util/function/Predicate;
+      82: invokeinterface #19,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+      87: invokedynamic #20,  0             // InvokeDynamic #4:apply:()Ljava/util/function/Function;
+      92: invokeinterface #21,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      97: aload_1
+      98: invokedynamic #22,  0             // InvokeDynamic #5:test:(Lorg/apache/dubbo/qos/api/CommandContext;)Ljava/util/function/Predicate;
+     103: invokeinterface #23,  2           // InterfaceMethod java/util/stream/Stream.anyMatch:(Ljava/util/function/Predicate;)Z
+     108: ifeq          113
+     111: iconst_1
+     112: ireturn
+     113: aload         4
+     115: invokevirtual #24                 // Method org/apache/dubbo/qos/api/QosConfiguration.getAnonymousAccessPermissionLevel:()Lorg/apache/dubbo/qos/api/PermissionLevel;
+     118: astore        6
+     120: aload_3
+     121: ifnull        139
+     124: aload_3
+     125: invokevirtual #25                 // Method java/net/InetAddress.isLoopbackAddress:()Z
+     128: ifeq          139
+     131: getstatic     #26                 // Field org/apache/dubbo/qos/api/PermissionLevel.PRIVATE:Lorg/apache/dubbo/qos/api/PermissionLevel;
+     134: astore        6
+     136: goto          165
+     139: aload_3
+     140: ifnull        165
+     143: aload         4
+     145: invokevirtual #27                 // Method org/apache/dubbo/qos/api/QosConfiguration.getAcceptForeignIpWhitelistPredicate:()Ljava/util/function/Predicate;
+     148: aload_3
+     149: invokevirtual #28                 // Method java/net/InetAddress.getHostAddress:()Ljava/lang/String;
+     152: invokeinterface #29,  2           // InterfaceMethod java/util/function/Predicate.test:(Ljava/lang/Object;)Z
+     157: ifeq          165
+     160: getstatic     #30                 // Field org/apache/dubbo/qos/api/PermissionLevel.PROTECTED:Lorg/apache/dubbo/qos/api/PermissionLevel;
+     163: astore        6
+     165: aload         6
+     167: invokevirtual #31                 // Method org/apache/dubbo/qos/api/PermissionLevel.getLevel:()I
+     170: aload_2
+     171: invokevirtual #31                 // Method org/apache/dubbo/qos/api/PermissionLevel.getLevel:()I
+     174: if_icmplt     181
+     177: iconst_1
+     178: goto          182
+     181: iconst_0
+     182: ireturn
+
+  private static boolean lambda$access$0(org.apache.dubbo.qos.api.CommandContext, java.lang.String);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: invokevirtual #32                 // Method org/apache/dubbo/qos/api/CommandContext.getCommandName:()Ljava/lang/String;
+       5: invokevirtual #33                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       8: ireturn
+
+  static {};
+    Code:
+       0: new           #34                 // class org/apache/dubbo/qos/permission/DefaultAnonymousAccessPermissionChecker
+       3: dup
+       4: invokespecial #35                 // Method "<init>":()V
+       7: putstatic     #36                 // Field INSTANCE:Lorg/apache/dubbo/qos/permission/DefaultAnonymousAccessPermissionChecker;
+      10: return
+}

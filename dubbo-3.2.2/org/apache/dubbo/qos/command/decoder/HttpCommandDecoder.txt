@@ -1,0 +1,180 @@
+Compiled from "HttpCommandDecoder.java"
+public class org.apache.dubbo.qos.command.decoder.HttpCommandDecoder {
+  public org.apache.dubbo.qos.command.decoder.HttpCommandDecoder();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static org.apache.dubbo.qos.api.CommandContext decode(io.netty.handler.codec.http.HttpRequest);
+    Code:
+       0: aconst_null
+       1: astore_1
+       2: aload_0
+       3: ifnull        386
+       6: new           #2                  // class io/netty/handler/codec/http/QueryStringDecoder
+       9: dup
+      10: aload_0
+      11: invokeinterface #3,  1            // InterfaceMethod io/netty/handler/codec/http/HttpRequest.uri:()Ljava/lang/String;
+      16: invokespecial #4                  // Method io/netty/handler/codec/http/QueryStringDecoder."<init>":(Ljava/lang/String;)V
+      19: astore_2
+      20: aload_2
+      21: invokevirtual #5                  // Method io/netty/handler/codec/http/QueryStringDecoder.path:()Ljava/lang/String;
+      24: astore_3
+      25: aload_3
+      26: ldc           #6                  // String /
+      28: invokevirtual #7                  // Method java/lang/String.split:(Ljava/lang/String;)[Ljava/lang/String;
+      31: astore        4
+      33: aload         4
+      35: arraylength
+      36: iconst_2
+      37: if_icmpne     334
+      40: aload         4
+      42: iconst_1
+      43: aaload
+      44: astore        5
+      46: aload_0
+      47: invokeinterface #8,  1            // InterfaceMethod io/netty/handler/codec/http/HttpRequest.method:()Lio/netty/handler/codec/http/HttpMethod;
+      52: getstatic     #9                  // Field io/netty/handler/codec/http/HttpMethod.GET:Lio/netty/handler/codec/http/HttpMethod;
+      55: if_acmpne     168
+      58: aload_2
+      59: invokevirtual #10                 // Method io/netty/handler/codec/http/QueryStringDecoder.parameters:()Ljava/util/Map;
+      62: invokeinterface #11,  1           // InterfaceMethod java/util/Map.isEmpty:()Z
+      67: ifeq          84
+      70: aload         5
+      72: invokestatic  #12                 // Method org/apache/dubbo/qos/command/CommandContextFactory.newInstance:(Ljava/lang/String;)Lorg/apache/dubbo/qos/api/CommandContext;
+      75: astore_1
+      76: aload_1
+      77: iconst_1
+      78: invokevirtual #13                 // Method org/apache/dubbo/qos/api/CommandContext.setHttp:(Z)V
+      81: goto          331
+      84: new           #14                 // class java/util/ArrayList
+      87: dup
+      88: invokespecial #15                 // Method java/util/ArrayList."<init>":()V
+      91: astore        6
+      93: aload_2
+      94: invokevirtual #10                 // Method io/netty/handler/codec/http/QueryStringDecoder.parameters:()Ljava/util/Map;
+      97: invokeinterface #16,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+     102: invokeinterface #17,  1           // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+     107: astore        7
+     109: aload         7
+     111: invokeinterface #18,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     116: ifeq          144
+     119: aload         7
+     121: invokeinterface #19,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     126: checkcast     #20                 // class java/util/List
+     129: astore        8
+     131: aload         6
+     133: aload         8
+     135: invokeinterface #21,  2           // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+     140: pop
+     141: goto          109
+     144: aload         5
+     146: aload         6
+     148: iconst_0
+     149: anewarray     #22                 // class java/lang/String
+     152: invokeinterface #23,  2           // InterfaceMethod java/util/List.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;
+     157: checkcast     #24                 // class "[Ljava/lang/String;"
+     160: iconst_1
+     161: invokestatic  #25                 // Method org/apache/dubbo/qos/command/CommandContextFactory.newInstance:(Ljava/lang/String;[Ljava/lang/String;Z)Lorg/apache/dubbo/qos/api/CommandContext;
+     164: astore_1
+     165: goto          331
+     168: aload_0
+     169: invokeinterface #8,  1            // InterfaceMethod io/netty/handler/codec/http/HttpRequest.method:()Lio/netty/handler/codec/http/HttpMethod;
+     174: getstatic     #26                 // Field io/netty/handler/codec/http/HttpMethod.POST:Lio/netty/handler/codec/http/HttpMethod;
+     177: if_acmpne     331
+     180: new           #27                 // class io/netty/handler/codec/http/multipart/HttpPostRequestDecoder
+     183: dup
+     184: aload_0
+     185: invokespecial #28                 // Method io/netty/handler/codec/http/multipart/HttpPostRequestDecoder."<init>":(Lio/netty/handler/codec/http/HttpRequest;)V
+     188: astore        6
+     190: new           #14                 // class java/util/ArrayList
+     193: dup
+     194: invokespecial #15                 // Method java/util/ArrayList."<init>":()V
+     197: astore        7
+     199: aload         6
+     201: invokevirtual #29                 // Method io/netty/handler/codec/http/multipart/HttpPostRequestDecoder.getBodyHttpDatas:()Ljava/util/List;
+     204: invokeinterface #30,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     209: astore        8
+     211: aload         8
+     213: invokeinterface #18,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     218: ifeq          286
+     221: aload         8
+     223: invokeinterface #19,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     228: checkcast     #31                 // class io/netty/handler/codec/http/multipart/InterfaceHttpData
+     231: astore        9
+     233: aload         9
+     235: invokeinterface #32,  1           // InterfaceMethod io/netty/handler/codec/http/multipart/InterfaceHttpData.getHttpDataType:()Lio/netty/handler/codec/http/multipart/InterfaceHttpData$HttpDataType;
+     240: getstatic     #33                 // Field io/netty/handler/codec/http/multipart/InterfaceHttpData$HttpDataType.Attribute:Lio/netty/handler/codec/http/multipart/InterfaceHttpData$HttpDataType;
+     243: if_acmpne     283
+     246: aload         9
+     248: checkcast     #34                 // class io/netty/handler/codec/http/multipart/Attribute
+     251: astore        10
+     253: aload         7
+     255: aload         10
+     257: invokeinterface #35,  1           // InterfaceMethod io/netty/handler/codec/http/multipart/Attribute.getValue:()Ljava/lang/String;
+     262: invokeinterface #36,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     267: pop
+     268: goto          283
+     271: astore        11
+     273: new           #38                 // class java/lang/RuntimeException
+     276: dup
+     277: aload         11
+     279: invokespecial #39                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/Throwable;)V
+     282: athrow
+     283: goto          211
+     286: aload         7
+     288: invokeinterface #40,  1           // InterfaceMethod java/util/List.isEmpty:()Z
+     293: ifeq          310
+     296: aload         5
+     298: invokestatic  #12                 // Method org/apache/dubbo/qos/command/CommandContextFactory.newInstance:(Ljava/lang/String;)Lorg/apache/dubbo/qos/api/CommandContext;
+     301: astore_1
+     302: aload_1
+     303: iconst_1
+     304: invokevirtual #13                 // Method org/apache/dubbo/qos/api/CommandContext.setHttp:(Z)V
+     307: goto          331
+     310: aload         5
+     312: aload         7
+     314: iconst_0
+     315: anewarray     #22                 // class java/lang/String
+     318: invokeinterface #23,  2           // InterfaceMethod java/util/List.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;
+     323: checkcast     #24                 // class "[Ljava/lang/String;"
+     326: iconst_1
+     327: invokestatic  #25                 // Method org/apache/dubbo/qos/command/CommandContextFactory.newInstance:(Ljava/lang/String;[Ljava/lang/String;Z)Lorg/apache/dubbo/qos/api/CommandContext;
+     330: astore_1
+     331: goto          386
+     334: aload         4
+     336: arraylength
+     337: iconst_3
+     338: if_icmpne     386
+     341: aload         4
+     343: iconst_1
+     344: aaload
+     345: astore        5
+     347: aload         4
+     349: iconst_2
+     350: aaload
+     351: astore        6
+     353: aload_0
+     354: invokeinterface #8,  1            // InterfaceMethod io/netty/handler/codec/http/HttpRequest.method:()Lio/netty/handler/codec/http/HttpMethod;
+     359: getstatic     #9                  // Field io/netty/handler/codec/http/HttpMethod.GET:Lio/netty/handler/codec/http/HttpMethod;
+     362: if_acmpne     386
+     365: aload         5
+     367: iconst_1
+     368: anewarray     #22                 // class java/lang/String
+     371: dup
+     372: iconst_0
+     373: aload         6
+     375: aastore
+     376: iconst_1
+     377: invokestatic  #25                 // Method org/apache/dubbo/qos/command/CommandContextFactory.newInstance:(Ljava/lang/String;[Ljava/lang/String;Z)Lorg/apache/dubbo/qos/api/CommandContext;
+     380: astore_1
+     381: aload_1
+     382: iconst_1
+     383: invokevirtual #13                 // Method org/apache/dubbo/qos/api/CommandContext.setHttp:(Z)V
+     386: aload_1
+     387: areturn
+    Exception table:
+       from    to  target type
+         253   268   271   Class java/io/IOException
+}

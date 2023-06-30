@@ -1,0 +1,198 @@
+Compiled from "TelnetProcessHandler.java"
+public class org.apache.dubbo.qos.server.handler.TelnetProcessHandler extends io.netty.channel.SimpleChannelInboundHandler<java.lang.String> {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger log;
+
+  private final org.apache.dubbo.qos.command.CommandExecutor commandExecutor;
+
+  private final org.apache.dubbo.qos.api.QosConfiguration qosConfiguration;
+
+  public org.apache.dubbo.qos.server.handler.TelnetProcessHandler(org.apache.dubbo.rpc.model.FrameworkModel, org.apache.dubbo.qos.api.QosConfiguration);
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method io/netty/channel/SimpleChannelInboundHandler."<init>":()V
+       4: aload_0
+       5: new           #3                  // class org/apache/dubbo/qos/command/DefaultCommandExecutor
+       8: dup
+       9: aload_1
+      10: invokespecial #4                  // Method org/apache/dubbo/qos/command/DefaultCommandExecutor."<init>":(Lorg/apache/dubbo/rpc/model/FrameworkModel;)V
+      13: putfield      #5                  // Field commandExecutor:Lorg/apache/dubbo/qos/command/CommandExecutor;
+      16: aload_0
+      17: aload_2
+      18: putfield      #6                  // Field qosConfiguration:Lorg/apache/dubbo/qos/api/QosConfiguration;
+      21: return
+
+  protected void channelRead0(io.netty.channel.ChannelHandlerContext, java.lang.String) throws java.lang.Exception;
+    Code:
+       0: aload_2
+       1: invokestatic  #7                  // Method org/apache/dubbo/common/utils/StringUtils.isBlank:(Ljava/lang/CharSequence;)Z
+       4: ifeq          19
+       7: aload_1
+       8: ldc           #9                  // String dubbo>
+      10: invokeinterface #10,  2           // InterfaceMethod io/netty/channel/ChannelHandlerContext.writeAndFlush:(Ljava/lang/Object;)Lio/netty/channel/ChannelFuture;
+      15: pop
+      16: goto          351
+      19: aload_2
+      20: invokestatic  #11                 // Method org/apache/dubbo/qos/command/decoder/TelnetCommandDecoder.decode:(Ljava/lang/String;)Lorg/apache/dubbo/qos/api/CommandContext;
+      23: astore_3
+      24: aload_3
+      25: aload_0
+      26: getfield      #6                  // Field qosConfiguration:Lorg/apache/dubbo/qos/api/QosConfiguration;
+      29: invokevirtual #12                 // Method org/apache/dubbo/qos/api/CommandContext.setQosConfiguration:(Lorg/apache/dubbo/qos/api/QosConfiguration;)V
+      32: aload_3
+      33: aload_1
+      34: invokeinterface #13,  1           // InterfaceMethod io/netty/channel/ChannelHandlerContext.channel:()Lio/netty/channel/Channel;
+      39: invokevirtual #14                 // Method org/apache/dubbo/qos/api/CommandContext.setRemote:(Lio/netty/channel/Channel;)V
+      42: aload_0
+      43: getfield      #5                  // Field commandExecutor:Lorg/apache/dubbo/qos/command/CommandExecutor;
+      46: aload_3
+      47: invokeinterface #15,  2           // InterfaceMethod org/apache/dubbo/qos/command/CommandExecutor.execute:(Lorg/apache/dubbo/qos/api/CommandContext;)Ljava/lang/String;
+      52: astore        4
+      54: ldc           #17                 // String close!
+      56: aload         4
+      58: invokestatic  #18                 // Method org/apache/dubbo/common/utils/StringUtils.isEquals:(Ljava/lang/String;Ljava/lang/String;)Z
+      61: ifeq          86
+      64: aload_1
+      65: aload_0
+      66: invokespecial #19                 // Method getByeLabel:()Ljava/lang/String;
+      69: invokeinterface #10,  2           // InterfaceMethod io/netty/channel/ChannelHandlerContext.writeAndFlush:(Ljava/lang/Object;)Lio/netty/channel/ChannelFuture;
+      74: getstatic     #20                 // Field io/netty/channel/ChannelFutureListener.CLOSE:Lio/netty/channel/ChannelFutureListener;
+      77: invokeinterface #21,  2           // InterfaceMethod io/netty/channel/ChannelFuture.addListener:(Lio/netty/util/concurrent/GenericFutureListener;)Lio/netty/channel/ChannelFuture;
+      82: pop
+      83: goto          118
+      86: aload_1
+      87: new           #22                 // class java/lang/StringBuilder
+      90: dup
+      91: invokespecial #23                 // Method java/lang/StringBuilder."<init>":()V
+      94: aload         4
+      96: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      99: ldc           #25                 // String \r\n
+     101: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     104: ldc           #9                  // String dubbo>
+     106: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     109: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     112: invokeinterface #10,  2           // InterfaceMethod io/netty/channel/ChannelHandlerContext.writeAndFlush:(Ljava/lang/Object;)Lio/netty/channel/ChannelFuture;
+     117: pop
+     118: goto          351
+     121: astore        4
+     123: aload_1
+     124: new           #22                 // class java/lang/StringBuilder
+     127: dup
+     128: invokespecial #23                 // Method java/lang/StringBuilder."<init>":()V
+     131: aload_2
+     132: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     135: ldc           #28                 // String  :no such command
+     137: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     140: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     143: invokeinterface #10,  2           // InterfaceMethod io/netty/channel/ChannelHandlerContext.writeAndFlush:(Ljava/lang/Object;)Lio/netty/channel/ChannelFuture;
+     148: pop
+     149: aload_1
+     150: ldc           #29                 // String \r\ndubbo>
+     152: invokeinterface #10,  2           // InterfaceMethod io/netty/channel/ChannelHandlerContext.writeAndFlush:(Ljava/lang/Object;)Lio/netty/channel/ChannelFuture;
+     157: pop
+     158: getstatic     #30                 // Field log:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     161: ldc           #31                 // String 7-5
+     163: ldc           #32                 // String
+     165: ldc           #32                 // String
+     167: new           #22                 // class java/lang/StringBuilder
+     170: dup
+     171: invokespecial #23                 // Method java/lang/StringBuilder."<init>":()V
+     174: ldc           #33                 // String can not found command
+     176: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     179: aload_3
+     180: invokevirtual #34                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     183: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     186: aload         4
+     188: invokeinterface #35,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     193: goto          351
+     196: astore        4
+     198: aload_1
+     199: new           #22                 // class java/lang/StringBuilder
+     202: dup
+     203: invokespecial #23                 // Method java/lang/StringBuilder."<init>":()V
+     206: aload_2
+     207: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     210: ldc           #37                 // String  :permission deny
+     212: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     215: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     218: invokeinterface #10,  2           // InterfaceMethod io/netty/channel/ChannelHandlerContext.writeAndFlush:(Ljava/lang/Object;)Lio/netty/channel/ChannelFuture;
+     223: pop
+     224: aload_1
+     225: ldc           #29                 // String \r\ndubbo>
+     227: invokeinterface #10,  2           // InterfaceMethod io/netty/channel/ChannelHandlerContext.writeAndFlush:(Ljava/lang/Object;)Lio/netty/channel/ChannelFuture;
+     232: pop
+     233: getstatic     #30                 // Field log:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     236: ldc           #38                 // String 7-7
+     238: ldc           #32                 // String
+     240: ldc           #32                 // String
+     242: new           #22                 // class java/lang/StringBuilder
+     245: dup
+     246: invokespecial #23                 // Method java/lang/StringBuilder."<init>":()V
+     249: ldc           #39                 // String permission deny to access command
+     251: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     254: aload_3
+     255: invokevirtual #34                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     258: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     261: aload         4
+     263: invokeinterface #35,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     268: goto          351
+     271: astore        4
+     273: aload_1
+     274: new           #22                 // class java/lang/StringBuilder
+     277: dup
+     278: invokespecial #23                 // Method java/lang/StringBuilder."<init>":()V
+     281: aload_2
+     282: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     285: ldc           #41                 // String  :fail to execute commandContext by
+     287: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     290: aload         4
+     292: invokevirtual #42                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+     295: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     298: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     301: invokeinterface #10,  2           // InterfaceMethod io/netty/channel/ChannelHandlerContext.writeAndFlush:(Ljava/lang/Object;)Lio/netty/channel/ChannelFuture;
+     306: pop
+     307: aload_1
+     308: ldc           #29                 // String \r\ndubbo>
+     310: invokeinterface #10,  2           // InterfaceMethod io/netty/channel/ChannelHandlerContext.writeAndFlush:(Ljava/lang/Object;)Lio/netty/channel/ChannelFuture;
+     315: pop
+     316: getstatic     #30                 // Field log:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     319: ldc           #43                 // String 7-6
+     321: ldc           #32                 // String
+     323: ldc           #32                 // String
+     325: new           #22                 // class java/lang/StringBuilder
+     328: dup
+     329: invokespecial #23                 // Method java/lang/StringBuilder."<init>":()V
+     332: ldc           #44                 // String execute commandContext got exception
+     334: invokevirtual #24                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     337: aload_3
+     338: invokevirtual #34                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     341: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     344: aload         4
+     346: invokeinterface #35,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     351: return
+    Exception table:
+       from    to  target type
+          42   118   121   Class org/apache/dubbo/qos/command/exception/NoSuchCommandException
+          42   118   196   Class org/apache/dubbo/qos/command/exception/PermissionDenyException
+          42   118   271   Class java/lang/Exception
+
+  private java.lang.String getByeLabel();
+    Code:
+       0: ldc           #45                 // String BYE!\n
+       2: areturn
+
+  protected void channelRead0(io.netty.channel.ChannelHandlerContext, java.lang.Object) throws java.lang.Exception;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: checkcast     #46                 // class java/lang/String
+       6: invokevirtual #47                 // Method channelRead0:(Lio/netty/channel/ChannelHandlerContext;Ljava/lang/String;)V
+       9: return
+
+  static {};
+    Code:
+       0: ldc           #48                 // class org/apache/dubbo/qos/server/handler/TelnetProcessHandler
+       2: invokestatic  #49                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #30                 // Field log:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

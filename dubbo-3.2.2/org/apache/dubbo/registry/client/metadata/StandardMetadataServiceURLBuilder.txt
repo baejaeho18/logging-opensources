@@ -1,0 +1,256 @@
+Compiled from "StandardMetadataServiceURLBuilder.java"
+public class org.apache.dubbo.registry.client.metadata.StandardMetadataServiceURLBuilder implements org.apache.dubbo.registry.client.metadata.MetadataServiceURLBuilder {
+  private final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  public static final java.lang.String NAME;
+
+  private org.apache.dubbo.rpc.model.ApplicationModel applicationModel;
+
+  private java.lang.Integer metadataServicePort;
+
+  public org.apache.dubbo.registry.client.metadata.StandardMetadataServiceURLBuilder(org.apache.dubbo.rpc.model.ApplicationModel);
+    Code:
+       0: aload_0
+       1: invokespecial #6                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_0
+       6: invokevirtual #7                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       9: invokestatic  #8                  // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      12: putfield      #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      15: aload_0
+      16: aload_1
+      17: putfield      #10                 // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      20: aload_0
+      21: aload_1
+      22: invokevirtual #11                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getCurrentConfig:()Lorg/apache/dubbo/config/ApplicationConfig;
+      25: invokevirtual #12                 // Method org/apache/dubbo/config/ApplicationConfig.getMetadataServicePort:()Ljava/lang/Integer;
+      28: putfield      #13                 // Field metadataServicePort:Ljava/lang/Integer;
+      31: return
+
+  public java.util.List<org.apache.dubbo.common.URL> build(org.apache.dubbo.registry.client.ServiceInstance);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #14                 // Method getMetadataServiceURLsParams:(Lorg/apache/dubbo/registry/client/ServiceInstance;)Ljava/util/Map;
+       5: astore_2
+       6: aload_1
+       7: invokeinterface #15,  1           // InterfaceMethod org/apache/dubbo/registry/client/ServiceInstance.getServiceName:()Ljava/lang/String;
+      12: astore_3
+      13: aload_1
+      14: invokeinterface #16,  1           // InterfaceMethod org/apache/dubbo/registry/client/ServiceInstance.getHost:()Ljava/lang/String;
+      19: astore        4
+      21: aload_2
+      22: invokeinterface #17,  1           // InterfaceMethod java/util/Map.isEmpty:()Z
+      27: ifeq          51
+      30: aload_0
+      31: aload_3
+      32: aload         4
+      34: aload_1
+      35: invokeinterface #18,  1           // InterfaceMethod org/apache/dubbo/registry/client/ServiceInstance.getPort:()I
+      40: invokestatic  #19                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      43: invokespecial #20                 // Method generateUrlWithoutMetadata:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Integer;)Lorg/apache/dubbo/common/URL;
+      46: astore        5
+      48: goto          61
+      51: aload_0
+      52: aload_3
+      53: aload         4
+      55: aload_2
+      56: invokespecial #21                 // Method generateWithMetadata:(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)Lorg/apache/dubbo/common/URL;
+      59: astore        5
+      61: aload         5
+      63: aload_1
+      64: invokeinterface #22,  1           // InterfaceMethod org/apache/dubbo/registry/client/ServiceInstance.getApplicationModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      69: invokevirtual #23                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getInternalModule:()Lorg/apache/dubbo/rpc/model/ModuleModel;
+      72: invokevirtual #24                 // Method org/apache/dubbo/common/URL.setScopeModel:(Lorg/apache/dubbo/rpc/model/ScopeModel;)Lorg/apache/dubbo/common/URL;
+      75: astore        5
+      77: aload         5
+      79: invokestatic  #25                 // Method java/util/Collections.singletonList:(Ljava/lang/Object;)Ljava/util/List;
+      82: areturn
+
+  private org.apache.dubbo.common.URL generateWithMetadata(java.lang.String, java.lang.String, java.util.Map<java.lang.String, java.lang.String>);
+    Code:
+       0: aload_3
+       1: ldc           #26                 // String protocol
+       3: invokeinterface #27,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       8: checkcast     #28                 // class java/lang/String
+      11: astore        4
+      13: aload_3
+      14: ldc           #29                 // String port
+      16: invokeinterface #27,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      21: checkcast     #28                 // class java/lang/String
+      24: invokestatic  #30                 // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+      27: istore        5
+      29: new           #31                 // class org/apache/dubbo/common/URLBuilder
+      32: dup
+      33: invokespecial #32                 // Method org/apache/dubbo/common/URLBuilder."<init>":()V
+      36: aload_2
+      37: invokevirtual #33                 // Method org/apache/dubbo/common/URLBuilder.setHost:(Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+      40: iload         5
+      42: invokevirtual #34                 // Method org/apache/dubbo/common/URLBuilder.setPort:(I)Lorg/apache/dubbo/common/URLBuilder;
+      45: aload         4
+      47: invokevirtual #35                 // Method org/apache/dubbo/common/URLBuilder.setProtocol:(Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+      50: ldc           #36                 // class org/apache/dubbo/metadata/MetadataService
+      52: invokevirtual #37                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      55: invokevirtual #38                 // Method org/apache/dubbo/common/URLBuilder.setPath:(Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+      58: ldc           #39                 // String timeout
+      60: aload_0
+      61: getfield      #10                 // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      64: ldc           #40                 // String dubbo.application.metadata.proxy.delay
+      66: sipush        5000
+      69: invokestatic  #41                 // Method org/apache/dubbo/common/config/ConfigurationUtils.get:(Lorg/apache/dubbo/rpc/model/ScopeModel;Ljava/lang/String;I)I
+      72: invokevirtual #42                 // Method org/apache/dubbo/common/URLBuilder.addParameter:(Ljava/lang/String;I)Lorg/apache/dubbo/common/URLBuilder;
+      75: ldc           #43                 // String side
+      77: ldc           #44                 // String consumer
+      79: invokevirtual #45                 // Method org/apache/dubbo/common/URLBuilder.addParameter:(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+      82: ldc           #46                 // String connections
+      84: iconst_1
+      85: invokevirtual #42                 // Method org/apache/dubbo/common/URLBuilder.addParameter:(Ljava/lang/String;I)Lorg/apache/dubbo/common/URLBuilder;
+      88: ldc           #47                 // String threadpool
+      90: ldc           #48                 // String cached
+      92: invokevirtual #45                 // Method org/apache/dubbo/common/URLBuilder.addParameter:(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+      95: ldc           #49                 // String threads
+      97: ldc           #50                 // String 100
+      99: invokevirtual #45                 // Method org/apache/dubbo/common/URLBuilder.addParameter:(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+     102: ldc           #51                 // String corethreads
+     104: ldc           #52                 // String 2
+     106: invokevirtual #45                 // Method org/apache/dubbo/common/URLBuilder.addParameter:(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+     109: ldc           #53                 // String retries
+     111: iconst_0
+     112: invokevirtual #42                 // Method org/apache/dubbo/common/URLBuilder.addParameter:(Ljava/lang/String;I)Lorg/apache/dubbo/common/URLBuilder;
+     115: astore        6
+     117: aload_3
+     118: aload         6
+     120: dup
+     121: invokevirtual #7                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     124: pop
+     125: invokedynamic #54,  0             // InvokeDynamic #0:accept:(Lorg/apache/dubbo/common/URLBuilder;)Ljava/util/function/BiConsumer;
+     130: invokeinterface #55,  2           // InterfaceMethod java/util/Map.forEach:(Ljava/util/function/BiConsumer;)V
+     135: aload         6
+     137: ldc           #56                 // String group
+     139: aload_1
+     140: invokevirtual #45                 // Method org/apache/dubbo/common/URLBuilder.addParameter:(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+     143: pop
+     144: aload         6
+     146: invokevirtual #57                 // Method org/apache/dubbo/common/URLBuilder.build:()Lorg/apache/dubbo/common/url/component/ServiceConfigURL;
+     149: areturn
+
+  private org.apache.dubbo.common.URL generateUrlWithoutMetadata(java.lang.String, java.lang.String, java.lang.Integer);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field metadataServicePort:Ljava/lang/Integer;
+       4: astore        4
+       6: aload         4
+       8: ifnull        20
+      11: aload         4
+      13: invokevirtual #58                 // Method java/lang/Integer.intValue:()I
+      16: iconst_1
+      17: if_icmpge     40
+      20: aload_0
+      21: getfield      #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      24: ldc           #59                 // String 1-18
+      26: ldc           #60                 // String missing configuration of metadata service port
+      28: ldc           #61                 // String
+      30: ldc           #62                 // String Metadata Service Port is not provided. Since DNS is not able to negotiate the metadata port between Provider and Consumer, Dubbo will try using instance port as the default metadata port.
+      32: invokeinterface #63,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      37: aload_3
+      38: astore        4
+      40: aload         4
+      42: ifnull        54
+      45: aload         4
+      47: invokevirtual #58                 // Method java/lang/Integer.intValue:()I
+      50: iconst_1
+      51: if_icmpge     117
+      54: new           #64                 // class java/lang/StringBuilder
+      57: dup
+      58: invokespecial #65                 // Method java/lang/StringBuilder."<init>":()V
+      61: ldc           #66                 // String Metadata Service Port should be specified for consumer. Please set dubbo.application.metadataServicePort and make sure it has been set on provider side. ServiceName:
+      63: invokevirtual #67                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      66: aload_1
+      67: invokevirtual #67                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      70: ldc           #68                 // String  Host:
+      72: invokevirtual #67                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      75: aload_2
+      76: invokevirtual #67                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      79: invokevirtual #69                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      82: astore        5
+      84: new           #70                 // class java/lang/IllegalStateException
+      87: dup
+      88: aload         5
+      90: invokespecial #71                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      93: astore        6
+      95: aload_0
+      96: getfield      #9                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      99: ldc           #59                 // String 1-18
+     101: ldc           #60                 // String missing configuration of metadata service port
+     103: ldc           #61                 // String
+     105: aload         5
+     107: aload         6
+     109: invokeinterface #72,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     114: aload         6
+     116: athrow
+     117: new           #31                 // class org/apache/dubbo/common/URLBuilder
+     120: dup
+     121: invokespecial #32                 // Method org/apache/dubbo/common/URLBuilder."<init>":()V
+     124: aload_2
+     125: invokevirtual #33                 // Method org/apache/dubbo/common/URLBuilder.setHost:(Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+     128: aload         4
+     130: invokevirtual #58                 // Method java/lang/Integer.intValue:()I
+     133: invokevirtual #34                 // Method org/apache/dubbo/common/URLBuilder.setPort:(I)Lorg/apache/dubbo/common/URLBuilder;
+     136: ldc           #73                 // String dubbo
+     138: invokevirtual #35                 // Method org/apache/dubbo/common/URLBuilder.setProtocol:(Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+     141: ldc           #36                 // class org/apache/dubbo/metadata/MetadataService
+     143: invokevirtual #37                 // Method java/lang/Class.getName:()Ljava/lang/String;
+     146: invokevirtual #38                 // Method org/apache/dubbo/common/URLBuilder.setPath:(Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+     149: ldc           #39                 // String timeout
+     151: aload_0
+     152: getfield      #10                 // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+     155: ldc           #40                 // String dubbo.application.metadata.proxy.delay
+     157: sipush        5000
+     160: invokestatic  #41                 // Method org/apache/dubbo/common/config/ConfigurationUtils.get:(Lorg/apache/dubbo/rpc/model/ScopeModel;Ljava/lang/String;I)I
+     163: invokevirtual #42                 // Method org/apache/dubbo/common/URLBuilder.addParameter:(Ljava/lang/String;I)Lorg/apache/dubbo/common/URLBuilder;
+     166: ldc           #74                 // String reconnect
+     168: iconst_0
+     169: invokevirtual #75                 // Method org/apache/dubbo/common/URLBuilder.addParameter:(Ljava/lang/String;Z)Lorg/apache/dubbo/common/URLBuilder;
+     172: ldc           #43                 // String side
+     174: ldc           #44                 // String consumer
+     176: invokevirtual #45                 // Method org/apache/dubbo/common/URLBuilder.addParameter:(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+     179: ldc           #56                 // String group
+     181: aload_1
+     182: invokevirtual #45                 // Method org/apache/dubbo/common/URLBuilder.addParameter:(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+     185: ldc           #76                 // String version
+     187: ldc           #77                 // String 1.0.0
+     189: invokevirtual #45                 // Method org/apache/dubbo/common/URLBuilder.addParameter:(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+     192: ldc           #53                 // String retries
+     194: iconst_0
+     195: invokevirtual #42                 // Method org/apache/dubbo/common/URLBuilder.addParameter:(Ljava/lang/String;I)Lorg/apache/dubbo/common/URLBuilder;
+     198: astore        5
+     200: aload         5
+     202: ldc           #78                 // String getAndListenInstanceMetadata.1.callback
+     204: iconst_1
+     205: invokevirtual #75                 // Method org/apache/dubbo/common/URLBuilder.addParameter:(Ljava/lang/String;Z)Lorg/apache/dubbo/common/URLBuilder;
+     208: pop
+     209: aload         5
+     211: invokevirtual #57                 // Method org/apache/dubbo/common/URLBuilder.build:()Lorg/apache/dubbo/common/url/component/ServiceConfigURL;
+     214: areturn
+
+  private java.util.Map<java.lang.String, java.lang.String> getMetadataServiceURLsParams(org.apache.dubbo.registry.client.ServiceInstance);
+    Code:
+       0: aload_1
+       1: invokeinterface #79,  1           // InterfaceMethod org/apache/dubbo/registry/client/ServiceInstance.getMetadata:()Ljava/util/Map;
+       6: astore_2
+       7: aload_2
+       8: ldc           #80                 // String dubbo.metadata-service.url-params
+      10: invokeinterface #27,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      15: checkcast     #28                 // class java/lang/String
+      18: astore_3
+      19: aload_3
+      20: invokestatic  #81                 // Method org/apache/dubbo/common/utils/StringUtils.isBlank:(Ljava/lang/CharSequence;)Z
+      23: ifeq          32
+      26: invokestatic  #82                 // Method java/util/Collections.emptyMap:()Ljava/util/Map;
+      29: goto          41
+      32: aload_3
+      33: ldc           #83                 // class java/util/Map
+      35: invokestatic  #84                 // Method org/apache/dubbo/common/utils/JsonUtils.toJavaObject:(Ljava/lang/String;Ljava/lang/reflect/Type;)Ljava/lang/Object;
+      38: checkcast     #83                 // class java/util/Map
+      41: areturn
+}

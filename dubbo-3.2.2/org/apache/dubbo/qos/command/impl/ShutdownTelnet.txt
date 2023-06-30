@@ -1,0 +1,115 @@
+Compiled from "ShutdownTelnet.java"
+public class org.apache.dubbo.qos.command.impl.ShutdownTelnet implements org.apache.dubbo.qos.api.BaseCommand {
+  private final org.apache.dubbo.rpc.model.FrameworkModel frameworkModel;
+
+  public org.apache.dubbo.qos.command.impl.ShutdownTelnet(org.apache.dubbo.rpc.model.FrameworkModel);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+       9: return
+
+  public java.lang.String execute(org.apache.dubbo.qos.api.CommandContext, java.lang.String[]);
+    Code:
+       0: iconst_0
+       1: istore_3
+       2: aload_2
+       3: ifnull        50
+       6: aload_2
+       7: arraylength
+       8: ifle          50
+      11: aload_2
+      12: arraylength
+      13: iconst_2
+      14: if_icmpne     47
+      17: ldc           #3                  // String -t
+      19: aload_2
+      20: iconst_0
+      21: aaload
+      22: invokevirtual #4                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      25: ifeq          47
+      28: aload_2
+      29: iconst_1
+      30: aaload
+      31: invokestatic  #5                  // Method org/apache/dubbo/common/utils/StringUtils.isNumber:(Ljava/lang/String;)Z
+      34: ifeq          47
+      37: aload_2
+      38: iconst_1
+      39: aaload
+      40: invokestatic  #6                  // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+      43: istore_3
+      44: goto          50
+      47: ldc           #7                  // String Invalid parameter,please input like shutdown -t 10000
+      49: areturn
+      50: invokestatic  #8                  // Method java/lang/System.currentTimeMillis:()J
+      53: lstore        4
+      55: iload_3
+      56: ifle          93
+      59: iload_3
+      60: i2l
+      61: invokestatic  #9                  // Method java/lang/Thread.sleep:(J)V
+      64: goto          93
+      67: astore        6
+      69: new           #11                 // class java/lang/StringBuilder
+      72: dup
+      73: invokespecial #12                 // Method java/lang/StringBuilder."<init>":()V
+      76: ldc           #13                 // String Failed to invoke shutdown command, cause:
+      78: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      81: aload         6
+      83: invokevirtual #15                 // Method java/lang/InterruptedException.getMessage:()Ljava/lang/String;
+      86: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      89: invokevirtual #16                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      92: areturn
+      93: new           #11                 // class java/lang/StringBuilder
+      96: dup
+      97: invokespecial #12                 // Method java/lang/StringBuilder."<init>":()V
+     100: astore        6
+     102: aload_0
+     103: getfield      #2                  // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+     106: invokevirtual #17                 // Method org/apache/dubbo/rpc/model/FrameworkModel.getApplicationModels:()Ljava/util/List;
+     109: astore        7
+     111: new           #18                 // class java/util/ArrayList
+     114: dup
+     115: aload         7
+     117: invokespecial #19                 // Method java/util/ArrayList."<init>":(Ljava/util/Collection;)V
+     120: invokevirtual #20                 // Method java/util/ArrayList.iterator:()Ljava/util/Iterator;
+     123: astore        8
+     125: aload         8
+     127: invokeinterface #21,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     132: ifeq          155
+     135: aload         8
+     137: invokeinterface #22,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     142: checkcast     #23                 // class org/apache/dubbo/rpc/model/ApplicationModel
+     145: astore        9
+     147: aload         9
+     149: invokevirtual #24                 // Method org/apache/dubbo/rpc/model/ApplicationModel.destroy:()V
+     152: goto          125
+     155: invokestatic  #8                  // Method java/lang/System.currentTimeMillis:()J
+     158: lstore        8
+     160: aload         6
+     162: ldc           #25                 // String Application has shutdown successfully
+     164: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     167: pop
+     168: aload         6
+     170: ldc           #26                 // String \r\nelapsed:
+     172: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     175: pop
+     176: aload         6
+     178: lload         8
+     180: lload         4
+     182: lsub
+     183: invokevirtual #27                 // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+     186: pop
+     187: aload         6
+     189: ldc           #28                 // String  ms.
+     191: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     194: pop
+     195: aload         6
+     197: invokevirtual #16                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     200: areturn
+    Exception table:
+       from    to  target type
+          59    64    67   Class java/lang/InterruptedException
+}

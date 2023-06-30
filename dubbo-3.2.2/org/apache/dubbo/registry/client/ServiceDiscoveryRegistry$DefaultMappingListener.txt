@@ -1,0 +1,242 @@
+Compiled from "ServiceDiscoveryRegistry.java"
+class org.apache.dubbo.registry.client.ServiceDiscoveryRegistry$DefaultMappingListener implements org.apache.dubbo.metadata.MappingListener {
+  private final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final org.apache.dubbo.common.URL url;
+
+  private java.util.Set<java.lang.String> oldApps;
+
+  private org.apache.dubbo.registry.NotifyListener listener;
+
+  private volatile boolean stopped;
+
+  final org.apache.dubbo.registry.client.ServiceDiscoveryRegistry this$0;
+
+  public org.apache.dubbo.registry.client.ServiceDiscoveryRegistry$DefaultMappingListener(org.apache.dubbo.common.URL, java.util.Set<java.lang.String>, org.apache.dubbo.registry.NotifyListener);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #2                  // Field this$0:Lorg/apache/dubbo/registry/client/ServiceDiscoveryRegistry;
+       5: aload_0
+       6: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       9: aload_0
+      10: ldc           #4                  // class org/apache/dubbo/registry/client/ServiceDiscoveryRegistry$DefaultMappingListener
+      12: invokestatic  #5                  // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      15: putfield      #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      18: aload_0
+      19: aload_2
+      20: putfield      #7                  // Field url:Lorg/apache/dubbo/common/URL;
+      23: aload_0
+      24: aload_3
+      25: putfield      #8                  // Field oldApps:Ljava/util/Set;
+      28: aload_0
+      29: aload         4
+      31: putfield      #9                  // Field listener:Lorg/apache/dubbo/registry/NotifyListener;
+      34: return
+
+  public synchronized void onEvent(org.apache.dubbo.metadata.MappingChangedEvent);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       4: new           #10                 // class java/lang/StringBuilder
+       7: dup
+       8: invokespecial #11                 // Method java/lang/StringBuilder."<init>":()V
+      11: ldc           #12                 // String Received mapping notification from meta server,
+      13: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      16: aload_1
+      17: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      20: invokevirtual #15                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      23: invokeinterface #16,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      28: aload_0
+      29: getfield      #17                 // Field stopped:Z
+      32: ifeq          53
+      35: aload_0
+      36: getfield      #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      39: ldc           #18                 // String 99-0
+      41: ldc           #19                 // String
+      43: ldc           #19                 // String
+      45: ldc           #20                 // String Listener has been stopped, ignore mapping notification, check why listener is not removed.
+      47: invokeinterface #21,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      52: return
+      53: aload_1
+      54: invokevirtual #22                 // Method org/apache/dubbo/metadata/MappingChangedEvent.getApps:()Ljava/util/Set;
+      57: astore_2
+      58: aload_0
+      59: getfield      #8                  // Field oldApps:Ljava/util/Set;
+      62: astore_3
+      63: aload_2
+      64: invokestatic  #23                 // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+      67: ifne          78
+      70: aload_2
+      71: aload_3
+      72: invokestatic  #24                 // Method org/apache/dubbo/common/utils/CollectionUtils.equals:(Ljava/util/Collection;Ljava/util/Collection;)Z
+      75: ifeq          79
+      78: return
+      79: aload_0
+      80: getfield      #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      83: new           #10                 // class java/lang/StringBuilder
+      86: dup
+      87: invokespecial #11                 // Method java/lang/StringBuilder."<init>":()V
+      90: ldc           #25                 // String Mapping of service
+      92: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      95: aload_1
+      96: invokevirtual #26                 // Method org/apache/dubbo/metadata/MappingChangedEvent.getServiceKey:()Ljava/lang/String;
+      99: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     102: ldc           #27                 // String changed from
+     104: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     107: aload_3
+     108: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     111: ldc           #28                 // String  to
+     113: invokevirtual #13                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     116: aload_2
+     117: invokevirtual #14                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     120: invokevirtual #15                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     123: invokeinterface #16,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+     128: aload_0
+     129: getfield      #2                  // Field this$0:Lorg/apache/dubbo/registry/client/ServiceDiscoveryRegistry;
+     132: invokestatic  #29                 // Method org/apache/dubbo/registry/client/ServiceDiscoveryRegistry.access$000:(Lorg/apache/dubbo/registry/client/ServiceDiscoveryRegistry;)Lorg/apache/dubbo/metadata/AbstractServiceNameMapping;
+     135: aload_1
+     136: invokevirtual #26                 // Method org/apache/dubbo/metadata/MappingChangedEvent.getServiceKey:()Ljava/lang/String;
+     139: invokevirtual #30                 // Method org/apache/dubbo/metadata/AbstractServiceNameMapping.getMappingLock:(Ljava/lang/String;)Ljava/util/concurrent/locks/Lock;
+     142: astore        4
+     144: aload         4
+     146: invokeinterface #31,  1           // InterfaceMethod java/util/concurrent/locks/Lock.lock:()V
+     151: aload_3
+     152: invokestatic  #23                 // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+     155: ifeq          214
+     158: aload_2
+     159: invokeinterface #32,  1           // InterfaceMethod java/util/Set.size:()I
+     164: ifle          214
+     167: aload_0
+     168: getfield      #2                  // Field this$0:Lorg/apache/dubbo/registry/client/ServiceDiscoveryRegistry;
+     171: invokestatic  #29                 // Method org/apache/dubbo/registry/client/ServiceDiscoveryRegistry.access$000:(Lorg/apache/dubbo/registry/client/ServiceDiscoveryRegistry;)Lorg/apache/dubbo/metadata/AbstractServiceNameMapping;
+     174: aload_0
+     175: getfield      #7                  // Field url:Lorg/apache/dubbo/common/URL;
+     178: invokestatic  #33                 // InterfaceMethod org/apache/dubbo/metadata/ServiceNameMapping.buildMappingKey:(Lorg/apache/dubbo/common/URL;)Ljava/lang/String;
+     181: aload_2
+     182: invokevirtual #34                 // Method org/apache/dubbo/metadata/AbstractServiceNameMapping.putCachedMapping:(Ljava/lang/String;Ljava/util/Set;)V
+     185: aload_0
+     186: getfield      #2                  // Field this$0:Lorg/apache/dubbo/registry/client/ServiceDiscoveryRegistry;
+     189: aload_0
+     190: getfield      #7                  // Field url:Lorg/apache/dubbo/common/URL;
+     193: aload_0
+     194: getfield      #9                  // Field listener:Lorg/apache/dubbo/registry/NotifyListener;
+     197: aload_2
+     198: invokevirtual #35                 // Method org/apache/dubbo/registry/client/ServiceDiscoveryRegistry.subscribeURLs:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/registry/NotifyListener;Ljava/util/Set;)V
+     201: aload_0
+     202: aload_2
+     203: putfield      #8                  // Field oldApps:Ljava/util/Set;
+     206: aload         4
+     208: invokeinterface #36,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     213: return
+     214: aload_2
+     215: invokeinterface #37,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     220: astore        5
+     222: aload         5
+     224: invokeinterface #38,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     229: ifeq          426
+     232: aload         5
+     234: invokeinterface #39,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     239: checkcast     #40                 // class java/lang/String
+     242: astore        6
+     244: aload_3
+     245: aload         6
+     247: invokeinterface #41,  2           // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+     252: ifne          423
+     255: aload_0
+     256: getfield      #2                  // Field this$0:Lorg/apache/dubbo/registry/client/ServiceDiscoveryRegistry;
+     259: invokestatic  #29                 // Method org/apache/dubbo/registry/client/ServiceDiscoveryRegistry.access$000:(Lorg/apache/dubbo/registry/client/ServiceDiscoveryRegistry;)Lorg/apache/dubbo/metadata/AbstractServiceNameMapping;
+     262: aload_0
+     263: getfield      #7                  // Field url:Lorg/apache/dubbo/common/URL;
+     266: invokestatic  #33                 // InterfaceMethod org/apache/dubbo/metadata/ServiceNameMapping.buildMappingKey:(Lorg/apache/dubbo/common/URL;)Ljava/lang/String;
+     269: invokevirtual #42                 // Method org/apache/dubbo/metadata/AbstractServiceNameMapping.removeCachedMapping:(Ljava/lang/String;)Ljava/util/Set;
+     272: pop
+     273: aload_0
+     274: getfield      #2                  // Field this$0:Lorg/apache/dubbo/registry/client/ServiceDiscoveryRegistry;
+     277: invokestatic  #29                 // Method org/apache/dubbo/registry/client/ServiceDiscoveryRegistry.access$000:(Lorg/apache/dubbo/registry/client/ServiceDiscoveryRegistry;)Lorg/apache/dubbo/metadata/AbstractServiceNameMapping;
+     280: aload_0
+     281: getfield      #7                  // Field url:Lorg/apache/dubbo/common/URL;
+     284: invokestatic  #33                 // InterfaceMethod org/apache/dubbo/metadata/ServiceNameMapping.buildMappingKey:(Lorg/apache/dubbo/common/URL;)Ljava/lang/String;
+     287: aload_2
+     288: invokevirtual #34                 // Method org/apache/dubbo/metadata/AbstractServiceNameMapping.putCachedMapping:(Ljava/lang/String;Ljava/util/Set;)V
+     291: aload_0
+     292: getfield      #9                  // Field listener:Lorg/apache/dubbo/registry/NotifyListener;
+     295: invokeinterface #43,  1           // InterfaceMethod org/apache/dubbo/registry/NotifyListener.getServiceListener:()Lorg/apache/dubbo/registry/client/event/listener/ServiceInstancesChangedListener;
+     300: astore        7
+     302: aload         7
+     304: ifnull        394
+     307: aload_3
+     308: invokestatic  #44                 // Method org/apache/dubbo/common/utils/CollectionUtils.toTreeSet:(Ljava/util/Set;)Ljava/util/Set;
+     311: invokestatic  #45                 // InterfaceMethod org/apache/dubbo/metadata/ServiceNameMapping.toStringKeys:(Ljava/util/Set;)Ljava/lang/String;
+     314: astore        8
+     316: aload_0
+     317: getfield      #2                  // Field this$0:Lorg/apache/dubbo/registry/client/ServiceDiscoveryRegistry;
+     320: aload         8
+     322: invokevirtual #46                 // Method org/apache/dubbo/registry/client/ServiceDiscoveryRegistry.getAppSubscription:(Ljava/lang/String;)Ljava/util/concurrent/locks/Lock;
+     325: astore        9
+     327: aload         9
+     329: invokeinterface #31,  1           // InterfaceMethod java/util/concurrent/locks/Lock.lock:()V
+     334: aload         7
+     336: aload_0
+     337: getfield      #7                  // Field url:Lorg/apache/dubbo/common/URL;
+     340: invokevirtual #47                 // Method org/apache/dubbo/common/URL.getServiceKey:()Ljava/lang/String;
+     343: aload_0
+     344: getfield      #9                  // Field listener:Lorg/apache/dubbo/registry/NotifyListener;
+     347: invokevirtual #48                 // Method org/apache/dubbo/registry/client/event/listener/ServiceInstancesChangedListener.removeListener:(Ljava/lang/String;Lorg/apache/dubbo/registry/NotifyListener;)V
+     350: aload         7
+     352: invokevirtual #49                 // Method org/apache/dubbo/registry/client/event/listener/ServiceInstancesChangedListener.hasListeners:()Z
+     355: ifne          372
+     358: aload         7
+     360: invokevirtual #50                 // Method org/apache/dubbo/registry/client/event/listener/ServiceInstancesChangedListener.destroy:()V
+     363: aload_0
+     364: getfield      #2                  // Field this$0:Lorg/apache/dubbo/registry/client/ServiceDiscoveryRegistry;
+     367: aload         8
+     369: invokevirtual #51                 // Method org/apache/dubbo/registry/client/ServiceDiscoveryRegistry.removeAppSubscriptionLock:(Ljava/lang/String;)V
+     372: aload         9
+     374: invokeinterface #36,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     379: goto          394
+     382: astore        10
+     384: aload         9
+     386: invokeinterface #36,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     391: aload         10
+     393: athrow
+     394: aload_0
+     395: getfield      #2                  // Field this$0:Lorg/apache/dubbo/registry/client/ServiceDiscoveryRegistry;
+     398: aload_0
+     399: getfield      #7                  // Field url:Lorg/apache/dubbo/common/URL;
+     402: aload_0
+     403: getfield      #9                  // Field listener:Lorg/apache/dubbo/registry/NotifyListener;
+     406: aload_2
+     407: invokevirtual #35                 // Method org/apache/dubbo/registry/client/ServiceDiscoveryRegistry.subscribeURLs:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/registry/NotifyListener;Ljava/util/Set;)V
+     410: aload_0
+     411: aload_2
+     412: putfield      #8                  // Field oldApps:Ljava/util/Set;
+     415: aload         4
+     417: invokeinterface #36,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     422: return
+     423: goto          222
+     426: aload         4
+     428: invokeinterface #36,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     433: goto          448
+     436: astore        11
+     438: aload         4
+     440: invokeinterface #36,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     445: aload         11
+     447: athrow
+     448: return
+    Exception table:
+       from    to  target type
+         327   372   382   any
+         382   384   382   any
+         144   206   436   any
+         214   415   436   any
+         423   426   436   any
+         436   438   436   any
+
+  public void stop();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: putfield      #17                 // Field stopped:Z
+       5: return
+}

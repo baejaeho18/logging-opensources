@@ -1,0 +1,224 @@
+Compiled from "QosProtocolWrapper.java"
+public class org.apache.dubbo.qos.protocol.QosProtocolWrapper implements org.apache.dubbo.rpc.Protocol,org.apache.dubbo.rpc.model.ScopeModelAware {
+  private final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final java.util.concurrent.atomic.AtomicBoolean hasStarted;
+
+  private final org.apache.dubbo.rpc.Protocol protocol;
+
+  private org.apache.dubbo.rpc.model.FrameworkModel frameworkModel;
+
+  public org.apache.dubbo.qos.protocol.QosProtocolWrapper(org.apache.dubbo.rpc.Protocol);
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: ldc           #4                  // class org/apache/dubbo/qos/protocol/QosProtocolWrapper
+       7: invokestatic  #5                  // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      10: putfield      #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      13: aload_0
+      14: new           #7                  // class java/util/concurrent/atomic/AtomicBoolean
+      17: dup
+      18: iconst_0
+      19: invokespecial #8                  // Method java/util/concurrent/atomic/AtomicBoolean."<init>":(Z)V
+      22: putfield      #9                  // Field hasStarted:Ljava/util/concurrent/atomic/AtomicBoolean;
+      25: aload_1
+      26: ifnonnull     39
+      29: new           #10                 // class java/lang/IllegalArgumentException
+      32: dup
+      33: ldc           #11                 // String protocol == null
+      35: invokespecial #12                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      38: athrow
+      39: aload_0
+      40: aload_1
+      41: putfield      #13                 // Field protocol:Lorg/apache/dubbo/rpc/Protocol;
+      44: return
+
+  public void setFrameworkModel(org.apache.dubbo.rpc.model.FrameworkModel);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #14                 // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+       5: return
+
+  public int getDefaultPort();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field protocol:Lorg/apache/dubbo/rpc/Protocol;
+       4: invokeinterface #15,  1           // InterfaceMethod org/apache/dubbo/rpc/Protocol.getDefaultPort:()I
+       9: ireturn
+
+  public <T> org.apache.dubbo.rpc.Exporter<T> export(org.apache.dubbo.rpc.Invoker<T>) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokeinterface #16,  1           // InterfaceMethod org/apache/dubbo/rpc/Invoker.getUrl:()Lorg/apache/dubbo/common/URL;
+       7: invokespecial #17                 // Method startQosServer:(Lorg/apache/dubbo/common/URL;)V
+      10: aload_0
+      11: getfield      #13                 // Field protocol:Lorg/apache/dubbo/rpc/Protocol;
+      14: aload_1
+      15: invokeinterface #18,  2           // InterfaceMethod org/apache/dubbo/rpc/Protocol.export:(Lorg/apache/dubbo/rpc/Invoker;)Lorg/apache/dubbo/rpc/Exporter;
+      20: areturn
+
+  public <T> org.apache.dubbo.rpc.Invoker<T> refer(java.lang.Class<T>, org.apache.dubbo.common.URL) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aload_0
+       1: aload_2
+       2: invokespecial #17                 // Method startQosServer:(Lorg/apache/dubbo/common/URL;)V
+       5: aload_0
+       6: getfield      #13                 // Field protocol:Lorg/apache/dubbo/rpc/Protocol;
+       9: aload_1
+      10: aload_2
+      11: invokeinterface #19,  3           // InterfaceMethod org/apache/dubbo/rpc/Protocol.refer:(Ljava/lang/Class;Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/rpc/Invoker;
+      16: areturn
+
+  public void destroy();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field protocol:Lorg/apache/dubbo/rpc/Protocol;
+       4: invokeinterface #20,  1           // InterfaceMethod org/apache/dubbo/rpc/Protocol.destroy:()V
+       9: aload_0
+      10: invokevirtual #21                 // Method stopServer:()V
+      13: return
+
+  public java.util.List<org.apache.dubbo.rpc.ProtocolServer> getServers();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field protocol:Lorg/apache/dubbo/rpc/Protocol;
+       4: invokeinterface #22,  1           // InterfaceMethod org/apache/dubbo/rpc/Protocol.getServers:()Ljava/util/List;
+       9: areturn
+
+  private void startQosServer(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field hasStarted:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: iconst_0
+       5: iconst_1
+       6: invokevirtual #23                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+       9: ifne          13
+      12: return
+      13: aload_1
+      14: ldc           #24                 // String qos.enable
+      16: iconst_1
+      17: invokevirtual #25                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+      20: istore_2
+      21: aload_0
+      22: getfield      #14                 // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+      25: ldc           #26                 // class org/apache/dubbo/remoting/api/WireProtocol
+      27: invokevirtual #27                 // Method org/apache/dubbo/rpc/model/FrameworkModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      30: ldc           #28                 // String qos
+      32: invokevirtual #29                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getExtension:(Ljava/lang/String;)Ljava/lang/Object;
+      35: checkcast     #26                 // class org/apache/dubbo/remoting/api/WireProtocol
+      38: astore_3
+      39: aload_3
+      40: ifnull        51
+      43: aload_3
+      44: checkcast     #30                 // class org/apache/dubbo/qos/pu/QosWireProtocol
+      47: iload_2
+      48: invokevirtual #31                 // Method org/apache/dubbo/qos/pu/QosWireProtocol.setQosEnable:(Z)V
+      51: iload_2
+      52: ifne          67
+      55: aload_0
+      56: getfield      #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      59: ldc           #32                 // String qos won\'t be started because it is disabled. Please check dubbo.application.qos.enable is configured either in system property, dubbo.properties or XML/spring-boot configuration.
+      61: invokeinterface #33,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      66: return
+      67: aload_1
+      68: ldc           #34                 // String qos.host
+      70: invokevirtual #35                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;)Ljava/lang/String;
+      73: astore        4
+      75: aload_1
+      76: ldc           #36                 // String qos.port
+      78: sipush        22222
+      81: invokevirtual #38                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;I)I
+      84: istore        5
+      86: aload_1
+      87: ldc           #39                 // String qos.accept.foreign.ip
+      89: ldc           #40                 // String false
+      91: invokevirtual #41                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      94: invokestatic  #42                 // Method java/lang/Boolean.parseBoolean:(Ljava/lang/String;)Z
+      97: istore        6
+      99: aload_1
+     100: ldc           #43                 // String qos.accept.foreign.ip.whitelist
+     102: ldc           #45                 // String
+     104: invokevirtual #41                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     107: astore        7
+     109: aload_1
+     110: ldc           #46                 // String qos.anonymous.access.permission.level
+     112: getstatic     #47                 // Field org/apache/dubbo/qos/api/PermissionLevel.PUBLIC:Lorg/apache/dubbo/qos/api/PermissionLevel;
+     115: invokevirtual #48                 // Method org/apache/dubbo/qos/api/PermissionLevel.name:()Ljava/lang/String;
+     118: invokevirtual #41                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     121: astore        8
+     123: aload_1
+     124: ldc           #49                 // String qos.anonymous.access.allow.commands
+     126: ldc           #45                 // String
+     128: invokevirtual #41                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     131: astore        9
+     133: aload_0
+     134: getfield      #14                 // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+     137: invokevirtual #50                 // Method org/apache/dubbo/rpc/model/FrameworkModel.getBeanFactory:()Lorg/apache/dubbo/common/beans/factory/ScopeBeanFactory;
+     140: ldc           #51                 // class org/apache/dubbo/qos/server/Server
+     142: invokevirtual #52                 // Method org/apache/dubbo/common/beans/factory/ScopeBeanFactory.getBean:(Ljava/lang/Class;)Ljava/lang/Object;
+     145: checkcast     #51                 // class org/apache/dubbo/qos/server/Server
+     148: astore        10
+     150: aload         10
+     152: invokevirtual #53                 // Method org/apache/dubbo/qos/server/Server.isStarted:()Z
+     155: ifeq          159
+     158: return
+     159: aload         10
+     161: aload         4
+     163: invokevirtual #54                 // Method org/apache/dubbo/qos/server/Server.setHost:(Ljava/lang/String;)V
+     166: aload         10
+     168: iload         5
+     170: invokevirtual #55                 // Method org/apache/dubbo/qos/server/Server.setPort:(I)V
+     173: aload         10
+     175: iload         6
+     177: invokevirtual #56                 // Method org/apache/dubbo/qos/server/Server.setAcceptForeignIp:(Z)V
+     180: aload         10
+     182: aload         7
+     184: invokevirtual #57                 // Method org/apache/dubbo/qos/server/Server.setAcceptForeignIpWhitelist:(Ljava/lang/String;)V
+     187: aload         10
+     189: aload         8
+     191: invokevirtual #58                 // Method org/apache/dubbo/qos/server/Server.setAnonymousAccessPermissionLevel:(Ljava/lang/String;)V
+     194: aload         10
+     196: aload         9
+     198: invokevirtual #59                 // Method org/apache/dubbo/qos/server/Server.setAnonymousAllowCommands:(Ljava/lang/String;)V
+     201: aload         10
+     203: invokevirtual #60                 // Method org/apache/dubbo/qos/server/Server.start:()V
+     206: goto          228
+     209: astore_2
+     210: aload_0
+     211: getfield      #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     214: ldc           #62                 // String 7-4
+     216: ldc           #45                 // String
+     218: ldc           #45                 // String
+     220: ldc           #63                 // String Fail to start qos server:
+     222: aload_2
+     223: invokeinterface #64,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     228: return
+    Exception table:
+       from    to  target type
+           0    12   209   Class java/lang/Throwable
+          13    66   209   Class java/lang/Throwable
+          67   158   209   Class java/lang/Throwable
+         159   206   209   Class java/lang/Throwable
+
+  void stopServer();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field hasStarted:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: iconst_1
+       5: iconst_0
+       6: invokevirtual #23                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+       9: ifeq          32
+      12: aload_0
+      13: getfield      #14                 // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+      16: invokevirtual #50                 // Method org/apache/dubbo/rpc/model/FrameworkModel.getBeanFactory:()Lorg/apache/dubbo/common/beans/factory/ScopeBeanFactory;
+      19: ldc           #51                 // class org/apache/dubbo/qos/server/Server
+      21: invokevirtual #52                 // Method org/apache/dubbo/common/beans/factory/ScopeBeanFactory.getBean:(Ljava/lang/Class;)Ljava/lang/Object;
+      24: checkcast     #51                 // class org/apache/dubbo/qos/server/Server
+      27: astore_1
+      28: aload_1
+      29: invokevirtual #65                 // Method org/apache/dubbo/qos/server/Server.stop:()V
+      32: return
+}

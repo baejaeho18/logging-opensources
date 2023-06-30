@@ -1,0 +1,684 @@
+Compiled from "InvokeTelnet.java"
+public class org.apache.dubbo.qos.command.impl.InvokeTelnet implements org.apache.dubbo.qos.api.BaseCommand {
+  public static final io.netty.util.AttributeKey<java.lang.String> INVOKE_MESSAGE_KEY;
+
+  public static final io.netty.util.AttributeKey<java.util.List<java.lang.reflect.Method>> INVOKE_METHOD_LIST_KEY;
+
+  public static final io.netty.util.AttributeKey<org.apache.dubbo.rpc.model.ProviderModel> INVOKE_METHOD_PROVIDER_KEY;
+
+  private final org.apache.dubbo.rpc.model.FrameworkModel frameworkModel;
+
+  public org.apache.dubbo.qos.command.impl.InvokeTelnet(org.apache.dubbo.rpc.model.FrameworkModel);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+       9: return
+
+  public java.lang.String execute(org.apache.dubbo.qos.api.CommandContext, java.lang.String[]);
+    Code:
+       0: aload_2
+       1: invokestatic  #3                  // Method org/apache/dubbo/common/utils/ArrayUtils.isEmpty:([Ljava/lang/Object;)Z
+       4: ifeq          10
+       7: ldc           #4                  // String Please input method name, eg: \r\ninvoke xxxMethod(1234, \"abcd\", {\"prop\" : \"value\"})\r\ninvoke XxxService.xxxMethod(1234, \"abcd\", {\"prop\" : \"value\"})\r\ninvoke com.xxx.XxxService.xxxMethod(1234, \"abcd\", {\"prop\" : \"value\"})
+       9: areturn
+      10: aload_1
+      11: invokevirtual #5                  // Method org/apache/dubbo/qos/api/CommandContext.getRemote:()Lio/netty/channel/Channel;
+      14: astore_3
+      15: aload_3
+      16: getstatic     #6                  // Field org/apache/dubbo/qos/command/impl/ChangeTelnet.SERVICE_KEY:Lio/netty/util/AttributeKey;
+      19: invokeinterface #7,  2            // InterfaceMethod io/netty/channel/Channel.attr:(Lio/netty/util/AttributeKey;)Lio/netty/util/Attribute;
+      24: ifnull        47
+      27: aload_3
+      28: getstatic     #6                  // Field org/apache/dubbo/qos/command/impl/ChangeTelnet.SERVICE_KEY:Lio/netty/util/AttributeKey;
+      31: invokeinterface #7,  2            // InterfaceMethod io/netty/channel/Channel.attr:(Lio/netty/util/AttributeKey;)Lio/netty/util/Attribute;
+      36: invokeinterface #8,  1            // InterfaceMethod io/netty/util/Attribute.get:()Ljava/lang/Object;
+      41: checkcast     #9                  // class java/lang/String
+      44: goto          48
+      47: aconst_null
+      48: astore        4
+      50: aload_2
+      51: iconst_0
+      52: aaload
+      53: astore        5
+      55: aload         5
+      57: ldc           #10                 // String (
+      59: invokevirtual #11                 // Method java/lang/String.indexOf:(Ljava/lang/String;)I
+      62: istore        6
+      64: iload         6
+      66: iflt          79
+      69: aload         5
+      71: ldc           #12                 // String )
+      73: invokevirtual #13                 // Method java/lang/String.endsWith:(Ljava/lang/String;)Z
+      76: ifne          82
+      79: ldc           #14                 // String Invalid parameters, format: service.method(args)
+      81: areturn
+      82: aload         5
+      84: iconst_0
+      85: iload         6
+      87: invokevirtual #15                 // Method java/lang/String.substring:(II)Ljava/lang/String;
+      90: invokevirtual #16                 // Method java/lang/String.trim:()Ljava/lang/String;
+      93: astore        7
+      95: aload         5
+      97: iload         6
+      99: iconst_1
+     100: iadd
+     101: aload         5
+     103: invokevirtual #17                 // Method java/lang/String.length:()I
+     106: iconst_1
+     107: isub
+     108: invokevirtual #15                 // Method java/lang/String.substring:(II)Ljava/lang/String;
+     111: invokevirtual #16                 // Method java/lang/String.trim:()Ljava/lang/String;
+     114: astore        8
+     116: aload         7
+     118: ldc           #18                 // String .
+     120: invokevirtual #19                 // Method java/lang/String.lastIndexOf:(Ljava/lang/String;)I
+     123: istore        6
+     125: iload         6
+     127: iflt          157
+     130: aload         7
+     132: iconst_0
+     133: iload         6
+     135: invokevirtual #15                 // Method java/lang/String.substring:(II)Ljava/lang/String;
+     138: invokevirtual #16                 // Method java/lang/String.trim:()Ljava/lang/String;
+     141: astore        4
+     143: aload         7
+     145: iload         6
+     147: iconst_1
+     148: iadd
+     149: invokevirtual #20                 // Method java/lang/String.substring:(I)Ljava/lang/String;
+     152: invokevirtual #16                 // Method java/lang/String.trim:()Ljava/lang/String;
+     155: astore        7
+     157: aload         4
+     159: invokestatic  #21                 // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+     162: ifeq          168
+     165: ldc           #22                 // String If you want to invoke like [invoke sayHello(\"xxxx\")], please execute cd command first, or you can execute it like [invoke IHelloService.sayHello(\"xxxx\")]
+     167: areturn
+     168: new           #23                 // class java/lang/StringBuilder
+     171: dup
+     172: invokespecial #24                 // Method java/lang/StringBuilder."<init>":()V
+     175: ldc           #25                 // String [
+     177: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     180: aload         8
+     182: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     185: ldc           #27                 // String ]
+     187: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     190: invokevirtual #28                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     193: ldc           #29                 // class java/lang/Object
+     195: invokestatic  #30                 // Method org/apache/dubbo/common/utils/JsonUtils.toJavaList:(Ljava/lang/String;Ljava/lang/Class;)Ljava/util/List;
+     198: astore        9
+     200: goto          229
+     203: astore        10
+     205: new           #23                 // class java/lang/StringBuilder
+     208: dup
+     209: invokespecial #24                 // Method java/lang/StringBuilder."<init>":()V
+     212: ldc           #32                 // String Invalid json argument, cause:
+     214: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     217: aload         10
+     219: invokevirtual #33                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     222: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     225: invokevirtual #28                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     228: areturn
+     229: new           #23                 // class java/lang/StringBuilder
+     232: dup
+     233: invokespecial #24                 // Method java/lang/StringBuilder."<init>":()V
+     236: astore        10
+     238: aconst_null
+     239: astore        11
+     241: aconst_null
+     242: astore        12
+     244: aload_0
+     245: aload_3
+     246: invokespecial #34                 // Method isInvokedSelectCommand:(Lio/netty/channel/Channel;)Z
+     249: ifeq          293
+     252: aload_3
+     253: getstatic     #35                 // Field INVOKE_METHOD_PROVIDER_KEY:Lio/netty/util/AttributeKey;
+     256: invokeinterface #7,  2            // InterfaceMethod io/netty/channel/Channel.attr:(Lio/netty/util/AttributeKey;)Lio/netty/util/Attribute;
+     261: invokeinterface #8,  1            // InterfaceMethod io/netty/util/Attribute.get:()Ljava/lang/Object;
+     266: checkcast     #36                 // class org/apache/dubbo/rpc/model/ProviderModel
+     269: astore        12
+     271: aload_3
+     272: getstatic     #37                 // Field org/apache/dubbo/qos/command/impl/SelectTelnet.SELECT_METHOD_KEY:Lio/netty/util/AttributeKey;
+     275: invokeinterface #7,  2            // InterfaceMethod io/netty/channel/Channel.attr:(Lio/netty/util/AttributeKey;)Lio/netty/util/Attribute;
+     280: invokeinterface #8,  1            // InterfaceMethod io/netty/util/Attribute.get:()Ljava/lang/Object;
+     285: checkcast     #38                 // class java/lang/reflect/Method
+     288: astore        11
+     290: goto          516
+     293: aload_0
+     294: getfield      #2                  // Field frameworkModel:Lorg/apache/dubbo/rpc/model/FrameworkModel;
+     297: invokevirtual #39                 // Method org/apache/dubbo/rpc/model/FrameworkModel.getServiceRepository:()Lorg/apache/dubbo/rpc/model/FrameworkServiceRepository;
+     300: invokevirtual #40                 // Method org/apache/dubbo/rpc/model/FrameworkServiceRepository.allProviderModels:()Ljava/util/List;
+     303: invokeinterface #41,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     308: astore        13
+     310: aload         13
+     312: invokeinterface #42,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     317: ifeq          516
+     320: aload         13
+     322: invokeinterface #43,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     327: checkcast     #36                 // class org/apache/dubbo/rpc/model/ProviderModel
+     330: astore        14
+     332: aload_0
+     333: aload         4
+     335: aload         14
+     337: invokespecial #44                 // Method isServiceMatch:(Ljava/lang/String;Lorg/apache/dubbo/rpc/model/ProviderModel;)Z
+     340: ifne          346
+     343: goto          310
+     346: aload         14
+     348: astore        12
+     350: aload_0
+     351: aload         14
+     353: invokevirtual #45                 // Method org/apache/dubbo/rpc/model/ProviderModel.getAllMethods:()Ljava/util/Set;
+     356: aload         7
+     358: aload         9
+     360: invokespecial #46                 // Method findSameSignatureMethod:(Ljava/util/Set;Ljava/lang/String;Ljava/util/List;)Ljava/util/List;
+     363: astore        15
+     365: aload         15
+     367: invokestatic  #47                 // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+     370: ifeq          376
+     373: goto          516
+     376: aload         15
+     378: invokeinterface #48,  1           // InterfaceMethod java/util/List.size:()I
+     383: iconst_1
+     384: if_icmpne     403
+     387: aload         15
+     389: iconst_0
+     390: invokeinterface #49,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     395: checkcast     #38                 // class java/lang/reflect/Method
+     398: astore        11
+     400: goto          516
+     403: aload_0
+     404: aload         15
+     406: aload         9
+     408: invokespecial #50                 // Method findMatchMethods:(Ljava/util/List;Ljava/util/List;)Ljava/util/List;
+     411: astore        16
+     413: aload         16
+     415: invokestatic  #47                 // Method org/apache/dubbo/common/utils/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+     418: ifeq          424
+     421: goto          516
+     424: aload         16
+     426: invokeinterface #48,  1           // InterfaceMethod java/util/List.size:()I
+     431: iconst_1
+     432: if_icmpne     451
+     435: aload         16
+     437: iconst_0
+     438: invokeinterface #49,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     443: checkcast     #38                 // class java/lang/reflect/Method
+     446: astore        11
+     448: goto          513
+     451: aload_3
+     452: getstatic     #35                 // Field INVOKE_METHOD_PROVIDER_KEY:Lio/netty/util/AttributeKey;
+     455: invokeinterface #7,  2            // InterfaceMethod io/netty/channel/Channel.attr:(Lio/netty/util/AttributeKey;)Lio/netty/util/Attribute;
+     460: aload         14
+     462: invokeinterface #51,  2           // InterfaceMethod io/netty/util/Attribute.set:(Ljava/lang/Object;)V
+     467: aload_3
+     468: getstatic     #52                 // Field INVOKE_METHOD_LIST_KEY:Lio/netty/util/AttributeKey;
+     471: invokeinterface #7,  2            // InterfaceMethod io/netty/channel/Channel.attr:(Lio/netty/util/AttributeKey;)Lio/netty/util/Attribute;
+     476: aload         16
+     478: invokeinterface #51,  2           // InterfaceMethod io/netty/util/Attribute.set:(Ljava/lang/Object;)V
+     483: aload_3
+     484: getstatic     #53                 // Field INVOKE_MESSAGE_KEY:Lio/netty/util/AttributeKey;
+     487: invokeinterface #7,  2            // InterfaceMethod io/netty/channel/Channel.attr:(Lio/netty/util/AttributeKey;)Lio/netty/util/Attribute;
+     492: aload         5
+     494: invokeinterface #51,  2           // InterfaceMethod io/netty/util/Attribute.set:(Ljava/lang/Object;)V
+     499: aload_0
+     500: aload         10
+     502: aload         16
+     504: invokespecial #54                 // Method printSelectMessage:(Ljava/lang/StringBuilder;Ljava/util/List;)V
+     507: aload         10
+     509: invokevirtual #28                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     512: areturn
+     513: goto          516
+     516: aload         4
+     518: invokestatic  #21                 // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+     521: ifne          542
+     524: aload         10
+     526: ldc           #55                 // String Use default service
+     528: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     531: aload         4
+     533: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     536: bipush        46
+     538: invokevirtual #56                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     541: pop
+     542: aload         12
+     544: ifnonnull     566
+     547: aload         10
+     549: ldc           #57                 // String \r\nNo such service
+     551: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     554: aload         4
+     556: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     559: pop
+     560: aload         10
+     562: invokevirtual #28                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     565: areturn
+     566: aload         11
+     568: ifnonnull     600
+     571: aload         10
+     573: ldc           #58                 // String \r\nNo such method
+     575: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     578: aload         7
+     580: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     583: ldc           #59                 // String  in service
+     585: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     588: aload         4
+     590: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     593: pop
+     594: aload         10
+     596: invokevirtual #28                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     599: areturn
+     600: aload         9
+     602: invokeinterface #60,  1           // InterfaceMethod java/util/List.toArray:()[Ljava/lang/Object;
+     607: aload         11
+     609: invokevirtual #61                 // Method java/lang/reflect/Method.getParameterTypes:()[Ljava/lang/Class;
+     612: aload         11
+     614: invokevirtual #62                 // Method java/lang/reflect/Method.getGenericParameterTypes:()[Ljava/lang/reflect/Type;
+     617: invokestatic  #63                 // Method org/apache/dubbo/common/utils/PojoUtils.realize:([Ljava/lang/Object;[Ljava/lang/Class;[Ljava/lang/reflect/Type;)[Ljava/lang/Object;
+     620: astore        13
+     622: invokestatic  #64                 // Method java/lang/System.currentTimeMillis:()J
+     625: lstore        14
+     627: new           #65                 // class org/apache/dubbo/rpc/AppResponse
+     630: dup
+     631: invokespecial #66                 // Method org/apache/dubbo/rpc/AppResponse."<init>":()V
+     634: astore        16
+     636: aload         11
+     638: aload         12
+     640: invokevirtual #67                 // Method org/apache/dubbo/rpc/model/ProviderModel.getServiceInstance:()Ljava/lang/Object;
+     643: aload         13
+     645: invokevirtual #68                 // Method java/lang/reflect/Method.invoke:(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+     648: astore        17
+     650: iconst_0
+     651: istore        18
+     653: invokestatic  #69                 // Method org/apache/dubbo/rpc/RpcContext.getServerAttachment:()Lorg/apache/dubbo/rpc/RpcContextAttachment;
+     656: invokevirtual #70                 // Method org/apache/dubbo/rpc/RpcContextAttachment.isAsyncStarted:()Z
+     659: ifeq          701
+     662: invokestatic  #69                 // Method org/apache/dubbo/rpc/RpcContext.getServerAttachment:()Lorg/apache/dubbo/rpc/RpcContextAttachment;
+     665: invokevirtual #71                 // Method org/apache/dubbo/rpc/RpcContextAttachment.getAsyncContext:()Lorg/apache/dubbo/rpc/AsyncContext;
+     668: astore        19
+     670: aload         19
+     672: instanceof    #72                 // class org/apache/dubbo/rpc/AsyncContextImpl
+     675: ifeq          701
+     678: aload         19
+     680: checkcast     #72                 // class org/apache/dubbo/rpc/AsyncContextImpl
+     683: invokevirtual #73                 // Method org/apache/dubbo/rpc/AsyncContextImpl.getInternalFuture:()Ljava/util/concurrent/CompletableFuture;
+     686: astore        20
+     688: aload         16
+     690: aload         20
+     692: invokevirtual #74                 // Method java/util/concurrent/CompletableFuture.get:()Ljava/lang/Object;
+     695: invokevirtual #75                 // Method org/apache/dubbo/rpc/AppResponse.setValue:(Ljava/lang/Object;)V
+     698: iconst_1
+     699: istore        18
+     701: iload         18
+     703: ifne          713
+     706: aload         16
+     708: aload         17
+     710: invokevirtual #75                 // Method org/apache/dubbo/rpc/AppResponse.setValue:(Ljava/lang/Object;)V
+     713: invokestatic  #76                 // Method org/apache/dubbo/rpc/RpcContext.removeContext:()V
+     716: goto          756
+     719: astore        17
+     721: aload         16
+     723: aload         17
+     725: invokevirtual #77                 // Method org/apache/dubbo/rpc/AppResponse.setException:(Ljava/lang/Throwable;)V
+     728: aload         17
+     730: instanceof    #78                 // class java/lang/InterruptedException
+     733: ifeq          742
+     736: invokestatic  #79                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+     739: invokevirtual #80                 // Method java/lang/Thread.interrupt:()V
+     742: invokestatic  #76                 // Method org/apache/dubbo/rpc/RpcContext.removeContext:()V
+     745: goto          756
+     748: astore        21
+     750: invokestatic  #76                 // Method org/apache/dubbo/rpc/RpcContext.removeContext:()V
+     753: aload         21
+     755: athrow
+     756: invokestatic  #64                 // Method java/lang/System.currentTimeMillis:()J
+     759: lstore        17
+     761: aload         10
+     763: ldc           #81                 // String \r\nresult:
+     765: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     768: pop
+     769: aload         10
+     771: aload         16
+     773: invokevirtual #82                 // Method org/apache/dubbo/rpc/AppResponse.recreate:()Ljava/lang/Object;
+     776: invokestatic  #83                 // Method org/apache/dubbo/common/utils/JsonUtils.toJson:(Ljava/lang/Object;)Ljava/lang/String;
+     779: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     782: pop
+     783: aload         10
+     785: ldc           #84                 // String \r\nelapsed:
+     787: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     790: pop
+     791: aload         10
+     793: lload         17
+     795: lload         14
+     797: lsub
+     798: invokevirtual #85                 // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+     801: pop
+     802: aload         10
+     804: ldc           #86                 // String  ms.
+     806: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     809: pop
+     810: goto          852
+     813: astore        13
+     815: new           #23                 // class java/lang/StringBuilder
+     818: dup
+     819: invokespecial #24                 // Method java/lang/StringBuilder."<init>":()V
+     822: ldc           #87                 // String Failed to invoke method
+     824: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     827: aload         11
+     829: invokevirtual #88                 // Method java/lang/reflect/Method.getName:()Ljava/lang/String;
+     832: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     835: ldc           #89                 // String , cause:
+     837: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     840: aload         13
+     842: invokestatic  #90                 // Method org/apache/dubbo/common/utils/StringUtils.toString:(Ljava/lang/Throwable;)Ljava/lang/String;
+     845: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     848: invokevirtual #28                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     851: areturn
+     852: aload         10
+     854: invokevirtual #28                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     857: areturn
+    Exception table:
+       from    to  target type
+         168   200   203   Class java/lang/Throwable
+         636   713   719   Class java/lang/Throwable
+         636   713   748   any
+         719   742   748   any
+         748   750   748   any
+         600   810   813   Class java/lang/Throwable
+
+  private boolean isServiceMatch(java.lang.String, org.apache.dubbo.rpc.model.ProviderModel);
+    Code:
+       0: aload_2
+       1: invokevirtual #91                 // Method org/apache/dubbo/rpc/model/ProviderModel.getServiceKey:()Ljava/lang/String;
+       4: aload_1
+       5: invokevirtual #92                 // Method java/lang/String.equalsIgnoreCase:(Ljava/lang/String;)Z
+       8: ifne          46
+      11: aload_2
+      12: invokevirtual #93                 // Method org/apache/dubbo/rpc/model/ProviderModel.getServiceInterfaceClass:()Ljava/lang/Class;
+      15: invokevirtual #94                 // Method java/lang/Class.getSimpleName:()Ljava/lang/String;
+      18: aload_1
+      19: invokevirtual #92                 // Method java/lang/String.equalsIgnoreCase:(Ljava/lang/String;)Z
+      22: ifne          46
+      25: aload_2
+      26: invokevirtual #93                 // Method org/apache/dubbo/rpc/model/ProviderModel.getServiceInterfaceClass:()Ljava/lang/Class;
+      29: invokevirtual #95                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      32: aload_1
+      33: invokevirtual #92                 // Method java/lang/String.equalsIgnoreCase:(Ljava/lang/String;)Z
+      36: ifne          46
+      39: aload_1
+      40: invokestatic  #21                 // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+      43: ifeq          50
+      46: iconst_1
+      47: goto          51
+      50: iconst_0
+      51: ireturn
+
+  private java.util.List<java.lang.reflect.Method> findSameSignatureMethod(java.util.Set<org.apache.dubbo.rpc.model.MethodDescriptor>, java.lang.String, java.util.List<java.lang.Object>);
+    Code:
+       0: new           #96                 // class java/util/ArrayList
+       3: dup
+       4: invokespecial #97                 // Method java/util/ArrayList."<init>":()V
+       7: astore        4
+       9: aload_1
+      10: invokeinterface #98,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      15: astore        5
+      17: aload         5
+      19: invokeinterface #42,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      24: ifeq          88
+      27: aload         5
+      29: invokeinterface #43,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      34: checkcast     #99                 // class org/apache/dubbo/rpc/model/MethodDescriptor
+      37: astore        6
+      39: aload         6
+      41: invokeinterface #100,  1          // InterfaceMethod org/apache/dubbo/rpc/model/MethodDescriptor.getMethod:()Ljava/lang/reflect/Method;
+      46: astore        7
+      48: aload         7
+      50: invokevirtual #88                 // Method java/lang/reflect/Method.getName:()Ljava/lang/String;
+      53: aload_2
+      54: invokevirtual #101                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      57: ifeq          85
+      60: aload         7
+      62: invokevirtual #61                 // Method java/lang/reflect/Method.getParameterTypes:()[Ljava/lang/Class;
+      65: arraylength
+      66: aload_3
+      67: invokeinterface #48,  1           // InterfaceMethod java/util/List.size:()I
+      72: if_icmpne     85
+      75: aload         4
+      77: aload         7
+      79: invokeinterface #102,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      84: pop
+      85: goto          17
+      88: aload         4
+      90: areturn
+
+  private java.util.List<java.lang.reflect.Method> findMatchMethods(java.util.List<java.lang.reflect.Method>, java.util.List<java.lang.Object>);
+    Code:
+       0: new           #96                 // class java/util/ArrayList
+       3: dup
+       4: invokespecial #97                 // Method java/util/ArrayList."<init>":()V
+       7: astore_3
+       8: aload_1
+       9: invokeinterface #41,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      14: astore        4
+      16: aload         4
+      18: invokeinterface #42,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      23: ifeq          59
+      26: aload         4
+      28: invokeinterface #43,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      33: checkcast     #38                 // class java/lang/reflect/Method
+      36: astore        5
+      38: aload         5
+      40: aload_2
+      41: invokestatic  #103                // Method isMatch:(Ljava/lang/reflect/Method;Ljava/util/List;)Z
+      44: ifeq          56
+      47: aload_3
+      48: aload         5
+      50: invokeinterface #102,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      55: pop
+      56: goto          16
+      59: aload_3
+      60: areturn
+
+  private static boolean isMatch(java.lang.reflect.Method, java.util.List<java.lang.Object>);
+    Code:
+       0: aload_0
+       1: invokevirtual #61                 // Method java/lang/reflect/Method.getParameterTypes:()[Ljava/lang/Class;
+       4: astore_2
+       5: aload_2
+       6: arraylength
+       7: aload_1
+       8: invokeinterface #48,  1           // InterfaceMethod java/util/List.size:()I
+      13: if_icmpeq     18
+      16: iconst_0
+      17: ireturn
+      18: iconst_0
+      19: istore_3
+      20: iload_3
+      21: aload_2
+      22: arraylength
+      23: if_icmpge     219
+      26: aload_2
+      27: iload_3
+      28: aaload
+      29: astore        4
+      31: aload_1
+      32: iload_3
+      33: invokeinterface #49,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+      38: astore        5
+      40: aload         5
+      42: ifnonnull     55
+      45: aload         4
+      47: invokevirtual #104                // Method java/lang/Class.isPrimitive:()Z
+      50: ifeq          213
+      53: iconst_0
+      54: ireturn
+      55: aload         5
+      57: invokevirtual #105                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      60: invokestatic  #106                // Method org/apache/dubbo/common/utils/ReflectUtils.isPrimitive:(Ljava/lang/Class;)Z
+      63: ifeq          107
+      66: aload         5
+      68: instanceof    #9                  // class java/lang/String
+      71: ifeq          85
+      74: aload         4
+      76: invokevirtual #107                // Method java/lang/Class.isEnum:()Z
+      79: ifeq          85
+      82: goto          213
+      85: aload         4
+      87: invokestatic  #106                // Method org/apache/dubbo/common/utils/ReflectUtils.isPrimitive:(Ljava/lang/Class;)Z
+      90: ifne          95
+      93: iconst_0
+      94: ireturn
+      95: aload         4
+      97: aload         5
+      99: invokestatic  #108                // Method org/apache/dubbo/common/utils/ReflectUtils.isCompatible:(Ljava/lang/Class;Ljava/lang/Object;)Z
+     102: ifne          213
+     105: iconst_0
+     106: ireturn
+     107: aload         5
+     109: instanceof    #109                // class java/util/Map
+     112: ifeq          167
+     115: aload         5
+     117: checkcast     #109                // class java/util/Map
+     120: ldc           #110                // String class
+     122: invokeinterface #111,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     127: checkcast     #9                  // class java/lang/String
+     130: astore        6
+     132: aload         6
+     134: invokestatic  #112                // Method org/apache/dubbo/common/utils/StringUtils.isNotEmpty:(Ljava/lang/String;)Z
+     137: ifeq          162
+     140: aload         6
+     142: invokestatic  #113                // Method org/apache/dubbo/common/utils/ReflectUtils.forName:(Ljava/lang/String;)Ljava/lang/Class;
+     145: astore        7
+     147: aload         4
+     149: aload         7
+     151: invokevirtual #114                // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+     154: ifne          159
+     157: iconst_0
+     158: ireturn
+     159: goto          164
+     162: iconst_1
+     163: ireturn
+     164: goto          213
+     167: aload         5
+     169: instanceof    #115                // class java/util/Collection
+     172: ifeq          198
+     175: aload         4
+     177: invokevirtual #116                // Method java/lang/Class.isArray:()Z
+     180: ifne          213
+     183: aload         4
+     185: aload         5
+     187: invokevirtual #105                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     190: invokevirtual #114                // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+     193: ifne          213
+     196: iconst_0
+     197: ireturn
+     198: aload         4
+     200: aload         5
+     202: invokevirtual #105                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     205: invokevirtual #114                // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+     208: ifne          213
+     211: iconst_0
+     212: ireturn
+     213: iinc          3, 1
+     216: goto          20
+     219: iconst_1
+     220: ireturn
+
+  private void printSelectMessage(java.lang.StringBuilder, java.util.List<java.lang.reflect.Method>);
+    Code:
+       0: aload_1
+       1: ldc           #117                // String Methods:\r\n
+       3: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       6: pop
+       7: iconst_0
+       8: istore_3
+       9: iload_3
+      10: aload_2
+      11: invokeinterface #48,  1           // InterfaceMethod java/util/List.size:()I
+      16: if_icmpge     124
+      19: aload_2
+      20: iload_3
+      21: invokeinterface #49,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+      26: checkcast     #38                 // class java/lang/reflect/Method
+      29: astore        4
+      31: aload_1
+      32: iload_3
+      33: iconst_1
+      34: iadd
+      35: invokevirtual #118                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      38: ldc           #119                // String .
+      40: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      43: aload         4
+      45: invokevirtual #88                 // Method java/lang/reflect/Method.getName:()Ljava/lang/String;
+      48: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      51: bipush        40
+      53: invokevirtual #56                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      56: pop
+      57: aload         4
+      59: invokevirtual #61                 // Method java/lang/reflect/Method.getParameterTypes:()[Ljava/lang/Class;
+      62: astore        5
+      64: iconst_0
+      65: istore        6
+      67: iload         6
+      69: aload         5
+      71: arraylength
+      72: if_icmpge     111
+      75: aload_1
+      76: aload         5
+      78: iload         6
+      80: aaload
+      81: invokevirtual #94                 // Method java/lang/Class.getSimpleName:()Ljava/lang/String;
+      84: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      87: pop
+      88: iload         6
+      90: aload         5
+      92: arraylength
+      93: iconst_1
+      94: isub
+      95: if_icmpeq     105
+      98: aload_1
+      99: bipush        44
+     101: invokevirtual #56                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     104: pop
+     105: iinc          6, 1
+     108: goto          67
+     111: aload_1
+     112: ldc           #120                // String )\r\n
+     114: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     117: pop
+     118: iinc          3, 1
+     121: goto          9
+     124: aload_1
+     125: ldc           #121                // String Please use the select command to select the method you want to invoke. eg: select 1
+     127: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     130: pop
+     131: return
+
+  private boolean isInvokedSelectCommand(io.netty.channel.Channel);
+    Code:
+       0: aload_1
+       1: getstatic     #122                // Field org/apache/dubbo/qos/command/impl/SelectTelnet.SELECT_KEY:Lio/netty/util/AttributeKey;
+       4: invokeinterface #7,  2            // InterfaceMethod io/netty/channel/Channel.attr:(Lio/netty/util/AttributeKey;)Lio/netty/util/Attribute;
+       9: invokeinterface #8,  1            // InterfaceMethod io/netty/util/Attribute.get:()Ljava/lang/Object;
+      14: ifnull        33
+      17: aload_1
+      18: getstatic     #122                // Field org/apache/dubbo/qos/command/impl/SelectTelnet.SELECT_KEY:Lio/netty/util/AttributeKey;
+      21: invokeinterface #7,  2            // InterfaceMethod io/netty/channel/Channel.attr:(Lio/netty/util/AttributeKey;)Lio/netty/util/Attribute;
+      26: invokeinterface #123,  1          // InterfaceMethod io/netty/util/Attribute.remove:()V
+      31: iconst_1
+      32: ireturn
+      33: iconst_0
+      34: ireturn
+
+  static {};
+    Code:
+       0: ldc           #124                // String telnet.invoke.method.message
+       2: invokestatic  #125                // Method io/netty/util/AttributeKey.valueOf:(Ljava/lang/String;)Lio/netty/util/AttributeKey;
+       5: putstatic     #53                 // Field INVOKE_MESSAGE_KEY:Lio/netty/util/AttributeKey;
+       8: ldc           #126                // String telnet.invoke.method.list
+      10: invokestatic  #125                // Method io/netty/util/AttributeKey.valueOf:(Ljava/lang/String;)Lio/netty/util/AttributeKey;
+      13: putstatic     #52                 // Field INVOKE_METHOD_LIST_KEY:Lio/netty/util/AttributeKey;
+      16: ldc           #127                // String telnet.invoke.method.provider
+      18: invokestatic  #125                // Method io/netty/util/AttributeKey.valueOf:(Ljava/lang/String;)Lio/netty/util/AttributeKey;
+      21: putstatic     #35                 // Field INVOKE_METHOD_PROVIDER_KEY:Lio/netty/util/AttributeKey;
+      24: return
+}

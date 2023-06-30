@@ -1,0 +1,1211 @@
+Compiled from "MigrationInvoker.java"
+public class org.apache.dubbo.registry.client.migration.MigrationInvoker<T> implements org.apache.dubbo.registry.client.migration.MigrationClusterInvoker<T> {
+  private final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private org.apache.dubbo.common.URL url;
+
+  private final org.apache.dubbo.common.URL consumerUrl;
+
+  private final org.apache.dubbo.rpc.cluster.Cluster cluster;
+
+  private final org.apache.dubbo.registry.Registry registry;
+
+  private final java.lang.Class<T> type;
+
+  private final org.apache.dubbo.registry.integration.RegistryProtocol registryProtocol;
+
+  private org.apache.dubbo.registry.client.migration.MigrationRuleListener migrationRuleListener;
+
+  private final org.apache.dubbo.rpc.model.ConsumerModel consumerModel;
+
+  private final org.apache.dubbo.common.status.reporter.FrameworkStatusReportService reportService;
+
+  private volatile org.apache.dubbo.rpc.cluster.ClusterInvoker<T> invoker;
+
+  private volatile org.apache.dubbo.rpc.cluster.ClusterInvoker<T> serviceDiscoveryInvoker;
+
+  private volatile org.apache.dubbo.rpc.cluster.ClusterInvoker<T> currentAvailableInvoker;
+
+  private volatile org.apache.dubbo.registry.client.migration.model.MigrationStep step;
+
+  private volatile org.apache.dubbo.registry.client.migration.model.MigrationRule rule;
+
+  private volatile int promotion;
+
+  public org.apache.dubbo.registry.client.migration.MigrationInvoker(org.apache.dubbo.registry.integration.RegistryProtocol, org.apache.dubbo.rpc.cluster.Cluster, org.apache.dubbo.registry.Registry, java.lang.Class<T>, org.apache.dubbo.common.URL, org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: aconst_null
+       2: aconst_null
+       3: aload_1
+       4: aload_2
+       5: aload_3
+       6: aload         4
+       8: aload         5
+      10: aload         6
+      12: invokespecial #3                  // Method "<init>":(Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;Lorg/apache/dubbo/registry/integration/RegistryProtocol;Lorg/apache/dubbo/rpc/cluster/Cluster;Lorg/apache/dubbo/registry/Registry;Ljava/lang/Class;Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/common/URL;)V
+      15: return
+
+  public org.apache.dubbo.registry.client.migration.MigrationInvoker(org.apache.dubbo.rpc.cluster.ClusterInvoker<T>, org.apache.dubbo.rpc.cluster.ClusterInvoker<T>, org.apache.dubbo.registry.integration.RegistryProtocol, org.apache.dubbo.rpc.cluster.Cluster, org.apache.dubbo.registry.Registry, java.lang.Class<T>, org.apache.dubbo.common.URL, org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: invokespecial #4                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: ldc           #5                  // class org/apache/dubbo/registry/client/migration/MigrationInvoker
+       7: invokestatic  #6                  // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      10: putfield      #7                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      13: aload_0
+      14: bipush        100
+      16: putfield      #8                  // Field promotion:I
+      19: aload_0
+      20: aload_1
+      21: putfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      24: aload_0
+      25: aload_2
+      26: putfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      29: aload_0
+      30: aload_3
+      31: putfield      #11                 // Field registryProtocol:Lorg/apache/dubbo/registry/integration/RegistryProtocol;
+      34: aload_0
+      35: aload         4
+      37: putfield      #12                 // Field cluster:Lorg/apache/dubbo/rpc/cluster/Cluster;
+      40: aload_0
+      41: aload         5
+      43: putfield      #13                 // Field registry:Lorg/apache/dubbo/registry/Registry;
+      46: aload_0
+      47: aload         6
+      49: putfield      #14                 // Field type:Ljava/lang/Class;
+      52: aload_0
+      53: aload         7
+      55: putfield      #15                 // Field url:Lorg/apache/dubbo/common/URL;
+      58: aload_0
+      59: aload         8
+      61: putfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+      64: aload_0
+      65: aload         8
+      67: invokevirtual #17                 // Method org/apache/dubbo/common/URL.getServiceModel:()Lorg/apache/dubbo/rpc/model/ServiceModel;
+      70: checkcast     #18                 // class org/apache/dubbo/rpc/model/ConsumerModel
+      73: putfield      #19                 // Field consumerModel:Lorg/apache/dubbo/rpc/model/ConsumerModel;
+      76: aload_0
+      77: aload         8
+      79: invokevirtual #20                 // Method org/apache/dubbo/common/URL.getOrDefaultApplicationModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      82: invokevirtual #21                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getBeanFactory:()Lorg/apache/dubbo/common/beans/factory/ScopeBeanFactory;
+      85: ldc           #22                 // class org/apache/dubbo/common/status/reporter/FrameworkStatusReportService
+      87: invokevirtual #23                 // Method org/apache/dubbo/common/beans/factory/ScopeBeanFactory.getBean:(Ljava/lang/Class;)Ljava/lang/Object;
+      90: checkcast     #22                 // class org/apache/dubbo/common/status/reporter/FrameworkStatusReportService
+      93: putfield      #24                 // Field reportService:Lorg/apache/dubbo/common/status/reporter/FrameworkStatusReportService;
+      96: aload_0
+      97: getfield      #19                 // Field consumerModel:Lorg/apache/dubbo/rpc/model/ConsumerModel;
+     100: ifnull        169
+     103: aload_0
+     104: getfield      #19                 // Field consumerModel:Lorg/apache/dubbo/rpc/model/ConsumerModel;
+     107: invokevirtual #25                 // Method org/apache/dubbo/rpc/model/ConsumerModel.getServiceMetadata:()Lorg/apache/dubbo/rpc/model/ServiceMetadata;
+     110: ldc           #27                 // String currentClusterInvoker
+     112: invokevirtual #28                 // Method org/apache/dubbo/rpc/model/ServiceMetadata.getAttribute:(Ljava/lang/String;)Ljava/lang/Object;
+     115: astore        9
+     117: aload         9
+     119: instanceof    #29                 // class java/util/Map
+     122: ifeq          135
+     125: aload         9
+     127: checkcast     #29                 // class java/util/Map
+     130: astore        10
+     132: goto          144
+     135: new           #30                 // class java/util/concurrent/ConcurrentHashMap
+     138: dup
+     139: invokespecial #31                 // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+     142: astore        10
+     144: aload         10
+     146: aload         5
+     148: aload_0
+     149: invokeinterface #32,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     154: pop
+     155: aload_0
+     156: getfield      #19                 // Field consumerModel:Lorg/apache/dubbo/rpc/model/ConsumerModel;
+     159: invokevirtual #25                 // Method org/apache/dubbo/rpc/model/ConsumerModel.getServiceMetadata:()Lorg/apache/dubbo/rpc/model/ServiceMetadata;
+     162: ldc           #27                 // String currentClusterInvoker
+     164: aload         10
+     166: invokevirtual #33                 // Method org/apache/dubbo/rpc/model/ServiceMetadata.addAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+     169: return
+
+  public org.apache.dubbo.rpc.cluster.ClusterInvoker<T> getInvoker();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       4: areturn
+
+  public void setInvoker(org.apache.dubbo.rpc.cluster.ClusterInvoker<T>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       5: return
+
+  public org.apache.dubbo.rpc.cluster.ClusterInvoker<T> getServiceDiscoveryInvoker();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       4: areturn
+
+  public void setServiceDiscoveryInvoker(org.apache.dubbo.rpc.cluster.ClusterInvoker<T>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       5: return
+
+  public org.apache.dubbo.rpc.cluster.ClusterInvoker<T> getCurrentAvailableInvoker();
+    Code:
+       0: aload_0
+       1: getfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       4: areturn
+
+  public java.lang.Class<T> getInterface();
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field type:Ljava/lang/Class;
+       4: areturn
+
+  public void reRefer(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #15                 // Field url:Lorg/apache/dubbo/common/URL;
+       5: ldc           #35                 // String refer
+       7: aload_1
+       8: invokevirtual #36                 // Method org/apache/dubbo/common/URL.getParameters:()Ljava/util/Map;
+      11: invokestatic  #37                 // Method org/apache/dubbo/common/utils/StringUtils.toQueryString:(Ljava/util/Map;)Ljava/lang/String;
+      14: invokevirtual #38                 // Method org/apache/dubbo/common/URL.addParameter:(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/dubbo/common/URL;
+      17: putfield      #15                 // Field url:Lorg/apache/dubbo/common/URL;
+      20: aload_0
+      21: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      24: ifnull        48
+      27: aload_0
+      28: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      31: invokeinterface #39,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.isDestroyed:()Z
+      36: ifne          48
+      39: aload_0
+      40: aload_0
+      41: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      44: aload_1
+      45: invokespecial #40                 // Method doReSubscribe:(Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;Lorg/apache/dubbo/common/URL;)V
+      48: aload_0
+      49: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      52: ifnull        76
+      55: aload_0
+      56: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      59: invokeinterface #39,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.isDestroyed:()Z
+      64: ifne          76
+      67: aload_0
+      68: aload_0
+      69: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      72: aload_1
+      73: invokespecial #40                 // Method doReSubscribe:(Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;Lorg/apache/dubbo/common/URL;)V
+      76: return
+
+  private void doReSubscribe(org.apache.dubbo.rpc.cluster.ClusterInvoker<T>, org.apache.dubbo.common.URL);
+    Code:
+       0: aload_1
+       1: invokeinterface #41,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.getDirectory:()Lorg/apache/dubbo/rpc/cluster/Directory;
+       6: checkcast     #42                 // class org/apache/dubbo/registry/integration/DynamicDirectory
+       9: astore_3
+      10: aload_3
+      11: invokevirtual #43                 // Method org/apache/dubbo/registry/integration/DynamicDirectory.getRegisteredConsumerUrl:()Lorg/apache/dubbo/common/URL;
+      14: astore        4
+      16: aload_3
+      17: invokevirtual #44                 // Method org/apache/dubbo/registry/integration/DynamicDirectory.getRegistry:()Lorg/apache/dubbo/registry/Registry;
+      20: astore        5
+      22: aload         5
+      24: aload_3
+      25: invokevirtual #43                 // Method org/apache/dubbo/registry/integration/DynamicDirectory.getRegisteredConsumerUrl:()Lorg/apache/dubbo/common/URL;
+      28: invokeinterface #45,  2           // InterfaceMethod org/apache/dubbo/registry/Registry.unregister:(Lorg/apache/dubbo/common/URL;)V
+      33: aload_3
+      34: aload         4
+      36: invokestatic  #46                 // Method org/apache/dubbo/registry/integration/RegistryProtocol.toSubscribeUrl:(Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/common/URL;
+      39: invokevirtual #47                 // Method org/apache/dubbo/registry/integration/DynamicDirectory.unSubscribe:(Lorg/apache/dubbo/common/URL;)V
+      42: aload_3
+      43: invokevirtual #48                 // Method org/apache/dubbo/registry/integration/DynamicDirectory.isShouldRegister:()Z
+      46: ifeq          65
+      49: aload         5
+      51: aload_3
+      52: invokevirtual #43                 // Method org/apache/dubbo/registry/integration/DynamicDirectory.getRegisteredConsumerUrl:()Lorg/apache/dubbo/common/URL;
+      55: invokeinterface #49,  2           // InterfaceMethod org/apache/dubbo/registry/Registry.register:(Lorg/apache/dubbo/common/URL;)V
+      60: aload_3
+      61: aload_2
+      62: invokevirtual #50                 // Method org/apache/dubbo/registry/integration/DynamicDirectory.setRegisteredConsumerUrl:(Lorg/apache/dubbo/common/URL;)V
+      65: aload_3
+      66: aload_2
+      67: invokevirtual #51                 // Method org/apache/dubbo/registry/integration/DynamicDirectory.buildRouterChain:(Lorg/apache/dubbo/common/URL;)V
+      70: aload_3
+      71: aload_2
+      72: invokestatic  #46                 // Method org/apache/dubbo/registry/integration/RegistryProtocol.toSubscribeUrl:(Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/common/URL;
+      75: invokevirtual #52                 // Method org/apache/dubbo/registry/integration/DynamicDirectory.subscribe:(Lorg/apache/dubbo/common/URL;)V
+      78: return
+
+  public boolean migrateToForceInterfaceInvoker(org.apache.dubbo.registry.client.migration.model.MigrationRule);
+    Code:
+       0: new           #53                 // class java/util/concurrent/CountDownLatch
+       3: dup
+       4: iconst_1
+       5: invokespecial #54                 // Method java/util/concurrent/CountDownLatch."<init>":(I)V
+       8: astore_2
+       9: aload_0
+      10: aload_2
+      11: invokevirtual #55                 // Method refreshInterfaceInvoker:(Ljava/util/concurrent/CountDownLatch;)V
+      14: aload_0
+      15: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      18: ifnonnull     31
+      21: aload_0
+      22: aload_0
+      23: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      26: putfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      29: iconst_1
+      30: ireturn
+      31: aload_0
+      32: aload_1
+      33: aload_2
+      34: invokespecial #56                 // Method waitAddressNotify:(Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;Ljava/util/concurrent/CountDownLatch;)V
+      37: aload_1
+      38: aload_0
+      39: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+      42: invokevirtual #57                 // Method org/apache/dubbo/registry/client/migration/model/MigrationRule.getForce:(Lorg/apache/dubbo/common/URL;)Z
+      45: ifeq          62
+      48: aload_0
+      49: aload_0
+      50: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      53: putfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      56: aload_0
+      57: invokevirtual #58                 // Method destroyServiceDiscoveryInvoker:()V
+      60: iconst_1
+      61: ireturn
+      62: aload_0
+      63: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+      66: ifnonnull     73
+      69: aconst_null
+      70: goto          80
+      73: aload_0
+      74: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+      77: invokevirtual #59                 // Method org/apache/dubbo/common/URL.getScopeModel:()Lorg/apache/dubbo/rpc/model/ScopeModel;
+      80: invokestatic  #60                 // Method org/apache/dubbo/rpc/model/ScopeModelUtil.getApplicationModel:(Lorg/apache/dubbo/rpc/model/ScopeModel;)Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      83: ldc           #61                 // class org/apache/dubbo/registry/client/migration/MigrationAddressComparator
+      85: invokevirtual #62                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      88: invokevirtual #63                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getSupportedExtensionInstances:()Ljava/util/Set;
+      91: astore_3
+      92: aload_3
+      93: invokestatic  #64                 // Method org/apache/dubbo/common/utils/CollectionUtils.isNotEmpty:(Ljava/util/Collection;)Z
+      96: ifeq          134
+      99: aload_3
+     100: invokeinterface #65,  1           // InterfaceMethod java/util/Set.stream:()Ljava/util/stream/Stream;
+     105: aload_0
+     106: aload_1
+     107: invokedynamic #66,  0             // InvokeDynamic #0:test:(Lorg/apache/dubbo/registry/client/migration/MigrationInvoker;Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;)Ljava/util/function/Predicate;
+     112: invokeinterface #67,  2           // InterfaceMethod java/util/stream/Stream.allMatch:(Ljava/util/function/Predicate;)Z
+     117: ifeq          134
+     120: aload_0
+     121: aload_0
+     122: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+     125: putfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+     128: aload_0
+     129: invokevirtual #58                 // Method destroyServiceDiscoveryInvoker:()V
+     132: iconst_1
+     133: ireturn
+     134: aload_0
+     135: getfield      #68                 // Field step:Lorg/apache/dubbo/registry/client/migration/model/MigrationStep;
+     138: getstatic     #69                 // Field org/apache/dubbo/registry/client/migration/model/MigrationStep.FORCE_APPLICATION:Lorg/apache/dubbo/registry/client/migration/model/MigrationStep;
+     141: if_acmpne     148
+     144: aload_0
+     145: invokevirtual #70                 // Method destroyInterfaceInvoker:()V
+     148: iconst_0
+     149: ireturn
+
+  public boolean migrateToForceApplicationInvoker(org.apache.dubbo.registry.client.migration.model.MigrationRule);
+    Code:
+       0: new           #53                 // class java/util/concurrent/CountDownLatch
+       3: dup
+       4: iconst_1
+       5: invokespecial #54                 // Method java/util/concurrent/CountDownLatch."<init>":(I)V
+       8: astore_2
+       9: aload_0
+      10: aload_2
+      11: invokevirtual #71                 // Method refreshServiceDiscoveryInvoker:(Ljava/util/concurrent/CountDownLatch;)V
+      14: aload_0
+      15: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      18: ifnonnull     31
+      21: aload_0
+      22: aload_0
+      23: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      26: putfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      29: iconst_1
+      30: ireturn
+      31: aload_0
+      32: aload_1
+      33: aload_2
+      34: invokespecial #56                 // Method waitAddressNotify:(Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;Ljava/util/concurrent/CountDownLatch;)V
+      37: aload_1
+      38: aload_0
+      39: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+      42: invokevirtual #57                 // Method org/apache/dubbo/registry/client/migration/model/MigrationRule.getForce:(Lorg/apache/dubbo/common/URL;)Z
+      45: ifeq          62
+      48: aload_0
+      49: aload_0
+      50: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      53: putfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      56: aload_0
+      57: invokevirtual #70                 // Method destroyInterfaceInvoker:()V
+      60: iconst_1
+      61: ireturn
+      62: aload_0
+      63: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+      66: ifnonnull     73
+      69: aconst_null
+      70: goto          80
+      73: aload_0
+      74: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+      77: invokevirtual #59                 // Method org/apache/dubbo/common/URL.getScopeModel:()Lorg/apache/dubbo/rpc/model/ScopeModel;
+      80: invokestatic  #60                 // Method org/apache/dubbo/rpc/model/ScopeModelUtil.getApplicationModel:(Lorg/apache/dubbo/rpc/model/ScopeModel;)Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      83: ldc           #61                 // class org/apache/dubbo/registry/client/migration/MigrationAddressComparator
+      85: invokevirtual #62                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      88: invokevirtual #63                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getSupportedExtensionInstances:()Ljava/util/Set;
+      91: astore_3
+      92: aload_3
+      93: invokestatic  #64                 // Method org/apache/dubbo/common/utils/CollectionUtils.isNotEmpty:(Ljava/util/Collection;)Z
+      96: ifeq          134
+      99: aload_3
+     100: invokeinterface #65,  1           // InterfaceMethod java/util/Set.stream:()Ljava/util/stream/Stream;
+     105: aload_0
+     106: aload_1
+     107: invokedynamic #72,  0             // InvokeDynamic #1:test:(Lorg/apache/dubbo/registry/client/migration/MigrationInvoker;Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;)Ljava/util/function/Predicate;
+     112: invokeinterface #67,  2           // InterfaceMethod java/util/stream/Stream.allMatch:(Ljava/util/function/Predicate;)Z
+     117: ifeq          134
+     120: aload_0
+     121: aload_0
+     122: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+     125: putfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+     128: aload_0
+     129: invokevirtual #70                 // Method destroyInterfaceInvoker:()V
+     132: iconst_1
+     133: ireturn
+     134: aload_0
+     135: getfield      #68                 // Field step:Lorg/apache/dubbo/registry/client/migration/model/MigrationStep;
+     138: getstatic     #73                 // Field org/apache/dubbo/registry/client/migration/model/MigrationStep.FORCE_INTERFACE:Lorg/apache/dubbo/registry/client/migration/model/MigrationStep;
+     141: if_acmpne     148
+     144: aload_0
+     145: invokevirtual #58                 // Method destroyServiceDiscoveryInvoker:()V
+     148: iconst_0
+     149: ireturn
+
+  public void migrateToApplicationFirstInvoker(org.apache.dubbo.registry.client.migration.model.MigrationRule);
+    Code:
+       0: new           #53                 // class java/util/concurrent/CountDownLatch
+       3: dup
+       4: iconst_0
+       5: invokespecial #54                 // Method java/util/concurrent/CountDownLatch."<init>":(I)V
+       8: astore_2
+       9: aload_0
+      10: aload_2
+      11: invokevirtual #55                 // Method refreshInterfaceInvoker:(Ljava/util/concurrent/CountDownLatch;)V
+      14: aload_0
+      15: aload_2
+      16: invokevirtual #71                 // Method refreshServiceDiscoveryInvoker:(Ljava/util/concurrent/CountDownLatch;)V
+      19: aload_0
+      20: aload_1
+      21: invokespecial #74                 // Method calcPreferredInvoker:(Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;)V
+      24: return
+
+  private void waitAddressNotify(org.apache.dubbo.registry.client.migration.model.MigrationRule, java.util.concurrent.CountDownLatch);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+       5: invokevirtual #75                 // Method org/apache/dubbo/registry/client/migration/model/MigrationRule.getDelay:(Lorg/apache/dubbo/common/URL;)I
+       8: istore_3
+       9: iload_3
+      10: ifle          65
+      13: iload_3
+      14: i2l
+      15: ldc2_w        #76                 // long 1000l
+      18: lmul
+      19: invokestatic  #78                 // Method java/lang/Thread.sleep:(J)V
+      22: goto          67
+      25: astore        4
+      27: aload_0
+      28: getfield      #7                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      31: ldc           #80                 // String 1-7
+      33: ldc           #81                 // String
+      35: ldc           #81                 // String
+      37: new           #82                 // class java/lang/StringBuilder
+      40: dup
+      41: invokespecial #83                 // Method java/lang/StringBuilder."<init>":()V
+      44: ldc           #84                 // String Interrupted when waiting for address notify!
+      46: invokevirtual #85                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      49: aload         4
+      51: invokevirtual #86                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      54: invokevirtual #87                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      57: invokeinterface #88,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      62: goto          67
+      65: iconst_0
+      66: istore_3
+      67: aload_2
+      68: iload_3
+      69: i2l
+      70: getstatic     #89                 // Field java/util/concurrent/TimeUnit.SECONDS:Ljava/util/concurrent/TimeUnit;
+      73: invokevirtual #90                 // Method java/util/concurrent/CountDownLatch.await:(JLjava/util/concurrent/TimeUnit;)Z
+      76: pop
+      77: goto          117
+      80: astore        4
+      82: aload_0
+      83: getfield      #7                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      86: ldc           #80                 // String 1-7
+      88: ldc           #81                 // String
+      90: ldc           #81                 // String
+      92: new           #82                 // class java/lang/StringBuilder
+      95: dup
+      96: invokespecial #83                 // Method java/lang/StringBuilder."<init>":()V
+      99: ldc           #84                 // String Interrupted when waiting for address notify!
+     101: invokevirtual #85                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     104: aload         4
+     106: invokevirtual #86                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     109: invokevirtual #87                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     112: invokeinterface #88,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     117: return
+    Exception table:
+       from    to  target type
+          13    22    25   Class java/lang/InterruptedException
+          67    77    80   Class java/lang/InterruptedException
+
+  public org.apache.dubbo.rpc.Result invoke(org.apache.dubbo.rpc.Invocation) throws org.apache.dubbo.rpc.RpcException;
+    Code:
+       0: aload_0
+       1: getfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       4: ifnull        77
+       7: aload_0
+       8: getfield      #68                 // Field step:Lorg/apache/dubbo/registry/client/migration/model/MigrationStep;
+      11: getstatic     #91                 // Field org/apache/dubbo/registry/client/migration/model/MigrationStep.APPLICATION_FIRST:Lorg/apache/dubbo/registry/client/migration/model/MigrationStep;
+      14: if_acmpne     66
+      17: aload_0
+      18: getfield      #8                  // Field promotion:I
+      21: bipush        100
+      23: if_icmpge     55
+      26: invokestatic  #92                 // Method java/util/concurrent/ThreadLocalRandom.current:()Ljava/util/concurrent/ThreadLocalRandom;
+      29: ldc2_w        #93                 // double 100.0d
+      32: invokevirtual #95                 // Method java/util/concurrent/ThreadLocalRandom.nextDouble:(D)D
+      35: aload_0
+      36: getfield      #8                  // Field promotion:I
+      39: i2d
+      40: dcmpl
+      41: ifle          55
+      44: aload_0
+      45: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      48: aload_1
+      49: invokeinterface #96,  2           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.invoke:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+      54: areturn
+      55: aload_0
+      56: invokespecial #97                 // Method decideInvoker:()Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      59: aload_1
+      60: invokeinterface #96,  2           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.invoke:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+      65: areturn
+      66: aload_0
+      67: getfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      70: aload_1
+      71: invokeinterface #96,  2           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.invoke:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+      76: areturn
+      77: getstatic     #98                 // Field org/apache/dubbo/registry/client/migration/MigrationInvoker$1.$SwitchMap$org$apache$dubbo$registry$client$migration$model$MigrationStep:[I
+      80: aload_0
+      81: getfield      #68                 // Field step:Lorg/apache/dubbo/registry/client/migration/model/MigrationStep;
+      84: invokevirtual #99                 // Method org/apache/dubbo/registry/client/migration/model/MigrationStep.ordinal:()I
+      87: iaload
+      88: tableswitch   { // 1 to 3
+                     1: 116
+                     2: 127
+                     3: 138
+               default: 138
+          }
+     116: aload_0
+     117: aload_0
+     118: invokespecial #97                 // Method decideInvoker:()Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+     121: putfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+     124: goto          146
+     127: aload_0
+     128: aload_0
+     129: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+     132: putfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+     135: goto          146
+     138: aload_0
+     139: aload_0
+     140: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+     143: putfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+     146: aload_0
+     147: getfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+     150: aload_1
+     151: invokeinterface #96,  2           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.invoke:(Lorg/apache/dubbo/rpc/Invocation;)Lorg/apache/dubbo/rpc/Result;
+     156: areturn
+
+  private org.apache.dubbo.rpc.cluster.ClusterInvoker<T> decideInvoker();
+    Code:
+       0: aload_0
+       1: getfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       4: aload_0
+       5: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       8: if_acmpne     32
+      11: aload_0
+      12: aload_0
+      13: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      16: invokevirtual #100                // Method checkInvokerAvailable:(Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;)Z
+      19: ifeq          27
+      22: aload_0
+      23: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      26: areturn
+      27: aload_0
+      28: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      31: areturn
+      32: aload_0
+      33: getfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      36: areturn
+
+  public boolean isAvailable();
+    Code:
+       0: aload_0
+       1: getfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       4: ifnull        19
+       7: aload_0
+       8: getfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      11: invokeinterface #101,  1          // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.isAvailable:()Z
+      16: goto          62
+      19: aload_0
+      20: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      23: ifnull        38
+      26: aload_0
+      27: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      30: invokeinterface #101,  1          // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.isAvailable:()Z
+      35: ifne          57
+      38: aload_0
+      39: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      42: ifnull        61
+      45: aload_0
+      46: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      49: invokeinterface #101,  1          // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.isAvailable:()Z
+      54: ifeq          61
+      57: iconst_1
+      58: goto          62
+      61: iconst_0
+      62: ireturn
+
+  public void destroy();
+    Code:
+       0: aload_0
+       1: getfield      #102                // Field migrationRuleListener:Lorg/apache/dubbo/registry/client/migration/MigrationRuleListener;
+       4: ifnull        15
+       7: aload_0
+       8: getfield      #102                // Field migrationRuleListener:Lorg/apache/dubbo/registry/client/migration/MigrationRuleListener;
+      11: aload_0
+      12: invokevirtual #103                // Method org/apache/dubbo/registry/client/migration/MigrationRuleListener.removeMigrationInvoker:(Lorg/apache/dubbo/registry/client/migration/MigrationInvoker;)V
+      15: aload_0
+      16: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      19: ifnull        31
+      22: aload_0
+      23: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      26: invokeinterface #104,  1          // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.destroy:()V
+      31: aload_0
+      32: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      35: ifnull        47
+      38: aload_0
+      39: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      42: invokeinterface #104,  1          // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.destroy:()V
+      47: aload_0
+      48: getfield      #19                 // Field consumerModel:Lorg/apache/dubbo/rpc/model/ConsumerModel;
+      51: ifnull        117
+      54: aload_0
+      55: getfield      #19                 // Field consumerModel:Lorg/apache/dubbo/rpc/model/ConsumerModel;
+      58: invokevirtual #25                 // Method org/apache/dubbo/rpc/model/ConsumerModel.getServiceMetadata:()Lorg/apache/dubbo/rpc/model/ServiceMetadata;
+      61: ldc           #27                 // String currentClusterInvoker
+      63: invokevirtual #28                 // Method org/apache/dubbo/rpc/model/ServiceMetadata.getAttribute:(Ljava/lang/String;)Ljava/lang/Object;
+      66: astore_1
+      67: aload_1
+      68: instanceof    #29                 // class java/util/Map
+      71: ifeq          117
+      74: aload_1
+      75: checkcast     #29                 // class java/util/Map
+      78: astore_2
+      79: aload_2
+      80: aload_0
+      81: getfield      #13                 // Field registry:Lorg/apache/dubbo/registry/Registry;
+      84: invokeinterface #105,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      89: pop
+      90: aload_2
+      91: invokeinterface #106,  1          // InterfaceMethod java/util/Map.isEmpty:()Z
+      96: ifeq          117
+      99: aload_0
+     100: getfield      #19                 // Field consumerModel:Lorg/apache/dubbo/rpc/model/ConsumerModel;
+     103: invokevirtual #25                 // Method org/apache/dubbo/rpc/model/ConsumerModel.getServiceMetadata:()Lorg/apache/dubbo/rpc/model/ServiceMetadata;
+     106: invokevirtual #107                // Method org/apache/dubbo/rpc/model/ServiceMetadata.getAttributeMap:()Ljava/util/Map;
+     109: ldc           #27                 // String currentClusterInvoker
+     111: invokeinterface #105,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+     116: pop
+     117: return
+
+  public org.apache.dubbo.common.URL getUrl();
+    Code:
+       0: aload_0
+       1: getfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       4: ifnull        17
+       7: aload_0
+       8: getfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      11: invokeinterface #108,  1          // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.getUrl:()Lorg/apache/dubbo/common/URL;
+      16: areturn
+      17: aload_0
+      18: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      21: ifnull        34
+      24: aload_0
+      25: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      28: invokeinterface #108,  1          // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.getUrl:()Lorg/apache/dubbo/common/URL;
+      33: areturn
+      34: aload_0
+      35: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      38: ifnull        51
+      41: aload_0
+      42: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      45: invokeinterface #108,  1          // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.getUrl:()Lorg/apache/dubbo/common/URL;
+      50: areturn
+      51: aload_0
+      52: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+      55: areturn
+
+  public org.apache.dubbo.common.URL getRegistryUrl();
+    Code:
+       0: aload_0
+       1: getfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       4: ifnull        17
+       7: aload_0
+       8: getfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      11: invokeinterface #109,  1          // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.getRegistryUrl:()Lorg/apache/dubbo/common/URL;
+      16: areturn
+      17: aload_0
+      18: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      21: ifnull        34
+      24: aload_0
+      25: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      28: invokeinterface #109,  1          // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.getRegistryUrl:()Lorg/apache/dubbo/common/URL;
+      33: areturn
+      34: aload_0
+      35: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      38: ifnull        51
+      41: aload_0
+      42: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      45: invokeinterface #109,  1          // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.getRegistryUrl:()Lorg/apache/dubbo/common/URL;
+      50: areturn
+      51: aload_0
+      52: getfield      #15                 // Field url:Lorg/apache/dubbo/common/URL;
+      55: areturn
+
+  public org.apache.dubbo.rpc.cluster.Directory<T> getDirectory();
+    Code:
+       0: aload_0
+       1: getfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       4: ifnull        17
+       7: aload_0
+       8: getfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      11: invokeinterface #41,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.getDirectory:()Lorg/apache/dubbo/rpc/cluster/Directory;
+      16: areturn
+      17: aload_0
+      18: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      21: ifnull        34
+      24: aload_0
+      25: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      28: invokeinterface #41,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.getDirectory:()Lorg/apache/dubbo/rpc/cluster/Directory;
+      33: areturn
+      34: aload_0
+      35: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      38: ifnull        51
+      41: aload_0
+      42: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      45: invokeinterface #41,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.getDirectory:()Lorg/apache/dubbo/rpc/cluster/Directory;
+      50: areturn
+      51: aconst_null
+      52: areturn
+
+  public boolean isDestroyed();
+    Code:
+       0: aload_0
+       1: getfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       4: ifnull        19
+       7: aload_0
+       8: getfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      11: invokeinterface #39,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.isDestroyed:()Z
+      16: goto          62
+      19: aload_0
+      20: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      23: ifnull        38
+      26: aload_0
+      27: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      30: invokeinterface #39,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.isDestroyed:()Z
+      35: ifeq          61
+      38: aload_0
+      39: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      42: ifnull        57
+      45: aload_0
+      46: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      49: invokeinterface #39,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.isDestroyed:()Z
+      54: ifeq          61
+      57: iconst_1
+      58: goto          62
+      61: iconst_0
+      62: ireturn
+
+  public boolean isServiceDiscovery();
+    Code:
+       0: iconst_0
+       1: ireturn
+
+  public org.apache.dubbo.registry.client.migration.model.MigrationStep getMigrationStep();
+    Code:
+       0: aload_0
+       1: getfield      #68                 // Field step:Lorg/apache/dubbo/registry/client/migration/model/MigrationStep;
+       4: areturn
+
+  public void setMigrationStep(org.apache.dubbo.registry.client.migration.model.MigrationStep);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #68                 // Field step:Lorg/apache/dubbo/registry/client/migration/model/MigrationStep;
+       5: return
+
+  public org.apache.dubbo.registry.client.migration.model.MigrationRule getMigrationRule();
+    Code:
+       0: aload_0
+       1: getfield      #110                // Field rule:Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;
+       4: areturn
+
+  public void setMigrationRule(org.apache.dubbo.registry.client.migration.model.MigrationRule);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #110                // Field rule:Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;
+       5: aload_0
+       6: aload_1
+       7: aload_0
+       8: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+      11: invokevirtual #111                // Method org/apache/dubbo/registry/client/migration/model/MigrationRule.getProportion:(Lorg/apache/dubbo/common/URL;)I
+      14: putfield      #8                  // Field promotion:I
+      17: return
+
+  protected void destroyServiceDiscoveryInvoker();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       4: ifnull        15
+       7: aload_0
+       8: aload_0
+       9: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      12: putfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      15: aload_0
+      16: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      19: ifnull        94
+      22: aload_0
+      23: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      26: invokeinterface #39,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.isDestroyed:()Z
+      31: ifne          94
+      34: aload_0
+      35: getfield      #7                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      38: invokeinterface #112,  1          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isInfoEnabled:()Z
+      43: ifeq          80
+      46: aload_0
+      47: getfield      #7                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      50: new           #82                 // class java/lang/StringBuilder
+      53: dup
+      54: invokespecial #83                 // Method java/lang/StringBuilder."<init>":()V
+      57: ldc           #113                // String Destroying instance address invokers, will not listen for address changes until re-subscribed,
+      59: invokevirtual #85                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      62: aload_0
+      63: getfield      #14                 // Field type:Ljava/lang/Class;
+      66: invokevirtual #114                // Method java/lang/Class.getName:()Ljava/lang/String;
+      69: invokevirtual #85                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      72: invokevirtual #87                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      75: invokeinterface #115,  2          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      80: aload_0
+      81: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      84: invokeinterface #104,  1          // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.destroy:()V
+      89: aload_0
+      90: aconst_null
+      91: putfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      94: return
+
+  protected void refreshServiceDiscoveryInvoker(java.util.concurrent.CountDownLatch);
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       5: invokespecial #116                // Method clearListener:(Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;)V
+       8: aload_0
+       9: aload_0
+      10: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      13: invokespecial #117                // Method needRefresh:(Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;)Z
+      16: ifeq          108
+      19: aload_0
+      20: getfield      #7                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      23: invokeinterface #118,  1          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isDebugEnabled:()Z
+      28: ifeq          65
+      31: aload_0
+      32: getfield      #7                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      35: new           #82                 // class java/lang/StringBuilder
+      38: dup
+      39: invokespecial #83                 // Method java/lang/StringBuilder."<init>":()V
+      42: ldc           #119                // String Re-subscribing instance addresses, current interface
+      44: invokevirtual #85                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      47: aload_0
+      48: getfield      #14                 // Field type:Ljava/lang/Class;
+      51: invokevirtual #114                // Method java/lang/Class.getName:()Ljava/lang/String;
+      54: invokevirtual #85                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      57: invokevirtual #87                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      60: invokeinterface #120,  2          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.debug:(Ljava/lang/String;)V
+      65: aload_0
+      66: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      69: ifnull        81
+      72: aload_0
+      73: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      76: invokeinterface #104,  1          // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.destroy:()V
+      81: aload_0
+      82: aload_0
+      83: getfield      #11                 // Field registryProtocol:Lorg/apache/dubbo/registry/integration/RegistryProtocol;
+      86: aload_0
+      87: getfield      #12                 // Field cluster:Lorg/apache/dubbo/rpc/cluster/Cluster;
+      90: aload_0
+      91: getfield      #13                 // Field registry:Lorg/apache/dubbo/registry/Registry;
+      94: aload_0
+      95: getfield      #14                 // Field type:Ljava/lang/Class;
+      98: aload_0
+      99: getfield      #15                 // Field url:Lorg/apache/dubbo/common/URL;
+     102: invokevirtual #121                // Method org/apache/dubbo/registry/integration/RegistryProtocol.getServiceDiscoveryInvoker:(Lorg/apache/dubbo/rpc/cluster/Cluster;Lorg/apache/dubbo/registry/Registry;Ljava/lang/Class;Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+     105: putfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+     108: aload_0
+     109: aload_0
+     110: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+     113: aload_0
+     114: aload_1
+     115: invokedynamic #122,  0            // InvokeDynamic #2:onChange:(Lorg/apache/dubbo/registry/client/migration/MigrationInvoker;Ljava/util/concurrent/CountDownLatch;)Lorg/apache/dubbo/registry/client/migration/InvokersChangedListener;
+     120: invokespecial #123                // Method setListener:(Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;Lorg/apache/dubbo/registry/client/migration/InvokersChangedListener;)V
+     123: return
+
+  protected void refreshInterfaceInvoker(java.util.concurrent.CountDownLatch);
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       5: invokespecial #116                // Method clearListener:(Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;)V
+       8: aload_0
+       9: aload_0
+      10: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      13: invokespecial #117                // Method needRefresh:(Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;)Z
+      16: ifeq          108
+      19: aload_0
+      20: getfield      #7                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      23: invokeinterface #118,  1          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isDebugEnabled:()Z
+      28: ifeq          65
+      31: aload_0
+      32: getfield      #7                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      35: new           #82                 // class java/lang/StringBuilder
+      38: dup
+      39: invokespecial #83                 // Method java/lang/StringBuilder."<init>":()V
+      42: ldc           #124                // String Re-subscribing interface addresses for interface
+      44: invokevirtual #85                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      47: aload_0
+      48: getfield      #14                 // Field type:Ljava/lang/Class;
+      51: invokevirtual #114                // Method java/lang/Class.getName:()Ljava/lang/String;
+      54: invokevirtual #85                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      57: invokevirtual #87                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      60: invokeinterface #120,  2          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.debug:(Ljava/lang/String;)V
+      65: aload_0
+      66: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      69: ifnull        81
+      72: aload_0
+      73: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      76: invokeinterface #104,  1          // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.destroy:()V
+      81: aload_0
+      82: aload_0
+      83: getfield      #11                 // Field registryProtocol:Lorg/apache/dubbo/registry/integration/RegistryProtocol;
+      86: aload_0
+      87: getfield      #12                 // Field cluster:Lorg/apache/dubbo/rpc/cluster/Cluster;
+      90: aload_0
+      91: getfield      #13                 // Field registry:Lorg/apache/dubbo/registry/Registry;
+      94: aload_0
+      95: getfield      #14                 // Field type:Ljava/lang/Class;
+      98: aload_0
+      99: getfield      #15                 // Field url:Lorg/apache/dubbo/common/URL;
+     102: invokevirtual #125                // Method org/apache/dubbo/registry/integration/RegistryProtocol.getInvoker:(Lorg/apache/dubbo/rpc/cluster/Cluster;Lorg/apache/dubbo/registry/Registry;Ljava/lang/Class;Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+     105: putfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+     108: aload_0
+     109: aload_0
+     110: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+     113: aload_0
+     114: aload_1
+     115: invokedynamic #126,  0            // InvokeDynamic #3:onChange:(Lorg/apache/dubbo/registry/client/migration/MigrationInvoker;Ljava/util/concurrent/CountDownLatch;)Lorg/apache/dubbo/registry/client/migration/InvokersChangedListener;
+     120: invokespecial #123                // Method setListener:(Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;Lorg/apache/dubbo/registry/client/migration/InvokersChangedListener;)V
+     123: return
+
+  private synchronized void calcPreferredInvoker(org.apache.dubbo.registry.client.migration.model.MigrationRule);
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       4: ifnull        14
+       7: aload_0
+       8: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      11: ifnonnull     15
+      14: return
+      15: aload_0
+      16: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+      19: ifnonnull     26
+      22: aconst_null
+      23: goto          33
+      26: aload_0
+      27: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+      30: invokevirtual #59                 // Method org/apache/dubbo/common/URL.getScopeModel:()Lorg/apache/dubbo/rpc/model/ScopeModel;
+      33: invokestatic  #60                 // Method org/apache/dubbo/rpc/model/ScopeModelUtil.getApplicationModel:(Lorg/apache/dubbo/rpc/model/ScopeModel;)Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      36: ldc           #61                 // class org/apache/dubbo/registry/client/migration/MigrationAddressComparator
+      38: invokevirtual #62                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getExtensionLoader:(Ljava/lang/Class;)Lorg/apache/dubbo/common/extension/ExtensionLoader;
+      41: invokevirtual #63                 // Method org/apache/dubbo/common/extension/ExtensionLoader.getSupportedExtensionInstances:()Ljava/util/Set;
+      44: astore_2
+      45: aload_2
+      46: invokestatic  #64                 // Method org/apache/dubbo/common/utils/CollectionUtils.isNotEmpty:(Ljava/util/Collection;)Z
+      49: ifeq          92
+      52: aload_2
+      53: invokeinterface #65,  1           // InterfaceMethod java/util/Set.stream:()Ljava/util/stream/Stream;
+      58: aload_0
+      59: aload_1
+      60: invokedynamic #127,  0            // InvokeDynamic #4:test:(Lorg/apache/dubbo/registry/client/migration/MigrationInvoker;Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;)Ljava/util/function/Predicate;
+      65: invokeinterface #67,  2           // InterfaceMethod java/util/stream/Stream.allMatch:(Ljava/util/function/Predicate;)Z
+      70: ifeq          84
+      73: aload_0
+      74: aload_0
+      75: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      78: putfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      81: goto          92
+      84: aload_0
+      85: aload_0
+      86: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      89: putfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      92: return
+
+  protected void destroyInterfaceInvoker();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       4: ifnull        15
+       7: aload_0
+       8: aload_0
+       9: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      12: putfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      15: aload_0
+      16: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      19: ifnull        94
+      22: aload_0
+      23: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      26: invokeinterface #39,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.isDestroyed:()Z
+      31: ifne          94
+      34: aload_0
+      35: getfield      #7                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      38: invokeinterface #112,  1          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isInfoEnabled:()Z
+      43: ifeq          80
+      46: aload_0
+      47: getfield      #7                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      50: new           #82                 // class java/lang/StringBuilder
+      53: dup
+      54: invokespecial #83                 // Method java/lang/StringBuilder."<init>":()V
+      57: ldc           #128                // String Destroying interface address invokers, will not listen for address changes until re-subscribed,
+      59: invokevirtual #85                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      62: aload_0
+      63: getfield      #14                 // Field type:Ljava/lang/Class;
+      66: invokevirtual #114                // Method java/lang/Class.getName:()Ljava/lang/String;
+      69: invokevirtual #85                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      72: invokevirtual #87                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      75: invokeinterface #115,  2          // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      80: aload_0
+      81: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      84: invokeinterface #104,  1          // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.destroy:()V
+      89: aload_0
+      90: aconst_null
+      91: putfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+      94: return
+
+  private void clearListener(org.apache.dubbo.rpc.cluster.ClusterInvoker<T>);
+    Code:
+       0: aload_1
+       1: ifnonnull     5
+       4: return
+       5: aload_1
+       6: invokeinterface #41,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.getDirectory:()Lorg/apache/dubbo/rpc/cluster/Directory;
+      11: checkcast     #42                 // class org/apache/dubbo/registry/integration/DynamicDirectory
+      14: astore_2
+      15: aload_2
+      16: aconst_null
+      17: invokevirtual #129                // Method org/apache/dubbo/registry/integration/DynamicDirectory.setInvokersChangedListener:(Lorg/apache/dubbo/registry/client/migration/InvokersChangedListener;)V
+      20: return
+
+  private void setListener(org.apache.dubbo.rpc.cluster.ClusterInvoker<T>, org.apache.dubbo.registry.client.migration.InvokersChangedListener);
+    Code:
+       0: aload_1
+       1: ifnonnull     5
+       4: return
+       5: aload_1
+       6: invokeinterface #41,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.getDirectory:()Lorg/apache/dubbo/rpc/cluster/Directory;
+      11: checkcast     #42                 // class org/apache/dubbo/registry/integration/DynamicDirectory
+      14: astore_3
+      15: aload_3
+      16: aload_2
+      17: invokevirtual #129                // Method org/apache/dubbo/registry/integration/DynamicDirectory.setInvokersChangedListener:(Lorg/apache/dubbo/registry/client/migration/InvokersChangedListener;)V
+      20: return
+
+  private boolean needRefresh(org.apache.dubbo.rpc.cluster.ClusterInvoker<T>);
+    Code:
+       0: aload_1
+       1: ifnull        22
+       4: aload_1
+       5: invokeinterface #39,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.isDestroyed:()Z
+      10: ifne          22
+      13: aload_1
+      14: invokeinterface #130,  1          // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.hasProxyInvokers:()Z
+      19: ifne          26
+      22: iconst_1
+      23: goto          27
+      26: iconst_0
+      27: ireturn
+
+  public boolean checkInvokerAvailable(org.apache.dubbo.rpc.cluster.ClusterInvoker<T>);
+    Code:
+       0: aload_1
+       1: ifnull        26
+       4: aload_1
+       5: invokeinterface #39,  1           // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.isDestroyed:()Z
+      10: ifne          26
+      13: aload_1
+      14: invokeinterface #101,  1          // InterfaceMethod org/apache/dubbo/rpc/cluster/ClusterInvoker.isAvailable:()Z
+      19: ifeq          26
+      22: iconst_1
+      23: goto          27
+      26: iconst_0
+      27: ireturn
+
+  protected void setCurrentAvailableInvoker(org.apache.dubbo.rpc.cluster.ClusterInvoker<T>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #34                 // Field currentAvailableInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       5: return
+
+  protected void setMigrationRuleListener(org.apache.dubbo.registry.client.migration.MigrationRuleListener);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #102                // Field migrationRuleListener:Lorg/apache/dubbo/registry/client/migration/MigrationRuleListener;
+       5: return
+
+  public org.apache.dubbo.rpc.cluster.Cluster getCluster();
+    Code:
+       0: aload_0
+       1: getfield      #12                 // Field cluster:Lorg/apache/dubbo/rpc/cluster/Cluster;
+       4: areturn
+
+  public org.apache.dubbo.common.URL getConsumerUrl();
+    Code:
+       0: aload_0
+       1: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+       4: areturn
+
+  private boolean lambda$calcPreferredInvoker$4(org.apache.dubbo.registry.client.migration.model.MigrationRule, org.apache.dubbo.registry.client.migration.MigrationAddressComparator);
+    Code:
+       0: aload_2
+       1: aload_0
+       2: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       5: aload_0
+       6: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       9: aload_1
+      10: invokeinterface #131,  4          // InterfaceMethod org/apache/dubbo/registry/client/migration/MigrationAddressComparator.shouldMigrate:(Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;)Z
+      15: ireturn
+
+  private void lambda$refreshInterfaceInvoker$3(java.util.concurrent.CountDownLatch);
+    Code:
+       0: aload_1
+       1: invokevirtual #132                // Method java/util/concurrent/CountDownLatch.countDown:()V
+       4: aload_0
+       5: getfield      #24                 // Field reportService:Lorg/apache/dubbo/common/status/reporter/FrameworkStatusReportService;
+       8: invokevirtual #133                // Method org/apache/dubbo/common/status/reporter/FrameworkStatusReportService.hasReporter:()Z
+      11: ifeq          51
+      14: aload_0
+      15: getfield      #24                 // Field reportService:Lorg/apache/dubbo/common/status/reporter/FrameworkStatusReportService;
+      18: aload_0
+      19: getfield      #24                 // Field reportService:Lorg/apache/dubbo/common/status/reporter/FrameworkStatusReportService;
+      22: aload_0
+      23: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+      26: invokevirtual #134                // Method org/apache/dubbo/common/URL.getServiceInterface:()Ljava/lang/String;
+      29: aload_0
+      30: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+      33: invokevirtual #135                // Method org/apache/dubbo/common/URL.getVersion:()Ljava/lang/String;
+      36: aload_0
+      37: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+      40: invokevirtual #136                // Method org/apache/dubbo/common/URL.getGroup:()Ljava/lang/String;
+      43: ldc           #137                // String interface
+      45: invokevirtual #138                // Method org/apache/dubbo/common/status/reporter/FrameworkStatusReportService.createConsumptionReport:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      48: invokevirtual #139                // Method org/apache/dubbo/common/status/reporter/FrameworkStatusReportService.reportConsumptionStatus:(Ljava/lang/Object;)V
+      51: aload_0
+      52: getfield      #68                 // Field step:Lorg/apache/dubbo/registry/client/migration/model/MigrationStep;
+      55: getstatic     #91                 // Field org/apache/dubbo/registry/client/migration/model/MigrationStep.APPLICATION_FIRST:Lorg/apache/dubbo/registry/client/migration/model/MigrationStep;
+      58: if_acmpne     69
+      61: aload_0
+      62: aload_0
+      63: getfield      #110                // Field rule:Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;
+      66: invokespecial #74                 // Method calcPreferredInvoker:(Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;)V
+      69: return
+
+  private void lambda$refreshServiceDiscoveryInvoker$2(java.util.concurrent.CountDownLatch);
+    Code:
+       0: aload_1
+       1: invokevirtual #132                // Method java/util/concurrent/CountDownLatch.countDown:()V
+       4: aload_0
+       5: getfield      #24                 // Field reportService:Lorg/apache/dubbo/common/status/reporter/FrameworkStatusReportService;
+       8: invokevirtual #133                // Method org/apache/dubbo/common/status/reporter/FrameworkStatusReportService.hasReporter:()Z
+      11: ifeq          51
+      14: aload_0
+      15: getfield      #24                 // Field reportService:Lorg/apache/dubbo/common/status/reporter/FrameworkStatusReportService;
+      18: aload_0
+      19: getfield      #24                 // Field reportService:Lorg/apache/dubbo/common/status/reporter/FrameworkStatusReportService;
+      22: aload_0
+      23: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+      26: invokevirtual #134                // Method org/apache/dubbo/common/URL.getServiceInterface:()Ljava/lang/String;
+      29: aload_0
+      30: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+      33: invokevirtual #135                // Method org/apache/dubbo/common/URL.getVersion:()Ljava/lang/String;
+      36: aload_0
+      37: getfield      #16                 // Field consumerUrl:Lorg/apache/dubbo/common/URL;
+      40: invokevirtual #136                // Method org/apache/dubbo/common/URL.getGroup:()Ljava/lang/String;
+      43: ldc           #140                // String app
+      45: invokevirtual #138                // Method org/apache/dubbo/common/status/reporter/FrameworkStatusReportService.createConsumptionReport:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      48: invokevirtual #139                // Method org/apache/dubbo/common/status/reporter/FrameworkStatusReportService.reportConsumptionStatus:(Ljava/lang/Object;)V
+      51: aload_0
+      52: getfield      #68                 // Field step:Lorg/apache/dubbo/registry/client/migration/model/MigrationStep;
+      55: getstatic     #91                 // Field org/apache/dubbo/registry/client/migration/model/MigrationStep.APPLICATION_FIRST:Lorg/apache/dubbo/registry/client/migration/model/MigrationStep;
+      58: if_acmpne     69
+      61: aload_0
+      62: aload_0
+      63: getfield      #110                // Field rule:Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;
+      66: invokespecial #74                 // Method calcPreferredInvoker:(Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;)V
+      69: return
+
+  private boolean lambda$migrateToForceApplicationInvoker$1(org.apache.dubbo.registry.client.migration.model.MigrationRule, org.apache.dubbo.registry.client.migration.MigrationAddressComparator);
+    Code:
+       0: aload_2
+       1: aload_0
+       2: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       5: aload_0
+       6: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       9: aload_1
+      10: invokeinterface #131,  4          // InterfaceMethod org/apache/dubbo/registry/client/migration/MigrationAddressComparator.shouldMigrate:(Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;)Z
+      15: ireturn
+
+  private boolean lambda$migrateToForceInterfaceInvoker$0(org.apache.dubbo.registry.client.migration.model.MigrationRule, org.apache.dubbo.registry.client.migration.MigrationAddressComparator);
+    Code:
+       0: aload_2
+       1: aload_0
+       2: getfield      #9                  // Field invoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       5: aload_0
+       6: getfield      #10                 // Field serviceDiscoveryInvoker:Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;
+       9: aload_1
+      10: invokeinterface #131,  4          // InterfaceMethod org/apache/dubbo/registry/client/migration/MigrationAddressComparator.shouldMigrate:(Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;Lorg/apache/dubbo/rpc/cluster/ClusterInvoker;Lorg/apache/dubbo/registry/client/migration/model/MigrationRule;)Z
+      15: ireturn
+}

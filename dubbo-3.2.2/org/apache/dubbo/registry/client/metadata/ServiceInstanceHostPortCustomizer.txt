@@ -1,0 +1,129 @@
+Compiled from "ServiceInstanceHostPortCustomizer.java"
+public class org.apache.dubbo.registry.client.metadata.ServiceInstanceHostPortCustomizer implements org.apache.dubbo.registry.client.ServiceInstanceCustomizer {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  public org.apache.dubbo.registry.client.metadata.ServiceInstanceHostPortCustomizer();
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public void customize(org.apache.dubbo.registry.client.ServiceInstance, org.apache.dubbo.rpc.model.ApplicationModel);
+    Code:
+       0: aload_1
+       1: invokeinterface #3,  1            // InterfaceMethod org/apache/dubbo/registry/client/ServiceInstance.getPort:()I
+       6: ifle          10
+       9: return
+      10: aload_1
+      11: invokeinterface #4,  1            // InterfaceMethod org/apache/dubbo/registry/client/ServiceInstance.getServiceMetadata:()Lorg/apache/dubbo/metadata/MetadataInfo;
+      16: astore_3
+      17: aload_3
+      18: ifnull        31
+      21: aload_3
+      22: invokevirtual #5                  // Method org/apache/dubbo/metadata/MetadataInfo.getExportedServiceURLs:()Ljava/util/concurrent/ConcurrentNavigableMap;
+      25: invokestatic  #6                  // Method org/apache/dubbo/common/utils/CollectionUtils.isEmptyMap:(Ljava/util/Map;)Z
+      28: ifeq          32
+      31: return
+      32: aconst_null
+      33: astore        4
+      35: iconst_m1
+      36: istore        5
+      38: aload_3
+      39: invokevirtual #7                  // Method org/apache/dubbo/metadata/MetadataInfo.collectExportedURLSet:()Ljava/util/Set;
+      42: astore        6
+      44: aload         6
+      46: invokestatic  #8                  // Method org/apache/dubbo/common/utils/CollectionUtils.isNotEmpty:(Ljava/util/Collection;)Z
+      49: ifeq          272
+      52: aload_2
+      53: invokevirtual #9                  // Method org/apache/dubbo/rpc/model/ApplicationModel.getCurrentConfig:()Lorg/apache/dubbo/config/ApplicationConfig;
+      56: invokevirtual #10                 // Method org/apache/dubbo/config/ApplicationConfig.getProtocol:()Ljava/lang/String;
+      59: astore        7
+      61: aload         7
+      63: ifnull        214
+      66: aload         6
+      68: invokeinterface #11,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      73: astore        8
+      75: aload         8
+      77: invokeinterface #12,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      82: ifeq          130
+      85: aload         8
+      87: invokeinterface #13,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      92: checkcast     #14                 // class org/apache/dubbo/common/URL
+      95: astore        9
+      97: aload         7
+      99: aload         9
+     101: invokevirtual #15                 // Method org/apache/dubbo/common/URL.getProtocol:()Ljava/lang/String;
+     104: invokevirtual #16                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+     107: ifeq          127
+     110: aload         9
+     112: invokevirtual #17                 // Method org/apache/dubbo/common/URL.getHost:()Ljava/lang/String;
+     115: astore        4
+     117: aload         9
+     119: invokevirtual #18                 // Method org/apache/dubbo/common/URL.getPort:()I
+     122: istore        5
+     124: goto          130
+     127: goto          75
+     130: aload         4
+     132: ifnull        141
+     135: iload         5
+     137: iconst_m1
+     138: if_icmpne     245
+     141: getstatic     #19                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     144: ldc           #20                 // String 4-2
+     146: ldc           #21                 // String typo in preferred protocol
+     148: ldc           #22                 // String
+     150: new           #23                 // class java/lang/StringBuilder
+     153: dup
+     154: invokespecial #24                 // Method java/lang/StringBuilder."<init>":()V
+     157: ldc           #25                 // String Can\'t find an instance URL using the default preferredProtocol \"
+     159: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     162: aload         7
+     164: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     167: ldc           #27                 // String \", falling back to the strategy that pick the first found protocol. Please try modifying the config of dubbo.application.protocol
+     169: invokevirtual #26                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     172: invokevirtual #28                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     175: invokeinterface #29,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     180: aload         6
+     182: invokeinterface #11,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     187: invokeinterface #13,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     192: checkcast     #14                 // class org/apache/dubbo/common/URL
+     195: astore        8
+     197: aload         8
+     199: invokevirtual #17                 // Method org/apache/dubbo/common/URL.getHost:()Ljava/lang/String;
+     202: astore        4
+     204: aload         8
+     206: invokevirtual #18                 // Method org/apache/dubbo/common/URL.getPort:()I
+     209: istore        5
+     211: goto          245
+     214: aload         6
+     216: invokeinterface #11,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     221: invokeinterface #13,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     226: checkcast     #14                 // class org/apache/dubbo/common/URL
+     229: astore        8
+     231: aload         8
+     233: invokevirtual #17                 // Method org/apache/dubbo/common/URL.getHost:()Ljava/lang/String;
+     236: astore        4
+     238: aload         8
+     240: invokevirtual #18                 // Method org/apache/dubbo/common/URL.getPort:()I
+     243: istore        5
+     245: aload_1
+     246: instanceof    #30                 // class org/apache/dubbo/registry/client/DefaultServiceInstance
+     249: ifeq          272
+     252: aload_1
+     253: checkcast     #30                 // class org/apache/dubbo/registry/client/DefaultServiceInstance
+     256: astore        8
+     258: aload         8
+     260: aload         4
+     262: invokevirtual #31                 // Method org/apache/dubbo/registry/client/DefaultServiceInstance.setHost:(Ljava/lang/String;)V
+     265: aload         8
+     267: iload         5
+     269: invokevirtual #32                 // Method org/apache/dubbo/registry/client/DefaultServiceInstance.setPort:(I)V
+     272: return
+
+  static {};
+    Code:
+       0: ldc           #33                 // class org/apache/dubbo/registry/client/metadata/ServiceInstanceHostPortCustomizer
+       2: invokestatic  #34                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #19                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}
