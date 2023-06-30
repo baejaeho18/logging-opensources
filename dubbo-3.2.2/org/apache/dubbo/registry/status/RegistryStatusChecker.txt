@@ -1,0 +1,85 @@
+Compiled from "RegistryStatusChecker.java"
+public class org.apache.dubbo.registry.status.RegistryStatusChecker implements org.apache.dubbo.common.status.StatusChecker {
+  private org.apache.dubbo.rpc.model.ApplicationModel applicationModel;
+
+  public org.apache.dubbo.registry.status.RegistryStatusChecker(org.apache.dubbo.rpc.model.ApplicationModel);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       9: return
+
+  public org.apache.dubbo.common.status.Status check();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       4: invokevirtual #3                  // Method org/apache/dubbo/rpc/model/ApplicationModel.getBeanFactory:()Lorg/apache/dubbo/common/beans/factory/ScopeBeanFactory;
+       7: ldc           #4                  // class org/apache/dubbo/registry/support/RegistryManager
+       9: invokevirtual #5                  // Method org/apache/dubbo/common/beans/factory/ScopeBeanFactory.getBean:(Ljava/lang/Class;)Ljava/lang/Object;
+      12: checkcast     #4                  // class org/apache/dubbo/registry/support/RegistryManager
+      15: astore_1
+      16: aload_1
+      17: invokevirtual #6                  // Method org/apache/dubbo/registry/support/RegistryManager.getRegistries:()Ljava/util/Collection;
+      20: astore_2
+      21: aload_2
+      22: invokeinterface #7,  1            // InterfaceMethod java/util/Collection.isEmpty:()Z
+      27: ifeq          41
+      30: new           #8                  // class org/apache/dubbo/common/status/Status
+      33: dup
+      34: getstatic     #9                  // Field org/apache/dubbo/common/status/Status$Level.UNKNOWN:Lorg/apache/dubbo/common/status/Status$Level;
+      37: invokespecial #10                 // Method org/apache/dubbo/common/status/Status."<init>":(Lorg/apache/dubbo/common/status/Status$Level;)V
+      40: areturn
+      41: getstatic     #11                 // Field org/apache/dubbo/common/status/Status$Level.OK:Lorg/apache/dubbo/common/status/Status$Level;
+      44: astore_3
+      45: new           #12                 // class java/lang/StringBuilder
+      48: dup
+      49: invokespecial #13                 // Method java/lang/StringBuilder."<init>":()V
+      52: astore        4
+      54: aload_2
+      55: invokeinterface #14,  1           // InterfaceMethod java/util/Collection.iterator:()Ljava/util/Iterator;
+      60: astore        5
+      62: aload         5
+      64: invokeinterface #15,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      69: ifeq          152
+      72: aload         5
+      74: invokeinterface #16,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      79: checkcast     #17                 // class org/apache/dubbo/registry/Registry
+      82: astore        6
+      84: aload         4
+      86: invokevirtual #18                 // Method java/lang/StringBuilder.length:()I
+      89: ifle          100
+      92: aload         4
+      94: bipush        44
+      96: invokevirtual #19                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      99: pop
+     100: aload         4
+     102: aload         6
+     104: invokeinterface #20,  1           // InterfaceMethod org/apache/dubbo/registry/Registry.getUrl:()Lorg/apache/dubbo/common/URL;
+     109: invokevirtual #21                 // Method org/apache/dubbo/common/URL.getAddress:()Ljava/lang/String;
+     112: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     115: pop
+     116: aload         6
+     118: invokeinterface #23,  1           // InterfaceMethod org/apache/dubbo/registry/Registry.isAvailable:()Z
+     123: ifne          141
+     126: getstatic     #24                 // Field org/apache/dubbo/common/status/Status$Level.ERROR:Lorg/apache/dubbo/common/status/Status$Level;
+     129: astore_3
+     130: aload         4
+     132: ldc           #25                 // String (disconnected)
+     134: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     137: pop
+     138: goto          149
+     141: aload         4
+     143: ldc           #26                 // String (connected)
+     145: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     148: pop
+     149: goto          62
+     152: new           #8                  // class org/apache/dubbo/common/status/Status
+     155: dup
+     156: aload_3
+     157: aload         4
+     159: invokevirtual #27                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     162: invokespecial #28                 // Method org/apache/dubbo/common/status/Status."<init>":(Lorg/apache/dubbo/common/status/Status$Level;Ljava/lang/String;)V
+     165: areturn
+}

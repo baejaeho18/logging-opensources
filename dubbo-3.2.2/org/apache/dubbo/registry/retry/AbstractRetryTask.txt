@@ -1,0 +1,227 @@
+Compiled from "AbstractRetryTask.java"
+public abstract class org.apache.dubbo.registry.retry.AbstractRetryTask implements org.apache.dubbo.common.timer.TimerTask {
+  protected final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  protected final org.apache.dubbo.common.URL url;
+
+  protected final org.apache.dubbo.registry.support.FailbackRegistry registry;
+
+  private final long retryPeriod;
+
+  private final int retryTimes;
+
+  private final java.lang.String taskName;
+
+  private int times;
+
+  private volatile boolean cancel;
+
+  org.apache.dubbo.registry.retry.AbstractRetryTask(org.apache.dubbo.common.URL, org.apache.dubbo.registry.support.FailbackRegistry, java.lang.String);
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_0
+       6: invokevirtual #4                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       9: invokestatic  #5                  // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      12: putfield      #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      15: aload_0
+      16: iconst_1
+      17: putfield      #7                  // Field times:I
+      20: aload_1
+      21: ifnull        31
+      24: aload_3
+      25: invokestatic  #8                  // Method org/apache/dubbo/common/utils/StringUtils.isBlank:(Ljava/lang/CharSequence;)Z
+      28: ifeq          39
+      31: new           #9                  // class java/lang/IllegalArgumentException
+      34: dup
+      35: invokespecial #10                 // Method java/lang/IllegalArgumentException."<init>":()V
+      38: athrow
+      39: aload_0
+      40: aload_1
+      41: putfield      #11                 // Field url:Lorg/apache/dubbo/common/URL;
+      44: aload_0
+      45: aload_2
+      46: putfield      #12                 // Field registry:Lorg/apache/dubbo/registry/support/FailbackRegistry;
+      49: aload_0
+      50: aload_3
+      51: putfield      #13                 // Field taskName:Ljava/lang/String;
+      54: aload_0
+      55: iconst_0
+      56: putfield      #14                 // Field cancel:Z
+      59: aload_0
+      60: aload_1
+      61: ldc           #15                 // String retry.period
+      63: sipush        5000
+      66: invokevirtual #16                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;I)I
+      69: i2l
+      70: putfield      #17                 // Field retryPeriod:J
+      73: aload_0
+      74: aload_1
+      75: ldc           #18                 // String retry.times
+      77: iconst_3
+      78: invokevirtual #16                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;I)I
+      81: putfield      #19                 // Field retryTimes:I
+      84: return
+
+  public void cancel();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: putfield      #14                 // Field cancel:Z
+       5: return
+
+  public boolean isCancel();
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field cancel:Z
+       4: ireturn
+
+  protected void reput(org.apache.dubbo.common.timer.Timeout, long);
+    Code:
+       0: aload_1
+       1: ifnonnull     12
+       4: new           #9                  // class java/lang/IllegalArgumentException
+       7: dup
+       8: invokespecial #10                 // Method java/lang/IllegalArgumentException."<init>":()V
+      11: athrow
+      12: aload_1
+      13: invokeinterface #20,  1           // InterfaceMethod org/apache/dubbo/common/timer/Timeout.timer:()Lorg/apache/dubbo/common/timer/Timer;
+      18: astore        4
+      20: aload         4
+      22: invokeinterface #21,  1           // InterfaceMethod org/apache/dubbo/common/timer/Timer.isStop:()Z
+      27: ifne          46
+      30: aload_1
+      31: invokeinterface #22,  1           // InterfaceMethod org/apache/dubbo/common/timer/Timeout.isCancelled:()Z
+      36: ifne          46
+      39: aload_0
+      40: invokevirtual #23                 // Method isCancel:()Z
+      43: ifeq          47
+      46: return
+      47: aload_0
+      48: dup
+      49: getfield      #7                  // Field times:I
+      52: iconst_1
+      53: iadd
+      54: putfield      #7                  // Field times:I
+      57: aload         4
+      59: aload_1
+      60: invokeinterface #24,  1           // InterfaceMethod org/apache/dubbo/common/timer/Timeout.task:()Lorg/apache/dubbo/common/timer/TimerTask;
+      65: lload_2
+      66: getstatic     #25                 // Field java/util/concurrent/TimeUnit.MILLISECONDS:Ljava/util/concurrent/TimeUnit;
+      69: invokeinterface #26,  5           // InterfaceMethod org/apache/dubbo/common/timer/Timer.newTimeout:(Lorg/apache/dubbo/common/timer/TimerTask;JLjava/util/concurrent/TimeUnit;)Lorg/apache/dubbo/common/timer/Timeout;
+      74: pop
+      75: return
+
+  public void run(org.apache.dubbo.common.timer.Timeout) throws java.lang.Exception;
+    Code:
+       0: aload_1
+       1: invokeinterface #22,  1           // InterfaceMethod org/apache/dubbo/common/timer/Timeout.isCancelled:()Z
+       6: ifne          30
+       9: aload_1
+      10: invokeinterface #20,  1           // InterfaceMethod org/apache/dubbo/common/timer/Timeout.timer:()Lorg/apache/dubbo/common/timer/Timer;
+      15: invokeinterface #21,  1           // InterfaceMethod org/apache/dubbo/common/timer/Timer.isStop:()Z
+      20: ifne          30
+      23: aload_0
+      24: invokevirtual #23                 // Method isCancel:()Z
+      27: ifeq          31
+      30: return
+      31: aload_0
+      32: getfield      #7                  // Field times:I
+      35: aload_0
+      36: getfield      #19                 // Field retryTimes:I
+      39: if_icmple     109
+      42: aload_0
+      43: getfield      #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      46: ldc           #27                 // String 1-13
+      48: ldc           #28                 // String registry center offline
+      50: ldc           #29                 // String Check the registry server.
+      52: new           #30                 // class java/lang/StringBuilder
+      55: dup
+      56: invokespecial #31                 // Method java/lang/StringBuilder."<init>":()V
+      59: ldc           #32                 // String Final failed to execute task
+      61: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      64: aload_0
+      65: getfield      #13                 // Field taskName:Ljava/lang/String;
+      68: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      71: ldc           #34                 // String , url:
+      73: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      76: aload_0
+      77: getfield      #11                 // Field url:Lorg/apache/dubbo/common/URL;
+      80: invokevirtual #35                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      83: ldc           #36                 // String , retry
+      85: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      88: aload_0
+      89: getfield      #19                 // Field retryTimes:I
+      92: invokevirtual #37                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      95: ldc           #38                 // String  times.
+      97: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     100: invokevirtual #39                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     103: invokeinterface #40,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+     108: return
+     109: aload_0
+     110: getfield      #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     113: invokeinterface #41,  1           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.isInfoEnabled:()Z
+     118: ifeq          159
+     121: aload_0
+     122: getfield      #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     125: new           #30                 // class java/lang/StringBuilder
+     128: dup
+     129: invokespecial #31                 // Method java/lang/StringBuilder."<init>":()V
+     132: aload_0
+     133: getfield      #13                 // Field taskName:Ljava/lang/String;
+     136: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     139: ldc           #42                 // String  :
+     141: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     144: aload_0
+     145: getfield      #11                 // Field url:Lorg/apache/dubbo/common/URL;
+     148: invokevirtual #35                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     151: invokevirtual #39                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     154: invokeinterface #43,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+     159: aload_0
+     160: aload_0
+     161: getfield      #11                 // Field url:Lorg/apache/dubbo/common/URL;
+     164: aload_0
+     165: getfield      #12                 // Field registry:Lorg/apache/dubbo/registry/support/FailbackRegistry;
+     168: aload_1
+     169: invokevirtual #44                 // Method doRetry:(Lorg/apache/dubbo/common/URL;Lorg/apache/dubbo/registry/support/FailbackRegistry;Lorg/apache/dubbo/common/timer/Timeout;)V
+     172: goto          247
+     175: astore_2
+     176: aload_0
+     177: getfield      #6                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     180: ldc           #27                 // String 1-13
+     182: ldc           #28                 // String registry center offline
+     184: ldc           #29                 // String Check the registry server.
+     186: new           #30                 // class java/lang/StringBuilder
+     189: dup
+     190: invokespecial #31                 // Method java/lang/StringBuilder."<init>":()V
+     193: ldc           #46                 // String Failed to execute task
+     195: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     198: aload_0
+     199: getfield      #13                 // Field taskName:Ljava/lang/String;
+     202: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     205: ldc           #34                 // String , url:
+     207: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     210: aload_0
+     211: getfield      #11                 // Field url:Lorg/apache/dubbo/common/URL;
+     214: invokevirtual #35                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     217: ldc           #47                 // String , waiting for again, cause:
+     219: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     222: aload_2
+     223: invokevirtual #48                 // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+     226: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     229: invokevirtual #39                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     232: aload_2
+     233: invokeinterface #49,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     238: aload_0
+     239: aload_1
+     240: aload_0
+     241: getfield      #17                 // Field retryPeriod:J
+     244: invokevirtual #50                 // Method reput:(Lorg/apache/dubbo/common/timer/Timeout;J)V
+     247: return
+    Exception table:
+       from    to  target type
+         159   172   175   Class java/lang/Throwable
+
+  protected abstract void doRetry(org.apache.dubbo.common.URL, org.apache.dubbo.registry.support.FailbackRegistry, org.apache.dubbo.common.timer.Timeout);
+}

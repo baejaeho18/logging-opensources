@@ -1,0 +1,621 @@
+Compiled from "AbstractProtocol.java"
+public abstract class org.apache.dubbo.registry.xds.util.protocol.AbstractProtocol<T, S extends org.apache.dubbo.registry.xds.util.protocol.DeltaResource<T>> implements org.apache.dubbo.registry.xds.util.protocol.XdsProtocol<T>, org.apache.dubbo.registry.xds.util.XdsListener {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  protected org.apache.dubbo.registry.xds.util.AdsObserver adsObserver;
+
+  protected final io.envoyproxy.envoy.config.core.v3.Node node;
+
+  private final int checkInterval;
+
+  protected final java.util.concurrent.locks.ReentrantReadWriteLock lock;
+
+  protected final java.util.concurrent.locks.ReentrantReadWriteLock$ReadLock readLock;
+
+  protected final java.util.concurrent.locks.ReentrantReadWriteLock$WriteLock writeLock;
+
+  protected java.util.Set<java.lang.String> observeResourcesName;
+
+  public static final java.lang.String emptyResourceName;
+
+  private final java.util.concurrent.locks.ReentrantLock resourceLock;
+
+  protected java.util.Map<java.util.Set<java.lang.String>, java.util.List<java.util.function.Consumer<java.util.Map<java.lang.String, T>>>> consumerObserveMap;
+
+  protected java.util.Map<java.lang.String, T> resourcesMap;
+
+  public java.util.Map<java.util.Set<java.lang.String>, java.util.List<java.util.function.Consumer<java.util.Map<java.lang.String, T>>>> getConsumerObserveMap();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field consumerObserveMap:Ljava/util/Map;
+       4: areturn
+
+  public org.apache.dubbo.registry.xds.util.protocol.AbstractProtocol(org.apache.dubbo.registry.xds.util.AdsObserver, io.envoyproxy.envoy.config.core.v3.Node, int);
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #4                  // class java/util/concurrent/locks/ReentrantReadWriteLock
+       8: dup
+       9: invokespecial #5                  // Method java/util/concurrent/locks/ReentrantReadWriteLock."<init>":()V
+      12: putfield      #6                  // Field lock:Ljava/util/concurrent/locks/ReentrantReadWriteLock;
+      15: aload_0
+      16: aload_0
+      17: getfield      #6                  // Field lock:Ljava/util/concurrent/locks/ReentrantReadWriteLock;
+      20: invokevirtual #7                  // Method java/util/concurrent/locks/ReentrantReadWriteLock.readLock:()Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;
+      23: putfield      #8                  // Field readLock:Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;
+      26: aload_0
+      27: aload_0
+      28: getfield      #6                  // Field lock:Ljava/util/concurrent/locks/ReentrantReadWriteLock;
+      31: invokevirtual #9                  // Method java/util/concurrent/locks/ReentrantReadWriteLock.writeLock:()Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+      34: putfield      #10                 // Field writeLock:Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+      37: aload_0
+      38: new           #11                 // class java/util/concurrent/locks/ReentrantLock
+      41: dup
+      42: invokespecial #12                 // Method java/util/concurrent/locks/ReentrantLock."<init>":()V
+      45: putfield      #13                 // Field resourceLock:Ljava/util/concurrent/locks/ReentrantLock;
+      48: aload_0
+      49: new           #14                 // class java/util/concurrent/ConcurrentHashMap
+      52: dup
+      53: invokespecial #15                 // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      56: putfield      #2                  // Field consumerObserveMap:Ljava/util/Map;
+      59: aload_0
+      60: new           #14                 // class java/util/concurrent/ConcurrentHashMap
+      63: dup
+      64: invokespecial #15                 // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      67: putfield      #16                 // Field resourcesMap:Ljava/util/Map;
+      70: aload_0
+      71: aload_1
+      72: putfield      #17                 // Field adsObserver:Lorg/apache/dubbo/registry/xds/util/AdsObserver;
+      75: aload_0
+      76: aload_2
+      77: putfield      #18                 // Field node:Lio/envoyproxy/envoy/config/core/v3/Node;
+      80: aload_0
+      81: iload_3
+      82: putfield      #19                 // Field checkInterval:I
+      85: aload_1
+      86: aload_0
+      87: invokevirtual #20                 // Method org/apache/dubbo/registry/xds/util/AdsObserver.addListener:(Lorg/apache/dubbo/registry/xds/util/protocol/AbstractProtocol;)V
+      90: return
+
+  public abstract java.lang.String getTypeUrl();
+
+  public boolean isCacheExistResource(java.util.Set<java.lang.String>);
+    Code:
+       0: aload_1
+       1: invokeinterface #21,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+       6: astore_2
+       7: aload_2
+       8: invokeinterface #22,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      13: ifeq          56
+      16: aload_2
+      17: invokeinterface #23,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      22: checkcast     #24                 // class java/lang/String
+      25: astore_3
+      26: ldc           #25                 // String
+      28: aload_3
+      29: invokevirtual #26                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      32: ifeq          38
+      35: goto          7
+      38: aload_0
+      39: getfield      #16                 // Field resourcesMap:Ljava/util/Map;
+      42: aload_3
+      43: invokeinterface #27,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      48: ifne          53
+      51: iconst_0
+      52: ireturn
+      53: goto          7
+      56: iconst_1
+      57: ireturn
+
+  public T getCacheResource(java.lang.String);
+    Code:
+       0: aload_1
+       1: ifnull        11
+       4: aload_1
+       5: invokevirtual #28                 // Method java/lang/String.length:()I
+       8: ifne          13
+      11: aconst_null
+      12: areturn
+      13: aload_0
+      14: getfield      #16                 // Field resourcesMap:Ljava/util/Map;
+      17: aload_1
+      18: invokeinterface #29,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      23: areturn
+
+  public java.util.Map<java.lang.String, T> getResource(java.util.Set<java.lang.String>);
+    Code:
+       0: aload_1
+       1: ifnonnull     10
+       4: invokestatic  #30                 // Method java/util/Collections.emptySet:()Ljava/util/Set;
+       7: goto          11
+      10: aload_1
+      11: astore_1
+      12: aload_1
+      13: invokeinterface #31,  1           // InterfaceMethod java/util/Set.isEmpty:()Z
+      18: ifne          35
+      21: aload_0
+      22: aload_1
+      23: invokevirtual #32                 // Method isCacheExistResource:(Ljava/util/Set;)Z
+      26: ifeq          35
+      29: aload_0
+      30: aload_1
+      31: invokespecial #33                 // Method getResourceFromCache:(Ljava/util/Set;)Ljava/util/Map;
+      34: areturn
+      35: aload_0
+      36: aload_1
+      37: invokevirtual #34                 // Method getResourceFromRemote:(Ljava/util/Set;)Ljava/util/Map;
+      40: areturn
+
+  private java.util.Map<java.lang.String, T> getResourceFromCache(java.util.Set<java.lang.String>);
+    Code:
+       0: aload_1
+       1: invokeinterface #35,  1           // InterfaceMethod java/util/Set.stream:()Ljava/util/stream/Stream;
+       6: invokedynamic #36,  0             // InvokeDynamic #0:test:()Ljava/util/function/Predicate;
+      11: invokeinterface #37,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+      16: invokedynamic #38,  0             // InvokeDynamic #1:apply:()Ljava/util/function/Function;
+      21: aload_0
+      22: invokedynamic #39,  0             // InvokeDynamic #2:apply:(Lorg/apache/dubbo/registry/xds/util/protocol/AbstractProtocol;)Ljava/util/function/Function;
+      27: invokestatic  #40                 // Method java/util/stream/Collectors.toMap:(Ljava/util/function/Function;Ljava/util/function/Function;)Ljava/util/stream/Collector;
+      30: invokeinterface #41,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+      35: checkcast     #42                 // class java/util/Map
+      38: areturn
+
+  public java.util.Map<java.lang.String, T> getResourceFromRemote(java.util.Set<java.lang.String>);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field resourceLock:Ljava/util/concurrent/locks/ReentrantLock;
+       4: invokevirtual #43                 // Method java/util/concurrent/locks/ReentrantLock.lock:()V
+       7: new           #44                 // class java/util/concurrent/CompletableFuture
+      10: dup
+      11: invokespecial #45                 // Method java/util/concurrent/CompletableFuture."<init>":()V
+      14: astore_2
+      15: aload_0
+      16: aload_1
+      17: putfield      #46                 // Field observeResourcesName:Ljava/util/Set;
+      20: new           #47                 // class java/util/HashSet
+      23: dup
+      24: invokespecial #48                 // Method java/util/HashSet."<init>":()V
+      27: astore_3
+      28: aload_1
+      29: invokeinterface #31,  1           // InterfaceMethod java/util/Set.isEmpty:()Z
+      34: ifeq          49
+      37: aload_3
+      38: ldc           #50                 // String emptyResourcesName
+      40: invokeinterface #51,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      45: pop
+      46: goto          51
+      49: aload_1
+      50: astore_3
+      51: aload_2
+      52: dup
+      53: invokevirtual #52                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      56: pop
+      57: invokedynamic #53,  0             // InvokeDynamic #3:accept:(Ljava/util/concurrent/CompletableFuture;)Ljava/util/function/Consumer;
+      62: astore        4
+      64: aload_0
+      65: getfield      #10                 // Field writeLock:Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+      68: invokevirtual #54                 // Method java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.lock:()V
+      71: aload_0
+      72: getfield      #2                  // Field consumerObserveMap:Ljava/util/Map;
+      75: checkcast     #14                 // class java/util/concurrent/ConcurrentHashMap
+      78: aload_3
+      79: invokedynamic #55,  0             // InvokeDynamic #4:apply:()Ljava/util/function/Function;
+      84: invokestatic  #56                 // Method org/apache/dubbo/common/utils/ConcurrentHashMapUtils.computeIfAbsent:(Ljava/util/concurrent/ConcurrentMap;Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+      87: checkcast     #57                 // class java/util/List
+      90: aload         4
+      92: invokeinterface #58,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      97: pop
+      98: aload_0
+      99: getfield      #10                 // Field writeLock:Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+     102: invokevirtual #59                 // Method java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.unlock:()V
+     105: goto          120
+     108: astore        5
+     110: aload_0
+     111: getfield      #10                 // Field writeLock:Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+     114: invokevirtual #59                 // Method java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.unlock:()V
+     117: aload         5
+     119: athrow
+     120: new           #47                 // class java/util/HashSet
+     123: dup
+     124: aload_1
+     125: invokespecial #60                 // Method java/util/HashSet."<init>":(Ljava/util/Collection;)V
+     128: astore        5
+     130: aload         5
+     132: aload_0
+     133: getfield      #16                 // Field resourcesMap:Ljava/util/Map;
+     136: invokeinterface #61,  1           // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+     141: invokeinterface #62,  2           // InterfaceMethod java/util/Set.addAll:(Ljava/util/Collection;)Z
+     146: pop
+     147: aload_0
+     148: getfield      #17                 // Field adsObserver:Lorg/apache/dubbo/registry/xds/util/AdsObserver;
+     151: aload_0
+     152: aload         5
+     154: invokevirtual #63                 // Method buildDiscoveryRequest:(Ljava/util/Set;)Lio/envoyproxy/envoy/service/discovery/v3/DiscoveryRequest;
+     157: invokevirtual #64                 // Method org/apache/dubbo/registry/xds/util/AdsObserver.request:(Lio/envoyproxy/envoy/service/discovery/v3/DiscoveryRequest;)V
+     160: getstatic     #65                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     163: new           #66                 // class java/lang/StringBuilder
+     166: dup
+     167: invokespecial #67                 // Method java/lang/StringBuilder."<init>":()V
+     170: ldc           #68                 // String Send xDS Observe request to remote. Resource count:
+     172: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     175: aload         5
+     177: invokeinterface #70,  1           // InterfaceMethod java/util/Set.size:()I
+     182: invokevirtual #71                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     185: ldc           #72                 // String . Resource Type:
+     187: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     190: aload_0
+     191: invokevirtual #73                 // Method getTypeUrl:()Ljava/lang/String;
+     194: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     197: invokevirtual #74                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     200: invokeinterface #75,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+     205: aload_2
+     206: invokevirtual #76                 // Method java/util/concurrent/CompletableFuture.get:()Ljava/lang/Object;
+     209: checkcast     #42                 // class java/util/Map
+     212: astore        6
+     214: aload_0
+     215: getfield      #10                 // Field writeLock:Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+     218: invokevirtual #54                 // Method java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.lock:()V
+     221: aload_0
+     222: getfield      #2                  // Field consumerObserveMap:Ljava/util/Map;
+     225: aload_3
+     226: invokeinterface #29,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     231: checkcast     #57                 // class java/util/List
+     234: aload         4
+     236: invokedynamic #77,  0             // InvokeDynamic #5:test:(Ljava/util/function/Consumer;)Ljava/util/function/Predicate;
+     241: invokeinterface #78,  2           // InterfaceMethod java/util/List.removeIf:(Ljava/util/function/Predicate;)Z
+     246: pop
+     247: aload_0
+     248: getfield      #10                 // Field writeLock:Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+     251: invokevirtual #59                 // Method java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.unlock:()V
+     254: goto          269
+     257: astore        7
+     259: aload_0
+     260: getfield      #10                 // Field writeLock:Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+     263: invokevirtual #59                 // Method java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.unlock:()V
+     266: aload         7
+     268: athrow
+     269: aload         6
+     271: astore        7
+     273: aload_0
+     274: getfield      #13                 // Field resourceLock:Ljava/util/concurrent/locks/ReentrantLock;
+     277: invokevirtual #79                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     280: aload         7
+     282: areturn
+     283: astore        6
+     285: getstatic     #65                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     288: ldc           #81                 // String 99-1
+     290: ldc           #25                 // String
+     292: ldc           #25                 // String
+     294: ldc           #82                 // String InterruptedException occur when request control panel. error=
+     296: aload         6
+     298: invokeinterface #83,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     303: invokestatic  #84                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+     306: invokevirtual #85                 // Method java/lang/Thread.interrupt:()V
+     309: goto          332
+     312: astore        6
+     314: getstatic     #65                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     317: ldc           #87                 // String 4-11
+     319: ldc           #25                 // String
+     321: ldc           #25                 // String
+     323: ldc           #88                 // String Error occur when request control panel. error=
+     325: aload         6
+     327: invokeinterface #83,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     332: aload_0
+     333: getfield      #13                 // Field resourceLock:Ljava/util/concurrent/locks/ReentrantLock;
+     336: invokevirtual #79                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     339: goto          354
+     342: astore        8
+     344: aload_0
+     345: getfield      #13                 // Field resourceLock:Ljava/util/concurrent/locks/ReentrantLock;
+     348: invokevirtual #79                 // Method java/util/concurrent/locks/ReentrantLock.unlock:()V
+     351: aload         8
+     353: athrow
+     354: invokestatic  #89                 // Method java/util/Collections.emptyMap:()Ljava/util/Map;
+     357: areturn
+    Exception table:
+       from    to  target type
+          64    98   108   any
+         108   110   108   any
+         214   247   257   any
+         257   259   257   any
+         205   273   283   Class java/lang/InterruptedException
+         205   273   312   Class java/lang/Exception
+           0   273   342   any
+         283   332   342   any
+         342   344   342   any
+
+  public void observeResource(java.util.Set<java.lang.String>, java.util.function.Consumer<java.util.Map<java.lang.String, T>>, boolean);
+    Code:
+       0: iload_3
+       1: ifne          61
+       4: aload_2
+       5: aload_0
+       6: aload_1
+       7: invokevirtual #90                 // Method getResource:(Ljava/util/Set;)Ljava/util/Map;
+      10: invokeinterface #91,  2           // InterfaceMethod java/util/function/Consumer.accept:(Ljava/lang/Object;)V
+      15: aload_0
+      16: getfield      #10                 // Field writeLock:Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+      19: invokevirtual #54                 // Method java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.lock:()V
+      22: aload_0
+      23: getfield      #2                  // Field consumerObserveMap:Ljava/util/Map;
+      26: aload_1
+      27: aload_2
+      28: invokedynamic #92,  0             // InvokeDynamic #6:apply:(Ljava/util/function/Consumer;)Ljava/util/function/BiFunction;
+      33: invokeinterface #93,  3           // InterfaceMethod java/util/Map.compute:(Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+      38: pop
+      39: aload_0
+      40: getfield      #10                 // Field writeLock:Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+      43: invokevirtual #59                 // Method java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.unlock:()V
+      46: goto          61
+      49: astore        4
+      51: aload_0
+      52: getfield      #10                 // Field writeLock:Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+      55: invokevirtual #59                 // Method java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.unlock:()V
+      58: aload         4
+      60: athrow
+      61: aload_0
+      62: getfield      #10                 // Field writeLock:Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+      65: invokevirtual #54                 // Method java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.lock:()V
+      68: aload_0
+      69: aload_0
+      70: getfield      #2                  // Field consumerObserveMap:Ljava/util/Map;
+      73: invokeinterface #61,  1           // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+      78: invokeinterface #35,  1           // InterfaceMethod java/util/Set.stream:()Ljava/util/stream/Stream;
+      83: invokedynamic #94,  0             // InvokeDynamic #7:apply:()Ljava/util/function/Function;
+      88: invokeinterface #95,  2           // InterfaceMethod java/util/stream/Stream.flatMap:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      93: invokestatic  #96                 // Method java/util/stream/Collectors.toSet:()Ljava/util/stream/Collector;
+      96: invokeinterface #41,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+     101: checkcast     #97                 // class java/util/Set
+     104: putfield      #46                 // Field observeResourcesName:Ljava/util/Set;
+     107: aload_0
+     108: getfield      #10                 // Field writeLock:Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+     111: invokevirtual #59                 // Method java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.unlock:()V
+     114: goto          129
+     117: astore        5
+     119: aload_0
+     120: getfield      #10                 // Field writeLock:Ljava/util/concurrent/locks/ReentrantReadWriteLock$WriteLock;
+     123: invokevirtual #59                 // Method java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.unlock:()V
+     126: aload         5
+     128: athrow
+     129: return
+    Exception table:
+       from    to  target type
+          15    39    49   any
+          49    51    49   any
+          61   107   117   any
+         117   119   117   any
+
+  public void unobserveResource(java.util.Set<java.lang.String>, java.util.function.Consumer<java.util.Map<java.lang.String, T>>);
+    Code:
+       0: return
+
+  protected io.envoyproxy.envoy.service.discovery.v3.DiscoveryRequest buildDiscoveryRequest(java.util.Set<java.lang.String>);
+    Code:
+       0: invokestatic  #98                 // Method io/envoyproxy/envoy/service/discovery/v3/DiscoveryRequest.newBuilder:()Lio/envoyproxy/envoy/service/discovery/v3/DiscoveryRequest$Builder;
+       3: aload_0
+       4: getfield      #18                 // Field node:Lio/envoyproxy/envoy/config/core/v3/Node;
+       7: invokevirtual #99                 // Method io/envoyproxy/envoy/service/discovery/v3/DiscoveryRequest$Builder.setNode:(Lio/envoyproxy/envoy/config/core/v3/Node;)Lio/envoyproxy/envoy/service/discovery/v3/DiscoveryRequest$Builder;
+      10: aload_0
+      11: invokevirtual #73                 // Method getTypeUrl:()Ljava/lang/String;
+      14: invokevirtual #100                // Method io/envoyproxy/envoy/service/discovery/v3/DiscoveryRequest$Builder.setTypeUrl:(Ljava/lang/String;)Lio/envoyproxy/envoy/service/discovery/v3/DiscoveryRequest$Builder;
+      17: aload_1
+      18: invokevirtual #101                // Method io/envoyproxy/envoy/service/discovery/v3/DiscoveryRequest$Builder.addAllResourceNames:(Ljava/lang/Iterable;)Lio/envoyproxy/envoy/service/discovery/v3/DiscoveryRequest$Builder;
+      21: invokevirtual #102                // Method io/envoyproxy/envoy/service/discovery/v3/DiscoveryRequest$Builder.build:()Lio/envoyproxy/envoy/service/discovery/v3/DiscoveryRequest;
+      24: areturn
+
+  protected abstract java.util.Map<java.lang.String, T> decodeDiscoveryResponse(io.envoyproxy.envoy.service.discovery.v3.DiscoveryResponse);
+
+  public final void process(io.envoyproxy.envoy.service.discovery.v3.DiscoveryResponse);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #103                // Method decodeDiscoveryResponse:(Lio/envoyproxy/envoy/service/discovery/v3/DiscoveryResponse;)Ljava/util/Map;
+       5: astore_2
+       6: aload_0
+       7: getfield      #16                 // Field resourcesMap:Ljava/util/Map;
+      10: astore_3
+      11: aload_0
+      12: aload_3
+      13: aload_2
+      14: invokespecial #104                // Method discoveryResponseListener:(Ljava/util/Map;Ljava/util/Map;)V
+      17: aload_0
+      18: aload_2
+      19: putfield      #16                 // Field resourcesMap:Ljava/util/Map;
+      22: return
+
+  private void discoveryResponseListener(java.util.Map<java.lang.String, T>, java.util.Map<java.lang.String, T>);
+    Code:
+       0: new           #47                 // class java/util/HashSet
+       3: dup
+       4: invokespecial #48                 // Method java/util/HashSet."<init>":()V
+       7: astore_3
+       8: aload_1
+       9: aload_2
+      10: aload_3
+      11: invokedynamic #105,  0            // InvokeDynamic #8:accept:(Ljava/util/Map;Ljava/util/Set;)Ljava/util/function/BiConsumer;
+      16: invokeinterface #106,  2          // InterfaceMethod java/util/Map.forEach:(Ljava/util/function/BiConsumer;)V
+      21: aload_2
+      22: aload_1
+      23: aload_3
+      24: invokedynamic #107,  0            // InvokeDynamic #9:accept:(Ljava/util/Map;Ljava/util/Set;)Ljava/util/function/BiConsumer;
+      29: invokeinterface #106,  2          // InterfaceMethod java/util/Map.forEach:(Ljava/util/function/BiConsumer;)V
+      34: aload_3
+      35: invokeinterface #31,  1           // InterfaceMethod java/util/Set.isEmpty:()Z
+      40: ifeq          44
+      43: return
+      44: getstatic     #65                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      47: new           #66                 // class java/lang/StringBuilder
+      50: dup
+      51: invokespecial #67                 // Method java/lang/StringBuilder."<init>":()V
+      54: ldc           #108                // String Receive resource update notification from xds server. Change resource count:
+      56: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      59: aload_3
+      60: invokeinterface #35,  1           // InterfaceMethod java/util/Set.stream:()Ljava/util/stream/Stream;
+      65: invokevirtual #109                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      68: ldc           #110                // String . Type:
+      70: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      73: aload_0
+      74: invokevirtual #73                 // Method getTypeUrl:()Ljava/lang/String;
+      77: invokevirtual #69                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      80: invokevirtual #74                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      83: invokeinterface #75,  2           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.info:(Ljava/lang/String;)V
+      88: aload_0
+      89: getfield      #8                  // Field readLock:Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;
+      92: invokevirtual #111                // Method java/util/concurrent/locks/ReentrantReadWriteLock$ReadLock.lock:()V
+      95: aload_0
+      96: getfield      #2                  // Field consumerObserveMap:Ljava/util/Map;
+      99: invokeinterface #112,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+     104: invokeinterface #21,  1           // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     109: astore        4
+     111: aload         4
+     113: invokeinterface #22,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     118: ifeq          234
+     121: aload         4
+     123: invokeinterface #23,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     128: checkcast     #113                // class java/util/Map$Entry
+     131: astore        5
+     133: aload         5
+     135: invokeinterface #114,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     140: checkcast     #97                 // class java/util/Set
+     143: invokeinterface #35,  1           // InterfaceMethod java/util/Set.stream:()Ljava/util/stream/Stream;
+     148: aload_3
+     149: dup
+     150: invokevirtual #52                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     153: pop
+     154: invokedynamic #115,  0            // InvokeDynamic #10:test:(Ljava/util/Set;)Ljava/util/function/Predicate;
+     159: invokeinterface #116,  2          // InterfaceMethod java/util/stream/Stream.noneMatch:(Ljava/util/function/Predicate;)Z
+     164: ifeq          170
+     167: goto          111
+     170: aload         5
+     172: invokeinterface #114,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+     177: checkcast     #97                 // class java/util/Set
+     180: invokeinterface #35,  1           // InterfaceMethod java/util/Set.stream:()Ljava/util/stream/Stream;
+     185: invokedynamic #117,  0            // InvokeDynamic #11:apply:()Ljava/util/function/Function;
+     190: aload_2
+     191: invokedynamic #118,  0            // InvokeDynamic #12:apply:(Ljava/util/Map;)Ljava/util/function/Function;
+     196: invokestatic  #40                 // Method java/util/stream/Collectors.toMap:(Ljava/util/function/Function;Ljava/util/function/Function;)Ljava/util/stream/Collector;
+     199: invokeinterface #41,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+     204: checkcast     #42                 // class java/util/Map
+     207: astore        6
+     209: aload         5
+     211: invokeinterface #119,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+     216: checkcast     #57                 // class java/util/List
+     219: aload         6
+     221: invokedynamic #120,  0            // InvokeDynamic #13:accept:(Ljava/util/Map;)Ljava/util/function/Consumer;
+     226: invokeinterface #121,  2          // InterfaceMethod java/util/List.forEach:(Ljava/util/function/Consumer;)V
+     231: goto          111
+     234: aload_0
+     235: getfield      #8                  // Field readLock:Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;
+     238: invokevirtual #122                // Method java/util/concurrent/locks/ReentrantReadWriteLock$ReadLock.unlock:()V
+     241: goto          256
+     244: astore        7
+     246: aload_0
+     247: getfield      #8                  // Field readLock:Ljava/util/concurrent/locks/ReentrantReadWriteLock$ReadLock;
+     250: invokevirtual #122                // Method java/util/concurrent/locks/ReentrantReadWriteLock$ReadLock.unlock:()V
+     253: aload         7
+     255: athrow
+     256: return
+    Exception table:
+       from    to  target type
+          88   234   244   any
+         244   246   244   any
+
+  private static void lambda$discoveryResponseListener$9(java.util.Map, java.util.function.Consumer);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: invokeinterface #91,  2           // InterfaceMethod java/util/function/Consumer.accept:(Ljava/lang/Object;)V
+       7: return
+
+  private static java.lang.Object lambda$discoveryResponseListener$8(java.util.Map, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokeinterface #29,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       7: areturn
+
+  private static java.lang.String lambda$discoveryResponseListener$7(java.lang.String);
+    Code:
+       0: aload_0
+       1: areturn
+
+  private static void lambda$discoveryResponseListener$6(java.util.Map, java.util.Set, java.lang.String, java.lang.Object);
+    Code:
+       0: aload_3
+       1: aload_0
+       2: aload_2
+       3: invokeinterface #29,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       8: invokestatic  #123                // Method java/util/Objects.equals:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      11: ifne          22
+      14: aload_1
+      15: aload_2
+      16: invokeinterface #51,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      21: pop
+      22: return
+
+  private static void lambda$discoveryResponseListener$5(java.util.Map, java.util.Set, java.lang.String, java.lang.Object);
+    Code:
+       0: aload_3
+       1: aload_0
+       2: aload_2
+       3: invokeinterface #29,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       8: invokestatic  #123                // Method java/util/Objects.equals:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      11: ifne          22
+      14: aload_1
+      15: aload_2
+      16: invokeinterface #51,  2           // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+      21: pop
+      22: return
+
+  private static java.util.List lambda$observeResource$4(java.util.function.Consumer, java.util.Set, java.util.List);
+    Code:
+       0: aload_2
+       1: ifnonnull     12
+       4: new           #124                // class java/util/ArrayList
+       7: dup
+       8: invokespecial #125                // Method java/util/ArrayList."<init>":()V
+      11: astore_2
+      12: aload_2
+      13: aload_0
+      14: invokeinterface #58,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      19: pop
+      20: aload_2
+      21: areturn
+
+  private static boolean lambda$getResourceFromRemote$3(java.util.function.Consumer, java.util.function.Consumer);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: invokevirtual #126                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+       5: ireturn
+
+  private static java.util.List lambda$getResourceFromRemote$2(java.util.Set);
+    Code:
+       0: new           #124                // class java/util/ArrayList
+       3: dup
+       4: invokespecial #125                // Method java/util/ArrayList."<init>":()V
+       7: areturn
+
+  private static java.lang.String lambda$getResourceFromCache$1(java.lang.String);
+    Code:
+       0: aload_0
+       1: areturn
+
+  private static boolean lambda$getResourceFromCache$0(java.lang.String);
+    Code:
+       0: aload_0
+       1: invokestatic  #127                // Method org/apache/dubbo/common/utils/StringUtils.isEmpty:(Ljava/lang/String;)Z
+       4: ifne          11
+       7: iconst_1
+       8: goto          12
+      11: iconst_0
+      12: ireturn
+
+  static {};
+    Code:
+       0: ldc           #49                 // class org/apache/dubbo/registry/xds/util/protocol/AbstractProtocol
+       2: invokestatic  #128                // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #65                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

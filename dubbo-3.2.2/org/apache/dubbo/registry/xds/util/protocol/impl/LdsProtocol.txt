@@ -1,0 +1,159 @@
+Compiled from "LdsProtocol.java"
+public class org.apache.dubbo.registry.xds.util.protocol.impl.LdsProtocol extends org.apache.dubbo.registry.xds.util.protocol.AbstractProtocol<org.apache.dubbo.registry.xds.util.protocol.message.ListenerResult, org.apache.dubbo.registry.xds.util.protocol.delta.DeltaListener> {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  public org.apache.dubbo.registry.xds.util.protocol.impl.LdsProtocol(org.apache.dubbo.registry.xds.util.AdsObserver, io.envoyproxy.envoy.config.core.v3.Node, int);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: iload_3
+       4: invokespecial #2                  // Method org/apache/dubbo/registry/xds/util/protocol/AbstractProtocol."<init>":(Lorg/apache/dubbo/registry/xds/util/AdsObserver;Lio/envoyproxy/envoy/config/core/v3/Node;I)V
+       7: return
+
+  public java.lang.String getTypeUrl();
+    Code:
+       0: ldc           #3                  // String type.googleapis.com/envoy.config.listener.v3.Listener
+       2: areturn
+
+  public java.util.Map<java.lang.String, org.apache.dubbo.registry.xds.util.protocol.message.ListenerResult> getListeners();
+    Code:
+       0: aload_0
+       1: aconst_null
+       2: invokevirtual #4                  // Method getResource:(Ljava/util/Set;)Ljava/util/Map;
+       5: areturn
+
+  protected java.util.Map<java.lang.String, org.apache.dubbo.registry.xds.util.protocol.message.ListenerResult> decodeDiscoveryResponse(io.envoyproxy.envoy.service.discovery.v3.DiscoveryResponse);
+    Code:
+       0: aload_0
+       1: invokevirtual #5                  // Method getTypeUrl:()Ljava/lang/String;
+       4: aload_1
+       5: invokevirtual #6                  // Method io/envoyproxy/envoy/service/discovery/v3/DiscoveryResponse.getTypeUrl:()Ljava/lang/String;
+       8: invokevirtual #7                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      11: ifeq          93
+      14: aload_1
+      15: invokevirtual #8                  // Method io/envoyproxy/envoy/service/discovery/v3/DiscoveryResponse.getResourcesList:()Ljava/util/List;
+      18: invokeinterface #9,  1            // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+      23: invokedynamic #10,  0             // InvokeDynamic #0:apply:()Ljava/util/function/Function;
+      28: invokeinterface #11,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      33: invokedynamic #12,  0             // InvokeDynamic #1:test:()Ljava/util/function/Predicate;
+      38: invokeinterface #13,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+      43: aload_0
+      44: invokedynamic #14,  0             // InvokeDynamic #2:apply:(Lorg/apache/dubbo/registry/xds/util/protocol/impl/LdsProtocol;)Ljava/util/function/Function;
+      49: invokeinterface #15,  2           // InterfaceMethod java/util/stream/Stream.flatMap:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      54: invokestatic  #16                 // Method java/util/stream/Collectors.toSet:()Ljava/util/stream/Collector;
+      57: invokeinterface #17,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+      62: checkcast     #18                 // class java/util/Set
+      65: astore_2
+      66: new           #19                 // class java/util/concurrent/ConcurrentHashMap
+      69: dup
+      70: invokespecial #20                 // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      73: astore_3
+      74: aload_3
+      75: ldc           #22                 // String emptyResourcesName
+      77: new           #23                 // class org/apache/dubbo/registry/xds/util/protocol/message/ListenerResult
+      80: dup
+      81: aload_2
+      82: invokespecial #24                 // Method org/apache/dubbo/registry/xds/util/protocol/message/ListenerResult."<init>":(Ljava/util/Set;)V
+      85: invokeinterface #25,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      90: pop
+      91: aload_3
+      92: areturn
+      93: new           #26                 // class java/util/HashMap
+      96: dup
+      97: invokespecial #27                 // Method java/util/HashMap."<init>":()V
+     100: areturn
+
+  private java.util.Set<java.lang.String> decodeResourceToListener(io.envoyproxy.envoy.config.listener.v3.Listener);
+    Code:
+       0: aload_1
+       1: invokevirtual #28                 // Method io/envoyproxy/envoy/config/listener/v3/Listener.getFilterChainsList:()Ljava/util/List;
+       4: invokeinterface #9,  1            // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+       9: invokedynamic #29,  0             // InvokeDynamic #3:apply:()Ljava/util/function/Function;
+      14: invokeinterface #15,  2           // InterfaceMethod java/util/stream/Stream.flatMap:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      19: invokedynamic #30,  0             // InvokeDynamic #4:apply:()Ljava/util/function/Function;
+      24: invokeinterface #11,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      29: invokedynamic #31,  0             // InvokeDynamic #5:apply:()Ljava/util/function/Function;
+      34: invokeinterface #11,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      39: invokedynamic #32,  0             // InvokeDynamic #6:test:()Ljava/util/function/Predicate;
+      44: invokeinterface #13,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+      49: invokedynamic #33,  0             // InvokeDynamic #7:apply:()Ljava/util/function/Function;
+      54: invokeinterface #11,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      59: invokedynamic #34,  0             // InvokeDynamic #8:apply:()Ljava/util/function/Function;
+      64: invokeinterface #11,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      69: invokestatic  #16                 // Method java/util/stream/Collectors.toSet:()Ljava/util/stream/Collector;
+      72: invokeinterface #17,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+      77: checkcast     #18                 // class java/util/Set
+      80: areturn
+
+  private static io.envoyproxy.envoy.config.listener.v3.Listener unpackListener(com.google.protobuf.Any);
+    Code:
+       0: aload_0
+       1: ldc           #35                 // class io/envoyproxy/envoy/config/listener/v3/Listener
+       3: invokevirtual #36                 // Method com/google/protobuf/Any.unpack:(Ljava/lang/Class;)Lcom/google/protobuf/Message;
+       6: checkcast     #35                 // class io/envoyproxy/envoy/config/listener/v3/Listener
+       9: areturn
+      10: astore_1
+      11: getstatic     #38                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      14: ldc           #39                 // String 1-31
+      16: ldc           #40                 // String
+      18: ldc           #40                 // String
+      20: ldc           #41                 // String Error occur when decode xDS response.
+      22: aload_1
+      23: invokeinterface #42,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      28: aconst_null
+      29: areturn
+    Exception table:
+       from    to  target type
+           0     9    10   Class com/google/protobuf/InvalidProtocolBufferException
+
+  private static io.envoyproxy.envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager unpackHttpConnectionManager(com.google.protobuf.Any);
+    Code:
+       0: aload_0
+       1: ldc           #43                 // class io/envoyproxy/envoy/extensions/filters/network/http_connection_manager/v3/HttpConnectionManager
+       3: invokevirtual #44                 // Method com/google/protobuf/Any.is:(Ljava/lang/Class;)Z
+       6: ifne          11
+       9: aconst_null
+      10: areturn
+      11: aload_0
+      12: ldc           #43                 // class io/envoyproxy/envoy/extensions/filters/network/http_connection_manager/v3/HttpConnectionManager
+      14: invokevirtual #36                 // Method com/google/protobuf/Any.unpack:(Ljava/lang/Class;)Lcom/google/protobuf/Message;
+      17: checkcast     #43                 // class io/envoyproxy/envoy/extensions/filters/network/http_connection_manager/v3/HttpConnectionManager
+      20: areturn
+      21: astore_1
+      22: getstatic     #38                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      25: ldc           #39                 // String 1-31
+      27: ldc           #40                 // String
+      29: ldc           #40                 // String
+      31: ldc           #41                 // String Error occur when decode xDS response.
+      33: aload_1
+      34: invokeinterface #42,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      39: aconst_null
+      40: areturn
+    Exception table:
+       from    to  target type
+           0    10    21   Class com/google/protobuf/InvalidProtocolBufferException
+          11    20    21   Class com/google/protobuf/InvalidProtocolBufferException
+
+  private static java.util.stream.Stream lambda$decodeResourceToListener$1(io.envoyproxy.envoy.config.listener.v3.FilterChain);
+    Code:
+       0: aload_0
+       1: invokevirtual #45                 // Method io/envoyproxy/envoy/config/listener/v3/FilterChain.getFiltersList:()Ljava/util/List;
+       4: invokeinterface #9,  1            // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+       9: areturn
+
+  private java.util.stream.Stream lambda$decodeDiscoveryResponse$0(io.envoyproxy.envoy.config.listener.v3.Listener);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #46                 // Method decodeResourceToListener:(Lio/envoyproxy/envoy/config/listener/v3/Listener;)Ljava/util/Set;
+       5: invokeinterface #47,  1           // InterfaceMethod java/util/Set.stream:()Ljava/util/stream/Stream;
+      10: areturn
+
+  static {};
+    Code:
+       0: ldc           #48                 // class org/apache/dubbo/registry/xds/util/protocol/impl/LdsProtocol
+       2: invokestatic  #49                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #38                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

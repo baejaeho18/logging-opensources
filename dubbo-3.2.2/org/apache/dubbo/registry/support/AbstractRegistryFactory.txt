@@ -1,0 +1,211 @@
+Compiled from "AbstractRegistryFactory.java"
+public abstract class org.apache.dubbo.registry.support.AbstractRegistryFactory implements org.apache.dubbo.registry.RegistryFactory,org.apache.dubbo.rpc.model.ScopeModelAware {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger LOGGER;
+
+  private org.apache.dubbo.registry.support.RegistryManager registryManager;
+
+  protected org.apache.dubbo.rpc.model.ApplicationModel applicationModel;
+
+  public org.apache.dubbo.registry.support.AbstractRegistryFactory();
+    Code:
+       0: aload_0
+       1: invokespecial #4                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public void setApplicationModel(org.apache.dubbo.rpc.model.ApplicationModel);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #5                  // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       5: aload_0
+       6: aload_1
+       7: invokevirtual #6                  // Method org/apache/dubbo/rpc/model/ApplicationModel.getBeanFactory:()Lorg/apache/dubbo/common/beans/factory/ScopeBeanFactory;
+      10: ldc           #7                  // class org/apache/dubbo/registry/support/RegistryManager
+      12: invokevirtual #8                  // Method org/apache/dubbo/common/beans/factory/ScopeBeanFactory.getBean:(Ljava/lang/Class;)Ljava/lang/Object;
+      15: checkcast     #7                  // class org/apache/dubbo/registry/support/RegistryManager
+      18: putfield      #9                  // Field registryManager:Lorg/apache/dubbo/registry/support/RegistryManager;
+      21: return
+
+  public org.apache.dubbo.registry.Registry getRegistry(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field registryManager:Lorg/apache/dubbo/registry/support/RegistryManager;
+       4: ifnonnull     17
+       7: new           #10                 // class java/lang/IllegalStateException
+      10: dup
+      11: ldc           #11                 // String Unable to fetch RegistryManager from ApplicationModel BeanFactory. Please check if `setApplicationModel` has been override.
+      13: invokespecial #12                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: aload_0
+      18: getfield      #9                  // Field registryManager:Lorg/apache/dubbo/registry/support/RegistryManager;
+      21: invokevirtual #13                 // Method org/apache/dubbo/registry/support/RegistryManager.getDefaultNopRegistryIfDestroyed:()Lorg/apache/dubbo/registry/Registry;
+      24: astore_2
+      25: aconst_null
+      26: aload_2
+      27: if_acmpeq     32
+      30: aload_2
+      31: areturn
+      32: aload_1
+      33: invokestatic  #14                 // Method org/apache/dubbo/common/URLBuilder.from:(Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/common/URLBuilder;
+      36: ldc           #15                 // class org/apache/dubbo/registry/RegistryService
+      38: invokevirtual #16                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      41: invokevirtual #17                 // Method org/apache/dubbo/common/URLBuilder.setPath:(Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+      44: ldc           #18                 // String interface
+      46: ldc           #15                 // class org/apache/dubbo/registry/RegistryService
+      48: invokevirtual #16                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      51: invokevirtual #19                 // Method org/apache/dubbo/common/URLBuilder.addParameter:(Ljava/lang/String;Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+      54: ldc           #20                 // String timestamp
+      56: invokevirtual #21                 // Method org/apache/dubbo/common/URLBuilder.removeParameter:(Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+      59: ldc           #22                 // String export
+      61: invokevirtual #23                 // Method org/apache/dubbo/common/URLBuilder.removeAttribute:(Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+      64: ldc           #24                 // String refer
+      66: invokevirtual #23                 // Method org/apache/dubbo/common/URLBuilder.removeAttribute:(Ljava/lang/String;)Lorg/apache/dubbo/common/URLBuilder;
+      69: invokevirtual #25                 // Method org/apache/dubbo/common/URLBuilder.build:()Lorg/apache/dubbo/common/url/component/ServiceConfigURL;
+      72: astore_1
+      73: aload_0
+      74: aload_1
+      75: invokevirtual #26                 // Method createRegistryCacheKey:(Lorg/apache/dubbo/common/URL;)Ljava/lang/String;
+      78: astore_3
+      79: aconst_null
+      80: astore        4
+      82: aload_1
+      83: ldc           #27                 // String check
+      85: iconst_1
+      86: invokevirtual #28                 // Method org/apache/dubbo/common/URL.getParameter:(Ljava/lang/String;Z)Z
+      89: ifeq          103
+      92: aload_1
+      93: invokevirtual #29                 // Method org/apache/dubbo/common/URL.getPort:()I
+      96: ifeq          103
+      99: iconst_1
+     100: goto          104
+     103: iconst_0
+     104: istore        5
+     106: aload_0
+     107: getfield      #9                  // Field registryManager:Lorg/apache/dubbo/registry/support/RegistryManager;
+     110: invokevirtual #30                 // Method org/apache/dubbo/registry/support/RegistryManager.getRegistryLock:()Ljava/util/concurrent/locks/Lock;
+     113: invokeinterface #31,  1           // InterfaceMethod java/util/concurrent/locks/Lock.lock:()V
+     118: aload_0
+     119: getfield      #9                  // Field registryManager:Lorg/apache/dubbo/registry/support/RegistryManager;
+     122: invokevirtual #13                 // Method org/apache/dubbo/registry/support/RegistryManager.getDefaultNopRegistryIfDestroyed:()Lorg/apache/dubbo/registry/Registry;
+     125: astore_2
+     126: aconst_null
+     127: aload_2
+     128: if_acmpeq     149
+     131: aload_2
+     132: astore        6
+     134: aload_0
+     135: getfield      #9                  // Field registryManager:Lorg/apache/dubbo/registry/support/RegistryManager;
+     138: invokevirtual #30                 // Method org/apache/dubbo/registry/support/RegistryManager.getRegistryLock:()Ljava/util/concurrent/locks/Lock;
+     141: invokeinterface #32,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     146: aload         6
+     148: areturn
+     149: aload_0
+     150: getfield      #9                  // Field registryManager:Lorg/apache/dubbo/registry/support/RegistryManager;
+     153: aload_3
+     154: invokevirtual #33                 // Method org/apache/dubbo/registry/support/RegistryManager.getRegistry:(Ljava/lang/String;)Lorg/apache/dubbo/registry/Registry;
+     157: astore        4
+     159: aload         4
+     161: ifnull        183
+     164: aload         4
+     166: astore        6
+     168: aload_0
+     169: getfield      #9                  // Field registryManager:Lorg/apache/dubbo/registry/support/RegistryManager;
+     172: invokevirtual #30                 // Method org/apache/dubbo/registry/support/RegistryManager.getRegistryLock:()Ljava/util/concurrent/locks/Lock;
+     175: invokeinterface #32,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     180: aload         6
+     182: areturn
+     183: aload_0
+     184: aload_1
+     185: invokevirtual #34                 // Method createRegistry:(Lorg/apache/dubbo/common/URL;)Lorg/apache/dubbo/registry/Registry;
+     188: astore        4
+     190: iload         5
+     192: ifeq          227
+     195: aload         4
+     197: ifnonnull     227
+     200: new           #10                 // class java/lang/IllegalStateException
+     203: dup
+     204: new           #35                 // class java/lang/StringBuilder
+     207: dup
+     208: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+     211: ldc           #37                 // String Can not create registry
+     213: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     216: aload_1
+     217: invokevirtual #39                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     220: invokevirtual #40                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     223: invokespecial #12                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     226: athrow
+     227: aload         4
+     229: ifnull        242
+     232: aload_0
+     233: getfield      #9                  // Field registryManager:Lorg/apache/dubbo/registry/support/RegistryManager;
+     236: aload_3
+     237: aload         4
+     239: invokevirtual #41                 // Method org/apache/dubbo/registry/support/RegistryManager.putRegistry:(Ljava/lang/String;Lorg/apache/dubbo/registry/Registry;)V
+     242: aload_0
+     243: getfield      #9                  // Field registryManager:Lorg/apache/dubbo/registry/support/RegistryManager;
+     246: invokevirtual #30                 // Method org/apache/dubbo/registry/support/RegistryManager.getRegistryLock:()Ljava/util/concurrent/locks/Lock;
+     249: invokeinterface #32,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     254: goto          343
+     257: astore        6
+     259: iload         5
+     261: ifeq          293
+     264: new           #43                 // class java/lang/RuntimeException
+     267: dup
+     268: new           #35                 // class java/lang/StringBuilder
+     271: dup
+     272: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+     275: ldc           #37                 // String Can not create registry
+     277: invokevirtual #38                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     280: aload_1
+     281: invokevirtual #39                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     284: invokevirtual #40                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     287: aload         6
+     289: invokespecial #44                 // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     292: athrow
+     293: getstatic     #45                 // Field LOGGER:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+     296: ldc           #46                 // String 1-11
+     298: ldc           #47                 // String
+     300: ldc           #47                 // String
+     302: ldc           #48                 // String Failed to obtain or create registry
+     304: aload         6
+     306: invokeinterface #49,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.warn:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     311: aload_0
+     312: getfield      #9                  // Field registryManager:Lorg/apache/dubbo/registry/support/RegistryManager;
+     315: invokevirtual #30                 // Method org/apache/dubbo/registry/support/RegistryManager.getRegistryLock:()Ljava/util/concurrent/locks/Lock;
+     318: invokeinterface #32,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     323: goto          343
+     326: astore        7
+     328: aload_0
+     329: getfield      #9                  // Field registryManager:Lorg/apache/dubbo/registry/support/RegistryManager;
+     332: invokevirtual #30                 // Method org/apache/dubbo/registry/support/RegistryManager.getRegistryLock:()Ljava/util/concurrent/locks/Lock;
+     335: invokeinterface #32,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+     340: aload         7
+     342: athrow
+     343: aload         4
+     345: areturn
+    Exception table:
+       from    to  target type
+         118   134   257   Class java/lang/Exception
+         149   168   257   Class java/lang/Exception
+         183   242   257   Class java/lang/Exception
+         118   134   326   any
+         149   168   326   any
+         183   242   326   any
+         257   311   326   any
+         326   328   326   any
+
+  protected java.lang.String createRegistryCacheKey(org.apache.dubbo.common.URL);
+    Code:
+       0: aload_1
+       1: invokevirtual #50                 // Method org/apache/dubbo/common/URL.toServiceStringWithoutResolving:()Ljava/lang/String;
+       4: areturn
+
+  protected abstract org.apache.dubbo.registry.Registry createRegistry(org.apache.dubbo.common.URL);
+
+  static {};
+    Code:
+       0: ldc           #51                 // class org/apache/dubbo/registry/support/AbstractRegistryFactory
+       2: invokestatic  #52                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #45                 // Field LOGGER:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

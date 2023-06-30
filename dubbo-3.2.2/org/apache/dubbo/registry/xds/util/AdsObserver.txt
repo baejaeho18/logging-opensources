@@ -1,0 +1,200 @@
+Compiled from "AdsObserver.java"
+public class org.apache.dubbo.registry.xds.util.AdsObserver {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  private final org.apache.dubbo.rpc.model.ApplicationModel applicationModel;
+
+  private final org.apache.dubbo.common.URL url;
+
+  private final io.envoyproxy.envoy.config.core.v3.Node node;
+
+  private volatile org.apache.dubbo.registry.xds.util.XdsChannel xdsChannel;
+
+  private final java.util.Map<java.lang.String, org.apache.dubbo.registry.xds.util.XdsListener> listeners;
+
+  protected io.grpc.stub.StreamObserver<io.envoyproxy.envoy.service.discovery.v3.DiscoveryRequest> requestObserver;
+
+  private final java.util.Map<java.lang.String, io.envoyproxy.envoy.service.discovery.v3.DiscoveryRequest> observedResources;
+
+  public org.apache.dubbo.registry.xds.util.AdsObserver(org.apache.dubbo.common.URL, io.envoyproxy.envoy.config.core.v3.Node);
+    Code:
+       0: aload_0
+       1: invokespecial #7                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #8                  // class java/util/concurrent/ConcurrentHashMap
+       8: dup
+       9: invokespecial #9                  // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      12: putfield      #6                  // Field listeners:Ljava/util/Map;
+      15: aload_0
+      16: new           #8                  // class java/util/concurrent/ConcurrentHashMap
+      19: dup
+      20: invokespecial #9                  // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+      23: putfield      #5                  // Field observedResources:Ljava/util/Map;
+      26: aload_0
+      27: aload_1
+      28: putfield      #10                 // Field url:Lorg/apache/dubbo/common/URL;
+      31: aload_0
+      32: aload_2
+      33: putfield      #4                  // Field node:Lio/envoyproxy/envoy/config/core/v3/Node;
+      36: aload_0
+      37: new           #11                 // class org/apache/dubbo/registry/xds/util/XdsChannel
+      40: dup
+      41: aload_1
+      42: invokespecial #12                 // Method org/apache/dubbo/registry/xds/util/XdsChannel."<init>":(Lorg/apache/dubbo/common/URL;)V
+      45: putfield      #13                 // Field xdsChannel:Lorg/apache/dubbo/registry/xds/util/XdsChannel;
+      48: aload_0
+      49: aload_1
+      50: invokevirtual #14                 // Method org/apache/dubbo/common/URL.getOrDefaultApplicationModel:()Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      53: putfield      #15                 // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+      56: return
+
+  public <T, S extends org.apache.dubbo.registry.xds.util.protocol.DeltaResource<T>> void addListener(org.apache.dubbo.registry.xds.util.protocol.AbstractProtocol<T, S>);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field listeners:Ljava/util/Map;
+       4: aload_1
+       5: invokevirtual #16                 // Method org/apache/dubbo/registry/xds/util/protocol/AbstractProtocol.getTypeUrl:()Ljava/lang/String;
+       8: aload_1
+       9: invokeinterface #17,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      14: pop
+      15: return
+
+  public void request(io.envoyproxy.envoy.service.discovery.v3.DiscoveryRequest);
+    Code:
+       0: aload_0
+       1: getfield      #18                 // Field requestObserver:Lio/grpc/stub/StreamObserver;
+       4: ifnonnull     26
+       7: aload_0
+       8: aload_0
+       9: getfield      #13                 // Field xdsChannel:Lorg/apache/dubbo/registry/xds/util/XdsChannel;
+      12: new           #19                 // class org/apache/dubbo/registry/xds/util/AdsObserver$ResponseObserver
+      15: dup
+      16: aload_0
+      17: invokespecial #20                 // Method org/apache/dubbo/registry/xds/util/AdsObserver$ResponseObserver."<init>":(Lorg/apache/dubbo/registry/xds/util/AdsObserver;)V
+      20: invokevirtual #21                 // Method org/apache/dubbo/registry/xds/util/XdsChannel.createDeltaDiscoveryRequest:(Lio/grpc/stub/StreamObserver;)Lio/grpc/stub/StreamObserver;
+      23: putfield      #18                 // Field requestObserver:Lio/grpc/stub/StreamObserver;
+      26: aload_0
+      27: getfield      #18                 // Field requestObserver:Lio/grpc/stub/StreamObserver;
+      30: aload_1
+      31: invokeinterface #22,  2           // InterfaceMethod io/grpc/stub/StreamObserver.onNext:(Ljava/lang/Object;)V
+      36: aload_0
+      37: getfield      #5                  // Field observedResources:Ljava/util/Map;
+      40: aload_1
+      41: invokevirtual #23                 // Method io/envoyproxy/envoy/service/discovery/v3/DiscoveryRequest.getTypeUrl:()Ljava/lang/String;
+      44: aload_1
+      45: invokeinterface #17,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      50: pop
+      51: return
+
+  private void triggerReConnectTask();
+    Code:
+       0: aload_0
+       1: getfield      #15                 // Field applicationModel:Lorg/apache/dubbo/rpc/model/ApplicationModel;
+       4: invokevirtual #24                 // Method org/apache/dubbo/rpc/model/ApplicationModel.getFrameworkModel:()Lorg/apache/dubbo/rpc/model/FrameworkModel;
+       7: invokevirtual #25                 // Method org/apache/dubbo/rpc/model/FrameworkModel.getBeanFactory:()Lorg/apache/dubbo/common/beans/factory/ScopeBeanFactory;
+      10: ldc           #26                 // class org/apache/dubbo/common/threadpool/manager/FrameworkExecutorRepository
+      12: invokevirtual #27                 // Method org/apache/dubbo/common/beans/factory/ScopeBeanFactory.getBean:(Ljava/lang/Class;)Ljava/lang/Object;
+      15: checkcast     #26                 // class org/apache/dubbo/common/threadpool/manager/FrameworkExecutorRepository
+      18: invokevirtual #28                 // Method org/apache/dubbo/common/threadpool/manager/FrameworkExecutorRepository.getSharedScheduledExecutor:()Ljava/util/concurrent/ScheduledExecutorService;
+      21: astore_1
+      22: aload_1
+      23: aload_0
+      24: invokedynamic #29,  0             // InvokeDynamic #0:run:(Lorg/apache/dubbo/registry/xds/util/AdsObserver;)Ljava/lang/Runnable;
+      29: ldc2_w        #30                 // long 3l
+      32: getstatic     #32                 // Field java/util/concurrent/TimeUnit.SECONDS:Ljava/util/concurrent/TimeUnit;
+      35: invokeinterface #33,  5           // InterfaceMethod java/util/concurrent/ScheduledExecutorService.schedule:(Ljava/lang/Runnable;JLjava/util/concurrent/TimeUnit;)Ljava/util/concurrent/ScheduledFuture;
+      40: pop
+      41: return
+
+  private void recover();
+    Code:
+       0: aload_0
+       1: new           #11                 // class org/apache/dubbo/registry/xds/util/XdsChannel
+       4: dup
+       5: aload_0
+       6: getfield      #10                 // Field url:Lorg/apache/dubbo/common/URL;
+       9: invokespecial #12                 // Method org/apache/dubbo/registry/xds/util/XdsChannel."<init>":(Lorg/apache/dubbo/common/URL;)V
+      12: putfield      #13                 // Field xdsChannel:Lorg/apache/dubbo/registry/xds/util/XdsChannel;
+      15: aload_0
+      16: getfield      #13                 // Field xdsChannel:Lorg/apache/dubbo/registry/xds/util/XdsChannel;
+      19: invokevirtual #34                 // Method org/apache/dubbo/registry/xds/util/XdsChannel.getChannel:()Lio/grpc/ManagedChannel;
+      22: ifnull        73
+      25: aload_0
+      26: aload_0
+      27: getfield      #13                 // Field xdsChannel:Lorg/apache/dubbo/registry/xds/util/XdsChannel;
+      30: new           #19                 // class org/apache/dubbo/registry/xds/util/AdsObserver$ResponseObserver
+      33: dup
+      34: aload_0
+      35: invokespecial #20                 // Method org/apache/dubbo/registry/xds/util/AdsObserver$ResponseObserver."<init>":(Lorg/apache/dubbo/registry/xds/util/AdsObserver;)V
+      38: invokevirtual #21                 // Method org/apache/dubbo/registry/xds/util/XdsChannel.createDeltaDiscoveryRequest:(Lio/grpc/stub/StreamObserver;)Lio/grpc/stub/StreamObserver;
+      41: putfield      #18                 // Field requestObserver:Lio/grpc/stub/StreamObserver;
+      44: aload_0
+      45: getfield      #5                  // Field observedResources:Ljava/util/Map;
+      48: invokeinterface #35,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+      53: aload_0
+      54: getfield      #18                 // Field requestObserver:Lio/grpc/stub/StreamObserver;
+      57: dup
+      58: invokevirtual #36                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      61: pop
+      62: invokedynamic #37,  0             // InvokeDynamic #1:accept:(Lio/grpc/stub/StreamObserver;)Ljava/util/function/Consumer;
+      67: invokeinterface #38,  2           // InterfaceMethod java/util/Collection.forEach:(Ljava/util/function/Consumer;)V
+      72: return
+      73: getstatic     #3                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      76: ldc           #39                 // String 1-30
+      78: ldc           #40                 // String
+      80: ldc           #40                 // String
+      82: ldc           #41                 // String Recover failed for xDS connection. Will retry. Create channel failed.
+      84: invokeinterface #42,  5           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+      89: goto          110
+      92: astore_1
+      93: getstatic     #3                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      96: ldc           #39                 // String 1-30
+      98: ldc           #40                 // String
+     100: ldc           #40                 // String
+     102: ldc           #44                 // String Recover failed for xDS connection. Will retry.
+     104: aload_1
+     105: invokeinterface #45,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+     110: aload_0
+     111: invokespecial #2                  // Method triggerReConnectTask:()V
+     114: return
+    Exception table:
+       from    to  target type
+           0    72    92   Class java/lang/Exception
+          73    89    92   Class java/lang/Exception
+
+  static java.util.Map access$000(org.apache.dubbo.registry.xds.util.AdsObserver);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field listeners:Ljava/util/Map;
+       4: areturn
+
+  static java.util.Map access$100(org.apache.dubbo.registry.xds.util.AdsObserver);
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field observedResources:Ljava/util/Map;
+       4: areturn
+
+  static io.envoyproxy.envoy.config.core.v3.Node access$200(org.apache.dubbo.registry.xds.util.AdsObserver);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field node:Lio/envoyproxy/envoy/config/core/v3/Node;
+       4: areturn
+
+  static org.apache.dubbo.common.logger.ErrorTypeAwareLogger access$300();
+    Code:
+       0: getstatic     #3                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       3: areturn
+
+  static void access$400(org.apache.dubbo.registry.xds.util.AdsObserver);
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method triggerReConnectTask:()V
+       4: return
+
+  static {};
+    Code:
+       0: ldc           #46                 // class org/apache/dubbo/registry/xds/util/AdsObserver
+       2: invokestatic  #47                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #3                  // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}

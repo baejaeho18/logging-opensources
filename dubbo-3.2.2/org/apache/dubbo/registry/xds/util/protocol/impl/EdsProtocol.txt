@@ -1,0 +1,152 @@
+Compiled from "EdsProtocol.java"
+public class org.apache.dubbo.registry.xds.util.protocol.impl.EdsProtocol extends org.apache.dubbo.registry.xds.util.protocol.AbstractProtocol<org.apache.dubbo.registry.xds.util.protocol.message.EndpointResult, org.apache.dubbo.registry.xds.util.protocol.delta.DeltaEndpoint> {
+  private static final org.apache.dubbo.common.logger.ErrorTypeAwareLogger logger;
+
+  public org.apache.dubbo.registry.xds.util.protocol.impl.EdsProtocol(org.apache.dubbo.registry.xds.util.AdsObserver, io.envoyproxy.envoy.config.core.v3.Node, int);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: iload_3
+       4: invokespecial #2                  // Method org/apache/dubbo/registry/xds/util/protocol/AbstractProtocol."<init>":(Lorg/apache/dubbo/registry/xds/util/AdsObserver;Lio/envoyproxy/envoy/config/core/v3/Node;I)V
+       7: return
+
+  public java.lang.String getTypeUrl();
+    Code:
+       0: ldc           #3                  // String type.googleapis.com/envoy.config.endpoint.v3.ClusterLoadAssignment
+       2: areturn
+
+  protected java.util.Map<java.lang.String, org.apache.dubbo.registry.xds.util.protocol.message.EndpointResult> decodeDiscoveryResponse(io.envoyproxy.envoy.service.discovery.v3.DiscoveryResponse);
+    Code:
+       0: aload_0
+       1: invokevirtual #4                  // Method getTypeUrl:()Ljava/lang/String;
+       4: aload_1
+       5: invokevirtual #5                  // Method io/envoyproxy/envoy/service/discovery/v3/DiscoveryResponse.getTypeUrl:()Ljava/lang/String;
+       8: invokevirtual #6                  // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      11: ifeq          66
+      14: aload_1
+      15: invokevirtual #7                  // Method io/envoyproxy/envoy/service/discovery/v3/DiscoveryResponse.getResourcesList:()Ljava/util/List;
+      18: invokeinterface #8,  1            // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+      23: invokedynamic #9,  0              // InvokeDynamic #0:apply:()Ljava/util/function/Function;
+      28: invokeinterface #10,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      33: invokedynamic #11,  0             // InvokeDynamic #1:test:()Ljava/util/function/Predicate;
+      38: invokeinterface #12,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+      43: invokedynamic #13,  0             // InvokeDynamic #2:apply:()Ljava/util/function/Function;
+      48: aload_0
+      49: invokedynamic #14,  0             // InvokeDynamic #3:apply:(Lorg/apache/dubbo/registry/xds/util/protocol/impl/EdsProtocol;)Ljava/util/function/Function;
+      54: invokestatic  #15                 // Method java/util/stream/Collectors.toConcurrentMap:(Ljava/util/function/Function;Ljava/util/function/Function;)Ljava/util/stream/Collector;
+      57: invokeinterface #16,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+      62: checkcast     #17                 // class java/util/Map
+      65: areturn
+      66: new           #18                 // class java/util/HashMap
+      69: dup
+      70: invokespecial #19                 // Method java/util/HashMap."<init>":()V
+      73: areturn
+
+  private org.apache.dubbo.registry.xds.util.protocol.message.EndpointResult decodeResourceToEndpoint(io.envoyproxy.envoy.config.endpoint.v3.ClusterLoadAssignment);
+    Code:
+       0: aload_1
+       1: invokevirtual #20                 // Method io/envoyproxy/envoy/config/endpoint/v3/ClusterLoadAssignment.getEndpointsList:()Ljava/util/List;
+       4: invokeinterface #8,  1            // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+       9: invokedynamic #21,  0             // InvokeDynamic #4:apply:()Ljava/util/function/Function;
+      14: invokeinterface #22,  2           // InterfaceMethod java/util/stream/Stream.flatMap:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      19: aload_1
+      20: invokedynamic #23,  0             // InvokeDynamic #5:apply:(Lio/envoyproxy/envoy/config/endpoint/v3/ClusterLoadAssignment;)Ljava/util/function/Function;
+      25: invokeinterface #10,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      30: invokestatic  #24                 // Method java/util/stream/Collectors.toSet:()Ljava/util/stream/Collector;
+      33: invokeinterface #16,  2           // InterfaceMethod java/util/stream/Stream.collect:(Ljava/util/stream/Collector;)Ljava/lang/Object;
+      38: checkcast     #25                 // class java/util/Set
+      41: astore_2
+      42: new           #26                 // class org/apache/dubbo/registry/xds/util/protocol/message/EndpointResult
+      45: dup
+      46: aload_2
+      47: invokespecial #27                 // Method org/apache/dubbo/registry/xds/util/protocol/message/EndpointResult."<init>":(Ljava/util/Set;)V
+      50: areturn
+
+  private static org.apache.dubbo.registry.xds.util.protocol.message.Endpoint decodeLbEndpointToEndpoint(java.lang.String, io.envoyproxy.envoy.config.endpoint.v3.LbEndpoint);
+    Code:
+       0: new           #28                 // class org/apache/dubbo/registry/xds/util/protocol/message/Endpoint
+       3: dup
+       4: invokespecial #29                 // Method org/apache/dubbo/registry/xds/util/protocol/message/Endpoint."<init>":()V
+       7: astore_2
+       8: aload_1
+       9: invokevirtual #30                 // Method io/envoyproxy/envoy/config/endpoint/v3/LbEndpoint.getEndpoint:()Lio/envoyproxy/envoy/config/endpoint/v3/Endpoint;
+      12: invokevirtual #31                 // Method io/envoyproxy/envoy/config/endpoint/v3/Endpoint.getAddress:()Lio/envoyproxy/envoy/config/core/v3/Address;
+      15: invokevirtual #32                 // Method io/envoyproxy/envoy/config/core/v3/Address.getSocketAddress:()Lio/envoyproxy/envoy/config/core/v3/SocketAddress;
+      18: astore_3
+      19: aload_2
+      20: aload_3
+      21: invokevirtual #33                 // Method io/envoyproxy/envoy/config/core/v3/SocketAddress.getAddress:()Ljava/lang/String;
+      24: invokevirtual #34                 // Method org/apache/dubbo/registry/xds/util/protocol/message/Endpoint.setAddress:(Ljava/lang/String;)V
+      27: aload_2
+      28: aload_3
+      29: invokevirtual #35                 // Method io/envoyproxy/envoy/config/core/v3/SocketAddress.getPortValue:()I
+      32: invokevirtual #36                 // Method org/apache/dubbo/registry/xds/util/protocol/message/Endpoint.setPortValue:(I)V
+      35: getstatic     #37                 // Field io/envoyproxy/envoy/config/core/v3/HealthStatus.HEALTHY:Lio/envoyproxy/envoy/config/core/v3/HealthStatus;
+      38: aload_1
+      39: invokevirtual #38                 // Method io/envoyproxy/envoy/config/endpoint/v3/LbEndpoint.getHealthStatus:()Lio/envoyproxy/envoy/config/core/v3/HealthStatus;
+      42: invokevirtual #39                 // Method io/envoyproxy/envoy/config/core/v3/HealthStatus.equals:(Ljava/lang/Object;)Z
+      45: ifne          61
+      48: getstatic     #40                 // Field io/envoyproxy/envoy/config/core/v3/HealthStatus.UNKNOWN:Lio/envoyproxy/envoy/config/core/v3/HealthStatus;
+      51: aload_1
+      52: invokevirtual #38                 // Method io/envoyproxy/envoy/config/endpoint/v3/LbEndpoint.getHealthStatus:()Lio/envoyproxy/envoy/config/core/v3/HealthStatus;
+      55: invokevirtual #39                 // Method io/envoyproxy/envoy/config/core/v3/HealthStatus.equals:(Ljava/lang/Object;)Z
+      58: ifeq          65
+      61: iconst_1
+      62: goto          66
+      65: iconst_0
+      66: istore        4
+      68: aload_2
+      69: iload         4
+      71: invokevirtual #41                 // Method org/apache/dubbo/registry/xds/util/protocol/message/Endpoint.setHealthy:(Z)V
+      74: aload_2
+      75: aload_1
+      76: invokevirtual #42                 // Method io/envoyproxy/envoy/config/endpoint/v3/LbEndpoint.getLoadBalancingWeight:()Lcom/google/protobuf/UInt32Value;
+      79: invokevirtual #43                 // Method com/google/protobuf/UInt32Value.getValue:()I
+      82: invokevirtual #44                 // Method org/apache/dubbo/registry/xds/util/protocol/message/Endpoint.setWeight:(I)V
+      85: aload_2
+      86: areturn
+
+  private static io.envoyproxy.envoy.config.endpoint.v3.ClusterLoadAssignment unpackClusterLoadAssignment(com.google.protobuf.Any);
+    Code:
+       0: aload_0
+       1: ldc           #45                 // class io/envoyproxy/envoy/config/endpoint/v3/ClusterLoadAssignment
+       3: invokevirtual #46                 // Method com/google/protobuf/Any.unpack:(Ljava/lang/Class;)Lcom/google/protobuf/Message;
+       6: checkcast     #45                 // class io/envoyproxy/envoy/config/endpoint/v3/ClusterLoadAssignment
+       9: areturn
+      10: astore_1
+      11: getstatic     #48                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+      14: ldc           #49                 // String 1-31
+      16: ldc           #50                 // String
+      18: ldc           #50                 // String
+      20: ldc           #51                 // String Error occur when decode xDS response.
+      22: aload_1
+      23: invokeinterface #52,  6           // InterfaceMethod org/apache/dubbo/common/logger/ErrorTypeAwareLogger.error:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      28: aconst_null
+      29: areturn
+    Exception table:
+       from    to  target type
+           0     9    10   Class com/google/protobuf/InvalidProtocolBufferException
+
+  private static org.apache.dubbo.registry.xds.util.protocol.message.Endpoint lambda$decodeResourceToEndpoint$1(io.envoyproxy.envoy.config.endpoint.v3.ClusterLoadAssignment, io.envoyproxy.envoy.config.endpoint.v3.LbEndpoint);
+    Code:
+       0: aload_0
+       1: invokevirtual #53                 // Method io/envoyproxy/envoy/config/endpoint/v3/ClusterLoadAssignment.getClusterName:()Ljava/lang/String;
+       4: aload_1
+       5: invokestatic  #54                 // Method decodeLbEndpointToEndpoint:(Ljava/lang/String;Lio/envoyproxy/envoy/config/endpoint/v3/LbEndpoint;)Lorg/apache/dubbo/registry/xds/util/protocol/message/Endpoint;
+       8: areturn
+
+  private static java.util.stream.Stream lambda$decodeResourceToEndpoint$0(io.envoyproxy.envoy.config.endpoint.v3.LocalityLbEndpoints);
+    Code:
+       0: aload_0
+       1: invokevirtual #55                 // Method io/envoyproxy/envoy/config/endpoint/v3/LocalityLbEndpoints.getLbEndpointsList:()Ljava/util/List;
+       4: invokeinterface #8,  1            // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+       9: areturn
+
+  static {};
+    Code:
+       0: ldc           #56                 // class org/apache/dubbo/registry/xds/util/protocol/impl/EdsProtocol
+       2: invokestatic  #57                 // Method org/apache/dubbo/common/logger/LoggerFactory.getErrorTypeAwareLogger:(Ljava/lang/Class;)Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       5: putstatic     #48                 // Field logger:Lorg/apache/dubbo/common/logger/ErrorTypeAwareLogger;
+       8: return
+}
