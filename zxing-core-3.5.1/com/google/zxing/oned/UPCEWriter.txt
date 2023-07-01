@@ -1,0 +1,161 @@
+Compiled from "UPCEWriter.java"
+public final class com.google.zxing.oned.UPCEWriter extends com.google.zxing.oned.UPCEANWriter {
+  private static final int CODE_WIDTH;
+
+  public com.google.zxing.oned.UPCEWriter();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method com/google/zxing/oned/UPCEANWriter."<init>":()V
+       4: return
+
+  protected java.util.Collection<com.google.zxing.BarcodeFormat> getSupportedWriteFormats();
+    Code:
+       0: getstatic     #2                  // Field com/google/zxing/BarcodeFormat.UPC_E:Lcom/google/zxing/BarcodeFormat;
+       3: invokestatic  #3                  // Method java/util/Collections.singleton:(Ljava/lang/Object;)Ljava/util/Set;
+       6: areturn
+
+  public boolean[] encode(java.lang.String);
+    Code:
+       0: aload_1
+       1: invokevirtual #4                  // Method java/lang/String.length:()I
+       4: istore_2
+       5: iload_2
+       6: lookupswitch  { // 2
+                     7: 32
+                     8: 77
+               default: 112
+          }
+      32: aload_1
+      33: invokestatic  #5                  // Method com/google/zxing/oned/UPCEReader.convertUPCEtoUPCA:(Ljava/lang/String;)Ljava/lang/String;
+      36: invokestatic  #6                  // Method com/google/zxing/oned/UPCEANReader.getStandardUPCEANChecksum:(Ljava/lang/CharSequence;)I
+      39: istore_3
+      40: goto          55
+      43: astore        4
+      45: new           #8                  // class java/lang/IllegalArgumentException
+      48: dup
+      49: aload         4
+      51: invokespecial #9                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/Throwable;)V
+      54: athrow
+      55: new           #10                 // class java/lang/StringBuilder
+      58: dup
+      59: invokespecial #11                 // Method java/lang/StringBuilder."<init>":()V
+      62: aload_1
+      63: invokevirtual #12                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      66: iload_3
+      67: invokevirtual #13                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      70: invokevirtual #14                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      73: astore_1
+      74: goto          139
+      77: aload_1
+      78: invokestatic  #5                  // Method com/google/zxing/oned/UPCEReader.convertUPCEtoUPCA:(Ljava/lang/String;)Ljava/lang/String;
+      81: invokestatic  #15                 // Method com/google/zxing/oned/UPCEANReader.checkStandardUPCEANChecksum:(Ljava/lang/CharSequence;)Z
+      84: ifne          97
+      87: new           #8                  // class java/lang/IllegalArgumentException
+      90: dup
+      91: ldc           #16                 // String Contents do not pass checksum
+      93: invokespecial #17                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      96: athrow
+      97: goto          139
+     100: astore        4
+     102: new           #8                  // class java/lang/IllegalArgumentException
+     105: dup
+     106: ldc           #18                 // String Illegal contents
+     108: invokespecial #17                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     111: athrow
+     112: new           #8                  // class java/lang/IllegalArgumentException
+     115: dup
+     116: new           #10                 // class java/lang/StringBuilder
+     119: dup
+     120: invokespecial #11                 // Method java/lang/StringBuilder."<init>":()V
+     123: ldc           #19                 // String Requested contents should be 7 or 8 digits long, but got
+     125: invokevirtual #12                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     128: iload_2
+     129: invokevirtual #13                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     132: invokevirtual #14                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     135: invokespecial #17                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     138: athrow
+     139: aload_1
+     140: invokestatic  #20                 // Method checkNumeric:(Ljava/lang/String;)V
+     143: aload_1
+     144: iconst_0
+     145: invokevirtual #21                 // Method java/lang/String.charAt:(I)C
+     148: bipush        10
+     150: invokestatic  #22                 // Method java/lang/Character.digit:(CI)I
+     153: istore_3
+     154: iload_3
+     155: ifeq          173
+     158: iload_3
+     159: iconst_1
+     160: if_icmpeq     173
+     163: new           #8                  // class java/lang/IllegalArgumentException
+     166: dup
+     167: ldc           #23                 // String Number system must be 0 or 1
+     169: invokespecial #17                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     172: athrow
+     173: aload_1
+     174: bipush        7
+     176: invokevirtual #21                 // Method java/lang/String.charAt:(I)C
+     179: bipush        10
+     181: invokestatic  #22                 // Method java/lang/Character.digit:(CI)I
+     184: istore        4
+     186: getstatic     #24                 // Field com/google/zxing/oned/UPCEReader.NUMSYS_AND_CHECK_DIGIT_PATTERNS:[[I
+     189: iload_3
+     190: aaload
+     191: iload         4
+     193: iaload
+     194: istore        5
+     196: bipush        51
+     198: newarray       boolean
+     200: astore        6
+     202: aload         6
+     204: iconst_0
+     205: getstatic     #26                 // Field com/google/zxing/oned/UPCEANReader.START_END_PATTERN:[I
+     208: iconst_1
+     209: invokestatic  #27                 // Method appendPattern:([ZI[IZ)I
+     212: istore        7
+     214: iconst_1
+     215: istore        8
+     217: iload         8
+     219: bipush        6
+     221: if_icmpgt     279
+     224: aload_1
+     225: iload         8
+     227: invokevirtual #21                 // Method java/lang/String.charAt:(I)C
+     230: bipush        10
+     232: invokestatic  #22                 // Method java/lang/Character.digit:(CI)I
+     235: istore        9
+     237: iload         5
+     239: bipush        6
+     241: iload         8
+     243: isub
+     244: ishr
+     245: iconst_1
+     246: iand
+     247: iconst_1
+     248: if_icmpne     254
+     251: iinc          9, 10
+     254: iload         7
+     256: aload         6
+     258: iload         7
+     260: getstatic     #28                 // Field com/google/zxing/oned/UPCEANReader.L_AND_G_PATTERNS:[[I
+     263: iload         9
+     265: aaload
+     266: iconst_0
+     267: invokestatic  #27                 // Method appendPattern:([ZI[IZ)I
+     270: iadd
+     271: istore        7
+     273: iinc          8, 1
+     276: goto          217
+     279: aload         6
+     281: iload         7
+     283: getstatic     #29                 // Field com/google/zxing/oned/UPCEANReader.END_PATTERN:[I
+     286: iconst_0
+     287: invokestatic  #27                 // Method appendPattern:([ZI[IZ)I
+     290: pop
+     291: aload         6
+     293: areturn
+    Exception table:
+       from    to  target type
+          32    40    43   Class com/google/zxing/FormatException
+          77    97   100   Class com/google/zxing/FormatException
+}

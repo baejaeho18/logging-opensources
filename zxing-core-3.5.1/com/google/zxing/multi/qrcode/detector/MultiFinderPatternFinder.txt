@@ -1,0 +1,491 @@
+Compiled from "MultiFinderPatternFinder.java"
+public final class com.google.zxing.multi.qrcode.detector.MultiFinderPatternFinder extends com.google.zxing.qrcode.detector.FinderPatternFinder {
+  private static final com.google.zxing.qrcode.detector.FinderPatternInfo[] EMPTY_RESULT_ARRAY;
+
+  private static final com.google.zxing.qrcode.detector.FinderPattern[] EMPTY_FP_ARRAY;
+
+  private static final com.google.zxing.qrcode.detector.FinderPattern[][] EMPTY_FP_2D_ARRAY;
+
+  private static final float MAX_MODULE_COUNT_PER_EDGE;
+
+  private static final float MIN_MODULE_COUNT_PER_EDGE;
+
+  private static final float DIFF_MODSIZE_CUTOFF_PERCENT;
+
+  private static final float DIFF_MODSIZE_CUTOFF;
+
+  public com.google.zxing.multi.qrcode.detector.MultiFinderPatternFinder(com.google.zxing.common.BitMatrix, com.google.zxing.ResultPointCallback);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokespecial #1                  // Method com/google/zxing/qrcode/detector/FinderPatternFinder."<init>":(Lcom/google/zxing/common/BitMatrix;Lcom/google/zxing/ResultPointCallback;)V
+       6: return
+
+  private com.google.zxing.qrcode.detector.FinderPattern[][] selectMultipleBestPatterns() throws com.google.zxing.NotFoundException;
+    Code:
+       0: new           #2                  // class java/util/ArrayList
+       3: dup
+       4: invokespecial #3                  // Method java/util/ArrayList."<init>":()V
+       7: astore_1
+       8: aload_0
+       9: invokevirtual #4                  // Method getPossibleCenters:()Ljava/util/List;
+      12: invokeinterface #5,  1            // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      17: astore_2
+      18: aload_2
+      19: invokeinterface #6,  1            // InterfaceMethod java/util/Iterator.hasNext:()Z
+      24: ifeq          56
+      27: aload_2
+      28: invokeinterface #7,  1            // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      33: checkcast     #8                  // class com/google/zxing/qrcode/detector/FinderPattern
+      36: astore_3
+      37: aload_3
+      38: invokevirtual #9                  // Method com/google/zxing/qrcode/detector/FinderPattern.getCount:()I
+      41: iconst_2
+      42: if_icmplt     53
+      45: aload_1
+      46: aload_3
+      47: invokeinterface #10,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      52: pop
+      53: goto          18
+      56: aload_1
+      57: invokeinterface #11,  1           // InterfaceMethod java/util/List.size:()I
+      62: istore_2
+      63: iload_2
+      64: iconst_3
+      65: if_icmpge     72
+      68: invokestatic  #12                 // Method com/google/zxing/NotFoundException.getNotFoundInstance:()Lcom/google/zxing/NotFoundException;
+      71: athrow
+      72: iload_2
+      73: iconst_3
+      74: if_icmpne     97
+      77: iconst_1
+      78: anewarray     #13                 // class "[Lcom/google/zxing/qrcode/detector/FinderPattern;"
+      81: dup
+      82: iconst_0
+      83: aload_1
+      84: getstatic     #14                 // Field EMPTY_FP_ARRAY:[Lcom/google/zxing/qrcode/detector/FinderPattern;
+      87: invokeinterface #15,  2           // InterfaceMethod java/util/List.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;
+      92: checkcast     #13                 // class "[Lcom/google/zxing/qrcode/detector/FinderPattern;"
+      95: aastore
+      96: areturn
+      97: aload_1
+      98: new           #16                 // class com/google/zxing/multi/qrcode/detector/MultiFinderPatternFinder$ModuleSizeComparator
+     101: dup
+     102: aconst_null
+     103: invokespecial #17                 // Method com/google/zxing/multi/qrcode/detector/MultiFinderPatternFinder$ModuleSizeComparator."<init>":(Lcom/google/zxing/multi/qrcode/detector/MultiFinderPatternFinder$1;)V
+     106: invokestatic  #18                 // Method java/util/Collections.sort:(Ljava/util/List;Ljava/util/Comparator;)V
+     109: new           #2                  // class java/util/ArrayList
+     112: dup
+     113: invokespecial #3                  // Method java/util/ArrayList."<init>":()V
+     116: astore_3
+     117: iconst_0
+     118: istore        4
+     120: iload         4
+     122: iload_2
+     123: iconst_2
+     124: isub
+     125: if_icmpge     563
+     128: aload_1
+     129: iload         4
+     131: invokeinterface #19,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     136: checkcast     #8                  // class com/google/zxing/qrcode/detector/FinderPattern
+     139: astore        5
+     141: aload         5
+     143: ifnonnull     149
+     146: goto          557
+     149: iload         4
+     151: iconst_1
+     152: iadd
+     153: istore        6
+     155: iload         6
+     157: iload_2
+     158: iconst_1
+     159: isub
+     160: if_icmpge     557
+     163: aload_1
+     164: iload         6
+     166: invokeinterface #19,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     171: checkcast     #8                  // class com/google/zxing/qrcode/detector/FinderPattern
+     174: astore        7
+     176: aload         7
+     178: ifnonnull     184
+     181: goto          551
+     184: aload         5
+     186: invokevirtual #20                 // Method com/google/zxing/qrcode/detector/FinderPattern.getEstimatedModuleSize:()F
+     189: aload         7
+     191: invokevirtual #20                 // Method com/google/zxing/qrcode/detector/FinderPattern.getEstimatedModuleSize:()F
+     194: fsub
+     195: aload         5
+     197: invokevirtual #20                 // Method com/google/zxing/qrcode/detector/FinderPattern.getEstimatedModuleSize:()F
+     200: aload         7
+     202: invokevirtual #20                 // Method com/google/zxing/qrcode/detector/FinderPattern.getEstimatedModuleSize:()F
+     205: invokestatic  #21                 // Method java/lang/Math.min:(FF)F
+     208: fdiv
+     209: fstore        8
+     211: aload         5
+     213: invokevirtual #20                 // Method com/google/zxing/qrcode/detector/FinderPattern.getEstimatedModuleSize:()F
+     216: aload         7
+     218: invokevirtual #20                 // Method com/google/zxing/qrcode/detector/FinderPattern.getEstimatedModuleSize:()F
+     221: fsub
+     222: invokestatic  #22                 // Method java/lang/Math.abs:(F)F
+     225: fstore        9
+     227: fload         9
+     229: ldc           #24                 // float 0.5f
+     231: fcmpl
+     232: ifle          246
+     235: fload         8
+     237: ldc           #25                 // float 0.05f
+     239: fcmpl
+     240: iflt          246
+     243: goto          557
+     246: iload         6
+     248: iconst_1
+     249: iadd
+     250: istore        10
+     252: iload         10
+     254: iload_2
+     255: if_icmpge     551
+     258: aload_1
+     259: iload         10
+     261: invokeinterface #19,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     266: checkcast     #8                  // class com/google/zxing/qrcode/detector/FinderPattern
+     269: astore        11
+     271: aload         11
+     273: ifnonnull     279
+     276: goto          545
+     279: aload         7
+     281: invokevirtual #20                 // Method com/google/zxing/qrcode/detector/FinderPattern.getEstimatedModuleSize:()F
+     284: aload         11
+     286: invokevirtual #20                 // Method com/google/zxing/qrcode/detector/FinderPattern.getEstimatedModuleSize:()F
+     289: fsub
+     290: aload         7
+     292: invokevirtual #20                 // Method com/google/zxing/qrcode/detector/FinderPattern.getEstimatedModuleSize:()F
+     295: aload         11
+     297: invokevirtual #20                 // Method com/google/zxing/qrcode/detector/FinderPattern.getEstimatedModuleSize:()F
+     300: invokestatic  #21                 // Method java/lang/Math.min:(FF)F
+     303: fdiv
+     304: fstore        12
+     306: aload         7
+     308: invokevirtual #20                 // Method com/google/zxing/qrcode/detector/FinderPattern.getEstimatedModuleSize:()F
+     311: aload         11
+     313: invokevirtual #20                 // Method com/google/zxing/qrcode/detector/FinderPattern.getEstimatedModuleSize:()F
+     316: fsub
+     317: invokestatic  #22                 // Method java/lang/Math.abs:(F)F
+     320: fstore        13
+     322: fload         13
+     324: ldc           #24                 // float 0.5f
+     326: fcmpl
+     327: ifle          341
+     330: fload         12
+     332: ldc           #25                 // float 0.05f
+     334: fcmpl
+     335: iflt          341
+     338: goto          551
+     341: iconst_3
+     342: anewarray     #8                  // class com/google/zxing/qrcode/detector/FinderPattern
+     345: dup
+     346: iconst_0
+     347: aload         5
+     349: aastore
+     350: dup
+     351: iconst_1
+     352: aload         7
+     354: aastore
+     355: dup
+     356: iconst_2
+     357: aload         11
+     359: aastore
+     360: astore        14
+     362: aload         14
+     364: invokestatic  #26                 // Method com/google/zxing/ResultPoint.orderBestPatterns:([Lcom/google/zxing/ResultPoint;)V
+     367: new           #27                 // class com/google/zxing/qrcode/detector/FinderPatternInfo
+     370: dup
+     371: aload         14
+     373: invokespecial #28                 // Method com/google/zxing/qrcode/detector/FinderPatternInfo."<init>":([Lcom/google/zxing/qrcode/detector/FinderPattern;)V
+     376: astore        15
+     378: aload         15
+     380: invokevirtual #29                 // Method com/google/zxing/qrcode/detector/FinderPatternInfo.getTopLeft:()Lcom/google/zxing/qrcode/detector/FinderPattern;
+     383: aload         15
+     385: invokevirtual #30                 // Method com/google/zxing/qrcode/detector/FinderPatternInfo.getBottomLeft:()Lcom/google/zxing/qrcode/detector/FinderPattern;
+     388: invokestatic  #31                 // Method com/google/zxing/ResultPoint.distance:(Lcom/google/zxing/ResultPoint;Lcom/google/zxing/ResultPoint;)F
+     391: fstore        16
+     393: aload         15
+     395: invokevirtual #32                 // Method com/google/zxing/qrcode/detector/FinderPatternInfo.getTopRight:()Lcom/google/zxing/qrcode/detector/FinderPattern;
+     398: aload         15
+     400: invokevirtual #30                 // Method com/google/zxing/qrcode/detector/FinderPatternInfo.getBottomLeft:()Lcom/google/zxing/qrcode/detector/FinderPattern;
+     403: invokestatic  #31                 // Method com/google/zxing/ResultPoint.distance:(Lcom/google/zxing/ResultPoint;Lcom/google/zxing/ResultPoint;)F
+     406: fstore        17
+     408: aload         15
+     410: invokevirtual #29                 // Method com/google/zxing/qrcode/detector/FinderPatternInfo.getTopLeft:()Lcom/google/zxing/qrcode/detector/FinderPattern;
+     413: aload         15
+     415: invokevirtual #32                 // Method com/google/zxing/qrcode/detector/FinderPatternInfo.getTopRight:()Lcom/google/zxing/qrcode/detector/FinderPattern;
+     418: invokestatic  #31                 // Method com/google/zxing/ResultPoint.distance:(Lcom/google/zxing/ResultPoint;Lcom/google/zxing/ResultPoint;)F
+     421: fstore        18
+     423: fload         16
+     425: fload         18
+     427: fadd
+     428: aload         5
+     430: invokevirtual #20                 // Method com/google/zxing/qrcode/detector/FinderPattern.getEstimatedModuleSize:()F
+     433: fconst_2
+     434: fmul
+     435: fdiv
+     436: fstore        19
+     438: fload         19
+     440: ldc           #33                 // float 180.0f
+     442: fcmpl
+     443: ifgt          545
+     446: fload         19
+     448: ldc           #34                 // float 9.0f
+     450: fcmpg
+     451: ifge          457
+     454: goto          545
+     457: fload         16
+     459: fload         18
+     461: fsub
+     462: fload         16
+     464: fload         18
+     466: invokestatic  #21                 // Method java/lang/Math.min:(FF)F
+     469: fdiv
+     470: invokestatic  #22                 // Method java/lang/Math.abs:(F)F
+     473: fstore        20
+     475: fload         20
+     477: ldc           #35                 // float 0.1f
+     479: fcmpl
+     480: iflt          486
+     483: goto          545
+     486: fload         16
+     488: f2d
+     489: fload         16
+     491: f2d
+     492: dmul
+     493: fload         18
+     495: f2d
+     496: fload         18
+     498: f2d
+     499: dmul
+     500: dadd
+     501: invokestatic  #36                 // Method java/lang/Math.sqrt:(D)D
+     504: d2f
+     505: fstore        21
+     507: fload         17
+     509: fload         21
+     511: fsub
+     512: fload         17
+     514: fload         21
+     516: invokestatic  #21                 // Method java/lang/Math.min:(FF)F
+     519: fdiv
+     520: invokestatic  #22                 // Method java/lang/Math.abs:(F)F
+     523: fstore        22
+     525: fload         22
+     527: ldc           #35                 // float 0.1f
+     529: fcmpl
+     530: iflt          536
+     533: goto          545
+     536: aload_3
+     537: aload         14
+     539: invokeinterface #10,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     544: pop
+     545: iinc          10, 1
+     548: goto          252
+     551: iinc          6, 1
+     554: goto          155
+     557: iinc          4, 1
+     560: goto          120
+     563: aload_3
+     564: invokeinterface #37,  1           // InterfaceMethod java/util/List.isEmpty:()Z
+     569: ifne          585
+     572: aload_3
+     573: getstatic     #38                 // Field EMPTY_FP_2D_ARRAY:[[Lcom/google/zxing/qrcode/detector/FinderPattern;
+     576: invokeinterface #15,  2           // InterfaceMethod java/util/List.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;
+     581: checkcast     #39                 // class "[[Lcom/google/zxing/qrcode/detector/FinderPattern;"
+     584: areturn
+     585: invokestatic  #12                 // Method com/google/zxing/NotFoundException.getNotFoundInstance:()Lcom/google/zxing/NotFoundException;
+     588: athrow
+
+  public com.google.zxing.qrcode.detector.FinderPatternInfo[] findMulti(java.util.Map<com.google.zxing.DecodeHintType, ?>) throws com.google.zxing.NotFoundException;
+    Code:
+       0: aload_1
+       1: ifnull        20
+       4: aload_1
+       5: getstatic     #40                 // Field com/google/zxing/DecodeHintType.TRY_HARDER:Lcom/google/zxing/DecodeHintType;
+       8: invokeinterface #41,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      13: ifeq          20
+      16: iconst_1
+      17: goto          21
+      20: iconst_0
+      21: istore_2
+      22: aload_0
+      23: invokevirtual #42                 // Method getImage:()Lcom/google/zxing/common/BitMatrix;
+      26: astore_3
+      27: aload_3
+      28: invokevirtual #43                 // Method com/google/zxing/common/BitMatrix.getHeight:()I
+      31: istore        4
+      33: aload_3
+      34: invokevirtual #44                 // Method com/google/zxing/common/BitMatrix.getWidth:()I
+      37: istore        5
+      39: iconst_3
+      40: iload         4
+      42: imul
+      43: sipush        388
+      46: idiv
+      47: istore        6
+      49: iload         6
+      51: iconst_3
+      52: if_icmplt     59
+      55: iload_2
+      56: ifeq          62
+      59: iconst_3
+      60: istore        6
+      62: iconst_5
+      63: newarray       int
+      65: astore        7
+      67: iload         6
+      69: iconst_1
+      70: isub
+      71: istore        8
+      73: iload         8
+      75: iload         4
+      77: if_icmpge     247
+      80: aload         7
+      82: invokestatic  #46                 // Method doClearCounts:([I)V
+      85: iconst_0
+      86: istore        9
+      88: iconst_0
+      89: istore        10
+      91: iload         10
+      93: iload         5
+      95: if_icmpge     218
+      98: aload_3
+      99: iload         10
+     101: iload         8
+     103: invokevirtual #47                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+     106: ifeq          132
+     109: iload         9
+     111: iconst_1
+     112: iand
+     113: iconst_1
+     114: if_icmpne     120
+     117: iinc          9, 1
+     120: aload         7
+     122: iload         9
+     124: dup2
+     125: iaload
+     126: iconst_1
+     127: iadd
+     128: iastore
+     129: goto          212
+     132: iload         9
+     134: iconst_1
+     135: iand
+     136: ifne          203
+     139: iload         9
+     141: iconst_4
+     142: if_icmpne     188
+     145: aload         7
+     147: invokestatic  #48                 // Method foundPatternCross:([I)Z
+     150: ifeq          177
+     153: aload_0
+     154: aload         7
+     156: iload         8
+     158: iload         10
+     160: invokevirtual #49                 // Method handlePossibleCenter:([III)Z
+     163: ifeq          177
+     166: iconst_0
+     167: istore        9
+     169: aload         7
+     171: invokestatic  #46                 // Method doClearCounts:([I)V
+     174: goto          212
+     177: aload         7
+     179: invokestatic  #50                 // Method doShiftCounts2:([I)V
+     182: iconst_3
+     183: istore        9
+     185: goto          212
+     188: aload         7
+     190: iinc          9, 1
+     193: iload         9
+     195: dup2
+     196: iaload
+     197: iconst_1
+     198: iadd
+     199: iastore
+     200: goto          212
+     203: aload         7
+     205: iload         9
+     207: dup2
+     208: iaload
+     209: iconst_1
+     210: iadd
+     211: iastore
+     212: iinc          10, 1
+     215: goto          91
+     218: aload         7
+     220: invokestatic  #48                 // Method foundPatternCross:([I)Z
+     223: ifeq          237
+     226: aload_0
+     227: aload         7
+     229: iload         8
+     231: iload         5
+     233: invokevirtual #49                 // Method handlePossibleCenter:([III)Z
+     236: pop
+     237: iload         8
+     239: iload         6
+     241: iadd
+     242: istore        8
+     244: goto          73
+     247: aload_0
+     248: invokespecial #51                 // Method selectMultipleBestPatterns:()[[Lcom/google/zxing/qrcode/detector/FinderPattern;
+     251: astore        8
+     253: new           #2                  // class java/util/ArrayList
+     256: dup
+     257: invokespecial #3                  // Method java/util/ArrayList."<init>":()V
+     260: astore        9
+     262: aload         8
+     264: astore        10
+     266: aload         10
+     268: arraylength
+     269: istore        11
+     271: iconst_0
+     272: istore        12
+     274: iload         12
+     276: iload         11
+     278: if_icmpge     316
+     281: aload         10
+     283: iload         12
+     285: aaload
+     286: astore        13
+     288: aload         13
+     290: invokestatic  #26                 // Method com/google/zxing/ResultPoint.orderBestPatterns:([Lcom/google/zxing/ResultPoint;)V
+     293: aload         9
+     295: new           #27                 // class com/google/zxing/qrcode/detector/FinderPatternInfo
+     298: dup
+     299: aload         13
+     301: invokespecial #28                 // Method com/google/zxing/qrcode/detector/FinderPatternInfo."<init>":([Lcom/google/zxing/qrcode/detector/FinderPattern;)V
+     304: invokeinterface #10,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     309: pop
+     310: iinc          12, 1
+     313: goto          274
+     316: aload         9
+     318: invokeinterface #37,  1           // InterfaceMethod java/util/List.isEmpty:()Z
+     323: ifeq          330
+     326: getstatic     #52                 // Field EMPTY_RESULT_ARRAY:[Lcom/google/zxing/qrcode/detector/FinderPatternInfo;
+     329: areturn
+     330: aload         9
+     332: getstatic     #52                 // Field EMPTY_RESULT_ARRAY:[Lcom/google/zxing/qrcode/detector/FinderPatternInfo;
+     335: invokeinterface #15,  2           // InterfaceMethod java/util/List.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;
+     340: checkcast     #53                 // class "[Lcom/google/zxing/qrcode/detector/FinderPatternInfo;"
+     343: areturn
+
+  static {};
+    Code:
+       0: iconst_0
+       1: anewarray     #27                 // class com/google/zxing/qrcode/detector/FinderPatternInfo
+       4: putstatic     #52                 // Field EMPTY_RESULT_ARRAY:[Lcom/google/zxing/qrcode/detector/FinderPatternInfo;
+       7: iconst_0
+       8: anewarray     #8                  // class com/google/zxing/qrcode/detector/FinderPattern
+      11: putstatic     #14                 // Field EMPTY_FP_ARRAY:[Lcom/google/zxing/qrcode/detector/FinderPattern;
+      14: iconst_0
+      15: anewarray     #13                 // class "[Lcom/google/zxing/qrcode/detector/FinderPattern;"
+      18: putstatic     #38                 // Field EMPTY_FP_2D_ARRAY:[[Lcom/google/zxing/qrcode/detector/FinderPattern;
+      21: return
+}

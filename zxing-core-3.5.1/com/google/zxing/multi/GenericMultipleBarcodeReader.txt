@@ -1,0 +1,347 @@
+Compiled from "GenericMultipleBarcodeReader.java"
+public final class com.google.zxing.multi.GenericMultipleBarcodeReader implements com.google.zxing.multi.MultipleBarcodeReader {
+  private static final int MIN_DIMENSION_TO_RECUR;
+
+  private static final int MAX_DEPTH;
+
+  static final com.google.zxing.Result[] EMPTY_RESULT_ARRAY;
+
+  private final com.google.zxing.Reader delegate;
+
+  public com.google.zxing.multi.GenericMultipleBarcodeReader(com.google.zxing.Reader);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field delegate:Lcom/google/zxing/Reader;
+       9: return
+
+  public com.google.zxing.Result[] decodeMultiple(com.google.zxing.BinaryBitmap) throws com.google.zxing.NotFoundException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aconst_null
+       3: invokevirtual #3                  // Method decodeMultiple:(Lcom/google/zxing/BinaryBitmap;Ljava/util/Map;)[Lcom/google/zxing/Result;
+       6: areturn
+
+  public com.google.zxing.Result[] decodeMultiple(com.google.zxing.BinaryBitmap, java.util.Map<com.google.zxing.DecodeHintType, ?>) throws com.google.zxing.NotFoundException;
+    Code:
+       0: new           #4                  // class java/util/ArrayList
+       3: dup
+       4: invokespecial #5                  // Method java/util/ArrayList."<init>":()V
+       7: astore_3
+       8: aload_0
+       9: aload_1
+      10: aload_2
+      11: aload_3
+      12: iconst_0
+      13: iconst_0
+      14: iconst_0
+      15: invokespecial #6                  // Method doDecodeMultiple:(Lcom/google/zxing/BinaryBitmap;Ljava/util/Map;Ljava/util/List;III)V
+      18: aload_3
+      19: invokeinterface #7,  1            // InterfaceMethod java/util/List.isEmpty:()Z
+      24: ifeq          31
+      27: invokestatic  #8                  // Method com/google/zxing/NotFoundException.getNotFoundInstance:()Lcom/google/zxing/NotFoundException;
+      30: athrow
+      31: aload_3
+      32: getstatic     #9                  // Field EMPTY_RESULT_ARRAY:[Lcom/google/zxing/Result;
+      35: invokeinterface #10,  2           // InterfaceMethod java/util/List.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;
+      40: checkcast     #11                 // class "[Lcom/google/zxing/Result;"
+      43: areturn
+
+  private void doDecodeMultiple(com.google.zxing.BinaryBitmap, java.util.Map<com.google.zxing.DecodeHintType, ?>, java.util.List<com.google.zxing.Result>, int, int, int);
+    Code:
+       0: iload         6
+       2: iconst_4
+       3: if_icmple     7
+       6: return
+       7: aload_0
+       8: getfield      #2                  // Field delegate:Lcom/google/zxing/Reader;
+      11: aload_1
+      12: aload_2
+      13: invokeinterface #13,  3           // InterfaceMethod com/google/zxing/Reader.decode:(Lcom/google/zxing/BinaryBitmap;Ljava/util/Map;)Lcom/google/zxing/Result;
+      18: astore        7
+      20: goto          26
+      23: astore        8
+      25: return
+      26: iconst_0
+      27: istore        8
+      29: aload_3
+      30: invokeinterface #15,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      35: astore        9
+      37: aload         9
+      39: invokeinterface #16,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      44: ifeq          84
+      47: aload         9
+      49: invokeinterface #17,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      54: checkcast     #18                 // class com/google/zxing/Result
+      57: astore        10
+      59: aload         10
+      61: invokevirtual #19                 // Method com/google/zxing/Result.getText:()Ljava/lang/String;
+      64: aload         7
+      66: invokevirtual #19                 // Method com/google/zxing/Result.getText:()Ljava/lang/String;
+      69: invokevirtual #20                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      72: ifeq          81
+      75: iconst_1
+      76: istore        8
+      78: goto          84
+      81: goto          37
+      84: iload         8
+      86: ifne          105
+      89: aload_3
+      90: aload         7
+      92: iload         4
+      94: iload         5
+      96: invokestatic  #21                 // Method translateResultPoints:(Lcom/google/zxing/Result;II)Lcom/google/zxing/Result;
+      99: invokeinterface #22,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     104: pop
+     105: aload         7
+     107: invokevirtual #23                 // Method com/google/zxing/Result.getResultPoints:()[Lcom/google/zxing/ResultPoint;
+     110: astore        9
+     112: aload         9
+     114: ifnull        123
+     117: aload         9
+     119: arraylength
+     120: ifne          124
+     123: return
+     124: aload_1
+     125: invokevirtual #24                 // Method com/google/zxing/BinaryBitmap.getWidth:()I
+     128: istore        10
+     130: aload_1
+     131: invokevirtual #25                 // Method com/google/zxing/BinaryBitmap.getHeight:()I
+     134: istore        11
+     136: iload         10
+     138: i2f
+     139: fstore        12
+     141: iload         11
+     143: i2f
+     144: fstore        13
+     146: fconst_0
+     147: fstore        14
+     149: fconst_0
+     150: fstore        15
+     152: aload         9
+     154: astore        16
+     156: aload         16
+     158: arraylength
+     159: istore        17
+     161: iconst_0
+     162: istore        18
+     164: iload         18
+     166: iload         17
+     168: if_icmpge     254
+     171: aload         16
+     173: iload         18
+     175: aaload
+     176: astore        19
+     178: aload         19
+     180: ifnonnull     186
+     183: goto          248
+     186: aload         19
+     188: invokevirtual #26                 // Method com/google/zxing/ResultPoint.getX:()F
+     191: fstore        20
+     193: aload         19
+     195: invokevirtual #27                 // Method com/google/zxing/ResultPoint.getY:()F
+     198: fstore        21
+     200: fload         20
+     202: fload         12
+     204: fcmpg
+     205: ifge          212
+     208: fload         20
+     210: fstore        12
+     212: fload         21
+     214: fload         13
+     216: fcmpg
+     217: ifge          224
+     220: fload         21
+     222: fstore        13
+     224: fload         20
+     226: fload         14
+     228: fcmpl
+     229: ifle          236
+     232: fload         20
+     234: fstore        14
+     236: fload         21
+     238: fload         15
+     240: fcmpl
+     241: ifle          248
+     244: fload         21
+     246: fstore        15
+     248: iinc          18, 1
+     251: goto          164
+     254: fload         12
+     256: ldc           #28                 // float 100.0f
+     258: fcmpl
+     259: ifle          287
+     262: aload_0
+     263: aload_1
+     264: iconst_0
+     265: iconst_0
+     266: fload         12
+     268: f2i
+     269: iload         11
+     271: invokevirtual #29                 // Method com/google/zxing/BinaryBitmap.crop:(IIII)Lcom/google/zxing/BinaryBitmap;
+     274: aload_2
+     275: aload_3
+     276: iload         4
+     278: iload         5
+     280: iload         6
+     282: iconst_1
+     283: iadd
+     284: invokespecial #6                  // Method doDecodeMultiple:(Lcom/google/zxing/BinaryBitmap;Ljava/util/Map;Ljava/util/List;III)V
+     287: fload         13
+     289: ldc           #28                 // float 100.0f
+     291: fcmpl
+     292: ifle          320
+     295: aload_0
+     296: aload_1
+     297: iconst_0
+     298: iconst_0
+     299: iload         10
+     301: fload         13
+     303: f2i
+     304: invokevirtual #29                 // Method com/google/zxing/BinaryBitmap.crop:(IIII)Lcom/google/zxing/BinaryBitmap;
+     307: aload_2
+     308: aload_3
+     309: iload         4
+     311: iload         5
+     313: iload         6
+     315: iconst_1
+     316: iadd
+     317: invokespecial #6                  // Method doDecodeMultiple:(Lcom/google/zxing/BinaryBitmap;Ljava/util/Map;Ljava/util/List;III)V
+     320: fload         14
+     322: iload         10
+     324: bipush        100
+     326: isub
+     327: i2f
+     328: fcmpg
+     329: ifge          366
+     332: aload_0
+     333: aload_1
+     334: fload         14
+     336: f2i
+     337: iconst_0
+     338: iload         10
+     340: fload         14
+     342: f2i
+     343: isub
+     344: iload         11
+     346: invokevirtual #29                 // Method com/google/zxing/BinaryBitmap.crop:(IIII)Lcom/google/zxing/BinaryBitmap;
+     349: aload_2
+     350: aload_3
+     351: iload         4
+     353: fload         14
+     355: f2i
+     356: iadd
+     357: iload         5
+     359: iload         6
+     361: iconst_1
+     362: iadd
+     363: invokespecial #6                  // Method doDecodeMultiple:(Lcom/google/zxing/BinaryBitmap;Ljava/util/Map;Ljava/util/List;III)V
+     366: fload         15
+     368: iload         11
+     370: bipush        100
+     372: isub
+     373: i2f
+     374: fcmpg
+     375: ifge          412
+     378: aload_0
+     379: aload_1
+     380: iconst_0
+     381: fload         15
+     383: f2i
+     384: iload         10
+     386: iload         11
+     388: fload         15
+     390: f2i
+     391: isub
+     392: invokevirtual #29                 // Method com/google/zxing/BinaryBitmap.crop:(IIII)Lcom/google/zxing/BinaryBitmap;
+     395: aload_2
+     396: aload_3
+     397: iload         4
+     399: iload         5
+     401: fload         15
+     403: f2i
+     404: iadd
+     405: iload         6
+     407: iconst_1
+     408: iadd
+     409: invokespecial #6                  // Method doDecodeMultiple:(Lcom/google/zxing/BinaryBitmap;Ljava/util/Map;Ljava/util/List;III)V
+     412: return
+    Exception table:
+       from    to  target type
+           7    20    23   Class com/google/zxing/ReaderException
+
+  private static com.google.zxing.Result translateResultPoints(com.google.zxing.Result, int, int);
+    Code:
+       0: aload_0
+       1: invokevirtual #23                 // Method com/google/zxing/Result.getResultPoints:()[Lcom/google/zxing/ResultPoint;
+       4: astore_3
+       5: aload_3
+       6: ifnonnull     11
+       9: aload_0
+      10: areturn
+      11: aload_3
+      12: arraylength
+      13: anewarray     #30                 // class com/google/zxing/ResultPoint
+      16: astore        4
+      18: iconst_0
+      19: istore        5
+      21: iload         5
+      23: aload_3
+      24: arraylength
+      25: if_icmpge     73
+      28: aload_3
+      29: iload         5
+      31: aaload
+      32: astore        6
+      34: aload         6
+      36: ifnull        67
+      39: aload         4
+      41: iload         5
+      43: new           #30                 // class com/google/zxing/ResultPoint
+      46: dup
+      47: aload         6
+      49: invokevirtual #26                 // Method com/google/zxing/ResultPoint.getX:()F
+      52: iload_1
+      53: i2f
+      54: fadd
+      55: aload         6
+      57: invokevirtual #27                 // Method com/google/zxing/ResultPoint.getY:()F
+      60: iload_2
+      61: i2f
+      62: fadd
+      63: invokespecial #31                 // Method com/google/zxing/ResultPoint."<init>":(FF)V
+      66: aastore
+      67: iinc          5, 1
+      70: goto          21
+      73: new           #18                 // class com/google/zxing/Result
+      76: dup
+      77: aload_0
+      78: invokevirtual #19                 // Method com/google/zxing/Result.getText:()Ljava/lang/String;
+      81: aload_0
+      82: invokevirtual #32                 // Method com/google/zxing/Result.getRawBytes:()[B
+      85: aload_0
+      86: invokevirtual #33                 // Method com/google/zxing/Result.getNumBits:()I
+      89: aload         4
+      91: aload_0
+      92: invokevirtual #34                 // Method com/google/zxing/Result.getBarcodeFormat:()Lcom/google/zxing/BarcodeFormat;
+      95: aload_0
+      96: invokevirtual #35                 // Method com/google/zxing/Result.getTimestamp:()J
+      99: invokespecial #36                 // Method com/google/zxing/Result."<init>":(Ljava/lang/String;[BI[Lcom/google/zxing/ResultPoint;Lcom/google/zxing/BarcodeFormat;J)V
+     102: astore        5
+     104: aload         5
+     106: aload_0
+     107: invokevirtual #37                 // Method com/google/zxing/Result.getResultMetadata:()Ljava/util/Map;
+     110: invokevirtual #38                 // Method com/google/zxing/Result.putAllMetadata:(Ljava/util/Map;)V
+     113: aload         5
+     115: areturn
+
+  static {};
+    Code:
+       0: iconst_0
+       1: anewarray     #18                 // class com/google/zxing/Result
+       4: putstatic     #9                  // Field EMPTY_RESULT_ARRAY:[Lcom/google/zxing/Result;
+       7: return
+}

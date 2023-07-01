@@ -1,0 +1,1696 @@
+Compiled from "FinderPatternFinder.java"
+public class com.google.zxing.qrcode.detector.FinderPatternFinder {
+  private static final int CENTER_QUORUM;
+
+  private static final com.google.zxing.qrcode.detector.FinderPatternFinder$EstimatedModuleComparator moduleComparator;
+
+  protected static final int MIN_SKIP;
+
+  protected static final int MAX_MODULES;
+
+  private final com.google.zxing.common.BitMatrix image;
+
+  private final java.util.List<com.google.zxing.qrcode.detector.FinderPattern> possibleCenters;
+
+  private boolean hasSkipped;
+
+  private final int[] crossCheckStateCount;
+
+  private final com.google.zxing.ResultPointCallback resultPointCallback;
+
+  public com.google.zxing.qrcode.detector.FinderPatternFinder(com.google.zxing.common.BitMatrix);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aconst_null
+       3: invokespecial #1                  // Method "<init>":(Lcom/google/zxing/common/BitMatrix;Lcom/google/zxing/ResultPointCallback;)V
+       6: return
+
+  public com.google.zxing.qrcode.detector.FinderPatternFinder(com.google.zxing.common.BitMatrix, com.google.zxing.ResultPointCallback);
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #3                  // Field image:Lcom/google/zxing/common/BitMatrix;
+       9: aload_0
+      10: new           #4                  // class java/util/ArrayList
+      13: dup
+      14: invokespecial #5                  // Method java/util/ArrayList."<init>":()V
+      17: putfield      #6                  // Field possibleCenters:Ljava/util/List;
+      20: aload_0
+      21: iconst_5
+      22: newarray       int
+      24: putfield      #7                  // Field crossCheckStateCount:[I
+      27: aload_0
+      28: aload_2
+      29: putfield      #8                  // Field resultPointCallback:Lcom/google/zxing/ResultPointCallback;
+      32: return
+
+  protected final com.google.zxing.common.BitMatrix getImage();
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field image:Lcom/google/zxing/common/BitMatrix;
+       4: areturn
+
+  protected final java.util.List<com.google.zxing.qrcode.detector.FinderPattern> getPossibleCenters();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+       4: areturn
+
+  final com.google.zxing.qrcode.detector.FinderPatternInfo find(java.util.Map<com.google.zxing.DecodeHintType, ?>) throws com.google.zxing.NotFoundException;
+    Code:
+       0: aload_1
+       1: ifnull        20
+       4: aload_1
+       5: getstatic     #9                  // Field com/google/zxing/DecodeHintType.TRY_HARDER:Lcom/google/zxing/DecodeHintType;
+       8: invokeinterface #10,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      13: ifeq          20
+      16: iconst_1
+      17: goto          21
+      20: iconst_0
+      21: istore_2
+      22: aload_0
+      23: getfield      #3                  // Field image:Lcom/google/zxing/common/BitMatrix;
+      26: invokevirtual #11                 // Method com/google/zxing/common/BitMatrix.getHeight:()I
+      29: istore_3
+      30: aload_0
+      31: getfield      #3                  // Field image:Lcom/google/zxing/common/BitMatrix;
+      34: invokevirtual #12                 // Method com/google/zxing/common/BitMatrix.getWidth:()I
+      37: istore        4
+      39: iconst_3
+      40: iload_3
+      41: imul
+      42: sipush        388
+      45: idiv
+      46: istore        5
+      48: iload         5
+      50: iconst_3
+      51: if_icmplt     58
+      54: iload_2
+      55: ifeq          61
+      58: iconst_3
+      59: istore        5
+      61: iconst_0
+      62: istore        6
+      64: iconst_5
+      65: newarray       int
+      67: astore        7
+      69: iload         5
+      71: iconst_1
+      72: isub
+      73: istore        8
+      75: iload         8
+      77: iload_3
+      78: if_icmpge     354
+      81: iload         6
+      83: ifne          354
+      86: aload         7
+      88: invokestatic  #14                 // Method doClearCounts:([I)V
+      91: iconst_0
+      92: istore        9
+      94: iconst_0
+      95: istore        10
+      97: iload         10
+      99: iload         4
+     101: if_icmpge     300
+     104: aload_0
+     105: getfield      #3                  // Field image:Lcom/google/zxing/common/BitMatrix;
+     108: iload         10
+     110: iload         8
+     112: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+     115: ifeq          141
+     118: iload         9
+     120: iconst_1
+     121: iand
+     122: iconst_1
+     123: if_icmpne     129
+     126: iinc          9, 1
+     129: aload         7
+     131: iload         9
+     133: dup2
+     134: iaload
+     135: iconst_1
+     136: iadd
+     137: iastore
+     138: goto          294
+     141: iload         9
+     143: iconst_1
+     144: iand
+     145: ifne          285
+     148: iload         9
+     150: iconst_4
+     151: if_icmpne     270
+     154: aload         7
+     156: invokestatic  #16                 // Method foundPatternCross:([I)Z
+     159: ifeq          259
+     162: aload_0
+     163: aload         7
+     165: iload         8
+     167: iload         10
+     169: invokevirtual #17                 // Method handlePossibleCenter:([III)Z
+     172: istore        11
+     174: iload         11
+     176: ifeq          237
+     179: iconst_2
+     180: istore        5
+     182: aload_0
+     183: getfield      #18                 // Field hasSkipped:Z
+     186: ifeq          198
+     189: aload_0
+     190: invokespecial #19                 // Method haveMultiplyConfirmedCenters:()Z
+     193: istore        6
+     195: goto          248
+     198: aload_0
+     199: invokespecial #20                 // Method findRowSkip:()I
+     202: istore        12
+     204: iload         12
+     206: aload         7
+     208: iconst_2
+     209: iaload
+     210: if_icmple     234
+     213: iload         8
+     215: iload         12
+     217: aload         7
+     219: iconst_2
+     220: iaload
+     221: isub
+     222: iload         5
+     224: isub
+     225: iadd
+     226: istore        8
+     228: iload         4
+     230: iconst_1
+     231: isub
+     232: istore        10
+     234: goto          248
+     237: aload         7
+     239: invokestatic  #21                 // Method doShiftCounts2:([I)V
+     242: iconst_3
+     243: istore        9
+     245: goto          294
+     248: iconst_0
+     249: istore        9
+     251: aload         7
+     253: invokestatic  #14                 // Method doClearCounts:([I)V
+     256: goto          294
+     259: aload         7
+     261: invokestatic  #21                 // Method doShiftCounts2:([I)V
+     264: iconst_3
+     265: istore        9
+     267: goto          294
+     270: aload         7
+     272: iinc          9, 1
+     275: iload         9
+     277: dup2
+     278: iaload
+     279: iconst_1
+     280: iadd
+     281: iastore
+     282: goto          294
+     285: aload         7
+     287: iload         9
+     289: dup2
+     290: iaload
+     291: iconst_1
+     292: iadd
+     293: iastore
+     294: iinc          10, 1
+     297: goto          97
+     300: aload         7
+     302: invokestatic  #16                 // Method foundPatternCross:([I)Z
+     305: ifeq          344
+     308: aload_0
+     309: aload         7
+     311: iload         8
+     313: iload         4
+     315: invokevirtual #17                 // Method handlePossibleCenter:([III)Z
+     318: istore        10
+     320: iload         10
+     322: ifeq          344
+     325: aload         7
+     327: iconst_0
+     328: iaload
+     329: istore        5
+     331: aload_0
+     332: getfield      #18                 // Field hasSkipped:Z
+     335: ifeq          344
+     338: aload_0
+     339: invokespecial #19                 // Method haveMultiplyConfirmedCenters:()Z
+     342: istore        6
+     344: iload         8
+     346: iload         5
+     348: iadd
+     349: istore        8
+     351: goto          75
+     354: aload_0
+     355: invokespecial #22                 // Method selectBestPatterns:()[Lcom/google/zxing/qrcode/detector/FinderPattern;
+     358: astore        8
+     360: aload         8
+     362: invokestatic  #23                 // Method com/google/zxing/ResultPoint.orderBestPatterns:([Lcom/google/zxing/ResultPoint;)V
+     365: new           #24                 // class com/google/zxing/qrcode/detector/FinderPatternInfo
+     368: dup
+     369: aload         8
+     371: invokespecial #25                 // Method com/google/zxing/qrcode/detector/FinderPatternInfo."<init>":([Lcom/google/zxing/qrcode/detector/FinderPattern;)V
+     374: areturn
+
+  private static float centerFromEnd(int[], int);
+    Code:
+       0: iload_1
+       1: aload_0
+       2: iconst_4
+       3: iaload
+       4: isub
+       5: aload_0
+       6: iconst_3
+       7: iaload
+       8: isub
+       9: i2f
+      10: aload_0
+      11: iconst_2
+      12: iaload
+      13: i2f
+      14: fconst_2
+      15: fdiv
+      16: fsub
+      17: freturn
+
+  protected static boolean foundPatternCross(int[]);
+    Code:
+       0: iconst_0
+       1: istore_1
+       2: iconst_0
+       3: istore_2
+       4: iload_2
+       5: iconst_5
+       6: if_icmpge     29
+       9: aload_0
+      10: iload_2
+      11: iaload
+      12: istore_3
+      13: iload_3
+      14: ifne          19
+      17: iconst_0
+      18: ireturn
+      19: iload_1
+      20: iload_3
+      21: iadd
+      22: istore_1
+      23: iinc          2, 1
+      26: goto          4
+      29: iload_1
+      30: bipush        7
+      32: if_icmpge     37
+      35: iconst_0
+      36: ireturn
+      37: iload_1
+      38: i2f
+      39: ldc           #26                 // float 7.0f
+      41: fdiv
+      42: fstore_2
+      43: fload_2
+      44: fconst_2
+      45: fdiv
+      46: fstore_3
+      47: fload_2
+      48: aload_0
+      49: iconst_0
+      50: iaload
+      51: i2f
+      52: fsub
+      53: invokestatic  #27                 // Method java/lang/Math.abs:(F)F
+      56: fload_3
+      57: fcmpg
+      58: ifge          127
+      61: fload_2
+      62: aload_0
+      63: iconst_1
+      64: iaload
+      65: i2f
+      66: fsub
+      67: invokestatic  #27                 // Method java/lang/Math.abs:(F)F
+      70: fload_3
+      71: fcmpg
+      72: ifge          127
+      75: ldc           #28                 // float 3.0f
+      77: fload_2
+      78: fmul
+      79: aload_0
+      80: iconst_2
+      81: iaload
+      82: i2f
+      83: fsub
+      84: invokestatic  #27                 // Method java/lang/Math.abs:(F)F
+      87: ldc           #28                 // float 3.0f
+      89: fload_3
+      90: fmul
+      91: fcmpg
+      92: ifge          127
+      95: fload_2
+      96: aload_0
+      97: iconst_3
+      98: iaload
+      99: i2f
+     100: fsub
+     101: invokestatic  #27                 // Method java/lang/Math.abs:(F)F
+     104: fload_3
+     105: fcmpg
+     106: ifge          127
+     109: fload_2
+     110: aload_0
+     111: iconst_4
+     112: iaload
+     113: i2f
+     114: fsub
+     115: invokestatic  #27                 // Method java/lang/Math.abs:(F)F
+     118: fload_3
+     119: fcmpg
+     120: ifge          127
+     123: iconst_1
+     124: goto          128
+     127: iconst_0
+     128: ireturn
+
+  protected static boolean foundPatternDiagonal(int[]);
+    Code:
+       0: iconst_0
+       1: istore_1
+       2: iconst_0
+       3: istore_2
+       4: iload_2
+       5: iconst_5
+       6: if_icmpge     29
+       9: aload_0
+      10: iload_2
+      11: iaload
+      12: istore_3
+      13: iload_3
+      14: ifne          19
+      17: iconst_0
+      18: ireturn
+      19: iload_1
+      20: iload_3
+      21: iadd
+      22: istore_1
+      23: iinc          2, 1
+      26: goto          4
+      29: iload_1
+      30: bipush        7
+      32: if_icmpge     37
+      35: iconst_0
+      36: ireturn
+      37: iload_1
+      38: i2f
+      39: ldc           #26                 // float 7.0f
+      41: fdiv
+      42: fstore_2
+      43: fload_2
+      44: ldc           #29                 // float 1.333f
+      46: fdiv
+      47: fstore_3
+      48: fload_2
+      49: aload_0
+      50: iconst_0
+      51: iaload
+      52: i2f
+      53: fsub
+      54: invokestatic  #27                 // Method java/lang/Math.abs:(F)F
+      57: fload_3
+      58: fcmpg
+      59: ifge          128
+      62: fload_2
+      63: aload_0
+      64: iconst_1
+      65: iaload
+      66: i2f
+      67: fsub
+      68: invokestatic  #27                 // Method java/lang/Math.abs:(F)F
+      71: fload_3
+      72: fcmpg
+      73: ifge          128
+      76: ldc           #28                 // float 3.0f
+      78: fload_2
+      79: fmul
+      80: aload_0
+      81: iconst_2
+      82: iaload
+      83: i2f
+      84: fsub
+      85: invokestatic  #27                 // Method java/lang/Math.abs:(F)F
+      88: ldc           #28                 // float 3.0f
+      90: fload_3
+      91: fmul
+      92: fcmpg
+      93: ifge          128
+      96: fload_2
+      97: aload_0
+      98: iconst_3
+      99: iaload
+     100: i2f
+     101: fsub
+     102: invokestatic  #27                 // Method java/lang/Math.abs:(F)F
+     105: fload_3
+     106: fcmpg
+     107: ifge          128
+     110: fload_2
+     111: aload_0
+     112: iconst_4
+     113: iaload
+     114: i2f
+     115: fsub
+     116: invokestatic  #27                 // Method java/lang/Math.abs:(F)F
+     119: fload_3
+     120: fcmpg
+     121: ifge          128
+     124: iconst_1
+     125: goto          129
+     128: iconst_0
+     129: ireturn
+
+  private int[] getCrossCheckStateCount();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field crossCheckStateCount:[I
+       4: invokestatic  #14                 // Method doClearCounts:([I)V
+       7: aload_0
+       8: getfield      #7                  // Field crossCheckStateCount:[I
+      11: areturn
+
+  protected final void clearCounts(int[]);
+    Code:
+       0: aload_1
+       1: invokestatic  #14                 // Method doClearCounts:([I)V
+       4: return
+
+  protected final void shiftCounts2(int[]);
+    Code:
+       0: aload_1
+       1: invokestatic  #21                 // Method doShiftCounts2:([I)V
+       4: return
+
+  protected static void doClearCounts(int[]);
+    Code:
+       0: aload_0
+       1: iconst_0
+       2: invokestatic  #30                 // Method java/util/Arrays.fill:([II)V
+       5: return
+
+  protected static void doShiftCounts2(int[]);
+    Code:
+       0: aload_0
+       1: iconst_0
+       2: aload_0
+       3: iconst_2
+       4: iaload
+       5: iastore
+       6: aload_0
+       7: iconst_1
+       8: aload_0
+       9: iconst_3
+      10: iaload
+      11: iastore
+      12: aload_0
+      13: iconst_2
+      14: aload_0
+      15: iconst_4
+      16: iaload
+      17: iastore
+      18: aload_0
+      19: iconst_3
+      20: iconst_1
+      21: iastore
+      22: aload_0
+      23: iconst_4
+      24: iconst_0
+      25: iastore
+      26: return
+
+  private boolean crossCheckDiagonal(int, int);
+    Code:
+       0: aload_0
+       1: invokespecial #31                 // Method getCrossCheckStateCount:()[I
+       4: astore_3
+       5: iconst_0
+       6: istore        4
+       8: iload_1
+       9: iload         4
+      11: if_icmplt     51
+      14: iload_2
+      15: iload         4
+      17: if_icmplt     51
+      20: aload_0
+      21: getfield      #3                  // Field image:Lcom/google/zxing/common/BitMatrix;
+      24: iload_2
+      25: iload         4
+      27: isub
+      28: iload_1
+      29: iload         4
+      31: isub
+      32: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+      35: ifeq          51
+      38: aload_3
+      39: iconst_2
+      40: dup2
+      41: iaload
+      42: iconst_1
+      43: iadd
+      44: iastore
+      45: iinc          4, 1
+      48: goto          8
+      51: aload_3
+      52: iconst_2
+      53: iaload
+      54: ifne          59
+      57: iconst_0
+      58: ireturn
+      59: iload_1
+      60: iload         4
+      62: if_icmplt     102
+      65: iload_2
+      66: iload         4
+      68: if_icmplt     102
+      71: aload_0
+      72: getfield      #3                  // Field image:Lcom/google/zxing/common/BitMatrix;
+      75: iload_2
+      76: iload         4
+      78: isub
+      79: iload_1
+      80: iload         4
+      82: isub
+      83: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+      86: ifne          102
+      89: aload_3
+      90: iconst_1
+      91: dup2
+      92: iaload
+      93: iconst_1
+      94: iadd
+      95: iastore
+      96: iinc          4, 1
+      99: goto          59
+     102: aload_3
+     103: iconst_1
+     104: iaload
+     105: ifne          110
+     108: iconst_0
+     109: ireturn
+     110: iload_1
+     111: iload         4
+     113: if_icmplt     153
+     116: iload_2
+     117: iload         4
+     119: if_icmplt     153
+     122: aload_0
+     123: getfield      #3                  // Field image:Lcom/google/zxing/common/BitMatrix;
+     126: iload_2
+     127: iload         4
+     129: isub
+     130: iload_1
+     131: iload         4
+     133: isub
+     134: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+     137: ifeq          153
+     140: aload_3
+     141: iconst_0
+     142: dup2
+     143: iaload
+     144: iconst_1
+     145: iadd
+     146: iastore
+     147: iinc          4, 1
+     150: goto          110
+     153: aload_3
+     154: iconst_0
+     155: iaload
+     156: ifne          161
+     159: iconst_0
+     160: ireturn
+     161: aload_0
+     162: getfield      #3                  // Field image:Lcom/google/zxing/common/BitMatrix;
+     165: invokevirtual #11                 // Method com/google/zxing/common/BitMatrix.getHeight:()I
+     168: istore        5
+     170: aload_0
+     171: getfield      #3                  // Field image:Lcom/google/zxing/common/BitMatrix;
+     174: invokevirtual #12                 // Method com/google/zxing/common/BitMatrix.getWidth:()I
+     177: istore        6
+     179: iconst_1
+     180: istore        4
+     182: iload_1
+     183: iload         4
+     185: iadd
+     186: iload         5
+     188: if_icmpge     231
+     191: iload_2
+     192: iload         4
+     194: iadd
+     195: iload         6
+     197: if_icmpge     231
+     200: aload_0
+     201: getfield      #3                  // Field image:Lcom/google/zxing/common/BitMatrix;
+     204: iload_2
+     205: iload         4
+     207: iadd
+     208: iload_1
+     209: iload         4
+     211: iadd
+     212: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+     215: ifeq          231
+     218: aload_3
+     219: iconst_2
+     220: dup2
+     221: iaload
+     222: iconst_1
+     223: iadd
+     224: iastore
+     225: iinc          4, 1
+     228: goto          182
+     231: iload_1
+     232: iload         4
+     234: iadd
+     235: iload         5
+     237: if_icmpge     280
+     240: iload_2
+     241: iload         4
+     243: iadd
+     244: iload         6
+     246: if_icmpge     280
+     249: aload_0
+     250: getfield      #3                  // Field image:Lcom/google/zxing/common/BitMatrix;
+     253: iload_2
+     254: iload         4
+     256: iadd
+     257: iload_1
+     258: iload         4
+     260: iadd
+     261: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+     264: ifne          280
+     267: aload_3
+     268: iconst_3
+     269: dup2
+     270: iaload
+     271: iconst_1
+     272: iadd
+     273: iastore
+     274: iinc          4, 1
+     277: goto          231
+     280: aload_3
+     281: iconst_3
+     282: iaload
+     283: ifne          288
+     286: iconst_0
+     287: ireturn
+     288: iload_1
+     289: iload         4
+     291: iadd
+     292: iload         5
+     294: if_icmpge     337
+     297: iload_2
+     298: iload         4
+     300: iadd
+     301: iload         6
+     303: if_icmpge     337
+     306: aload_0
+     307: getfield      #3                  // Field image:Lcom/google/zxing/common/BitMatrix;
+     310: iload_2
+     311: iload         4
+     313: iadd
+     314: iload_1
+     315: iload         4
+     317: iadd
+     318: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+     321: ifeq          337
+     324: aload_3
+     325: iconst_4
+     326: dup2
+     327: iaload
+     328: iconst_1
+     329: iadd
+     330: iastore
+     331: iinc          4, 1
+     334: goto          288
+     337: aload_3
+     338: iconst_4
+     339: iaload
+     340: ifne          345
+     343: iconst_0
+     344: ireturn
+     345: aload_3
+     346: invokestatic  #32                 // Method foundPatternDiagonal:([I)Z
+     349: ireturn
+
+  private float crossCheckVertical(int, int, int, int);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field image:Lcom/google/zxing/common/BitMatrix;
+       4: astore        5
+       6: aload         5
+       8: invokevirtual #11                 // Method com/google/zxing/common/BitMatrix.getHeight:()I
+      11: istore        6
+      13: aload_0
+      14: invokespecial #31                 // Method getCrossCheckStateCount:()[I
+      17: astore        7
+      19: iload_1
+      20: istore        8
+      22: iload         8
+      24: iflt          52
+      27: aload         5
+      29: iload_2
+      30: iload         8
+      32: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+      35: ifeq          52
+      38: aload         7
+      40: iconst_2
+      41: dup2
+      42: iaload
+      43: iconst_1
+      44: iadd
+      45: iastore
+      46: iinc          8, -1
+      49: goto          22
+      52: iload         8
+      54: ifge          60
+      57: ldc           #34                 // float NaNf
+      59: freturn
+      60: iload         8
+      62: iflt          98
+      65: aload         5
+      67: iload_2
+      68: iload         8
+      70: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+      73: ifne          98
+      76: aload         7
+      78: iconst_1
+      79: iaload
+      80: iload_3
+      81: if_icmpgt     98
+      84: aload         7
+      86: iconst_1
+      87: dup2
+      88: iaload
+      89: iconst_1
+      90: iadd
+      91: iastore
+      92: iinc          8, -1
+      95: goto          60
+      98: iload         8
+     100: iflt          111
+     103: aload         7
+     105: iconst_1
+     106: iaload
+     107: iload_3
+     108: if_icmple     114
+     111: ldc           #34                 // float NaNf
+     113: freturn
+     114: iload         8
+     116: iflt          152
+     119: aload         5
+     121: iload_2
+     122: iload         8
+     124: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+     127: ifeq          152
+     130: aload         7
+     132: iconst_0
+     133: iaload
+     134: iload_3
+     135: if_icmpgt     152
+     138: aload         7
+     140: iconst_0
+     141: dup2
+     142: iaload
+     143: iconst_1
+     144: iadd
+     145: iastore
+     146: iinc          8, -1
+     149: goto          114
+     152: aload         7
+     154: iconst_0
+     155: iaload
+     156: iload_3
+     157: if_icmple     163
+     160: ldc           #34                 // float NaNf
+     162: freturn
+     163: iload_1
+     164: iconst_1
+     165: iadd
+     166: istore        8
+     168: iload         8
+     170: iload         6
+     172: if_icmpge     200
+     175: aload         5
+     177: iload_2
+     178: iload         8
+     180: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+     183: ifeq          200
+     186: aload         7
+     188: iconst_2
+     189: dup2
+     190: iaload
+     191: iconst_1
+     192: iadd
+     193: iastore
+     194: iinc          8, 1
+     197: goto          168
+     200: iload         8
+     202: iload         6
+     204: if_icmpne     210
+     207: ldc           #34                 // float NaNf
+     209: freturn
+     210: iload         8
+     212: iload         6
+     214: if_icmpge     250
+     217: aload         5
+     219: iload_2
+     220: iload         8
+     222: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+     225: ifne          250
+     228: aload         7
+     230: iconst_3
+     231: iaload
+     232: iload_3
+     233: if_icmpge     250
+     236: aload         7
+     238: iconst_3
+     239: dup2
+     240: iaload
+     241: iconst_1
+     242: iadd
+     243: iastore
+     244: iinc          8, 1
+     247: goto          210
+     250: iload         8
+     252: iload         6
+     254: if_icmpeq     265
+     257: aload         7
+     259: iconst_3
+     260: iaload
+     261: iload_3
+     262: if_icmplt     268
+     265: ldc           #34                 // float NaNf
+     267: freturn
+     268: iload         8
+     270: iload         6
+     272: if_icmpge     308
+     275: aload         5
+     277: iload_2
+     278: iload         8
+     280: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+     283: ifeq          308
+     286: aload         7
+     288: iconst_4
+     289: iaload
+     290: iload_3
+     291: if_icmpge     308
+     294: aload         7
+     296: iconst_4
+     297: dup2
+     298: iaload
+     299: iconst_1
+     300: iadd
+     301: iastore
+     302: iinc          8, 1
+     305: goto          268
+     308: aload         7
+     310: iconst_4
+     311: iaload
+     312: iload_3
+     313: if_icmplt     319
+     316: ldc           #34                 // float NaNf
+     318: freturn
+     319: aload         7
+     321: iconst_0
+     322: iaload
+     323: aload         7
+     325: iconst_1
+     326: iaload
+     327: iadd
+     328: aload         7
+     330: iconst_2
+     331: iaload
+     332: iadd
+     333: aload         7
+     335: iconst_3
+     336: iaload
+     337: iadd
+     338: aload         7
+     340: iconst_4
+     341: iaload
+     342: iadd
+     343: istore        9
+     345: iconst_5
+     346: iload         9
+     348: iload         4
+     350: isub
+     351: invokestatic  #35                 // Method java/lang/Math.abs:(I)I
+     354: imul
+     355: iconst_2
+     356: iload         4
+     358: imul
+     359: if_icmplt     365
+     362: ldc           #34                 // float NaNf
+     364: freturn
+     365: aload         7
+     367: invokestatic  #16                 // Method foundPatternCross:([I)Z
+     370: ifeq          383
+     373: aload         7
+     375: iload         8
+     377: invokestatic  #36                 // Method centerFromEnd:([II)F
+     380: goto          385
+     383: ldc           #34                 // float NaNf
+     385: freturn
+
+  private float crossCheckHorizontal(int, int, int, int);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field image:Lcom/google/zxing/common/BitMatrix;
+       4: astore        5
+       6: aload         5
+       8: invokevirtual #12                 // Method com/google/zxing/common/BitMatrix.getWidth:()I
+      11: istore        6
+      13: aload_0
+      14: invokespecial #31                 // Method getCrossCheckStateCount:()[I
+      17: astore        7
+      19: iload_1
+      20: istore        8
+      22: iload         8
+      24: iflt          52
+      27: aload         5
+      29: iload         8
+      31: iload_2
+      32: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+      35: ifeq          52
+      38: aload         7
+      40: iconst_2
+      41: dup2
+      42: iaload
+      43: iconst_1
+      44: iadd
+      45: iastore
+      46: iinc          8, -1
+      49: goto          22
+      52: iload         8
+      54: ifge          60
+      57: ldc           #34                 // float NaNf
+      59: freturn
+      60: iload         8
+      62: iflt          98
+      65: aload         5
+      67: iload         8
+      69: iload_2
+      70: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+      73: ifne          98
+      76: aload         7
+      78: iconst_1
+      79: iaload
+      80: iload_3
+      81: if_icmpgt     98
+      84: aload         7
+      86: iconst_1
+      87: dup2
+      88: iaload
+      89: iconst_1
+      90: iadd
+      91: iastore
+      92: iinc          8, -1
+      95: goto          60
+      98: iload         8
+     100: iflt          111
+     103: aload         7
+     105: iconst_1
+     106: iaload
+     107: iload_3
+     108: if_icmple     114
+     111: ldc           #34                 // float NaNf
+     113: freturn
+     114: iload         8
+     116: iflt          152
+     119: aload         5
+     121: iload         8
+     123: iload_2
+     124: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+     127: ifeq          152
+     130: aload         7
+     132: iconst_0
+     133: iaload
+     134: iload_3
+     135: if_icmpgt     152
+     138: aload         7
+     140: iconst_0
+     141: dup2
+     142: iaload
+     143: iconst_1
+     144: iadd
+     145: iastore
+     146: iinc          8, -1
+     149: goto          114
+     152: aload         7
+     154: iconst_0
+     155: iaload
+     156: iload_3
+     157: if_icmple     163
+     160: ldc           #34                 // float NaNf
+     162: freturn
+     163: iload_1
+     164: iconst_1
+     165: iadd
+     166: istore        8
+     168: iload         8
+     170: iload         6
+     172: if_icmpge     200
+     175: aload         5
+     177: iload         8
+     179: iload_2
+     180: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+     183: ifeq          200
+     186: aload         7
+     188: iconst_2
+     189: dup2
+     190: iaload
+     191: iconst_1
+     192: iadd
+     193: iastore
+     194: iinc          8, 1
+     197: goto          168
+     200: iload         8
+     202: iload         6
+     204: if_icmpne     210
+     207: ldc           #34                 // float NaNf
+     209: freturn
+     210: iload         8
+     212: iload         6
+     214: if_icmpge     250
+     217: aload         5
+     219: iload         8
+     221: iload_2
+     222: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+     225: ifne          250
+     228: aload         7
+     230: iconst_3
+     231: iaload
+     232: iload_3
+     233: if_icmpge     250
+     236: aload         7
+     238: iconst_3
+     239: dup2
+     240: iaload
+     241: iconst_1
+     242: iadd
+     243: iastore
+     244: iinc          8, 1
+     247: goto          210
+     250: iload         8
+     252: iload         6
+     254: if_icmpeq     265
+     257: aload         7
+     259: iconst_3
+     260: iaload
+     261: iload_3
+     262: if_icmplt     268
+     265: ldc           #34                 // float NaNf
+     267: freturn
+     268: iload         8
+     270: iload         6
+     272: if_icmpge     308
+     275: aload         5
+     277: iload         8
+     279: iload_2
+     280: invokevirtual #15                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+     283: ifeq          308
+     286: aload         7
+     288: iconst_4
+     289: iaload
+     290: iload_3
+     291: if_icmpge     308
+     294: aload         7
+     296: iconst_4
+     297: dup2
+     298: iaload
+     299: iconst_1
+     300: iadd
+     301: iastore
+     302: iinc          8, 1
+     305: goto          268
+     308: aload         7
+     310: iconst_4
+     311: iaload
+     312: iload_3
+     313: if_icmplt     319
+     316: ldc           #34                 // float NaNf
+     318: freturn
+     319: aload         7
+     321: iconst_0
+     322: iaload
+     323: aload         7
+     325: iconst_1
+     326: iaload
+     327: iadd
+     328: aload         7
+     330: iconst_2
+     331: iaload
+     332: iadd
+     333: aload         7
+     335: iconst_3
+     336: iaload
+     337: iadd
+     338: aload         7
+     340: iconst_4
+     341: iaload
+     342: iadd
+     343: istore        9
+     345: iconst_5
+     346: iload         9
+     348: iload         4
+     350: isub
+     351: invokestatic  #35                 // Method java/lang/Math.abs:(I)I
+     354: imul
+     355: iload         4
+     357: if_icmplt     363
+     360: ldc           #34                 // float NaNf
+     362: freturn
+     363: aload         7
+     365: invokestatic  #16                 // Method foundPatternCross:([I)Z
+     368: ifeq          381
+     371: aload         7
+     373: iload         8
+     375: invokestatic  #36                 // Method centerFromEnd:([II)F
+     378: goto          383
+     381: ldc           #34                 // float NaNf
+     383: freturn
+
+  protected final boolean handlePossibleCenter(int[], int, int, boolean);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iload_2
+       3: iload_3
+       4: invokevirtual #17                 // Method handlePossibleCenter:([III)Z
+       7: ireturn
+
+  protected final boolean handlePossibleCenter(int[], int, int);
+    Code:
+       0: aload_1
+       1: iconst_0
+       2: iaload
+       3: aload_1
+       4: iconst_1
+       5: iaload
+       6: iadd
+       7: aload_1
+       8: iconst_2
+       9: iaload
+      10: iadd
+      11: aload_1
+      12: iconst_3
+      13: iaload
+      14: iadd
+      15: aload_1
+      16: iconst_4
+      17: iaload
+      18: iadd
+      19: istore        4
+      21: aload_1
+      22: iload_3
+      23: invokestatic  #36                 // Method centerFromEnd:([II)F
+      26: fstore        5
+      28: aload_0
+      29: iload_2
+      30: fload         5
+      32: f2i
+      33: aload_1
+      34: iconst_2
+      35: iaload
+      36: iload         4
+      38: invokespecial #37                 // Method crossCheckVertical:(IIII)F
+      41: fstore        6
+      43: fload         6
+      45: invokestatic  #38                 // Method java/lang/Float.isNaN:(F)Z
+      48: ifne          234
+      51: aload_0
+      52: fload         5
+      54: f2i
+      55: fload         6
+      57: f2i
+      58: aload_1
+      59: iconst_2
+      60: iaload
+      61: iload         4
+      63: invokespecial #39                 // Method crossCheckHorizontal:(IIII)F
+      66: fstore        5
+      68: fload         5
+      70: invokestatic  #38                 // Method java/lang/Float.isNaN:(F)Z
+      73: ifne          234
+      76: aload_0
+      77: fload         6
+      79: f2i
+      80: fload         5
+      82: f2i
+      83: invokespecial #40                 // Method crossCheckDiagonal:(II)Z
+      86: ifeq          234
+      89: iload         4
+      91: i2f
+      92: ldc           #26                 // float 7.0f
+      94: fdiv
+      95: fstore        7
+      97: iconst_0
+      98: istore        8
+     100: iconst_0
+     101: istore        9
+     103: iload         9
+     105: aload_0
+     106: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+     109: invokeinterface #41,  1           // InterfaceMethod java/util/List.size:()I
+     114: if_icmpge     182
+     117: aload_0
+     118: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+     121: iload         9
+     123: invokeinterface #42,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     128: checkcast     #43                 // class com/google/zxing/qrcode/detector/FinderPattern
+     131: astore        10
+     133: aload         10
+     135: fload         7
+     137: fload         6
+     139: fload         5
+     141: invokevirtual #44                 // Method com/google/zxing/qrcode/detector/FinderPattern.aboutEquals:(FFF)Z
+     144: ifeq          176
+     147: aload_0
+     148: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+     151: iload         9
+     153: aload         10
+     155: fload         6
+     157: fload         5
+     159: fload         7
+     161: invokevirtual #45                 // Method com/google/zxing/qrcode/detector/FinderPattern.combineEstimate:(FFF)Lcom/google/zxing/qrcode/detector/FinderPattern;
+     164: invokeinterface #46,  3           // InterfaceMethod java/util/List.set:(ILjava/lang/Object;)Ljava/lang/Object;
+     169: pop
+     170: iconst_1
+     171: istore        8
+     173: goto          182
+     176: iinc          9, 1
+     179: goto          103
+     182: iload         8
+     184: ifne          232
+     187: new           #43                 // class com/google/zxing/qrcode/detector/FinderPattern
+     190: dup
+     191: fload         5
+     193: fload         6
+     195: fload         7
+     197: invokespecial #47                 // Method com/google/zxing/qrcode/detector/FinderPattern."<init>":(FFF)V
+     200: astore        9
+     202: aload_0
+     203: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+     206: aload         9
+     208: invokeinterface #48,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     213: pop
+     214: aload_0
+     215: getfield      #8                  // Field resultPointCallback:Lcom/google/zxing/ResultPointCallback;
+     218: ifnull        232
+     221: aload_0
+     222: getfield      #8                  // Field resultPointCallback:Lcom/google/zxing/ResultPointCallback;
+     225: aload         9
+     227: invokeinterface #49,  2           // InterfaceMethod com/google/zxing/ResultPointCallback.foundPossibleResultPoint:(Lcom/google/zxing/ResultPoint;)V
+     232: iconst_1
+     233: ireturn
+     234: iconst_0
+     235: ireturn
+
+  private int findRowSkip();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+       4: invokeinterface #41,  1           // InterfaceMethod java/util/List.size:()I
+       9: istore_1
+      10: iload_1
+      11: iconst_1
+      12: if_icmpgt     17
+      15: iconst_0
+      16: ireturn
+      17: aconst_null
+      18: astore_2
+      19: aload_0
+      20: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+      23: invokeinterface #50,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      28: astore_3
+      29: aload_3
+      30: invokeinterface #51,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      35: ifeq          107
+      38: aload_3
+      39: invokeinterface #52,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      44: checkcast     #43                 // class com/google/zxing/qrcode/detector/FinderPattern
+      47: astore        4
+      49: aload         4
+      51: invokevirtual #53                 // Method com/google/zxing/qrcode/detector/FinderPattern.getCount:()I
+      54: iconst_2
+      55: if_icmplt     104
+      58: aload_2
+      59: ifnonnull     68
+      62: aload         4
+      64: astore_2
+      65: goto          104
+      68: aload_0
+      69: iconst_1
+      70: putfield      #18                 // Field hasSkipped:Z
+      73: aload_2
+      74: invokevirtual #54                 // Method com/google/zxing/ResultPoint.getX:()F
+      77: aload         4
+      79: invokevirtual #55                 // Method com/google/zxing/qrcode/detector/FinderPattern.getX:()F
+      82: fsub
+      83: invokestatic  #27                 // Method java/lang/Math.abs:(F)F
+      86: aload_2
+      87: invokevirtual #56                 // Method com/google/zxing/ResultPoint.getY:()F
+      90: aload         4
+      92: invokevirtual #57                 // Method com/google/zxing/qrcode/detector/FinderPattern.getY:()F
+      95: fsub
+      96: invokestatic  #27                 // Method java/lang/Math.abs:(F)F
+      99: fsub
+     100: f2i
+     101: iconst_2
+     102: idiv
+     103: ireturn
+     104: goto          29
+     107: iconst_0
+     108: ireturn
+
+  private boolean haveMultiplyConfirmedCenters();
+    Code:
+       0: iconst_0
+       1: istore_1
+       2: fconst_0
+       3: fstore_2
+       4: aload_0
+       5: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+       8: invokeinterface #41,  1           // InterfaceMethod java/util/List.size:()I
+      13: istore_3
+      14: aload_0
+      15: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+      18: invokeinterface #50,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      23: astore        4
+      25: aload         4
+      27: invokeinterface #51,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      32: ifeq          70
+      35: aload         4
+      37: invokeinterface #52,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      42: checkcast     #43                 // class com/google/zxing/qrcode/detector/FinderPattern
+      45: astore        5
+      47: aload         5
+      49: invokevirtual #53                 // Method com/google/zxing/qrcode/detector/FinderPattern.getCount:()I
+      52: iconst_2
+      53: if_icmplt     67
+      56: iinc          1, 1
+      59: fload_2
+      60: aload         5
+      62: invokevirtual #58                 // Method com/google/zxing/qrcode/detector/FinderPattern.getEstimatedModuleSize:()F
+      65: fadd
+      66: fstore_2
+      67: goto          25
+      70: iload_1
+      71: iconst_3
+      72: if_icmpge     77
+      75: iconst_0
+      76: ireturn
+      77: fload_2
+      78: iload_3
+      79: i2f
+      80: fdiv
+      81: fstore        4
+      83: fconst_0
+      84: fstore        5
+      86: aload_0
+      87: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+      90: invokeinterface #50,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      95: astore        6
+      97: aload         6
+      99: invokeinterface #51,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     104: ifeq          138
+     107: aload         6
+     109: invokeinterface #52,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     114: checkcast     #43                 // class com/google/zxing/qrcode/detector/FinderPattern
+     117: astore        7
+     119: fload         5
+     121: aload         7
+     123: invokevirtual #58                 // Method com/google/zxing/qrcode/detector/FinderPattern.getEstimatedModuleSize:()F
+     126: fload         4
+     128: fsub
+     129: invokestatic  #27                 // Method java/lang/Math.abs:(F)F
+     132: fadd
+     133: fstore        5
+     135: goto          97
+     138: fload         5
+     140: ldc           #59                 // float 0.05f
+     142: fload_2
+     143: fmul
+     144: fcmpg
+     145: ifgt          152
+     148: iconst_1
+     149: goto          153
+     152: iconst_0
+     153: ireturn
+
+  private static double squaredDistance(com.google.zxing.qrcode.detector.FinderPattern, com.google.zxing.qrcode.detector.FinderPattern);
+    Code:
+       0: aload_0
+       1: invokevirtual #55                 // Method com/google/zxing/qrcode/detector/FinderPattern.getX:()F
+       4: aload_1
+       5: invokevirtual #55                 // Method com/google/zxing/qrcode/detector/FinderPattern.getX:()F
+       8: fsub
+       9: f2d
+      10: dstore_2
+      11: aload_0
+      12: invokevirtual #57                 // Method com/google/zxing/qrcode/detector/FinderPattern.getY:()F
+      15: aload_1
+      16: invokevirtual #57                 // Method com/google/zxing/qrcode/detector/FinderPattern.getY:()F
+      19: fsub
+      20: f2d
+      21: dstore        4
+      23: dload_2
+      24: dload_2
+      25: dmul
+      26: dload         4
+      28: dload         4
+      30: dmul
+      31: dadd
+      32: dreturn
+
+  private com.google.zxing.qrcode.detector.FinderPattern[] selectBestPatterns() throws com.google.zxing.NotFoundException;
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+       4: invokeinterface #41,  1           // InterfaceMethod java/util/List.size:()I
+       9: istore_1
+      10: iload_1
+      11: iconst_3
+      12: if_icmpge     19
+      15: invokestatic  #60                 // Method com/google/zxing/NotFoundException.getNotFoundInstance:()Lcom/google/zxing/NotFoundException;
+      18: athrow
+      19: aload_0
+      20: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+      23: invokeinterface #50,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      28: astore_2
+      29: aload_2
+      30: invokeinterface #51,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      35: ifeq          63
+      38: aload_2
+      39: invokeinterface #52,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      44: checkcast     #43                 // class com/google/zxing/qrcode/detector/FinderPattern
+      47: invokevirtual #53                 // Method com/google/zxing/qrcode/detector/FinderPattern.getCount:()I
+      50: iconst_2
+      51: if_icmpge     29
+      54: aload_2
+      55: invokeinterface #61,  1           // InterfaceMethod java/util/Iterator.remove:()V
+      60: goto          29
+      63: aload_0
+      64: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+      67: getstatic     #62                 // Field moduleComparator:Lcom/google/zxing/qrcode/detector/FinderPatternFinder$EstimatedModuleComparator;
+      70: invokeinterface #63,  2           // InterfaceMethod java/util/List.sort:(Ljava/util/Comparator;)V
+      75: ldc2_w        #65                 // double 1.7976931348623157E308d
+      78: dstore_2
+      79: iconst_3
+      80: anewarray     #43                 // class com/google/zxing/qrcode/detector/FinderPattern
+      83: astore        4
+      85: iconst_0
+      86: istore        5
+      88: iload         5
+      90: aload_0
+      91: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+      94: invokeinterface #41,  1           // InterfaceMethod java/util/List.size:()I
+      99: iconst_2
+     100: isub
+     101: if_icmpge     446
+     104: aload_0
+     105: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+     108: iload         5
+     110: invokeinterface #42,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     115: checkcast     #43                 // class com/google/zxing/qrcode/detector/FinderPattern
+     118: astore        6
+     120: aload         6
+     122: invokevirtual #58                 // Method com/google/zxing/qrcode/detector/FinderPattern.getEstimatedModuleSize:()F
+     125: fstore        7
+     127: iload         5
+     129: iconst_1
+     130: iadd
+     131: istore        8
+     133: iload         8
+     135: aload_0
+     136: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+     139: invokeinterface #41,  1           // InterfaceMethod java/util/List.size:()I
+     144: iconst_1
+     145: isub
+     146: if_icmpge     440
+     149: aload_0
+     150: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+     153: iload         8
+     155: invokeinterface #42,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     160: checkcast     #43                 // class com/google/zxing/qrcode/detector/FinderPattern
+     163: astore        9
+     165: aload         6
+     167: aload         9
+     169: invokestatic  #67                 // Method squaredDistance:(Lcom/google/zxing/qrcode/detector/FinderPattern;Lcom/google/zxing/qrcode/detector/FinderPattern;)D
+     172: dstore        10
+     174: iload         8
+     176: iconst_1
+     177: iadd
+     178: istore        12
+     180: iload         12
+     182: aload_0
+     183: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+     186: invokeinterface #41,  1           // InterfaceMethod java/util/List.size:()I
+     191: if_icmpge     434
+     194: aload_0
+     195: getfield      #6                  // Field possibleCenters:Ljava/util/List;
+     198: iload         12
+     200: invokeinterface #42,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     205: checkcast     #43                 // class com/google/zxing/qrcode/detector/FinderPattern
+     208: astore        13
+     210: aload         13
+     212: invokevirtual #58                 // Method com/google/zxing/qrcode/detector/FinderPattern.getEstimatedModuleSize:()F
+     215: fstore        14
+     217: fload         14
+     219: fload         7
+     221: ldc           #68                 // float 1.4f
+     223: fmul
+     224: fcmpl
+     225: ifle          231
+     228: goto          428
+     231: dload         10
+     233: dstore        15
+     235: aload         9
+     237: aload         13
+     239: invokestatic  #67                 // Method squaredDistance:(Lcom/google/zxing/qrcode/detector/FinderPattern;Lcom/google/zxing/qrcode/detector/FinderPattern;)D
+     242: dstore        17
+     244: aload         6
+     246: aload         13
+     248: invokestatic  #67                 // Method squaredDistance:(Lcom/google/zxing/qrcode/detector/FinderPattern;Lcom/google/zxing/qrcode/detector/FinderPattern;)D
+     251: dstore        19
+     253: dload         15
+     255: dload         17
+     257: dcmpg
+     258: ifge          311
+     261: dload         17
+     263: dload         19
+     265: dcmpl
+     266: ifle          373
+     269: dload         15
+     271: dload         19
+     273: dcmpg
+     274: ifge          292
+     277: dload         17
+     279: dstore        21
+     281: dload         19
+     283: dstore        17
+     285: dload         21
+     287: dstore        19
+     289: goto          373
+     292: dload         15
+     294: dstore        21
+     296: dload         19
+     298: dstore        15
+     300: dload         17
+     302: dstore        19
+     304: dload         21
+     306: dstore        17
+     308: goto          373
+     311: dload         17
+     313: dload         19
+     315: dcmpg
+     316: ifge          361
+     319: dload         15
+     321: dload         19
+     323: dcmpg
+     324: ifge          342
+     327: dload         15
+     329: dstore        21
+     331: dload         17
+     333: dstore        15
+     335: dload         21
+     337: dstore        17
+     339: goto          373
+     342: dload         15
+     344: dstore        21
+     346: dload         17
+     348: dstore        15
+     350: dload         19
+     352: dstore        17
+     354: dload         21
+     356: dstore        19
+     358: goto          373
+     361: dload         15
+     363: dstore        21
+     365: dload         19
+     367: dstore        15
+     369: dload         21
+     371: dstore        19
+     373: dload         19
+     375: ldc2_w        #69                 // double 2.0d
+     378: dload         17
+     380: dmul
+     381: dsub
+     382: invokestatic  #71                 // Method java/lang/Math.abs:(D)D
+     385: dload         19
+     387: ldc2_w        #69                 // double 2.0d
+     390: dload         15
+     392: dmul
+     393: dsub
+     394: invokestatic  #71                 // Method java/lang/Math.abs:(D)D
+     397: dadd
+     398: dstore        21
+     400: dload         21
+     402: dload_2
+     403: dcmpg
+     404: ifge          428
+     407: dload         21
+     409: dstore_2
+     410: aload         4
+     412: iconst_0
+     413: aload         6
+     415: aastore
+     416: aload         4
+     418: iconst_1
+     419: aload         9
+     421: aastore
+     422: aload         4
+     424: iconst_2
+     425: aload         13
+     427: aastore
+     428: iinc          12, 1
+     431: goto          180
+     434: iinc          8, 1
+     437: goto          133
+     440: iinc          5, 1
+     443: goto          88
+     446: dload_2
+     447: ldc2_w        #65                 // double 1.7976931348623157E308d
+     450: dcmpl
+     451: ifne          458
+     454: invokestatic  #60                 // Method com/google/zxing/NotFoundException.getNotFoundInstance:()Lcom/google/zxing/NotFoundException;
+     457: athrow
+     458: aload         4
+     460: areturn
+
+  static {};
+    Code:
+       0: new           #72                 // class com/google/zxing/qrcode/detector/FinderPatternFinder$EstimatedModuleComparator
+       3: dup
+       4: aconst_null
+       5: invokespecial #73                 // Method com/google/zxing/qrcode/detector/FinderPatternFinder$EstimatedModuleComparator."<init>":(Lcom/google/zxing/qrcode/detector/FinderPatternFinder$1;)V
+       8: putstatic     #62                 // Field moduleComparator:Lcom/google/zxing/qrcode/detector/FinderPatternFinder$EstimatedModuleComparator;
+      11: return
+}

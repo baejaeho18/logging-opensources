@@ -1,0 +1,691 @@
+Compiled from "DecodedBitStreamParser.java"
+final class com.google.zxing.qrcode.decoder.DecodedBitStreamParser {
+  private static final char[] ALPHANUMERIC_CHARS;
+
+  private static final int GB2312_SUBSET;
+
+  private com.google.zxing.qrcode.decoder.DecodedBitStreamParser();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  static com.google.zxing.common.DecoderResult decode(byte[], com.google.zxing.qrcode.decoder.Version, com.google.zxing.qrcode.decoder.ErrorCorrectionLevel, java.util.Map<com.google.zxing.DecodeHintType, ?>) throws com.google.zxing.FormatException;
+    Code:
+       0: new           #2                  // class com/google/zxing/common/BitSource
+       3: dup
+       4: aload_0
+       5: invokespecial #3                  // Method com/google/zxing/common/BitSource."<init>":([B)V
+       8: astore        4
+      10: new           #4                  // class java/lang/StringBuilder
+      13: dup
+      14: bipush        50
+      16: invokespecial #5                  // Method java/lang/StringBuilder."<init>":(I)V
+      19: astore        5
+      21: new           #6                  // class java/util/ArrayList
+      24: dup
+      25: iconst_1
+      26: invokespecial #7                  // Method java/util/ArrayList."<init>":(I)V
+      29: astore        6
+      31: iconst_m1
+      32: istore        7
+      34: iconst_m1
+      35: istore        8
+      37: aconst_null
+      38: astore        10
+      40: iconst_0
+      41: istore        11
+      43: iconst_0
+      44: istore        12
+      46: iconst_0
+      47: istore        13
+      49: aload         4
+      51: invokevirtual #8                  // Method com/google/zxing/common/BitSource.available:()I
+      54: iconst_4
+      55: if_icmpge     66
+      58: getstatic     #9                  // Field com/google/zxing/qrcode/decoder/Mode.TERMINATOR:Lcom/google/zxing/qrcode/decoder/Mode;
+      61: astore        14
+      63: goto          77
+      66: aload         4
+      68: iconst_4
+      69: invokevirtual #10                 // Method com/google/zxing/common/BitSource.readBits:(I)I
+      72: invokestatic  #11                 // Method com/google/zxing/qrcode/decoder/Mode.forBits:(I)Lcom/google/zxing/qrcode/decoder/Mode;
+      75: astore        14
+      77: getstatic     #12                 // Field com/google/zxing/qrcode/decoder/DecodedBitStreamParser$1.$SwitchMap$com$google$zxing$qrcode$decoder$Mode:[I
+      80: aload         14
+      82: invokevirtual #13                 // Method com/google/zxing/qrcode/decoder/Mode.ordinal:()I
+      85: iaload
+      86: tableswitch   { // 5 to 10
+                     5: 124
+                     6: 127
+                     7: 136
+                     8: 145
+                     9: 180
+                    10: 203
+               default: 242
+          }
+     124: goto          355
+     127: iconst_1
+     128: istore        12
+     130: iconst_1
+     131: istore        11
+     133: goto          355
+     136: iconst_1
+     137: istore        13
+     139: iconst_1
+     140: istore        11
+     142: goto          355
+     145: aload         4
+     147: invokevirtual #8                  // Method com/google/zxing/common/BitSource.available:()I
+     150: bipush        16
+     152: if_icmpge     159
+     155: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+     158: athrow
+     159: aload         4
+     161: bipush        8
+     163: invokevirtual #10                 // Method com/google/zxing/common/BitSource.readBits:(I)I
+     166: istore        7
+     168: aload         4
+     170: bipush        8
+     172: invokevirtual #10                 // Method com/google/zxing/common/BitSource.readBits:(I)I
+     175: istore        8
+     177: goto          355
+     180: aload         4
+     182: invokestatic  #15                 // Method parseECIValue:(Lcom/google/zxing/common/BitSource;)I
+     185: istore        15
+     187: iload         15
+     189: invokestatic  #16                 // Method com/google/zxing/common/CharacterSetECI.getCharacterSetECIByValue:(I)Lcom/google/zxing/common/CharacterSetECI;
+     192: astore        10
+     194: aload         10
+     196: ifnonnull     355
+     199: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+     202: athrow
+     203: aload         4
+     205: iconst_4
+     206: invokevirtual #10                 // Method com/google/zxing/common/BitSource.readBits:(I)I
+     209: istore        16
+     211: aload         4
+     213: aload         14
+     215: aload_1
+     216: invokevirtual #17                 // Method com/google/zxing/qrcode/decoder/Mode.getCharacterCountBits:(Lcom/google/zxing/qrcode/decoder/Version;)I
+     219: invokevirtual #10                 // Method com/google/zxing/common/BitSource.readBits:(I)I
+     222: istore        17
+     224: iload         16
+     226: iconst_1
+     227: if_icmpne     355
+     230: aload         4
+     232: aload         5
+     234: iload         17
+     236: invokestatic  #19                 // Method decodeHanziSegment:(Lcom/google/zxing/common/BitSource;Ljava/lang/StringBuilder;I)V
+     239: goto          355
+     242: aload         4
+     244: aload         14
+     246: aload_1
+     247: invokevirtual #17                 // Method com/google/zxing/qrcode/decoder/Mode.getCharacterCountBits:(Lcom/google/zxing/qrcode/decoder/Version;)I
+     250: invokevirtual #10                 // Method com/google/zxing/common/BitSource.readBits:(I)I
+     253: istore        18
+     255: getstatic     #12                 // Field com/google/zxing/qrcode/decoder/DecodedBitStreamParser$1.$SwitchMap$com$google$zxing$qrcode$decoder$Mode:[I
+     258: aload         14
+     260: invokevirtual #13                 // Method com/google/zxing/qrcode/decoder/Mode.ordinal:()I
+     263: iaload
+     264: tableswitch   { // 1 to 4
+                     1: 296
+                     2: 308
+                     3: 322
+                     4: 339
+               default: 351
+          }
+     296: aload         4
+     298: aload         5
+     300: iload         18
+     302: invokestatic  #20                 // Method decodeNumericSegment:(Lcom/google/zxing/common/BitSource;Ljava/lang/StringBuilder;I)V
+     305: goto          355
+     308: aload         4
+     310: aload         5
+     312: iload         18
+     314: iload         11
+     316: invokestatic  #21                 // Method decodeAlphanumericSegment:(Lcom/google/zxing/common/BitSource;Ljava/lang/StringBuilder;IZ)V
+     319: goto          355
+     322: aload         4
+     324: aload         5
+     326: iload         18
+     328: aload         10
+     330: aload         6
+     332: aload_3
+     333: invokestatic  #22                 // Method decodeByteSegment:(Lcom/google/zxing/common/BitSource;Ljava/lang/StringBuilder;ILcom/google/zxing/common/CharacterSetECI;Ljava/util/Collection;Ljava/util/Map;)V
+     336: goto          355
+     339: aload         4
+     341: aload         5
+     343: iload         18
+     345: invokestatic  #23                 // Method decodeKanjiSegment:(Lcom/google/zxing/common/BitSource;Ljava/lang/StringBuilder;I)V
+     348: goto          355
+     351: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+     354: athrow
+     355: aload         14
+     357: getstatic     #9                  // Field com/google/zxing/qrcode/decoder/Mode.TERMINATOR:Lcom/google/zxing/qrcode/decoder/Mode;
+     360: if_acmpne     49
+     363: aload         10
+     365: ifnull        397
+     368: iload         12
+     370: ifeq          379
+     373: iconst_4
+     374: istore        9
+     376: goto          422
+     379: iload         13
+     381: ifeq          391
+     384: bipush        6
+     386: istore        9
+     388: goto          422
+     391: iconst_2
+     392: istore        9
+     394: goto          422
+     397: iload         12
+     399: ifeq          408
+     402: iconst_3
+     403: istore        9
+     405: goto          422
+     408: iload         13
+     410: ifeq          419
+     413: iconst_5
+     414: istore        9
+     416: goto          422
+     419: iconst_1
+     420: istore        9
+     422: goto          431
+     425: astore        10
+     427: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+     430: athrow
+     431: new           #25                 // class com/google/zxing/common/DecoderResult
+     434: dup
+     435: aload_0
+     436: aload         5
+     438: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     441: aload         6
+     443: invokeinterface #27,  1           // InterfaceMethod java/util/List.isEmpty:()Z
+     448: ifeq          455
+     451: aconst_null
+     452: goto          457
+     455: aload         6
+     457: aload_2
+     458: ifnonnull     465
+     461: aconst_null
+     462: goto          469
+     465: aload_2
+     466: invokevirtual #28                 // Method com/google/zxing/qrcode/decoder/ErrorCorrectionLevel.toString:()Ljava/lang/String;
+     469: iload         7
+     471: iload         8
+     473: iload         9
+     475: invokespecial #29                 // Method com/google/zxing/common/DecoderResult."<init>":([BLjava/lang/String;Ljava/util/List;Ljava/lang/String;III)V
+     478: areturn
+    Exception table:
+       from    to  target type
+          37   422   425   Class java/lang/IllegalArgumentException
+
+  private static void decodeHanziSegment(com.google.zxing.common.BitSource, java.lang.StringBuilder, int) throws com.google.zxing.FormatException;
+    Code:
+       0: getstatic     #30                 // Field com/google/zxing/common/StringUtils.GB2312_CHARSET:Ljava/nio/charset/Charset;
+       3: ifnonnull     10
+       6: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+       9: athrow
+      10: iload_2
+      11: bipush        13
+      13: imul
+      14: aload_0
+      15: invokevirtual #8                  // Method com/google/zxing/common/BitSource.available:()I
+      18: if_icmple     25
+      21: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+      24: athrow
+      25: iconst_2
+      26: iload_2
+      27: imul
+      28: newarray       byte
+      30: astore_3
+      31: iconst_0
+      32: istore        4
+      34: iload_2
+      35: ifle          123
+      38: aload_0
+      39: bipush        13
+      41: invokevirtual #10                 // Method com/google/zxing/common/BitSource.readBits:(I)I
+      44: istore        5
+      46: iload         5
+      48: bipush        96
+      50: idiv
+      51: bipush        8
+      53: ishl
+      54: iload         5
+      56: bipush        96
+      58: irem
+      59: ior
+      60: istore        6
+      62: iload         6
+      64: sipush        2560
+      67: if_icmpge     80
+      70: iload         6
+      72: ldc           #31                 // int 41377
+      74: iadd
+      75: istore        6
+      77: goto          87
+      80: iload         6
+      82: ldc           #32                 // int 42657
+      84: iadd
+      85: istore        6
+      87: aload_3
+      88: iload         4
+      90: iload         6
+      92: bipush        8
+      94: ishr
+      95: sipush        255
+      98: iand
+      99: i2b
+     100: bastore
+     101: aload_3
+     102: iload         4
+     104: iconst_1
+     105: iadd
+     106: iload         6
+     108: sipush        255
+     111: iand
+     112: i2b
+     113: bastore
+     114: iinc          4, 2
+     117: iinc          2, -1
+     120: goto          34
+     123: aload_1
+     124: new           #33                 // class java/lang/String
+     127: dup
+     128: aload_3
+     129: getstatic     #30                 // Field com/google/zxing/common/StringUtils.GB2312_CHARSET:Ljava/nio/charset/Charset;
+     132: invokespecial #34                 // Method java/lang/String."<init>":([BLjava/nio/charset/Charset;)V
+     135: invokevirtual #35                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     138: pop
+     139: return
+
+  private static void decodeKanjiSegment(com.google.zxing.common.BitSource, java.lang.StringBuilder, int) throws com.google.zxing.FormatException;
+    Code:
+       0: iload_2
+       1: bipush        13
+       3: imul
+       4: aload_0
+       5: invokevirtual #8                  // Method com/google/zxing/common/BitSource.available:()I
+       8: if_icmple     15
+      11: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+      14: athrow
+      15: iconst_2
+      16: iload_2
+      17: imul
+      18: newarray       byte
+      20: astore_3
+      21: iconst_0
+      22: istore        4
+      24: iload_2
+      25: ifle          107
+      28: aload_0
+      29: bipush        13
+      31: invokevirtual #10                 // Method com/google/zxing/common/BitSource.readBits:(I)I
+      34: istore        5
+      36: iload         5
+      38: sipush        192
+      41: idiv
+      42: bipush        8
+      44: ishl
+      45: iload         5
+      47: sipush        192
+      50: irem
+      51: ior
+      52: istore        6
+      54: iload         6
+      56: sipush        7936
+      59: if_icmpge     72
+      62: iload         6
+      64: ldc           #36                 // int 33088
+      66: iadd
+      67: istore        6
+      69: goto          79
+      72: iload         6
+      74: ldc           #37                 // int 49472
+      76: iadd
+      77: istore        6
+      79: aload_3
+      80: iload         4
+      82: iload         6
+      84: bipush        8
+      86: ishr
+      87: i2b
+      88: bastore
+      89: aload_3
+      90: iload         4
+      92: iconst_1
+      93: iadd
+      94: iload         6
+      96: i2b
+      97: bastore
+      98: iinc          4, 2
+     101: iinc          2, -1
+     104: goto          24
+     107: aload_1
+     108: new           #33                 // class java/lang/String
+     111: dup
+     112: aload_3
+     113: getstatic     #38                 // Field com/google/zxing/common/StringUtils.SHIFT_JIS_CHARSET:Ljava/nio/charset/Charset;
+     116: invokespecial #34                 // Method java/lang/String."<init>":([BLjava/nio/charset/Charset;)V
+     119: invokevirtual #35                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     122: pop
+     123: return
+
+  private static void decodeByteSegment(com.google.zxing.common.BitSource, java.lang.StringBuilder, int, com.google.zxing.common.CharacterSetECI, java.util.Collection<byte[]>, java.util.Map<com.google.zxing.DecodeHintType, ?>) throws com.google.zxing.FormatException;
+    Code:
+       0: bipush        8
+       2: iload_2
+       3: imul
+       4: aload_0
+       5: invokevirtual #8                  // Method com/google/zxing/common/BitSource.available:()I
+       8: if_icmple     15
+      11: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+      14: athrow
+      15: iload_2
+      16: newarray       byte
+      18: astore        6
+      20: iconst_0
+      21: istore        7
+      23: iload         7
+      25: iload_2
+      26: if_icmpge     47
+      29: aload         6
+      31: iload         7
+      33: aload_0
+      34: bipush        8
+      36: invokevirtual #10                 // Method com/google/zxing/common/BitSource.readBits:(I)I
+      39: i2b
+      40: bastore
+      41: iinc          7, 1
+      44: goto          23
+      47: aload_3
+      48: ifnonnull     63
+      51: aload         6
+      53: aload         5
+      55: invokestatic  #39                 // Method com/google/zxing/common/StringUtils.guessCharset:([BLjava/util/Map;)Ljava/nio/charset/Charset;
+      58: astore        7
+      60: goto          69
+      63: aload_3
+      64: invokevirtual #40                 // Method com/google/zxing/common/CharacterSetECI.getCharset:()Ljava/nio/charset/Charset;
+      67: astore        7
+      69: aload_1
+      70: new           #33                 // class java/lang/String
+      73: dup
+      74: aload         6
+      76: aload         7
+      78: invokespecial #34                 // Method java/lang/String."<init>":([BLjava/nio/charset/Charset;)V
+      81: invokevirtual #35                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      84: pop
+      85: aload         4
+      87: aload         6
+      89: invokeinterface #41,  2           // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+      94: pop
+      95: return
+
+  private static char toAlphaNumericChar(int) throws com.google.zxing.FormatException;
+    Code:
+       0: iload_0
+       1: getstatic     #42                 // Field ALPHANUMERIC_CHARS:[C
+       4: arraylength
+       5: if_icmplt     12
+       8: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+      11: athrow
+      12: getstatic     #42                 // Field ALPHANUMERIC_CHARS:[C
+      15: iload_0
+      16: caload
+      17: ireturn
+
+  private static void decodeAlphanumericSegment(com.google.zxing.common.BitSource, java.lang.StringBuilder, int, boolean) throws com.google.zxing.FormatException;
+    Code:
+       0: aload_1
+       1: invokevirtual #43                 // Method java/lang/StringBuilder.length:()I
+       4: istore        4
+       6: iload_2
+       7: iconst_1
+       8: if_icmple     64
+      11: aload_0
+      12: invokevirtual #8                  // Method com/google/zxing/common/BitSource.available:()I
+      15: bipush        11
+      17: if_icmpge     24
+      20: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+      23: athrow
+      24: aload_0
+      25: bipush        11
+      27: invokevirtual #10                 // Method com/google/zxing/common/BitSource.readBits:(I)I
+      30: istore        5
+      32: aload_1
+      33: iload         5
+      35: bipush        45
+      37: idiv
+      38: invokestatic  #44                 // Method toAlphaNumericChar:(I)C
+      41: invokevirtual #45                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      44: pop
+      45: aload_1
+      46: iload         5
+      48: bipush        45
+      50: irem
+      51: invokestatic  #44                 // Method toAlphaNumericChar:(I)C
+      54: invokevirtual #45                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      57: pop
+      58: iinc          2, -2
+      61: goto          6
+      64: iload_2
+      65: iconst_1
+      66: if_icmpne     96
+      69: aload_0
+      70: invokevirtual #8                  // Method com/google/zxing/common/BitSource.available:()I
+      73: bipush        6
+      75: if_icmpge     82
+      78: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+      81: athrow
+      82: aload_1
+      83: aload_0
+      84: bipush        6
+      86: invokevirtual #10                 // Method com/google/zxing/common/BitSource.readBits:(I)I
+      89: invokestatic  #44                 // Method toAlphaNumericChar:(I)C
+      92: invokevirtual #45                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      95: pop
+      96: iload_3
+      97: ifeq          174
+     100: iload         4
+     102: istore        5
+     104: iload         5
+     106: aload_1
+     107: invokevirtual #43                 // Method java/lang/StringBuilder.length:()I
+     110: if_icmpge     174
+     113: aload_1
+     114: iload         5
+     116: invokevirtual #46                 // Method java/lang/StringBuilder.charAt:(I)C
+     119: bipush        37
+     121: if_icmpne     168
+     124: iload         5
+     126: aload_1
+     127: invokevirtual #43                 // Method java/lang/StringBuilder.length:()I
+     130: iconst_1
+     131: isub
+     132: if_icmpge     160
+     135: aload_1
+     136: iload         5
+     138: iconst_1
+     139: iadd
+     140: invokevirtual #46                 // Method java/lang/StringBuilder.charAt:(I)C
+     143: bipush        37
+     145: if_icmpne     160
+     148: aload_1
+     149: iload         5
+     151: iconst_1
+     152: iadd
+     153: invokevirtual #47                 // Method java/lang/StringBuilder.deleteCharAt:(I)Ljava/lang/StringBuilder;
+     156: pop
+     157: goto          168
+     160: aload_1
+     161: iload         5
+     163: bipush        29
+     165: invokevirtual #48                 // Method java/lang/StringBuilder.setCharAt:(IC)V
+     168: iinc          5, 1
+     171: goto          104
+     174: return
+
+  private static void decodeNumericSegment(com.google.zxing.common.BitSource, java.lang.StringBuilder, int) throws com.google.zxing.FormatException;
+    Code:
+       0: iload_2
+       1: iconst_3
+       2: if_icmplt     81
+       5: aload_0
+       6: invokevirtual #8                  // Method com/google/zxing/common/BitSource.available:()I
+       9: bipush        10
+      11: if_icmpge     18
+      14: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+      17: athrow
+      18: aload_0
+      19: bipush        10
+      21: invokevirtual #10                 // Method com/google/zxing/common/BitSource.readBits:(I)I
+      24: istore_3
+      25: iload_3
+      26: sipush        1000
+      29: if_icmplt     36
+      32: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+      35: athrow
+      36: aload_1
+      37: iload_3
+      38: bipush        100
+      40: idiv
+      41: invokestatic  #44                 // Method toAlphaNumericChar:(I)C
+      44: invokevirtual #45                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      47: pop
+      48: aload_1
+      49: iload_3
+      50: bipush        10
+      52: idiv
+      53: bipush        10
+      55: irem
+      56: invokestatic  #44                 // Method toAlphaNumericChar:(I)C
+      59: invokevirtual #45                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      62: pop
+      63: aload_1
+      64: iload_3
+      65: bipush        10
+      67: irem
+      68: invokestatic  #44                 // Method toAlphaNumericChar:(I)C
+      71: invokevirtual #45                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      74: pop
+      75: iinc          2, -3
+      78: goto          0
+      81: iload_2
+      82: iconst_2
+      83: if_icmpne     143
+      86: aload_0
+      87: invokevirtual #8                  // Method com/google/zxing/common/BitSource.available:()I
+      90: bipush        7
+      92: if_icmpge     99
+      95: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+      98: athrow
+      99: aload_0
+     100: bipush        7
+     102: invokevirtual #10                 // Method com/google/zxing/common/BitSource.readBits:(I)I
+     105: istore_3
+     106: iload_3
+     107: bipush        100
+     109: if_icmplt     116
+     112: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+     115: athrow
+     116: aload_1
+     117: iload_3
+     118: bipush        10
+     120: idiv
+     121: invokestatic  #44                 // Method toAlphaNumericChar:(I)C
+     124: invokevirtual #45                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     127: pop
+     128: aload_1
+     129: iload_3
+     130: bipush        10
+     132: irem
+     133: invokestatic  #44                 // Method toAlphaNumericChar:(I)C
+     136: invokevirtual #45                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     139: pop
+     140: goto          185
+     143: iload_2
+     144: iconst_1
+     145: if_icmpne     185
+     148: aload_0
+     149: invokevirtual #8                  // Method com/google/zxing/common/BitSource.available:()I
+     152: iconst_4
+     153: if_icmpge     160
+     156: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+     159: athrow
+     160: aload_0
+     161: iconst_4
+     162: invokevirtual #10                 // Method com/google/zxing/common/BitSource.readBits:(I)I
+     165: istore_3
+     166: iload_3
+     167: bipush        10
+     169: if_icmplt     176
+     172: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+     175: athrow
+     176: aload_1
+     177: iload_3
+     178: invokestatic  #44                 // Method toAlphaNumericChar:(I)C
+     181: invokevirtual #45                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     184: pop
+     185: return
+
+  private static int parseECIValue(com.google.zxing.common.BitSource) throws com.google.zxing.FormatException;
+    Code:
+       0: aload_0
+       1: bipush        8
+       3: invokevirtual #10                 // Method com/google/zxing/common/BitSource.readBits:(I)I
+       6: istore_1
+       7: iload_1
+       8: sipush        128
+      11: iand
+      12: ifne          20
+      15: iload_1
+      16: bipush        127
+      18: iand
+      19: ireturn
+      20: iload_1
+      21: sipush        192
+      24: iand
+      25: sipush        128
+      28: if_icmpne     48
+      31: aload_0
+      32: bipush        8
+      34: invokevirtual #10                 // Method com/google/zxing/common/BitSource.readBits:(I)I
+      37: istore_2
+      38: iload_1
+      39: bipush        63
+      41: iand
+      42: bipush        8
+      44: ishl
+      45: iload_2
+      46: ior
+      47: ireturn
+      48: iload_1
+      49: sipush        224
+      52: iand
+      53: sipush        192
+      56: if_icmpne     76
+      59: aload_0
+      60: bipush        16
+      62: invokevirtual #10                 // Method com/google/zxing/common/BitSource.readBits:(I)I
+      65: istore_2
+      66: iload_1
+      67: bipush        31
+      69: iand
+      70: bipush        16
+      72: ishl
+      73: iload_2
+      74: ior
+      75: ireturn
+      76: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+      79: athrow
+
+  static {};
+    Code:
+       0: ldc           #49                 // String 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:
+       2: invokevirtual #50                 // Method java/lang/String.toCharArray:()[C
+       5: putstatic     #42                 // Field ALPHANUMERIC_CHARS:[C
+       8: return
+}

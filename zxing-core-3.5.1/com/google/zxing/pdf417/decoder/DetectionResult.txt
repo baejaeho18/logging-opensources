@@ -1,0 +1,819 @@
+Compiled from "DetectionResult.java"
+final class com.google.zxing.pdf417.decoder.DetectionResult {
+  private static final int ADJUST_ROW_NUMBER_SKIP;
+
+  private final com.google.zxing.pdf417.decoder.BarcodeMetadata barcodeMetadata;
+
+  private final com.google.zxing.pdf417.decoder.DetectionResultColumn[] detectionResultColumns;
+
+  private com.google.zxing.pdf417.decoder.BoundingBox boundingBox;
+
+  private final int barcodeColumnCount;
+
+  com.google.zxing.pdf417.decoder.DetectionResult(com.google.zxing.pdf417.decoder.BarcodeMetadata, com.google.zxing.pdf417.decoder.BoundingBox);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field barcodeMetadata:Lcom/google/zxing/pdf417/decoder/BarcodeMetadata;
+       9: aload_0
+      10: aload_1
+      11: invokevirtual #3                  // Method com/google/zxing/pdf417/decoder/BarcodeMetadata.getColumnCount:()I
+      14: putfield      #4                  // Field barcodeColumnCount:I
+      17: aload_0
+      18: aload_2
+      19: putfield      #5                  // Field boundingBox:Lcom/google/zxing/pdf417/decoder/BoundingBox;
+      22: aload_0
+      23: aload_0
+      24: getfield      #4                  // Field barcodeColumnCount:I
+      27: iconst_2
+      28: iadd
+      29: anewarray     #6                  // class com/google/zxing/pdf417/decoder/DetectionResultColumn
+      32: putfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+      35: return
+
+  com.google.zxing.pdf417.decoder.DetectionResultColumn[] getDetectionResultColumns();
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+       5: iconst_0
+       6: aaload
+       7: invokespecial #8                  // Method adjustIndicatorColumnRowNumbers:(Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;)V
+      10: aload_0
+      11: aload_0
+      12: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+      15: aload_0
+      16: getfield      #4                  // Field barcodeColumnCount:I
+      19: iconst_1
+      20: iadd
+      21: aaload
+      22: invokespecial #8                  // Method adjustIndicatorColumnRowNumbers:(Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;)V
+      25: sipush        928
+      28: istore_1
+      29: iload_1
+      30: istore_2
+      31: aload_0
+      32: invokespecial #10                 // Method adjustRowNumbers:()I
+      35: istore_1
+      36: iload_1
+      37: ifle          45
+      40: iload_1
+      41: iload_2
+      42: if_icmplt     29
+      45: aload_0
+      46: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+      49: areturn
+
+  private void adjustIndicatorColumnRowNumbers(com.google.zxing.pdf417.decoder.DetectionResultColumn);
+    Code:
+       0: aload_1
+       1: ifnull        15
+       4: aload_1
+       5: checkcast     #11                 // class com/google/zxing/pdf417/decoder/DetectionResultRowIndicatorColumn
+       8: aload_0
+       9: getfield      #2                  // Field barcodeMetadata:Lcom/google/zxing/pdf417/decoder/BarcodeMetadata;
+      12: invokevirtual #12                 // Method com/google/zxing/pdf417/decoder/DetectionResultRowIndicatorColumn.adjustCompleteIndicatorColumnRowNumbers:(Lcom/google/zxing/pdf417/decoder/BarcodeMetadata;)V
+      15: return
+
+  private int adjustRowNumbers();
+    Code:
+       0: aload_0
+       1: invokespecial #13                 // Method adjustRowNumbersByRow:()I
+       4: istore_1
+       5: iload_1
+       6: ifne          11
+       9: iconst_0
+      10: ireturn
+      11: iconst_1
+      12: istore_2
+      13: iload_2
+      14: aload_0
+      15: getfield      #4                  // Field barcodeColumnCount:I
+      18: iconst_1
+      19: iadd
+      20: if_icmpge     83
+      23: aload_0
+      24: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+      27: iload_2
+      28: aaload
+      29: invokevirtual #14                 // Method com/google/zxing/pdf417/decoder/DetectionResultColumn.getCodewords:()[Lcom/google/zxing/pdf417/decoder/Codeword;
+      32: astore_3
+      33: iconst_0
+      34: istore        4
+      36: iload         4
+      38: aload_3
+      39: arraylength
+      40: if_icmpge     77
+      43: aload_3
+      44: iload         4
+      46: aaload
+      47: ifnonnull     53
+      50: goto          71
+      53: aload_3
+      54: iload         4
+      56: aaload
+      57: invokevirtual #15                 // Method com/google/zxing/pdf417/decoder/Codeword.hasValidRowNumber:()Z
+      60: ifne          71
+      63: aload_0
+      64: iload_2
+      65: iload         4
+      67: aload_3
+      68: invokespecial #16                 // Method adjustRowNumbers:(II[Lcom/google/zxing/pdf417/decoder/Codeword;)V
+      71: iinc          4, 1
+      74: goto          36
+      77: iinc          2, 1
+      80: goto          13
+      83: iload_1
+      84: ireturn
+
+  private int adjustRowNumbersByRow();
+    Code:
+       0: aload_0
+       1: invokespecial #17                 // Method adjustRowNumbersFromBothRI:()V
+       4: aload_0
+       5: invokespecial #18                 // Method adjustRowNumbersFromLRI:()I
+       8: istore_1
+       9: iload_1
+      10: aload_0
+      11: invokespecial #19                 // Method adjustRowNumbersFromRRI:()I
+      14: iadd
+      15: ireturn
+
+  private void adjustRowNumbersFromBothRI();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+       4: iconst_0
+       5: aaload
+       6: ifnull        23
+       9: aload_0
+      10: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+      13: aload_0
+      14: getfield      #4                  // Field barcodeColumnCount:I
+      17: iconst_1
+      18: iadd
+      19: aaload
+      20: ifnonnull     24
+      23: return
+      24: aload_0
+      25: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+      28: iconst_0
+      29: aaload
+      30: invokevirtual #14                 // Method com/google/zxing/pdf417/decoder/DetectionResultColumn.getCodewords:()[Lcom/google/zxing/pdf417/decoder/Codeword;
+      33: astore_1
+      34: aload_0
+      35: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+      38: aload_0
+      39: getfield      #4                  // Field barcodeColumnCount:I
+      42: iconst_1
+      43: iadd
+      44: aaload
+      45: invokevirtual #14                 // Method com/google/zxing/pdf417/decoder/DetectionResultColumn.getCodewords:()[Lcom/google/zxing/pdf417/decoder/Codeword;
+      48: astore_2
+      49: iconst_0
+      50: istore_3
+      51: iload_3
+      52: aload_1
+      53: arraylength
+      54: if_icmpge     162
+      57: aload_1
+      58: iload_3
+      59: aaload
+      60: ifnull        156
+      63: aload_2
+      64: iload_3
+      65: aaload
+      66: ifnull        156
+      69: aload_1
+      70: iload_3
+      71: aaload
+      72: invokevirtual #20                 // Method com/google/zxing/pdf417/decoder/Codeword.getRowNumber:()I
+      75: aload_2
+      76: iload_3
+      77: aaload
+      78: invokevirtual #20                 // Method com/google/zxing/pdf417/decoder/Codeword.getRowNumber:()I
+      81: if_icmpne     156
+      84: iconst_1
+      85: istore        4
+      87: iload         4
+      89: aload_0
+      90: getfield      #4                  // Field barcodeColumnCount:I
+      93: if_icmpgt     156
+      96: aload_0
+      97: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+     100: iload         4
+     102: aaload
+     103: invokevirtual #14                 // Method com/google/zxing/pdf417/decoder/DetectionResultColumn.getCodewords:()[Lcom/google/zxing/pdf417/decoder/Codeword;
+     106: iload_3
+     107: aaload
+     108: astore        5
+     110: aload         5
+     112: ifnonnull     118
+     115: goto          150
+     118: aload         5
+     120: aload_1
+     121: iload_3
+     122: aaload
+     123: invokevirtual #20                 // Method com/google/zxing/pdf417/decoder/Codeword.getRowNumber:()I
+     126: invokevirtual #21                 // Method com/google/zxing/pdf417/decoder/Codeword.setRowNumber:(I)V
+     129: aload         5
+     131: invokevirtual #15                 // Method com/google/zxing/pdf417/decoder/Codeword.hasValidRowNumber:()Z
+     134: ifne          150
+     137: aload_0
+     138: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+     141: iload         4
+     143: aaload
+     144: invokevirtual #14                 // Method com/google/zxing/pdf417/decoder/DetectionResultColumn.getCodewords:()[Lcom/google/zxing/pdf417/decoder/Codeword;
+     147: iload_3
+     148: aconst_null
+     149: aastore
+     150: iinc          4, 1
+     153: goto          87
+     156: iinc          3, 1
+     159: goto          51
+     162: return
+
+  private int adjustRowNumbersFromRRI();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+       4: aload_0
+       5: getfield      #4                  // Field barcodeColumnCount:I
+       8: iconst_1
+       9: iadd
+      10: aaload
+      11: ifnonnull     16
+      14: iconst_0
+      15: ireturn
+      16: iconst_0
+      17: istore_1
+      18: aload_0
+      19: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+      22: aload_0
+      23: getfield      #4                  // Field barcodeColumnCount:I
+      26: iconst_1
+      27: iadd
+      28: aaload
+      29: invokevirtual #14                 // Method com/google/zxing/pdf417/decoder/DetectionResultColumn.getCodewords:()[Lcom/google/zxing/pdf417/decoder/Codeword;
+      32: astore_2
+      33: iconst_0
+      34: istore_3
+      35: iload_3
+      36: aload_2
+      37: arraylength
+      38: if_icmpge     133
+      41: aload_2
+      42: iload_3
+      43: aaload
+      44: ifnonnull     50
+      47: goto          127
+      50: aload_2
+      51: iload_3
+      52: aaload
+      53: invokevirtual #20                 // Method com/google/zxing/pdf417/decoder/Codeword.getRowNumber:()I
+      56: istore        4
+      58: iconst_0
+      59: istore        5
+      61: aload_0
+      62: getfield      #4                  // Field barcodeColumnCount:I
+      65: iconst_1
+      66: iadd
+      67: istore        6
+      69: iload         6
+      71: ifle          127
+      74: iload         5
+      76: iconst_2
+      77: if_icmpge     127
+      80: aload_0
+      81: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+      84: iload         6
+      86: aaload
+      87: invokevirtual #14                 // Method com/google/zxing/pdf417/decoder/DetectionResultColumn.getCodewords:()[Lcom/google/zxing/pdf417/decoder/Codeword;
+      90: iload_3
+      91: aaload
+      92: astore        7
+      94: aload         7
+      96: ifnull        121
+      99: iload         4
+     101: iload         5
+     103: aload         7
+     105: invokestatic  #23                 // Method adjustRowNumberIfValid:(IILcom/google/zxing/pdf417/decoder/Codeword;)I
+     108: istore        5
+     110: aload         7
+     112: invokevirtual #15                 // Method com/google/zxing/pdf417/decoder/Codeword.hasValidRowNumber:()Z
+     115: ifne          121
+     118: iinc          1, 1
+     121: iinc          6, -1
+     124: goto          69
+     127: iinc          3, 1
+     130: goto          35
+     133: iload_1
+     134: ireturn
+
+  private int adjustRowNumbersFromLRI();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+       4: iconst_0
+       5: aaload
+       6: ifnonnull     11
+       9: iconst_0
+      10: ireturn
+      11: iconst_0
+      12: istore_1
+      13: aload_0
+      14: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+      17: iconst_0
+      18: aaload
+      19: invokevirtual #14                 // Method com/google/zxing/pdf417/decoder/DetectionResultColumn.getCodewords:()[Lcom/google/zxing/pdf417/decoder/Codeword;
+      22: astore_2
+      23: iconst_0
+      24: istore_3
+      25: iload_3
+      26: aload_2
+      27: arraylength
+      28: if_icmpge     124
+      31: aload_2
+      32: iload_3
+      33: aaload
+      34: ifnonnull     40
+      37: goto          118
+      40: aload_2
+      41: iload_3
+      42: aaload
+      43: invokevirtual #20                 // Method com/google/zxing/pdf417/decoder/Codeword.getRowNumber:()I
+      46: istore        4
+      48: iconst_0
+      49: istore        5
+      51: iconst_1
+      52: istore        6
+      54: iload         6
+      56: aload_0
+      57: getfield      #4                  // Field barcodeColumnCount:I
+      60: iconst_1
+      61: iadd
+      62: if_icmpge     118
+      65: iload         5
+      67: iconst_2
+      68: if_icmpge     118
+      71: aload_0
+      72: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+      75: iload         6
+      77: aaload
+      78: invokevirtual #14                 // Method com/google/zxing/pdf417/decoder/DetectionResultColumn.getCodewords:()[Lcom/google/zxing/pdf417/decoder/Codeword;
+      81: iload_3
+      82: aaload
+      83: astore        7
+      85: aload         7
+      87: ifnull        112
+      90: iload         4
+      92: iload         5
+      94: aload         7
+      96: invokestatic  #23                 // Method adjustRowNumberIfValid:(IILcom/google/zxing/pdf417/decoder/Codeword;)I
+      99: istore        5
+     101: aload         7
+     103: invokevirtual #15                 // Method com/google/zxing/pdf417/decoder/Codeword.hasValidRowNumber:()Z
+     106: ifne          112
+     109: iinc          1, 1
+     112: iinc          6, 1
+     115: goto          54
+     118: iinc          3, 1
+     121: goto          25
+     124: iload_1
+     125: ireturn
+
+  private static int adjustRowNumberIfValid(int, int, com.google.zxing.pdf417.decoder.Codeword);
+    Code:
+       0: aload_2
+       1: ifnonnull     6
+       4: iload_1
+       5: ireturn
+       6: aload_2
+       7: invokevirtual #15                 // Method com/google/zxing/pdf417/decoder/Codeword.hasValidRowNumber:()Z
+      10: ifne          34
+      13: aload_2
+      14: iload_0
+      15: invokevirtual #24                 // Method com/google/zxing/pdf417/decoder/Codeword.isValidRowNumber:(I)Z
+      18: ifeq          31
+      21: aload_2
+      22: iload_0
+      23: invokevirtual #21                 // Method com/google/zxing/pdf417/decoder/Codeword.setRowNumber:(I)V
+      26: iconst_0
+      27: istore_1
+      28: goto          34
+      31: iinc          1, 1
+      34: iload_1
+      35: ireturn
+
+  private void adjustRowNumbers(int, int, com.google.zxing.pdf417.decoder.Codeword[]);
+    Code:
+       0: aload_3
+       1: iload_2
+       2: aaload
+       3: astore        4
+       5: aload_0
+       6: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+       9: iload_1
+      10: iconst_1
+      11: isub
+      12: aaload
+      13: invokevirtual #14                 // Method com/google/zxing/pdf417/decoder/DetectionResultColumn.getCodewords:()[Lcom/google/zxing/pdf417/decoder/Codeword;
+      16: astore        5
+      18: aload         5
+      20: astore        6
+      22: aload_0
+      23: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+      26: iload_1
+      27: iconst_1
+      28: iadd
+      29: aaload
+      30: ifnull        46
+      33: aload_0
+      34: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+      37: iload_1
+      38: iconst_1
+      39: iadd
+      40: aaload
+      41: invokevirtual #14                 // Method com/google/zxing/pdf417/decoder/DetectionResultColumn.getCodewords:()[Lcom/google/zxing/pdf417/decoder/Codeword;
+      44: astore        6
+      46: bipush        14
+      48: anewarray     #25                 // class com/google/zxing/pdf417/decoder/Codeword
+      51: astore        7
+      53: aload         7
+      55: iconst_2
+      56: aload         5
+      58: iload_2
+      59: aaload
+      60: aastore
+      61: aload         7
+      63: iconst_3
+      64: aload         6
+      66: iload_2
+      67: aaload
+      68: aastore
+      69: iload_2
+      70: ifle          102
+      73: aload         7
+      75: iconst_0
+      76: aload_3
+      77: iload_2
+      78: iconst_1
+      79: isub
+      80: aaload
+      81: aastore
+      82: aload         7
+      84: iconst_4
+      85: aload         5
+      87: iload_2
+      88: iconst_1
+      89: isub
+      90: aaload
+      91: aastore
+      92: aload         7
+      94: iconst_5
+      95: aload         6
+      97: iload_2
+      98: iconst_1
+      99: isub
+     100: aaload
+     101: aastore
+     102: iload_2
+     103: iconst_1
+     104: if_icmple     139
+     107: aload         7
+     109: bipush        8
+     111: aload_3
+     112: iload_2
+     113: iconst_2
+     114: isub
+     115: aaload
+     116: aastore
+     117: aload         7
+     119: bipush        10
+     121: aload         5
+     123: iload_2
+     124: iconst_2
+     125: isub
+     126: aaload
+     127: aastore
+     128: aload         7
+     130: bipush        11
+     132: aload         6
+     134: iload_2
+     135: iconst_2
+     136: isub
+     137: aaload
+     138: aastore
+     139: iload_2
+     140: aload_3
+     141: arraylength
+     142: iconst_1
+     143: isub
+     144: if_icmpge     178
+     147: aload         7
+     149: iconst_1
+     150: aload_3
+     151: iload_2
+     152: iconst_1
+     153: iadd
+     154: aaload
+     155: aastore
+     156: aload         7
+     158: bipush        6
+     160: aload         5
+     162: iload_2
+     163: iconst_1
+     164: iadd
+     165: aaload
+     166: aastore
+     167: aload         7
+     169: bipush        7
+     171: aload         6
+     173: iload_2
+     174: iconst_1
+     175: iadd
+     176: aaload
+     177: aastore
+     178: iload_2
+     179: aload_3
+     180: arraylength
+     181: iconst_2
+     182: isub
+     183: if_icmpge     218
+     186: aload         7
+     188: bipush        9
+     190: aload_3
+     191: iload_2
+     192: iconst_2
+     193: iadd
+     194: aaload
+     195: aastore
+     196: aload         7
+     198: bipush        12
+     200: aload         5
+     202: iload_2
+     203: iconst_2
+     204: iadd
+     205: aaload
+     206: aastore
+     207: aload         7
+     209: bipush        13
+     211: aload         6
+     213: iload_2
+     214: iconst_2
+     215: iadd
+     216: aaload
+     217: aastore
+     218: aload         7
+     220: astore        8
+     222: aload         8
+     224: arraylength
+     225: istore        9
+     227: iconst_0
+     228: istore        10
+     230: iload         10
+     232: iload         9
+     234: if_icmpge     261
+     237: aload         8
+     239: iload         10
+     241: aaload
+     242: astore        11
+     244: aload         4
+     246: aload         11
+     248: invokestatic  #26                 // Method adjustRowNumber:(Lcom/google/zxing/pdf417/decoder/Codeword;Lcom/google/zxing/pdf417/decoder/Codeword;)Z
+     251: ifeq          255
+     254: return
+     255: iinc          10, 1
+     258: goto          230
+     261: return
+
+  private static boolean adjustRowNumber(com.google.zxing.pdf417.decoder.Codeword, com.google.zxing.pdf417.decoder.Codeword);
+    Code:
+       0: aload_1
+       1: ifnonnull     6
+       4: iconst_0
+       5: ireturn
+       6: aload_1
+       7: invokevirtual #15                 // Method com/google/zxing/pdf417/decoder/Codeword.hasValidRowNumber:()Z
+      10: ifeq          34
+      13: aload_1
+      14: invokevirtual #27                 // Method com/google/zxing/pdf417/decoder/Codeword.getBucket:()I
+      17: aload_0
+      18: invokevirtual #27                 // Method com/google/zxing/pdf417/decoder/Codeword.getBucket:()I
+      21: if_icmpne     34
+      24: aload_0
+      25: aload_1
+      26: invokevirtual #20                 // Method com/google/zxing/pdf417/decoder/Codeword.getRowNumber:()I
+      29: invokevirtual #21                 // Method com/google/zxing/pdf417/decoder/Codeword.setRowNumber:(I)V
+      32: iconst_1
+      33: ireturn
+      34: iconst_0
+      35: ireturn
+
+  int getBarcodeColumnCount();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field barcodeColumnCount:I
+       4: ireturn
+
+  int getBarcodeRowCount();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field barcodeMetadata:Lcom/google/zxing/pdf417/decoder/BarcodeMetadata;
+       4: invokevirtual #28                 // Method com/google/zxing/pdf417/decoder/BarcodeMetadata.getRowCount:()I
+       7: ireturn
+
+  int getBarcodeECLevel();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field barcodeMetadata:Lcom/google/zxing/pdf417/decoder/BarcodeMetadata;
+       4: invokevirtual #29                 // Method com/google/zxing/pdf417/decoder/BarcodeMetadata.getErrorCorrectionLevel:()I
+       7: ireturn
+
+  void setBoundingBox(com.google.zxing.pdf417.decoder.BoundingBox);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #5                  // Field boundingBox:Lcom/google/zxing/pdf417/decoder/BoundingBox;
+       5: return
+
+  com.google.zxing.pdf417.decoder.BoundingBox getBoundingBox();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field boundingBox:Lcom/google/zxing/pdf417/decoder/BoundingBox;
+       4: areturn
+
+  void setDetectionResultColumn(int, com.google.zxing.pdf417.decoder.DetectionResultColumn);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+       4: iload_1
+       5: aload_2
+       6: aastore
+       7: return
+
+  com.google.zxing.pdf417.decoder.DetectionResultColumn getDetectionResultColumn(int);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+       4: iload_1
+       5: aaload
+       6: areturn
+
+  public java.lang.String toString();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+       4: iconst_0
+       5: aaload
+       6: astore_1
+       7: aload_1
+       8: ifnonnull     23
+      11: aload_0
+      12: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+      15: aload_0
+      16: getfield      #4                  // Field barcodeColumnCount:I
+      19: iconst_1
+      20: iadd
+      21: aaload
+      22: astore_1
+      23: new           #30                 // class java/util/Formatter
+      26: dup
+      27: invokespecial #31                 // Method java/util/Formatter."<init>":()V
+      30: astore_2
+      31: aconst_null
+      32: astore_3
+      33: iconst_0
+      34: istore        4
+      36: iload         4
+      38: aload_1
+      39: invokevirtual #14                 // Method com/google/zxing/pdf417/decoder/DetectionResultColumn.getCodewords:()[Lcom/google/zxing/pdf417/decoder/Codeword;
+      42: arraylength
+      43: if_icmpge     193
+      46: aload_2
+      47: ldc           #32                 // String CW %3d:
+      49: iconst_1
+      50: anewarray     #33                 // class java/lang/Object
+      53: dup
+      54: iconst_0
+      55: iload         4
+      57: invokestatic  #34                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      60: aastore
+      61: invokevirtual #35                 // Method java/util/Formatter.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/util/Formatter;
+      64: pop
+      65: iconst_0
+      66: istore        5
+      68: iload         5
+      70: aload_0
+      71: getfield      #4                  // Field barcodeColumnCount:I
+      74: iconst_2
+      75: iadd
+      76: if_icmpge     176
+      79: aload_0
+      80: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+      83: iload         5
+      85: aaload
+      86: ifnonnull     103
+      89: aload_2
+      90: ldc           #36                 // String     |
+      92: iconst_0
+      93: anewarray     #33                 // class java/lang/Object
+      96: invokevirtual #35                 // Method java/util/Formatter.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/util/Formatter;
+      99: pop
+     100: goto          170
+     103: aload_0
+     104: getfield      #7                  // Field detectionResultColumns:[Lcom/google/zxing/pdf417/decoder/DetectionResultColumn;
+     107: iload         5
+     109: aaload
+     110: invokevirtual #14                 // Method com/google/zxing/pdf417/decoder/DetectionResultColumn.getCodewords:()[Lcom/google/zxing/pdf417/decoder/Codeword;
+     113: iload         4
+     115: aaload
+     116: astore        6
+     118: aload         6
+     120: ifnonnull     137
+     123: aload_2
+     124: ldc           #36                 // String     |
+     126: iconst_0
+     127: anewarray     #33                 // class java/lang/Object
+     130: invokevirtual #35                 // Method java/util/Formatter.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/util/Formatter;
+     133: pop
+     134: goto          170
+     137: aload_2
+     138: ldc           #37                 // String  %3d|%3d
+     140: iconst_2
+     141: anewarray     #33                 // class java/lang/Object
+     144: dup
+     145: iconst_0
+     146: aload         6
+     148: invokevirtual #20                 // Method com/google/zxing/pdf417/decoder/Codeword.getRowNumber:()I
+     151: invokestatic  #34                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     154: aastore
+     155: dup
+     156: iconst_1
+     157: aload         6
+     159: invokevirtual #38                 // Method com/google/zxing/pdf417/decoder/Codeword.getValue:()I
+     162: invokestatic  #34                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     165: aastore
+     166: invokevirtual #35                 // Method java/util/Formatter.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/util/Formatter;
+     169: pop
+     170: iinc          5, 1
+     173: goto          68
+     176: aload_2
+     177: ldc           #39                 // String %n
+     179: iconst_0
+     180: anewarray     #33                 // class java/lang/Object
+     183: invokevirtual #35                 // Method java/util/Formatter.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/util/Formatter;
+     186: pop
+     187: iinc          4, 1
+     190: goto          36
+     193: aload_2
+     194: invokevirtual #40                 // Method java/util/Formatter.toString:()Ljava/lang/String;
+     197: astore        4
+     199: aload_2
+     200: ifnull        229
+     203: aload_3
+     204: ifnull        225
+     207: aload_2
+     208: invokevirtual #41                 // Method java/util/Formatter.close:()V
+     211: goto          229
+     214: astore        5
+     216: aload_3
+     217: aload         5
+     219: invokevirtual #43                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     222: goto          229
+     225: aload_2
+     226: invokevirtual #41                 // Method java/util/Formatter.close:()V
+     229: aload         4
+     231: areturn
+     232: astore        4
+     234: aload         4
+     236: astore_3
+     237: aload         4
+     239: athrow
+     240: astore        7
+     242: aload_2
+     243: ifnull        272
+     246: aload_3
+     247: ifnull        268
+     250: aload_2
+     251: invokevirtual #41                 // Method java/util/Formatter.close:()V
+     254: goto          272
+     257: astore        8
+     259: aload_3
+     260: aload         8
+     262: invokevirtual #43                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     265: goto          272
+     268: aload_2
+     269: invokevirtual #41                 // Method java/util/Formatter.close:()V
+     272: aload         7
+     274: athrow
+    Exception table:
+       from    to  target type
+         207   211   214   Class java/lang/Throwable
+          33   199   232   Class java/lang/Throwable
+          33   199   240   any
+         250   254   257   Class java/lang/Throwable
+         232   242   240   any
+}

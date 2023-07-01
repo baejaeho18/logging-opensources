@@ -1,0 +1,807 @@
+Compiled from "MinimalEncoder.java"
+public final class com.google.zxing.datamatrix.encoder.MinimalEncoder {
+  static final char[] C40_SHIFT2_CHARS;
+
+  private com.google.zxing.datamatrix.encoder.MinimalEncoder();
+    Code:
+       0: aload_0
+       1: invokespecial #5                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  static boolean isExtendedASCII(char, int);
+    Code:
+       0: iload_0
+       1: iload_1
+       2: if_icmpeq     23
+       5: iload_0
+       6: sipush        128
+       9: if_icmplt     23
+      12: iload_0
+      13: sipush        255
+      16: if_icmpgt     23
+      19: iconst_1
+      20: goto          24
+      23: iconst_0
+      24: ireturn
+
+  private static boolean isInC40Shift1Set(char);
+    Code:
+       0: iload_0
+       1: bipush        31
+       3: if_icmpgt     10
+       6: iconst_1
+       7: goto          11
+      10: iconst_0
+      11: ireturn
+
+  private static boolean isInC40Shift2Set(char, int);
+    Code:
+       0: getstatic     #6                  // Field C40_SHIFT2_CHARS:[C
+       3: astore_2
+       4: aload_2
+       5: arraylength
+       6: istore_3
+       7: iconst_0
+       8: istore        4
+      10: iload         4
+      12: iload_3
+      13: if_icmpge     36
+      16: aload_2
+      17: iload         4
+      19: caload
+      20: istore        5
+      22: iload         5
+      24: iload_0
+      25: if_icmpne     30
+      28: iconst_1
+      29: ireturn
+      30: iinc          4, 1
+      33: goto          10
+      36: iload_0
+      37: iload_1
+      38: if_icmpne     45
+      41: iconst_1
+      42: goto          46
+      45: iconst_0
+      46: ireturn
+
+  private static boolean isInTextShift1Set(char);
+    Code:
+       0: iload_0
+       1: invokestatic  #4                  // Method isInC40Shift1Set:(C)Z
+       4: ireturn
+
+  private static boolean isInTextShift2Set(char, int);
+    Code:
+       0: iload_0
+       1: iload_1
+       2: invokestatic  #2                  // Method isInC40Shift2Set:(CI)Z
+       5: ireturn
+
+  public static java.lang.String encodeHighLevel(java.lang.String);
+    Code:
+       0: aload_0
+       1: aconst_null
+       2: iconst_m1
+       3: getstatic     #7                  // Field com/google/zxing/datamatrix/encoder/SymbolShapeHint.FORCE_NONE:Lcom/google/zxing/datamatrix/encoder/SymbolShapeHint;
+       6: invokestatic  #8                  // Method encodeHighLevel:(Ljava/lang/String;Ljava/nio/charset/Charset;ILcom/google/zxing/datamatrix/encoder/SymbolShapeHint;)Ljava/lang/String;
+       9: areturn
+
+  public static java.lang.String encodeHighLevel(java.lang.String, java.nio.charset.Charset, int, com.google.zxing.datamatrix.encoder.SymbolShapeHint);
+    Code:
+       0: iconst_0
+       1: istore        4
+       3: aload_0
+       4: ldc           #10                 // String [)>\u001e05\u001d
+       6: invokevirtual #11                 // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+       9: ifeq          43
+      12: aload_0
+      13: ldc           #12                 // String \u001e\u0004
+      15: invokevirtual #13                 // Method java/lang/String.endsWith:(Ljava/lang/String;)Z
+      18: ifeq          43
+      21: iconst_5
+      22: istore        4
+      24: aload_0
+      25: ldc           #10                 // String [)>\u001e05\u001d
+      27: invokevirtual #14                 // Method java/lang/String.length:()I
+      30: aload_0
+      31: invokevirtual #14                 // Method java/lang/String.length:()I
+      34: iconst_2
+      35: isub
+      36: invokevirtual #15                 // Method java/lang/String.substring:(II)Ljava/lang/String;
+      39: astore_0
+      40: goto          81
+      43: aload_0
+      44: ldc           #16                 // String [)>\u001e06\u001d
+      46: invokevirtual #11                 // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+      49: ifeq          81
+      52: aload_0
+      53: ldc           #12                 // String \u001e\u0004
+      55: invokevirtual #13                 // Method java/lang/String.endsWith:(Ljava/lang/String;)Z
+      58: ifeq          81
+      61: bipush        6
+      63: istore        4
+      65: aload_0
+      66: ldc           #16                 // String [)>\u001e06\u001d
+      68: invokevirtual #14                 // Method java/lang/String.length:()I
+      71: aload_0
+      72: invokevirtual #14                 // Method java/lang/String.length:()I
+      75: iconst_2
+      76: isub
+      77: invokevirtual #15                 // Method java/lang/String.substring:(II)Ljava/lang/String;
+      80: astore_0
+      81: new           #17                 // class java/lang/String
+      84: dup
+      85: aload_0
+      86: aload_1
+      87: iload_2
+      88: aload_3
+      89: iload         4
+      91: invokestatic  #18                 // Method encode:(Ljava/lang/String;Ljava/nio/charset/Charset;ILcom/google/zxing/datamatrix/encoder/SymbolShapeHint;I)[B
+      94: getstatic     #19                 // Field java/nio/charset/StandardCharsets.ISO_8859_1:Ljava/nio/charset/Charset;
+      97: invokespecial #20                 // Method java/lang/String."<init>":([BLjava/nio/charset/Charset;)V
+     100: areturn
+
+  static byte[] encode(java.lang.String, java.nio.charset.Charset, int, com.google.zxing.datamatrix.encoder.SymbolShapeHint, int);
+    Code:
+       0: new           #21                 // class com/google/zxing/datamatrix/encoder/MinimalEncoder$Input
+       3: dup
+       4: aload_0
+       5: aload_1
+       6: iload_2
+       7: aload_3
+       8: iload         4
+      10: aconst_null
+      11: invokespecial #22                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input."<init>":(Ljava/lang/String;Ljava/nio/charset/Charset;ILcom/google/zxing/datamatrix/encoder/SymbolShapeHint;ILcom/google/zxing/datamatrix/encoder/MinimalEncoder$1;)V
+      14: invokestatic  #23                 // Method encodeMinimally:(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Input;)Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Result;
+      17: invokevirtual #24                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Result.getBytes:()[B
+      20: areturn
+
+  static void addEdge(com.google.zxing.datamatrix.encoder.MinimalEncoder$Edge[][], com.google.zxing.datamatrix.encoder.MinimalEncoder$Edge);
+    Code:
+       0: aload_1
+       1: invokestatic  #25                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge.access$100:(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;)I
+       4: aload_1
+       5: invokestatic  #26                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge.access$200:(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;)I
+       8: iadd
+       9: istore_2
+      10: aload_0
+      11: iload_2
+      12: aaload
+      13: aload_1
+      14: invokevirtual #27                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge.getEndMode:()Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;
+      17: invokevirtual #28                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Mode.ordinal:()I
+      20: aaload
+      21: ifnull        45
+      24: aload_0
+      25: iload_2
+      26: aaload
+      27: aload_1
+      28: invokevirtual #27                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge.getEndMode:()Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;
+      31: invokevirtual #28                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Mode.ordinal:()I
+      34: aaload
+      35: invokestatic  #29                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge.access$300:(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;)I
+      38: aload_1
+      39: invokestatic  #29                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge.access$300:(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;)I
+      42: if_icmple     57
+      45: aload_0
+      46: iload_2
+      47: aaload
+      48: aload_1
+      49: invokevirtual #27                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge.getEndMode:()Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;
+      52: invokevirtual #28                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Mode.ordinal:()I
+      55: aload_1
+      56: aastore
+      57: return
+
+  static int getNumberOfC40Words(com.google.zxing.datamatrix.encoder.MinimalEncoder$Input, int, boolean, int[]);
+    Code:
+       0: iconst_0
+       1: istore        4
+       3: iload_1
+       4: istore        5
+       6: iload         5
+       8: aload_0
+       9: invokevirtual #30                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.length:()I
+      12: if_icmpge     199
+      15: aload_0
+      16: iload         5
+      18: invokevirtual #31                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.isECI:(I)Z
+      21: ifeq          30
+      24: aload_3
+      25: iconst_0
+      26: iconst_0
+      27: iastore
+      28: iconst_0
+      29: ireturn
+      30: aload_0
+      31: iload         5
+      33: invokevirtual #32                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.charAt:(I)C
+      36: istore        6
+      38: iload_2
+      39: ifeq          50
+      42: iload         6
+      44: invokestatic  #33                 // Method com/google/zxing/datamatrix/encoder/HighLevelEncoder.isNativeC40:(C)Z
+      47: ifne          62
+      50: iload_2
+      51: ifne          68
+      54: iload         6
+      56: invokestatic  #34                 // Method com/google/zxing/datamatrix/encoder/HighLevelEncoder.isNativeText:(C)Z
+      59: ifeq          68
+      62: iinc          4, 1
+      65: goto          145
+      68: iload         6
+      70: aload_0
+      71: invokevirtual #35                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.getFNC1Character:()I
+      74: invokestatic  #36                 // Method isExtendedASCII:(CI)Z
+      77: ifne          86
+      80: iinc          4, 2
+      83: goto          145
+      86: iload         6
+      88: sipush        255
+      91: iand
+      92: istore        7
+      94: iload         7
+      96: sipush        128
+      99: if_icmplt     142
+     102: iload_2
+     103: ifeq          119
+     106: iload         7
+     108: sipush        128
+     111: isub
+     112: i2c
+     113: invokestatic  #33                 // Method com/google/zxing/datamatrix/encoder/HighLevelEncoder.isNativeC40:(C)Z
+     116: ifne          136
+     119: iload_2
+     120: ifne          142
+     123: iload         7
+     125: sipush        128
+     128: isub
+     129: i2c
+     130: invokestatic  #34                 // Method com/google/zxing/datamatrix/encoder/HighLevelEncoder.isNativeText:(C)Z
+     133: ifeq          142
+     136: iinc          4, 3
+     139: goto          145
+     142: iinc          4, 4
+     145: iload         4
+     147: iconst_3
+     148: irem
+     149: ifeq          172
+     152: iload         4
+     154: iconst_2
+     155: isub
+     156: iconst_3
+     157: irem
+     158: ifne          193
+     161: iload         5
+     163: iconst_1
+     164: iadd
+     165: aload_0
+     166: invokevirtual #30                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.length:()I
+     169: if_icmpne     193
+     172: aload_3
+     173: iconst_0
+     174: iload         5
+     176: iload_1
+     177: isub
+     178: iconst_1
+     179: iadd
+     180: iastore
+     181: iload         4
+     183: i2d
+     184: ldc2_w        #37                 // double 3.0d
+     187: ddiv
+     188: invokestatic  #39                 // Method java/lang/Math.ceil:(D)D
+     191: d2i
+     192: ireturn
+     193: iinc          5, 1
+     196: goto          6
+     199: aload_3
+     200: iconst_0
+     201: iconst_0
+     202: iastore
+     203: iconst_0
+     204: ireturn
+
+  static void addEdges(com.google.zxing.datamatrix.encoder.MinimalEncoder$Input, com.google.zxing.datamatrix.encoder.MinimalEncoder$Edge[][], int, com.google.zxing.datamatrix.encoder.MinimalEncoder$Edge);
+    Code:
+       0: aload_0
+       1: iload_2
+       2: invokevirtual #31                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.isECI:(I)Z
+       5: ifeq          28
+       8: aload_1
+       9: new           #40                 // class com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge
+      12: dup
+      13: aload_0
+      14: getstatic     #41                 // Field com/google/zxing/datamatrix/encoder/MinimalEncoder$Mode.ASCII:Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;
+      17: iload_2
+      18: iconst_1
+      19: aload_3
+      20: aconst_null
+      21: invokespecial #42                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge."<init>":(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Input;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;IILcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$1;)V
+      24: invokestatic  #43                 // Method addEdge:([[Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;)V
+      27: return
+      28: aload_0
+      29: iload_2
+      30: invokevirtual #32                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.charAt:(I)C
+      33: istore        4
+      35: aload_3
+      36: ifnull        49
+      39: aload_3
+      40: invokevirtual #27                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge.getEndMode:()Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;
+      43: getstatic     #44                 // Field com/google/zxing/datamatrix/encoder/MinimalEncoder$Mode.EDF:Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;
+      46: if_acmpeq     303
+      49: iload         4
+      51: invokestatic  #45                 // Method com/google/zxing/datamatrix/encoder/HighLevelEncoder.isDigit:(C)Z
+      54: ifeq          101
+      57: aload_0
+      58: iload_2
+      59: iconst_2
+      60: invokevirtual #46                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.haveNCharacters:(II)Z
+      63: ifeq          101
+      66: aload_0
+      67: iload_2
+      68: iconst_1
+      69: iadd
+      70: invokevirtual #32                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.charAt:(I)C
+      73: invokestatic  #45                 // Method com/google/zxing/datamatrix/encoder/HighLevelEncoder.isDigit:(C)Z
+      76: ifeq          101
+      79: aload_1
+      80: new           #40                 // class com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge
+      83: dup
+      84: aload_0
+      85: getstatic     #41                 // Field com/google/zxing/datamatrix/encoder/MinimalEncoder$Mode.ASCII:Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;
+      88: iload_2
+      89: iconst_2
+      90: aload_3
+      91: aconst_null
+      92: invokespecial #42                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge."<init>":(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Input;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;IILcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$1;)V
+      95: invokestatic  #43                 // Method addEdge:([[Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;)V
+      98: goto          120
+     101: aload_1
+     102: new           #40                 // class com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge
+     105: dup
+     106: aload_0
+     107: getstatic     #41                 // Field com/google/zxing/datamatrix/encoder/MinimalEncoder$Mode.ASCII:Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;
+     110: iload_2
+     111: iconst_1
+     112: aload_3
+     113: aconst_null
+     114: invokespecial #42                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge."<init>":(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Input;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;IILcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$1;)V
+     117: invokestatic  #43                 // Method addEdge:([[Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;)V
+     120: iconst_2
+     121: anewarray     #47                 // class com/google/zxing/datamatrix/encoder/MinimalEncoder$Mode
+     124: dup
+     125: iconst_0
+     126: getstatic     #48                 // Field com/google/zxing/datamatrix/encoder/MinimalEncoder$Mode.C40:Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;
+     129: aastore
+     130: dup
+     131: iconst_1
+     132: getstatic     #49                 // Field com/google/zxing/datamatrix/encoder/MinimalEncoder$Mode.TEXT:Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;
+     135: aastore
+     136: astore        5
+     138: aload         5
+     140: astore        6
+     142: aload         6
+     144: arraylength
+     145: istore        7
+     147: iconst_0
+     148: istore        8
+     150: iload         8
+     152: iload         7
+     154: if_icmpge     219
+     157: aload         6
+     159: iload         8
+     161: aaload
+     162: astore        9
+     164: iconst_1
+     165: newarray       int
+     167: astore        10
+     169: aload_0
+     170: iload_2
+     171: aload         9
+     173: getstatic     #48                 // Field com/google/zxing/datamatrix/encoder/MinimalEncoder$Mode.C40:Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;
+     176: if_acmpne     183
+     179: iconst_1
+     180: goto          184
+     183: iconst_0
+     184: aload         10
+     186: invokestatic  #50                 // Method getNumberOfC40Words:(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Input;IZ[I)I
+     189: ifle          213
+     192: aload_1
+     193: new           #40                 // class com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge
+     196: dup
+     197: aload_0
+     198: aload         9
+     200: iload_2
+     201: aload         10
+     203: iconst_0
+     204: iaload
+     205: aload_3
+     206: aconst_null
+     207: invokespecial #42                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge."<init>":(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Input;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;IILcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$1;)V
+     210: invokestatic  #43                 // Method addEdge:([[Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;)V
+     213: iinc          8, 1
+     216: goto          150
+     219: aload_0
+     220: iload_2
+     221: iconst_3
+     222: invokevirtual #46                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.haveNCharacters:(II)Z
+     225: ifeq          284
+     228: aload_0
+     229: iload_2
+     230: invokevirtual #32                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.charAt:(I)C
+     233: invokestatic  #51                 // Method com/google/zxing/datamatrix/encoder/HighLevelEncoder.isNativeX12:(C)Z
+     236: ifeq          284
+     239: aload_0
+     240: iload_2
+     241: iconst_1
+     242: iadd
+     243: invokevirtual #32                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.charAt:(I)C
+     246: invokestatic  #51                 // Method com/google/zxing/datamatrix/encoder/HighLevelEncoder.isNativeX12:(C)Z
+     249: ifeq          284
+     252: aload_0
+     253: iload_2
+     254: iconst_2
+     255: iadd
+     256: invokevirtual #32                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.charAt:(I)C
+     259: invokestatic  #51                 // Method com/google/zxing/datamatrix/encoder/HighLevelEncoder.isNativeX12:(C)Z
+     262: ifeq          284
+     265: aload_1
+     266: new           #40                 // class com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge
+     269: dup
+     270: aload_0
+     271: getstatic     #52                 // Field com/google/zxing/datamatrix/encoder/MinimalEncoder$Mode.X12:Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;
+     274: iload_2
+     275: iconst_3
+     276: aload_3
+     277: aconst_null
+     278: invokespecial #42                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge."<init>":(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Input;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;IILcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$1;)V
+     281: invokestatic  #43                 // Method addEdge:([[Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;)V
+     284: aload_1
+     285: new           #40                 // class com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge
+     288: dup
+     289: aload_0
+     290: getstatic     #53                 // Field com/google/zxing/datamatrix/encoder/MinimalEncoder$Mode.B256:Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;
+     293: iload_2
+     294: iconst_1
+     295: aload_3
+     296: aconst_null
+     297: invokespecial #42                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge."<init>":(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Input;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;IILcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$1;)V
+     300: invokestatic  #43                 // Method addEdge:([[Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;)V
+     303: iconst_0
+     304: istore        5
+     306: iload         5
+     308: iconst_3
+     309: if_icmpge     368
+     312: iload_2
+     313: iload         5
+     315: iadd
+     316: istore        6
+     318: aload_0
+     319: iload         6
+     321: iconst_1
+     322: invokevirtual #46                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.haveNCharacters:(II)Z
+     325: ifeq          368
+     328: aload_0
+     329: iload         6
+     331: invokevirtual #32                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.charAt:(I)C
+     334: invokestatic  #54                 // Method com/google/zxing/datamatrix/encoder/HighLevelEncoder.isNativeEDIFACT:(C)Z
+     337: ifeq          368
+     340: aload_1
+     341: new           #40                 // class com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge
+     344: dup
+     345: aload_0
+     346: getstatic     #44                 // Field com/google/zxing/datamatrix/encoder/MinimalEncoder$Mode.EDF:Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;
+     349: iload_2
+     350: iload         5
+     352: iconst_1
+     353: iadd
+     354: aload_3
+     355: aconst_null
+     356: invokespecial #42                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge."<init>":(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Input;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;IILcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$1;)V
+     359: invokestatic  #43                 // Method addEdge:([[Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;)V
+     362: iinc          5, 1
+     365: goto          306
+     368: iload         5
+     370: iconst_3
+     371: if_icmpne     415
+     374: aload_0
+     375: iload_2
+     376: iconst_4
+     377: invokevirtual #46                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.haveNCharacters:(II)Z
+     380: ifeq          415
+     383: aload_0
+     384: iload_2
+     385: iconst_3
+     386: iadd
+     387: invokevirtual #32                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.charAt:(I)C
+     390: invokestatic  #54                 // Method com/google/zxing/datamatrix/encoder/HighLevelEncoder.isNativeEDIFACT:(C)Z
+     393: ifeq          415
+     396: aload_1
+     397: new           #40                 // class com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge
+     400: dup
+     401: aload_0
+     402: getstatic     #44                 // Field com/google/zxing/datamatrix/encoder/MinimalEncoder$Mode.EDF:Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;
+     405: iload_2
+     406: iconst_4
+     407: aload_3
+     408: aconst_null
+     409: invokespecial #42                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge."<init>":(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Input;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Mode;IILcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$1;)V
+     412: invokestatic  #43                 // Method addEdge:([[Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;)V
+     415: return
+
+  static com.google.zxing.datamatrix.encoder.MinimalEncoder$Result encodeMinimally(com.google.zxing.datamatrix.encoder.MinimalEncoder$Input);
+    Code:
+       0: aload_0
+       1: invokevirtual #30                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Input.length:()I
+       4: istore_1
+       5: iload_1
+       6: iconst_1
+       7: iadd
+       8: bipush        6
+      10: multianewarray #55,  2            // class "[[Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;"
+      14: astore_2
+      15: aload_0
+      16: aload_2
+      17: iconst_0
+      18: aconst_null
+      19: invokestatic  #56                 // Method addEdges:(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Input;[[Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;ILcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;)V
+      22: iconst_1
+      23: istore_3
+      24: iload_3
+      25: iload_1
+      26: if_icmpgt     102
+      29: iconst_0
+      30: istore        4
+      32: iload         4
+      34: bipush        6
+      36: if_icmpge     71
+      39: aload_2
+      40: iload_3
+      41: aaload
+      42: iload         4
+      44: aaload
+      45: ifnull        65
+      48: iload_3
+      49: iload_1
+      50: if_icmpge     65
+      53: aload_0
+      54: aload_2
+      55: iload_3
+      56: aload_2
+      57: iload_3
+      58: aaload
+      59: iload         4
+      61: aaload
+      62: invokestatic  #56                 // Method addEdges:(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Input;[[Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;ILcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;)V
+      65: iinc          4, 1
+      68: goto          32
+      71: iconst_0
+      72: istore        4
+      74: iload         4
+      76: bipush        6
+      78: if_icmpge     96
+      81: aload_2
+      82: iload_3
+      83: iconst_1
+      84: isub
+      85: aaload
+      86: iload         4
+      88: aconst_null
+      89: aastore
+      90: iinc          4, 1
+      93: goto          74
+      96: iinc          3, 1
+      99: goto          24
+     102: iconst_m1
+     103: istore_3
+     104: ldc           #58                 // int 2147483647
+     106: istore        4
+     108: iconst_0
+     109: istore        5
+     111: iload         5
+     113: bipush        6
+     115: if_icmpge     184
+     118: aload_2
+     119: iload_1
+     120: aaload
+     121: iload         5
+     123: aaload
+     124: ifnull        178
+     127: aload_2
+     128: iload_1
+     129: aaload
+     130: iload         5
+     132: aaload
+     133: astore        6
+     135: iload         5
+     137: iconst_1
+     138: if_icmplt     157
+     141: iload         5
+     143: iconst_3
+     144: if_icmpgt     157
+     147: aload         6
+     149: invokestatic  #29                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge.access$300:(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;)I
+     152: iconst_1
+     153: iadd
+     154: goto          162
+     157: aload         6
+     159: invokestatic  #29                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Edge.access$300:(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;)I
+     162: istore        7
+     164: iload         7
+     166: iload         4
+     168: if_icmpge     178
+     171: iload         7
+     173: istore        4
+     175: iload         5
+     177: istore_3
+     178: iinc          5, 1
+     181: goto          111
+     184: iload_3
+     185: ifge          220
+     188: new           #59                 // class java/lang/IllegalStateException
+     191: dup
+     192: new           #60                 // class java/lang/StringBuilder
+     195: dup
+     196: invokespecial #61                 // Method java/lang/StringBuilder."<init>":()V
+     199: ldc           #62                 // String Failed to encode \"
+     201: invokevirtual #63                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     204: aload_0
+     205: invokevirtual #64                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     208: ldc           #65                 // String \"
+     210: invokevirtual #63                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     213: invokevirtual #66                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     216: invokespecial #67                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     219: athrow
+     220: new           #68                 // class com/google/zxing/datamatrix/encoder/MinimalEncoder$Result
+     223: dup
+     224: aload_2
+     225: iload_1
+     226: aaload
+     227: iload_3
+     228: aaload
+     229: invokespecial #69                 // Method com/google/zxing/datamatrix/encoder/MinimalEncoder$Result."<init>":(Lcom/google/zxing/datamatrix/encoder/MinimalEncoder$Edge;)V
+     232: areturn
+
+  static boolean access$600(char);
+    Code:
+       0: iload_0
+       1: invokestatic  #4                  // Method isInC40Shift1Set:(C)Z
+       4: ireturn
+
+  static boolean access$700(char);
+    Code:
+       0: iload_0
+       1: invokestatic  #3                  // Method isInTextShift1Set:(C)Z
+       4: ireturn
+
+  static boolean access$800(char, int);
+    Code:
+       0: iload_0
+       1: iload_1
+       2: invokestatic  #2                  // Method isInC40Shift2Set:(CI)Z
+       5: ireturn
+
+  static boolean access$900(char, int);
+    Code:
+       0: iload_0
+       1: iload_1
+       2: invokestatic  #1                  // Method isInTextShift2Set:(CI)Z
+       5: ireturn
+
+  static {};
+    Code:
+       0: bipush        27
+       2: newarray       char
+       4: dup
+       5: iconst_0
+       6: bipush        33
+       8: castore
+       9: dup
+      10: iconst_1
+      11: bipush        34
+      13: castore
+      14: dup
+      15: iconst_2
+      16: bipush        35
+      18: castore
+      19: dup
+      20: iconst_3
+      21: bipush        36
+      23: castore
+      24: dup
+      25: iconst_4
+      26: bipush        37
+      28: castore
+      29: dup
+      30: iconst_5
+      31: bipush        38
+      33: castore
+      34: dup
+      35: bipush        6
+      37: bipush        39
+      39: castore
+      40: dup
+      41: bipush        7
+      43: bipush        40
+      45: castore
+      46: dup
+      47: bipush        8
+      49: bipush        41
+      51: castore
+      52: dup
+      53: bipush        9
+      55: bipush        42
+      57: castore
+      58: dup
+      59: bipush        10
+      61: bipush        43
+      63: castore
+      64: dup
+      65: bipush        11
+      67: bipush        44
+      69: castore
+      70: dup
+      71: bipush        12
+      73: bipush        45
+      75: castore
+      76: dup
+      77: bipush        13
+      79: bipush        46
+      81: castore
+      82: dup
+      83: bipush        14
+      85: bipush        47
+      87: castore
+      88: dup
+      89: bipush        15
+      91: bipush        58
+      93: castore
+      94: dup
+      95: bipush        16
+      97: bipush        59
+      99: castore
+     100: dup
+     101: bipush        17
+     103: bipush        60
+     105: castore
+     106: dup
+     107: bipush        18
+     109: bipush        61
+     111: castore
+     112: dup
+     113: bipush        19
+     115: bipush        62
+     117: castore
+     118: dup
+     119: bipush        20
+     121: bipush        63
+     123: castore
+     124: dup
+     125: bipush        21
+     127: bipush        64
+     129: castore
+     130: dup
+     131: bipush        22
+     133: bipush        91
+     135: castore
+     136: dup
+     137: bipush        23
+     139: bipush        92
+     141: castore
+     142: dup
+     143: bipush        24
+     145: bipush        93
+     147: castore
+     148: dup
+     149: bipush        25
+     151: bipush        94
+     153: castore
+     154: dup
+     155: bipush        26
+     157: bipush        95
+     159: castore
+     160: putstatic     #6                  // Field C40_SHIFT2_CHARS:[C
+     163: return
+}

@@ -1,0 +1,279 @@
+Compiled from "QRCodeMultiReader.java"
+public final class com.google.zxing.multi.qrcode.QRCodeMultiReader extends com.google.zxing.qrcode.QRCodeReader implements com.google.zxing.multi.MultipleBarcodeReader {
+  private static final com.google.zxing.Result[] EMPTY_RESULT_ARRAY;
+
+  private static final com.google.zxing.ResultPoint[] NO_POINTS;
+
+  public com.google.zxing.multi.qrcode.QRCodeMultiReader();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method com/google/zxing/qrcode/QRCodeReader."<init>":()V
+       4: return
+
+  public com.google.zxing.Result[] decodeMultiple(com.google.zxing.BinaryBitmap) throws com.google.zxing.NotFoundException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aconst_null
+       3: invokevirtual #2                  // Method decodeMultiple:(Lcom/google/zxing/BinaryBitmap;Ljava/util/Map;)[Lcom/google/zxing/Result;
+       6: areturn
+
+  public com.google.zxing.Result[] decodeMultiple(com.google.zxing.BinaryBitmap, java.util.Map<com.google.zxing.DecodeHintType, ?>) throws com.google.zxing.NotFoundException;
+    Code:
+       0: new           #3                  // class java/util/ArrayList
+       3: dup
+       4: invokespecial #4                  // Method java/util/ArrayList."<init>":()V
+       7: astore_3
+       8: new           #5                  // class com/google/zxing/multi/qrcode/detector/MultiDetector
+      11: dup
+      12: aload_1
+      13: invokevirtual #6                  // Method com/google/zxing/BinaryBitmap.getBlackMatrix:()Lcom/google/zxing/common/BitMatrix;
+      16: invokespecial #7                  // Method com/google/zxing/multi/qrcode/detector/MultiDetector."<init>":(Lcom/google/zxing/common/BitMatrix;)V
+      19: aload_2
+      20: invokevirtual #8                  // Method com/google/zxing/multi/qrcode/detector/MultiDetector.detectMulti:(Ljava/util/Map;)[Lcom/google/zxing/common/DetectorResult;
+      23: astore        4
+      25: aload         4
+      27: astore        5
+      29: aload         5
+      31: arraylength
+      32: istore        6
+      34: iconst_0
+      35: istore        7
+      37: iload         7
+      39: iload         6
+      41: if_icmpge     225
+      44: aload         5
+      46: iload         7
+      48: aaload
+      49: astore        8
+      51: aload_0
+      52: invokevirtual #9                  // Method getDecoder:()Lcom/google/zxing/qrcode/decoder/Decoder;
+      55: aload         8
+      57: invokevirtual #10                 // Method com/google/zxing/common/DetectorResult.getBits:()Lcom/google/zxing/common/BitMatrix;
+      60: aload_2
+      61: invokevirtual #11                 // Method com/google/zxing/qrcode/decoder/Decoder.decode:(Lcom/google/zxing/common/BitMatrix;Ljava/util/Map;)Lcom/google/zxing/common/DecoderResult;
+      64: astore        9
+      66: aload         8
+      68: invokevirtual #12                 // Method com/google/zxing/common/DetectorResult.getPoints:()[Lcom/google/zxing/ResultPoint;
+      71: astore        10
+      73: aload         9
+      75: invokevirtual #13                 // Method com/google/zxing/common/DecoderResult.getOther:()Ljava/lang/Object;
+      78: instanceof    #14                 // class com/google/zxing/qrcode/decoder/QRCodeDecoderMetaData
+      81: ifeq          97
+      84: aload         9
+      86: invokevirtual #13                 // Method com/google/zxing/common/DecoderResult.getOther:()Ljava/lang/Object;
+      89: checkcast     #14                 // class com/google/zxing/qrcode/decoder/QRCodeDecoderMetaData
+      92: aload         10
+      94: invokevirtual #15                 // Method com/google/zxing/qrcode/decoder/QRCodeDecoderMetaData.applyMirroredCorrection:([Lcom/google/zxing/ResultPoint;)V
+      97: new           #16                 // class com/google/zxing/Result
+     100: dup
+     101: aload         9
+     103: invokevirtual #17                 // Method com/google/zxing/common/DecoderResult.getText:()Ljava/lang/String;
+     106: aload         9
+     108: invokevirtual #18                 // Method com/google/zxing/common/DecoderResult.getRawBytes:()[B
+     111: aload         10
+     113: getstatic     #19                 // Field com/google/zxing/BarcodeFormat.QR_CODE:Lcom/google/zxing/BarcodeFormat;
+     116: invokespecial #20                 // Method com/google/zxing/Result."<init>":(Ljava/lang/String;[B[Lcom/google/zxing/ResultPoint;Lcom/google/zxing/BarcodeFormat;)V
+     119: astore        11
+     121: aload         9
+     123: invokevirtual #21                 // Method com/google/zxing/common/DecoderResult.getByteSegments:()Ljava/util/List;
+     126: astore        12
+     128: aload         12
+     130: ifnull        143
+     133: aload         11
+     135: getstatic     #22                 // Field com/google/zxing/ResultMetadataType.BYTE_SEGMENTS:Lcom/google/zxing/ResultMetadataType;
+     138: aload         12
+     140: invokevirtual #23                 // Method com/google/zxing/Result.putMetadata:(Lcom/google/zxing/ResultMetadataType;Ljava/lang/Object;)V
+     143: aload         9
+     145: invokevirtual #24                 // Method com/google/zxing/common/DecoderResult.getECLevel:()Ljava/lang/String;
+     148: astore        13
+     150: aload         13
+     152: ifnull        165
+     155: aload         11
+     157: getstatic     #25                 // Field com/google/zxing/ResultMetadataType.ERROR_CORRECTION_LEVEL:Lcom/google/zxing/ResultMetadataType;
+     160: aload         13
+     162: invokevirtual #23                 // Method com/google/zxing/Result.putMetadata:(Lcom/google/zxing/ResultMetadataType;Ljava/lang/Object;)V
+     165: aload         9
+     167: invokevirtual #26                 // Method com/google/zxing/common/DecoderResult.hasStructuredAppend:()Z
+     170: ifeq          205
+     173: aload         11
+     175: getstatic     #27                 // Field com/google/zxing/ResultMetadataType.STRUCTURED_APPEND_SEQUENCE:Lcom/google/zxing/ResultMetadataType;
+     178: aload         9
+     180: invokevirtual #28                 // Method com/google/zxing/common/DecoderResult.getStructuredAppendSequenceNumber:()I
+     183: invokestatic  #29                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     186: invokevirtual #23                 // Method com/google/zxing/Result.putMetadata:(Lcom/google/zxing/ResultMetadataType;Ljava/lang/Object;)V
+     189: aload         11
+     191: getstatic     #30                 // Field com/google/zxing/ResultMetadataType.STRUCTURED_APPEND_PARITY:Lcom/google/zxing/ResultMetadataType;
+     194: aload         9
+     196: invokevirtual #31                 // Method com/google/zxing/common/DecoderResult.getStructuredAppendParity:()I
+     199: invokestatic  #29                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+     202: invokevirtual #23                 // Method com/google/zxing/Result.putMetadata:(Lcom/google/zxing/ResultMetadataType;Ljava/lang/Object;)V
+     205: aload_3
+     206: aload         11
+     208: invokeinterface #32,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     213: pop
+     214: goto          219
+     217: astore        9
+     219: iinc          7, 1
+     222: goto          37
+     225: aload_3
+     226: invokeinterface #34,  1           // InterfaceMethod java/util/List.isEmpty:()Z
+     231: ifeq          238
+     234: getstatic     #35                 // Field EMPTY_RESULT_ARRAY:[Lcom/google/zxing/Result;
+     237: areturn
+     238: aload_3
+     239: invokestatic  #36                 // Method processStructuredAppend:(Ljava/util/List;)Ljava/util/List;
+     242: astore_3
+     243: aload_3
+     244: getstatic     #35                 // Field EMPTY_RESULT_ARRAY:[Lcom/google/zxing/Result;
+     247: invokeinterface #37,  2           // InterfaceMethod java/util/List.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;
+     252: checkcast     #38                 // class "[Lcom/google/zxing/Result;"
+     255: areturn
+    Exception table:
+       from    to  target type
+          51   214   217   Class com/google/zxing/ReaderException
+
+  static java.util.List<com.google.zxing.Result> processStructuredAppend(java.util.List<com.google.zxing.Result>);
+    Code:
+       0: new           #3                  // class java/util/ArrayList
+       3: dup
+       4: invokespecial #4                  // Method java/util/ArrayList."<init>":()V
+       7: astore_1
+       8: new           #3                  // class java/util/ArrayList
+      11: dup
+      12: invokespecial #4                  // Method java/util/ArrayList."<init>":()V
+      15: astore_2
+      16: aload_0
+      17: invokeinterface #39,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      22: astore_3
+      23: aload_3
+      24: invokeinterface #40,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      29: ifeq          83
+      32: aload_3
+      33: invokeinterface #41,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      38: checkcast     #16                 // class com/google/zxing/Result
+      41: astore        4
+      43: aload         4
+      45: invokevirtual #42                 // Method com/google/zxing/Result.getResultMetadata:()Ljava/util/Map;
+      48: getstatic     #27                 // Field com/google/zxing/ResultMetadataType.STRUCTURED_APPEND_SEQUENCE:Lcom/google/zxing/ResultMetadataType;
+      51: invokeinterface #43,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+      56: ifeq          71
+      59: aload_2
+      60: aload         4
+      62: invokeinterface #32,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      67: pop
+      68: goto          80
+      71: aload_1
+      72: aload         4
+      74: invokeinterface #32,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      79: pop
+      80: goto          23
+      83: aload_2
+      84: invokeinterface #34,  1           // InterfaceMethod java/util/List.isEmpty:()Z
+      89: ifeq          94
+      92: aload_0
+      93: areturn
+      94: aload_2
+      95: new           #44                 // class com/google/zxing/multi/qrcode/QRCodeMultiReader$SAComparator
+      98: dup
+      99: aconst_null
+     100: invokespecial #45                 // Method com/google/zxing/multi/qrcode/QRCodeMultiReader$SAComparator."<init>":(Lcom/google/zxing/multi/qrcode/QRCodeMultiReader$1;)V
+     103: invokestatic  #46                 // Method java/util/Collections.sort:(Ljava/util/List;Ljava/util/Comparator;)V
+     106: new           #47                 // class java/lang/StringBuilder
+     109: dup
+     110: invokespecial #48                 // Method java/lang/StringBuilder."<init>":()V
+     113: astore_3
+     114: new           #49                 // class java/io/ByteArrayOutputStream
+     117: dup
+     118: invokespecial #50                 // Method java/io/ByteArrayOutputStream."<init>":()V
+     121: astore        4
+     123: new           #49                 // class java/io/ByteArrayOutputStream
+     126: dup
+     127: invokespecial #50                 // Method java/io/ByteArrayOutputStream."<init>":()V
+     130: astore        5
+     132: aload_2
+     133: invokeinterface #39,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     138: astore        6
+     140: aload         6
+     142: invokeinterface #40,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     147: ifeq          261
+     150: aload         6
+     152: invokeinterface #41,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     157: checkcast     #16                 // class com/google/zxing/Result
+     160: astore        7
+     162: aload_3
+     163: aload         7
+     165: invokevirtual #51                 // Method com/google/zxing/Result.getText:()Ljava/lang/String;
+     168: invokevirtual #52                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     171: pop
+     172: aload         7
+     174: invokevirtual #53                 // Method com/google/zxing/Result.getRawBytes:()[B
+     177: astore        8
+     179: aload         4
+     181: aload         8
+     183: iconst_0
+     184: aload         8
+     186: arraylength
+     187: invokevirtual #54                 // Method java/io/ByteArrayOutputStream.write:([BII)V
+     190: aload         7
+     192: invokevirtual #42                 // Method com/google/zxing/Result.getResultMetadata:()Ljava/util/Map;
+     195: getstatic     #22                 // Field com/google/zxing/ResultMetadataType.BYTE_SEGMENTS:Lcom/google/zxing/ResultMetadataType;
+     198: invokeinterface #55,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+     203: checkcast     #56                 // class java/lang/Iterable
+     206: astore        9
+     208: aload         9
+     210: ifnull        258
+     213: aload         9
+     215: invokeinterface #57,  1           // InterfaceMethod java/lang/Iterable.iterator:()Ljava/util/Iterator;
+     220: astore        10
+     222: aload         10
+     224: invokeinterface #40,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+     229: ifeq          258
+     232: aload         10
+     234: invokeinterface #41,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     239: checkcast     #58                 // class "[B"
+     242: astore        11
+     244: aload         5
+     246: aload         11
+     248: iconst_0
+     249: aload         11
+     251: arraylength
+     252: invokevirtual #54                 // Method java/io/ByteArrayOutputStream.write:([BII)V
+     255: goto          222
+     258: goto          140
+     261: new           #16                 // class com/google/zxing/Result
+     264: dup
+     265: aload_3
+     266: invokevirtual #59                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     269: aload         4
+     271: invokevirtual #60                 // Method java/io/ByteArrayOutputStream.toByteArray:()[B
+     274: getstatic     #61                 // Field NO_POINTS:[Lcom/google/zxing/ResultPoint;
+     277: getstatic     #19                 // Field com/google/zxing/BarcodeFormat.QR_CODE:Lcom/google/zxing/BarcodeFormat;
+     280: invokespecial #20                 // Method com/google/zxing/Result."<init>":(Ljava/lang/String;[B[Lcom/google/zxing/ResultPoint;Lcom/google/zxing/BarcodeFormat;)V
+     283: astore        6
+     285: aload         5
+     287: invokevirtual #62                 // Method java/io/ByteArrayOutputStream.size:()I
+     290: ifle          309
+     293: aload         6
+     295: getstatic     #22                 // Field com/google/zxing/ResultMetadataType.BYTE_SEGMENTS:Lcom/google/zxing/ResultMetadataType;
+     298: aload         5
+     300: invokevirtual #60                 // Method java/io/ByteArrayOutputStream.toByteArray:()[B
+     303: invokestatic  #63                 // Method java/util/Collections.singletonList:(Ljava/lang/Object;)Ljava/util/List;
+     306: invokevirtual #23                 // Method com/google/zxing/Result.putMetadata:(Lcom/google/zxing/ResultMetadataType;Ljava/lang/Object;)V
+     309: aload_1
+     310: aload         6
+     312: invokeinterface #32,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     317: pop
+     318: aload_1
+     319: areturn
+
+  static {};
+    Code:
+       0: iconst_0
+       1: anewarray     #16                 // class com/google/zxing/Result
+       4: putstatic     #35                 // Field EMPTY_RESULT_ARRAY:[Lcom/google/zxing/Result;
+       7: iconst_0
+       8: anewarray     #64                 // class com/google/zxing/ResultPoint
+      11: putstatic     #61                 // Field NO_POINTS:[Lcom/google/zxing/ResultPoint;
+      14: return
+}

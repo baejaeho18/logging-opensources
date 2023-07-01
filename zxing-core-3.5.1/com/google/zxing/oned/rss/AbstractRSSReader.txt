@@ -1,0 +1,276 @@
+Compiled from "AbstractRSSReader.java"
+public abstract class com.google.zxing.oned.rss.AbstractRSSReader extends com.google.zxing.oned.OneDReader {
+  private static final float MAX_AVG_VARIANCE;
+
+  private static final float MAX_INDIVIDUAL_VARIANCE;
+
+  private static final float MIN_FINDER_PATTERN_RATIO;
+
+  private static final float MAX_FINDER_PATTERN_RATIO;
+
+  private final int[] decodeFinderCounters;
+
+  private final int[] dataCharacterCounters;
+
+  private final float[] oddRoundingErrors;
+
+  private final float[] evenRoundingErrors;
+
+  private final int[] oddCounts;
+
+  private final int[] evenCounts;
+
+  protected com.google.zxing.oned.rss.AbstractRSSReader();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method com/google/zxing/oned/OneDReader."<init>":()V
+       4: aload_0
+       5: iconst_4
+       6: newarray       int
+       8: putfield      #2                  // Field decodeFinderCounters:[I
+      11: aload_0
+      12: bipush        8
+      14: newarray       int
+      16: putfield      #3                  // Field dataCharacterCounters:[I
+      19: aload_0
+      20: iconst_4
+      21: newarray       float
+      23: putfield      #4                  // Field oddRoundingErrors:[F
+      26: aload_0
+      27: iconst_4
+      28: newarray       float
+      30: putfield      #5                  // Field evenRoundingErrors:[F
+      33: aload_0
+      34: aload_0
+      35: getfield      #3                  // Field dataCharacterCounters:[I
+      38: arraylength
+      39: iconst_2
+      40: idiv
+      41: newarray       int
+      43: putfield      #6                  // Field oddCounts:[I
+      46: aload_0
+      47: aload_0
+      48: getfield      #3                  // Field dataCharacterCounters:[I
+      51: arraylength
+      52: iconst_2
+      53: idiv
+      54: newarray       int
+      56: putfield      #7                  // Field evenCounts:[I
+      59: return
+
+  protected final int[] getDecodeFinderCounters();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field decodeFinderCounters:[I
+       4: areturn
+
+  protected final int[] getDataCharacterCounters();
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field dataCharacterCounters:[I
+       4: areturn
+
+  protected final float[] getOddRoundingErrors();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field oddRoundingErrors:[F
+       4: areturn
+
+  protected final float[] getEvenRoundingErrors();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field evenRoundingErrors:[F
+       4: areturn
+
+  protected final int[] getOddCounts();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field oddCounts:[I
+       4: areturn
+
+  protected final int[] getEvenCounts();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field evenCounts:[I
+       4: areturn
+
+  protected static int parseFinderValue(int[], int[][]) throws com.google.zxing.NotFoundException;
+    Code:
+       0: iconst_0
+       1: istore_2
+       2: iload_2
+       3: aload_1
+       4: arraylength
+       5: if_icmpge     31
+       8: aload_0
+       9: aload_1
+      10: iload_2
+      11: aaload
+      12: ldc           #9                  // float 0.45f
+      14: invokestatic  #10                 // Method patternMatchVariance:([I[IF)F
+      17: ldc           #11                 // float 0.2f
+      19: fcmpg
+      20: ifge          25
+      23: iload_2
+      24: ireturn
+      25: iinc          2, 1
+      28: goto          2
+      31: invokestatic  #12                 // Method com/google/zxing/NotFoundException.getNotFoundInstance:()Lcom/google/zxing/NotFoundException;
+      34: athrow
+
+  protected static int count(int[]);
+    Code:
+       0: aload_0
+       1: invokestatic  #13                 // Method com/google/zxing/common/detector/MathUtils.sum:([I)I
+       4: ireturn
+
+  protected static void increment(int[], float[]);
+    Code:
+       0: iconst_0
+       1: istore_2
+       2: aload_1
+       3: iconst_0
+       4: faload
+       5: fstore_3
+       6: iconst_1
+       7: istore        4
+       9: iload         4
+      11: aload_0
+      12: arraylength
+      13: if_icmpge     39
+      16: aload_1
+      17: iload         4
+      19: faload
+      20: fload_3
+      21: fcmpl
+      22: ifle          33
+      25: aload_1
+      26: iload         4
+      28: faload
+      29: fstore_3
+      30: iload         4
+      32: istore_2
+      33: iinc          4, 1
+      36: goto          9
+      39: aload_0
+      40: iload_2
+      41: dup2
+      42: iaload
+      43: iconst_1
+      44: iadd
+      45: iastore
+      46: return
+
+  protected static void decrement(int[], float[]);
+    Code:
+       0: iconst_0
+       1: istore_2
+       2: aload_1
+       3: iconst_0
+       4: faload
+       5: fstore_3
+       6: iconst_1
+       7: istore        4
+       9: iload         4
+      11: aload_0
+      12: arraylength
+      13: if_icmpge     39
+      16: aload_1
+      17: iload         4
+      19: faload
+      20: fload_3
+      21: fcmpg
+      22: ifge          33
+      25: aload_1
+      26: iload         4
+      28: faload
+      29: fstore_3
+      30: iload         4
+      32: istore_2
+      33: iinc          4, 1
+      36: goto          9
+      39: aload_0
+      40: iload_2
+      41: dup2
+      42: iaload
+      43: iconst_1
+      44: isub
+      45: iastore
+      46: return
+
+  protected static boolean isFinderPattern(int[]);
+    Code:
+       0: aload_0
+       1: iconst_0
+       2: iaload
+       3: aload_0
+       4: iconst_1
+       5: iaload
+       6: iadd
+       7: istore_1
+       8: iload_1
+       9: aload_0
+      10: iconst_2
+      11: iaload
+      12: iadd
+      13: aload_0
+      14: iconst_3
+      15: iaload
+      16: iadd
+      17: istore_2
+      18: iload_1
+      19: i2f
+      20: iload_2
+      21: i2f
+      22: fdiv
+      23: fstore_3
+      24: fload_3
+      25: ldc           #14                 // float 0.7916667f
+      27: fcmpl
+      28: iflt          115
+      31: fload_3
+      32: ldc           #15                 // float 0.89285713f
+      34: fcmpg
+      35: ifgt          115
+      38: ldc           #17                 // int 2147483647
+      40: istore        4
+      42: ldc           #18                 // int -2147483648
+      44: istore        5
+      46: aload_0
+      47: astore        6
+      49: aload         6
+      51: arraylength
+      52: istore        7
+      54: iconst_0
+      55: istore        8
+      57: iload         8
+      59: iload         7
+      61: if_icmpge     99
+      64: aload         6
+      66: iload         8
+      68: iaload
+      69: istore        9
+      71: iload         9
+      73: iload         5
+      75: if_icmple     82
+      78: iload         9
+      80: istore        5
+      82: iload         9
+      84: iload         4
+      86: if_icmpge     93
+      89: iload         9
+      91: istore        4
+      93: iinc          8, 1
+      96: goto          57
+      99: iload         5
+     101: bipush        10
+     103: iload         4
+     105: imul
+     106: if_icmpge     113
+     109: iconst_1
+     110: goto          114
+     113: iconst_0
+     114: ireturn
+     115: iconst_0
+     116: ireturn
+}

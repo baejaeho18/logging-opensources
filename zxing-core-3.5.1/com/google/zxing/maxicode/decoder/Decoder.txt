@@ -1,0 +1,207 @@
+Compiled from "Decoder.java"
+public final class com.google.zxing.maxicode.decoder.Decoder {
+  private static final int ALL;
+
+  private static final int EVEN;
+
+  private static final int ODD;
+
+  private final com.google.zxing.common.reedsolomon.ReedSolomonDecoder rsDecoder;
+
+  public com.google.zxing.maxicode.decoder.Decoder();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #2                  // class com/google/zxing/common/reedsolomon/ReedSolomonDecoder
+       8: dup
+       9: getstatic     #3                  // Field com/google/zxing/common/reedsolomon/GenericGF.MAXICODE_FIELD_64:Lcom/google/zxing/common/reedsolomon/GenericGF;
+      12: invokespecial #4                  // Method com/google/zxing/common/reedsolomon/ReedSolomonDecoder."<init>":(Lcom/google/zxing/common/reedsolomon/GenericGF;)V
+      15: putfield      #5                  // Field rsDecoder:Lcom/google/zxing/common/reedsolomon/ReedSolomonDecoder;
+      18: return
+
+  public com.google.zxing.common.DecoderResult decode(com.google.zxing.common.BitMatrix) throws com.google.zxing.ChecksumException, com.google.zxing.FormatException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aconst_null
+       3: invokevirtual #6                  // Method decode:(Lcom/google/zxing/common/BitMatrix;Ljava/util/Map;)Lcom/google/zxing/common/DecoderResult;
+       6: areturn
+
+  public com.google.zxing.common.DecoderResult decode(com.google.zxing.common.BitMatrix, java.util.Map<com.google.zxing.DecodeHintType, ?>) throws com.google.zxing.FormatException, com.google.zxing.ChecksumException;
+    Code:
+       0: new           #7                  // class com/google/zxing/maxicode/decoder/BitMatrixParser
+       3: dup
+       4: aload_1
+       5: invokespecial #8                  // Method com/google/zxing/maxicode/decoder/BitMatrixParser."<init>":(Lcom/google/zxing/common/BitMatrix;)V
+       8: astore_3
+       9: aload_3
+      10: invokevirtual #9                  // Method com/google/zxing/maxicode/decoder/BitMatrixParser.readCodewords:()[B
+      13: astore        4
+      15: aload_0
+      16: aload         4
+      18: iconst_0
+      19: bipush        10
+      21: bipush        10
+      23: iconst_0
+      24: invokespecial #11                 // Method correctErrors:([BIIII)V
+      27: aload         4
+      29: iconst_0
+      30: baload
+      31: bipush        15
+      33: iand
+      34: istore        5
+      36: iload         5
+      38: tableswitch   { // 2 to 5
+                     2: 68
+                     3: 68
+                     4: 68
+                     5: 103
+               default: 138
+          }
+      68: aload_0
+      69: aload         4
+      71: bipush        20
+      73: bipush        84
+      75: bipush        40
+      77: iconst_1
+      78: invokespecial #11                 // Method correctErrors:([BIIII)V
+      81: aload_0
+      82: aload         4
+      84: bipush        20
+      86: bipush        84
+      88: bipush        40
+      90: iconst_2
+      91: invokespecial #11                 // Method correctErrors:([BIIII)V
+      94: bipush        94
+      96: newarray       byte
+      98: astore        6
+     100: goto          142
+     103: aload_0
+     104: aload         4
+     106: bipush        20
+     108: bipush        68
+     110: bipush        56
+     112: iconst_1
+     113: invokespecial #11                 // Method correctErrors:([BIIII)V
+     116: aload_0
+     117: aload         4
+     119: bipush        20
+     121: bipush        68
+     123: bipush        56
+     125: iconst_2
+     126: invokespecial #11                 // Method correctErrors:([BIIII)V
+     129: bipush        78
+     131: newarray       byte
+     133: astore        6
+     135: goto          142
+     138: invokestatic  #12                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+     141: athrow
+     142: aload         4
+     144: iconst_0
+     145: aload         6
+     147: iconst_0
+     148: bipush        10
+     150: invokestatic  #13                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+     153: aload         4
+     155: bipush        20
+     157: aload         6
+     159: bipush        10
+     161: aload         6
+     163: arraylength
+     164: bipush        10
+     166: isub
+     167: invokestatic  #13                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+     170: aload         6
+     172: iload         5
+     174: invokestatic  #14                 // Method com/google/zxing/maxicode/decoder/DecodedBitStreamParser.decode:([BI)Lcom/google/zxing/common/DecoderResult;
+     177: areturn
+
+  private void correctErrors(byte[], int, int, int, int) throws com.google.zxing.ChecksumException;
+    Code:
+       0: iload_3
+       1: iload         4
+       3: iadd
+       4: istore        6
+       6: iload         5
+       8: ifne          15
+      11: iconst_1
+      12: goto          16
+      15: iconst_2
+      16: istore        7
+      18: iload         6
+      20: iload         7
+      22: idiv
+      23: newarray       int
+      25: astore        8
+      27: iconst_0
+      28: istore        9
+      30: iload         9
+      32: iload         6
+      34: if_icmpge     77
+      37: iload         5
+      39: ifeq          53
+      42: iload         9
+      44: iconst_2
+      45: irem
+      46: iload         5
+      48: iconst_1
+      49: isub
+      50: if_icmpne     71
+      53: aload         8
+      55: iload         9
+      57: iload         7
+      59: idiv
+      60: aload_1
+      61: iload         9
+      63: iload_2
+      64: iadd
+      65: baload
+      66: sipush        255
+      69: iand
+      70: iastore
+      71: iinc          9, 1
+      74: goto          30
+      77: aload_0
+      78: getfield      #5                  // Field rsDecoder:Lcom/google/zxing/common/reedsolomon/ReedSolomonDecoder;
+      81: aload         8
+      83: iload         4
+      85: iload         7
+      87: idiv
+      88: invokevirtual #15                 // Method com/google/zxing/common/reedsolomon/ReedSolomonDecoder.decode:([II)V
+      91: goto          100
+      94: astore        9
+      96: invokestatic  #17                 // Method com/google/zxing/ChecksumException.getChecksumInstance:()Lcom/google/zxing/ChecksumException;
+      99: athrow
+     100: iconst_0
+     101: istore        9
+     103: iload         9
+     105: iload_3
+     106: if_icmpge     146
+     109: iload         5
+     111: ifeq          125
+     114: iload         9
+     116: iconst_2
+     117: irem
+     118: iload         5
+     120: iconst_1
+     121: isub
+     122: if_icmpne     140
+     125: aload_1
+     126: iload         9
+     128: iload_2
+     129: iadd
+     130: aload         8
+     132: iload         9
+     134: iload         7
+     136: idiv
+     137: iaload
+     138: i2b
+     139: bastore
+     140: iinc          9, 1
+     143: goto          103
+     146: return
+    Exception table:
+       from    to  target type
+          77    91    94   Class com/google/zxing/common/reedsolomon/ReedSolomonException
+}

@@ -1,0 +1,1128 @@
+Compiled from "ITFReader.java"
+public final class com.google.zxing.oned.ITFReader extends com.google.zxing.oned.OneDReader {
+  private static final float MAX_AVG_VARIANCE;
+
+  private static final float MAX_INDIVIDUAL_VARIANCE;
+
+  private static final int W;
+
+  private static final int w;
+
+  private static final int N;
+
+  private static final int[] DEFAULT_ALLOWED_LENGTHS;
+
+  private int narrowLineWidth;
+
+  private static final int[] START_PATTERN;
+
+  private static final int[][] END_PATTERN_REVERSED;
+
+  private static final int[][] PATTERNS;
+
+  public com.google.zxing.oned.ITFReader();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method com/google/zxing/oned/OneDReader."<init>":()V
+       4: aload_0
+       5: iconst_m1
+       6: putfield      #2                  // Field narrowLineWidth:I
+       9: return
+
+  public com.google.zxing.Result decodeRow(int, com.google.zxing.common.BitArray, java.util.Map<com.google.zxing.DecodeHintType, ?>) throws com.google.zxing.FormatException, com.google.zxing.NotFoundException;
+    Code:
+       0: aload_0
+       1: aload_2
+       2: invokespecial #3                  // Method decodeStart:(Lcom/google/zxing/common/BitArray;)[I
+       5: astore        4
+       7: aload_0
+       8: aload_2
+       9: invokespecial #4                  // Method decodeEnd:(Lcom/google/zxing/common/BitArray;)[I
+      12: astore        5
+      14: new           #5                  // class java/lang/StringBuilder
+      17: dup
+      18: bipush        20
+      20: invokespecial #6                  // Method java/lang/StringBuilder."<init>":(I)V
+      23: astore        6
+      25: aload_2
+      26: aload         4
+      28: iconst_1
+      29: iaload
+      30: aload         5
+      32: iconst_0
+      33: iaload
+      34: aload         6
+      36: invokestatic  #7                  // Method decodeMiddle:(Lcom/google/zxing/common/BitArray;IILjava/lang/StringBuilder;)V
+      39: aload         6
+      41: invokevirtual #8                  // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      44: astore        7
+      46: aconst_null
+      47: astore        8
+      49: aload_3
+      50: ifnull        70
+      53: aload_3
+      54: getstatic     #9                  // Field com/google/zxing/DecodeHintType.ALLOWED_LENGTHS:Lcom/google/zxing/DecodeHintType;
+      57: invokeinterface #10,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      62: checkcast     #11                 // class "[I"
+      65: checkcast     #11                 // class "[I"
+      68: astore        8
+      70: aload         8
+      72: ifnonnull     80
+      75: getstatic     #12                 // Field DEFAULT_ALLOWED_LENGTHS:[I
+      78: astore        8
+      80: aload         7
+      82: invokevirtual #13                 // Method java/lang/String.length:()I
+      85: istore        9
+      87: iconst_0
+      88: istore        10
+      90: iconst_0
+      91: istore        11
+      93: aload         8
+      95: astore        12
+      97: aload         12
+      99: arraylength
+     100: istore        13
+     102: iconst_0
+     103: istore        14
+     105: iload         14
+     107: iload         13
+     109: if_icmpge     149
+     112: aload         12
+     114: iload         14
+     116: iaload
+     117: istore        15
+     119: iload         9
+     121: iload         15
+     123: if_icmpne     132
+     126: iconst_1
+     127: istore        10
+     129: goto          149
+     132: iload         15
+     134: iload         11
+     136: if_icmple     143
+     139: iload         15
+     141: istore        11
+     143: iinc          14, 1
+     146: goto          105
+     149: iload         10
+     151: ifne          164
+     154: iload         9
+     156: iload         11
+     158: if_icmple     164
+     161: iconst_1
+     162: istore        10
+     164: iload         10
+     166: ifne          173
+     169: invokestatic  #14                 // Method com/google/zxing/FormatException.getFormatInstance:()Lcom/google/zxing/FormatException;
+     172: athrow
+     173: new           #15                 // class com/google/zxing/Result
+     176: dup
+     177: aload         7
+     179: aconst_null
+     180: iconst_2
+     181: anewarray     #16                 // class com/google/zxing/ResultPoint
+     184: dup
+     185: iconst_0
+     186: new           #16                 // class com/google/zxing/ResultPoint
+     189: dup
+     190: aload         4
+     192: iconst_1
+     193: iaload
+     194: i2f
+     195: iload_1
+     196: i2f
+     197: invokespecial #17                 // Method com/google/zxing/ResultPoint."<init>":(FF)V
+     200: aastore
+     201: dup
+     202: iconst_1
+     203: new           #16                 // class com/google/zxing/ResultPoint
+     206: dup
+     207: aload         5
+     209: iconst_0
+     210: iaload
+     211: i2f
+     212: iload_1
+     213: i2f
+     214: invokespecial #17                 // Method com/google/zxing/ResultPoint."<init>":(FF)V
+     217: aastore
+     218: getstatic     #18                 // Field com/google/zxing/BarcodeFormat.ITF:Lcom/google/zxing/BarcodeFormat;
+     221: invokespecial #19                 // Method com/google/zxing/Result."<init>":(Ljava/lang/String;[B[Lcom/google/zxing/ResultPoint;Lcom/google/zxing/BarcodeFormat;)V
+     224: astore        12
+     226: aload         12
+     228: getstatic     #20                 // Field com/google/zxing/ResultMetadataType.SYMBOLOGY_IDENTIFIER:Lcom/google/zxing/ResultMetadataType;
+     231: ldc           #21                 // String ]I0
+     233: invokevirtual #22                 // Method com/google/zxing/Result.putMetadata:(Lcom/google/zxing/ResultMetadataType;Ljava/lang/Object;)V
+     236: aload         12
+     238: areturn
+
+  private static void decodeMiddle(com.google.zxing.common.BitArray, int, int, java.lang.StringBuilder) throws com.google.zxing.NotFoundException;
+    Code:
+       0: bipush        10
+       2: newarray       int
+       4: astore        4
+       6: iconst_5
+       7: newarray       int
+       9: astore        5
+      11: iconst_5
+      12: newarray       int
+      14: astore        6
+      16: iload_1
+      17: iload_2
+      18: if_icmpge     147
+      21: aload_0
+      22: iload_1
+      23: aload         4
+      25: invokestatic  #23                 // Method recordPattern:(Lcom/google/zxing/common/BitArray;I[I)V
+      28: iconst_0
+      29: istore        7
+      31: iload         7
+      33: iconst_5
+      34: if_icmpge     71
+      37: iconst_2
+      38: iload         7
+      40: imul
+      41: istore        8
+      43: aload         5
+      45: iload         7
+      47: aload         4
+      49: iload         8
+      51: iaload
+      52: iastore
+      53: aload         6
+      55: iload         7
+      57: aload         4
+      59: iload         8
+      61: iconst_1
+      62: iadd
+      63: iaload
+      64: iastore
+      65: iinc          7, 1
+      68: goto          31
+      71: aload         5
+      73: invokestatic  #24                 // Method decodeDigit:([I)I
+      76: istore        7
+      78: aload_3
+      79: bipush        48
+      81: iload         7
+      83: iadd
+      84: i2c
+      85: invokevirtual #25                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      88: pop
+      89: aload         6
+      91: invokestatic  #24                 // Method decodeDigit:([I)I
+      94: istore        7
+      96: aload_3
+      97: bipush        48
+      99: iload         7
+     101: iadd
+     102: i2c
+     103: invokevirtual #25                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     106: pop
+     107: aload         4
+     109: astore        8
+     111: aload         8
+     113: arraylength
+     114: istore        9
+     116: iconst_0
+     117: istore        10
+     119: iload         10
+     121: iload         9
+     123: if_icmpge     144
+     126: aload         8
+     128: iload         10
+     130: iaload
+     131: istore        11
+     133: iload_1
+     134: iload         11
+     136: iadd
+     137: istore_1
+     138: iinc          10, 1
+     141: goto          119
+     144: goto          16
+     147: return
+
+  private int[] decodeStart(com.google.zxing.common.BitArray) throws com.google.zxing.NotFoundException;
+    Code:
+       0: aload_1
+       1: invokestatic  #26                 // Method skipWhiteSpace:(Lcom/google/zxing/common/BitArray;)I
+       4: istore_2
+       5: aload_1
+       6: iload_2
+       7: getstatic     #27                 // Field START_PATTERN:[I
+      10: invokestatic  #28                 // Method findGuardPattern:(Lcom/google/zxing/common/BitArray;I[I)[I
+      13: astore_3
+      14: aload_0
+      15: aload_3
+      16: iconst_1
+      17: iaload
+      18: aload_3
+      19: iconst_0
+      20: iaload
+      21: isub
+      22: iconst_4
+      23: idiv
+      24: putfield      #2                  // Field narrowLineWidth:I
+      27: aload_0
+      28: aload_1
+      29: aload_3
+      30: iconst_0
+      31: iaload
+      32: invokespecial #29                 // Method validateQuietZone:(Lcom/google/zxing/common/BitArray;I)V
+      35: aload_3
+      36: areturn
+
+  private void validateQuietZone(com.google.zxing.common.BitArray, int) throws com.google.zxing.NotFoundException;
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field narrowLineWidth:I
+       4: bipush        10
+       6: imul
+       7: istore_3
+       8: iload_3
+       9: iload_2
+      10: invokestatic  #30                 // Method java/lang/Math.min:(II)I
+      13: istore_3
+      14: iload_2
+      15: iconst_1
+      16: isub
+      17: istore        4
+      19: iload_3
+      20: ifle          49
+      23: iload         4
+      25: iflt          49
+      28: aload_1
+      29: iload         4
+      31: invokevirtual #31                 // Method com/google/zxing/common/BitArray.get:(I)Z
+      34: ifeq          40
+      37: goto          49
+      40: iinc          3, -1
+      43: iinc          4, -1
+      46: goto          19
+      49: iload_3
+      50: ifeq          57
+      53: invokestatic  #32                 // Method com/google/zxing/NotFoundException.getNotFoundInstance:()Lcom/google/zxing/NotFoundException;
+      56: athrow
+      57: return
+
+  private static int skipWhiteSpace(com.google.zxing.common.BitArray) throws com.google.zxing.NotFoundException;
+    Code:
+       0: aload_0
+       1: invokevirtual #33                 // Method com/google/zxing/common/BitArray.getSize:()I
+       4: istore_1
+       5: aload_0
+       6: iconst_0
+       7: invokevirtual #34                 // Method com/google/zxing/common/BitArray.getNextSet:(I)I
+      10: istore_2
+      11: iload_2
+      12: iload_1
+      13: if_icmpne     20
+      16: invokestatic  #32                 // Method com/google/zxing/NotFoundException.getNotFoundInstance:()Lcom/google/zxing/NotFoundException;
+      19: athrow
+      20: iload_2
+      21: ireturn
+
+  private int[] decodeEnd(com.google.zxing.common.BitArray) throws com.google.zxing.NotFoundException;
+    Code:
+       0: aload_1
+       1: invokevirtual #35                 // Method com/google/zxing/common/BitArray.reverse:()V
+       4: aload_1
+       5: invokestatic  #26                 // Method skipWhiteSpace:(Lcom/google/zxing/common/BitArray;)I
+       8: istore_2
+       9: aload_1
+      10: iload_2
+      11: getstatic     #36                 // Field END_PATTERN_REVERSED:[[I
+      14: iconst_0
+      15: aaload
+      16: invokestatic  #28                 // Method findGuardPattern:(Lcom/google/zxing/common/BitArray;I[I)[I
+      19: astore_3
+      20: goto          36
+      23: astore        4
+      25: aload_1
+      26: iload_2
+      27: getstatic     #36                 // Field END_PATTERN_REVERSED:[[I
+      30: iconst_1
+      31: aaload
+      32: invokestatic  #28                 // Method findGuardPattern:(Lcom/google/zxing/common/BitArray;I[I)[I
+      35: astore_3
+      36: aload_0
+      37: aload_1
+      38: aload_3
+      39: iconst_0
+      40: iaload
+      41: invokespecial #29                 // Method validateQuietZone:(Lcom/google/zxing/common/BitArray;I)V
+      44: aload_3
+      45: iconst_0
+      46: iaload
+      47: istore        4
+      49: aload_3
+      50: iconst_0
+      51: aload_1
+      52: invokevirtual #33                 // Method com/google/zxing/common/BitArray.getSize:()I
+      55: aload_3
+      56: iconst_1
+      57: iaload
+      58: isub
+      59: iastore
+      60: aload_3
+      61: iconst_1
+      62: aload_1
+      63: invokevirtual #33                 // Method com/google/zxing/common/BitArray.getSize:()I
+      66: iload         4
+      68: isub
+      69: iastore
+      70: aload_3
+      71: astore        5
+      73: aload_1
+      74: invokevirtual #35                 // Method com/google/zxing/common/BitArray.reverse:()V
+      77: aload         5
+      79: areturn
+      80: astore        6
+      82: aload_1
+      83: invokevirtual #35                 // Method com/google/zxing/common/BitArray.reverse:()V
+      86: aload         6
+      88: athrow
+    Exception table:
+       from    to  target type
+           9    20    23   Class com/google/zxing/NotFoundException
+           4    73    80   any
+          80    82    80   any
+
+  private static int[] findGuardPattern(com.google.zxing.common.BitArray, int, int[]) throws com.google.zxing.NotFoundException;
+    Code:
+       0: aload_2
+       1: arraylength
+       2: istore_3
+       3: iload_3
+       4: newarray       int
+       6: astore        4
+       8: aload_0
+       9: invokevirtual #33                 // Method com/google/zxing/common/BitArray.getSize:()I
+      12: istore        5
+      14: iconst_0
+      15: istore        6
+      17: iconst_0
+      18: istore        7
+      20: iload_1
+      21: istore        8
+      23: iload_1
+      24: istore        9
+      26: iload         9
+      28: iload         5
+      30: if_icmpge     166
+      33: aload_0
+      34: iload         9
+      36: invokevirtual #31                 // Method com/google/zxing/common/BitArray.get:(I)Z
+      39: iload         6
+      41: if_icmpeq     56
+      44: aload         4
+      46: iload         7
+      48: dup2
+      49: iaload
+      50: iconst_1
+      51: iadd
+      52: iastore
+      53: goto          160
+      56: iload         7
+      58: iload_3
+      59: iconst_1
+      60: isub
+      61: if_icmpne     139
+      64: aload         4
+      66: aload_2
+      67: ldc           #39                 // float 0.5f
+      69: invokestatic  #40                 // Method patternMatchVariance:([I[IF)F
+      72: ldc           #41                 // float 0.38f
+      74: fcmpg
+      75: ifge          92
+      78: iconst_2
+      79: newarray       int
+      81: dup
+      82: iconst_0
+      83: iload         8
+      85: iastore
+      86: dup
+      87: iconst_1
+      88: iload         9
+      90: iastore
+      91: areturn
+      92: iload         8
+      94: aload         4
+      96: iconst_0
+      97: iaload
+      98: aload         4
+     100: iconst_1
+     101: iaload
+     102: iadd
+     103: iadd
+     104: istore        8
+     106: aload         4
+     108: iconst_2
+     109: aload         4
+     111: iconst_0
+     112: iload         7
+     114: iconst_1
+     115: isub
+     116: invokestatic  #42                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+     119: aload         4
+     121: iload         7
+     123: iconst_1
+     124: isub
+     125: iconst_0
+     126: iastore
+     127: aload         4
+     129: iload         7
+     131: iconst_0
+     132: iastore
+     133: iinc          7, -1
+     136: goto          142
+     139: iinc          7, 1
+     142: aload         4
+     144: iload         7
+     146: iconst_1
+     147: iastore
+     148: iload         6
+     150: ifne          157
+     153: iconst_1
+     154: goto          158
+     157: iconst_0
+     158: istore        6
+     160: iinc          9, 1
+     163: goto          26
+     166: invokestatic  #32                 // Method com/google/zxing/NotFoundException.getNotFoundInstance:()Lcom/google/zxing/NotFoundException;
+     169: athrow
+
+  private static int decodeDigit(int[]) throws com.google.zxing.NotFoundException;
+    Code:
+       0: ldc           #41                 // float 0.38f
+       2: fstore_1
+       3: iconst_m1
+       4: istore_2
+       5: getstatic     #43                 // Field PATTERNS:[[I
+       8: arraylength
+       9: istore_3
+      10: iconst_0
+      11: istore        4
+      13: iload         4
+      15: iload_3
+      16: if_icmpge     68
+      19: getstatic     #43                 // Field PATTERNS:[[I
+      22: iload         4
+      24: aaload
+      25: astore        5
+      27: aload_0
+      28: aload         5
+      30: ldc           #39                 // float 0.5f
+      32: invokestatic  #40                 // Method patternMatchVariance:([I[IF)F
+      35: fstore        6
+      37: fload         6
+      39: fload_1
+      40: fcmpg
+      41: ifge          53
+      44: fload         6
+      46: fstore_1
+      47: iload         4
+      49: istore_2
+      50: goto          62
+      53: fload         6
+      55: fload_1
+      56: fcmpl
+      57: ifne          62
+      60: iconst_m1
+      61: istore_2
+      62: iinc          4, 1
+      65: goto          13
+      68: iload_2
+      69: iflt          77
+      72: iload_2
+      73: bipush        10
+      75: irem
+      76: ireturn
+      77: invokestatic  #32                 // Method com/google/zxing/NotFoundException.getNotFoundInstance:()Lcom/google/zxing/NotFoundException;
+      80: athrow
+
+  static {};
+    Code:
+       0: iconst_5
+       1: newarray       int
+       3: dup
+       4: iconst_0
+       5: bipush        6
+       7: iastore
+       8: dup
+       9: iconst_1
+      10: bipush        8
+      12: iastore
+      13: dup
+      14: iconst_2
+      15: bipush        10
+      17: iastore
+      18: dup
+      19: iconst_3
+      20: bipush        12
+      22: iastore
+      23: dup
+      24: iconst_4
+      25: bipush        14
+      27: iastore
+      28: putstatic     #12                 // Field DEFAULT_ALLOWED_LENGTHS:[I
+      31: iconst_4
+      32: newarray       int
+      34: dup
+      35: iconst_0
+      36: iconst_1
+      37: iastore
+      38: dup
+      39: iconst_1
+      40: iconst_1
+      41: iastore
+      42: dup
+      43: iconst_2
+      44: iconst_1
+      45: iastore
+      46: dup
+      47: iconst_3
+      48: iconst_1
+      49: iastore
+      50: putstatic     #27                 // Field START_PATTERN:[I
+      53: iconst_2
+      54: anewarray     #11                 // class "[I"
+      57: dup
+      58: iconst_0
+      59: iconst_3
+      60: newarray       int
+      62: dup
+      63: iconst_0
+      64: iconst_1
+      65: iastore
+      66: dup
+      67: iconst_1
+      68: iconst_1
+      69: iastore
+      70: dup
+      71: iconst_2
+      72: iconst_2
+      73: iastore
+      74: aastore
+      75: dup
+      76: iconst_1
+      77: iconst_3
+      78: newarray       int
+      80: dup
+      81: iconst_0
+      82: iconst_1
+      83: iastore
+      84: dup
+      85: iconst_1
+      86: iconst_1
+      87: iastore
+      88: dup
+      89: iconst_2
+      90: iconst_3
+      91: iastore
+      92: aastore
+      93: putstatic     #36                 // Field END_PATTERN_REVERSED:[[I
+      96: bipush        20
+      98: anewarray     #11                 // class "[I"
+     101: dup
+     102: iconst_0
+     103: iconst_5
+     104: newarray       int
+     106: dup
+     107: iconst_0
+     108: iconst_1
+     109: iastore
+     110: dup
+     111: iconst_1
+     112: iconst_1
+     113: iastore
+     114: dup
+     115: iconst_2
+     116: iconst_2
+     117: iastore
+     118: dup
+     119: iconst_3
+     120: iconst_2
+     121: iastore
+     122: dup
+     123: iconst_4
+     124: iconst_1
+     125: iastore
+     126: aastore
+     127: dup
+     128: iconst_1
+     129: iconst_5
+     130: newarray       int
+     132: dup
+     133: iconst_0
+     134: iconst_2
+     135: iastore
+     136: dup
+     137: iconst_1
+     138: iconst_1
+     139: iastore
+     140: dup
+     141: iconst_2
+     142: iconst_1
+     143: iastore
+     144: dup
+     145: iconst_3
+     146: iconst_1
+     147: iastore
+     148: dup
+     149: iconst_4
+     150: iconst_2
+     151: iastore
+     152: aastore
+     153: dup
+     154: iconst_2
+     155: iconst_5
+     156: newarray       int
+     158: dup
+     159: iconst_0
+     160: iconst_1
+     161: iastore
+     162: dup
+     163: iconst_1
+     164: iconst_2
+     165: iastore
+     166: dup
+     167: iconst_2
+     168: iconst_1
+     169: iastore
+     170: dup
+     171: iconst_3
+     172: iconst_1
+     173: iastore
+     174: dup
+     175: iconst_4
+     176: iconst_2
+     177: iastore
+     178: aastore
+     179: dup
+     180: iconst_3
+     181: iconst_5
+     182: newarray       int
+     184: dup
+     185: iconst_0
+     186: iconst_2
+     187: iastore
+     188: dup
+     189: iconst_1
+     190: iconst_2
+     191: iastore
+     192: dup
+     193: iconst_2
+     194: iconst_1
+     195: iastore
+     196: dup
+     197: iconst_3
+     198: iconst_1
+     199: iastore
+     200: dup
+     201: iconst_4
+     202: iconst_1
+     203: iastore
+     204: aastore
+     205: dup
+     206: iconst_4
+     207: iconst_5
+     208: newarray       int
+     210: dup
+     211: iconst_0
+     212: iconst_1
+     213: iastore
+     214: dup
+     215: iconst_1
+     216: iconst_1
+     217: iastore
+     218: dup
+     219: iconst_2
+     220: iconst_2
+     221: iastore
+     222: dup
+     223: iconst_3
+     224: iconst_1
+     225: iastore
+     226: dup
+     227: iconst_4
+     228: iconst_2
+     229: iastore
+     230: aastore
+     231: dup
+     232: iconst_5
+     233: iconst_5
+     234: newarray       int
+     236: dup
+     237: iconst_0
+     238: iconst_2
+     239: iastore
+     240: dup
+     241: iconst_1
+     242: iconst_1
+     243: iastore
+     244: dup
+     245: iconst_2
+     246: iconst_2
+     247: iastore
+     248: dup
+     249: iconst_3
+     250: iconst_1
+     251: iastore
+     252: dup
+     253: iconst_4
+     254: iconst_1
+     255: iastore
+     256: aastore
+     257: dup
+     258: bipush        6
+     260: iconst_5
+     261: newarray       int
+     263: dup
+     264: iconst_0
+     265: iconst_1
+     266: iastore
+     267: dup
+     268: iconst_1
+     269: iconst_2
+     270: iastore
+     271: dup
+     272: iconst_2
+     273: iconst_2
+     274: iastore
+     275: dup
+     276: iconst_3
+     277: iconst_1
+     278: iastore
+     279: dup
+     280: iconst_4
+     281: iconst_1
+     282: iastore
+     283: aastore
+     284: dup
+     285: bipush        7
+     287: iconst_5
+     288: newarray       int
+     290: dup
+     291: iconst_0
+     292: iconst_1
+     293: iastore
+     294: dup
+     295: iconst_1
+     296: iconst_1
+     297: iastore
+     298: dup
+     299: iconst_2
+     300: iconst_1
+     301: iastore
+     302: dup
+     303: iconst_3
+     304: iconst_2
+     305: iastore
+     306: dup
+     307: iconst_4
+     308: iconst_2
+     309: iastore
+     310: aastore
+     311: dup
+     312: bipush        8
+     314: iconst_5
+     315: newarray       int
+     317: dup
+     318: iconst_0
+     319: iconst_2
+     320: iastore
+     321: dup
+     322: iconst_1
+     323: iconst_1
+     324: iastore
+     325: dup
+     326: iconst_2
+     327: iconst_1
+     328: iastore
+     329: dup
+     330: iconst_3
+     331: iconst_2
+     332: iastore
+     333: dup
+     334: iconst_4
+     335: iconst_1
+     336: iastore
+     337: aastore
+     338: dup
+     339: bipush        9
+     341: iconst_5
+     342: newarray       int
+     344: dup
+     345: iconst_0
+     346: iconst_1
+     347: iastore
+     348: dup
+     349: iconst_1
+     350: iconst_2
+     351: iastore
+     352: dup
+     353: iconst_2
+     354: iconst_1
+     355: iastore
+     356: dup
+     357: iconst_3
+     358: iconst_2
+     359: iastore
+     360: dup
+     361: iconst_4
+     362: iconst_1
+     363: iastore
+     364: aastore
+     365: dup
+     366: bipush        10
+     368: iconst_5
+     369: newarray       int
+     371: dup
+     372: iconst_0
+     373: iconst_1
+     374: iastore
+     375: dup
+     376: iconst_1
+     377: iconst_1
+     378: iastore
+     379: dup
+     380: iconst_2
+     381: iconst_3
+     382: iastore
+     383: dup
+     384: iconst_3
+     385: iconst_3
+     386: iastore
+     387: dup
+     388: iconst_4
+     389: iconst_1
+     390: iastore
+     391: aastore
+     392: dup
+     393: bipush        11
+     395: iconst_5
+     396: newarray       int
+     398: dup
+     399: iconst_0
+     400: iconst_3
+     401: iastore
+     402: dup
+     403: iconst_1
+     404: iconst_1
+     405: iastore
+     406: dup
+     407: iconst_2
+     408: iconst_1
+     409: iastore
+     410: dup
+     411: iconst_3
+     412: iconst_1
+     413: iastore
+     414: dup
+     415: iconst_4
+     416: iconst_3
+     417: iastore
+     418: aastore
+     419: dup
+     420: bipush        12
+     422: iconst_5
+     423: newarray       int
+     425: dup
+     426: iconst_0
+     427: iconst_1
+     428: iastore
+     429: dup
+     430: iconst_1
+     431: iconst_3
+     432: iastore
+     433: dup
+     434: iconst_2
+     435: iconst_1
+     436: iastore
+     437: dup
+     438: iconst_3
+     439: iconst_1
+     440: iastore
+     441: dup
+     442: iconst_4
+     443: iconst_3
+     444: iastore
+     445: aastore
+     446: dup
+     447: bipush        13
+     449: iconst_5
+     450: newarray       int
+     452: dup
+     453: iconst_0
+     454: iconst_3
+     455: iastore
+     456: dup
+     457: iconst_1
+     458: iconst_3
+     459: iastore
+     460: dup
+     461: iconst_2
+     462: iconst_1
+     463: iastore
+     464: dup
+     465: iconst_3
+     466: iconst_1
+     467: iastore
+     468: dup
+     469: iconst_4
+     470: iconst_1
+     471: iastore
+     472: aastore
+     473: dup
+     474: bipush        14
+     476: iconst_5
+     477: newarray       int
+     479: dup
+     480: iconst_0
+     481: iconst_1
+     482: iastore
+     483: dup
+     484: iconst_1
+     485: iconst_1
+     486: iastore
+     487: dup
+     488: iconst_2
+     489: iconst_3
+     490: iastore
+     491: dup
+     492: iconst_3
+     493: iconst_1
+     494: iastore
+     495: dup
+     496: iconst_4
+     497: iconst_3
+     498: iastore
+     499: aastore
+     500: dup
+     501: bipush        15
+     503: iconst_5
+     504: newarray       int
+     506: dup
+     507: iconst_0
+     508: iconst_3
+     509: iastore
+     510: dup
+     511: iconst_1
+     512: iconst_1
+     513: iastore
+     514: dup
+     515: iconst_2
+     516: iconst_3
+     517: iastore
+     518: dup
+     519: iconst_3
+     520: iconst_1
+     521: iastore
+     522: dup
+     523: iconst_4
+     524: iconst_1
+     525: iastore
+     526: aastore
+     527: dup
+     528: bipush        16
+     530: iconst_5
+     531: newarray       int
+     533: dup
+     534: iconst_0
+     535: iconst_1
+     536: iastore
+     537: dup
+     538: iconst_1
+     539: iconst_3
+     540: iastore
+     541: dup
+     542: iconst_2
+     543: iconst_3
+     544: iastore
+     545: dup
+     546: iconst_3
+     547: iconst_1
+     548: iastore
+     549: dup
+     550: iconst_4
+     551: iconst_1
+     552: iastore
+     553: aastore
+     554: dup
+     555: bipush        17
+     557: iconst_5
+     558: newarray       int
+     560: dup
+     561: iconst_0
+     562: iconst_1
+     563: iastore
+     564: dup
+     565: iconst_1
+     566: iconst_1
+     567: iastore
+     568: dup
+     569: iconst_2
+     570: iconst_1
+     571: iastore
+     572: dup
+     573: iconst_3
+     574: iconst_3
+     575: iastore
+     576: dup
+     577: iconst_4
+     578: iconst_3
+     579: iastore
+     580: aastore
+     581: dup
+     582: bipush        18
+     584: iconst_5
+     585: newarray       int
+     587: dup
+     588: iconst_0
+     589: iconst_3
+     590: iastore
+     591: dup
+     592: iconst_1
+     593: iconst_1
+     594: iastore
+     595: dup
+     596: iconst_2
+     597: iconst_1
+     598: iastore
+     599: dup
+     600: iconst_3
+     601: iconst_3
+     602: iastore
+     603: dup
+     604: iconst_4
+     605: iconst_1
+     606: iastore
+     607: aastore
+     608: dup
+     609: bipush        19
+     611: iconst_5
+     612: newarray       int
+     614: dup
+     615: iconst_0
+     616: iconst_1
+     617: iastore
+     618: dup
+     619: iconst_1
+     620: iconst_3
+     621: iastore
+     622: dup
+     623: iconst_2
+     624: iconst_1
+     625: iastore
+     626: dup
+     627: iconst_3
+     628: iconst_3
+     629: iastore
+     630: dup
+     631: iconst_4
+     632: iconst_1
+     633: iastore
+     634: aastore
+     635: putstatic     #43                 // Field PATTERNS:[[I
+     638: return
+}

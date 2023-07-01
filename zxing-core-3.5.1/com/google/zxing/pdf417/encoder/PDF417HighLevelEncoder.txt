@@ -1,0 +1,1624 @@
+Compiled from "PDF417HighLevelEncoder.java"
+final class com.google.zxing.pdf417.encoder.PDF417HighLevelEncoder {
+  private static final int TEXT_COMPACTION;
+
+  private static final int BYTE_COMPACTION;
+
+  private static final int NUMERIC_COMPACTION;
+
+  private static final int SUBMODE_ALPHA;
+
+  private static final int SUBMODE_LOWER;
+
+  private static final int SUBMODE_MIXED;
+
+  private static final int SUBMODE_PUNCTUATION;
+
+  private static final int LATCH_TO_TEXT;
+
+  private static final int LATCH_TO_BYTE_PADDED;
+
+  private static final int LATCH_TO_NUMERIC;
+
+  private static final int SHIFT_TO_BYTE;
+
+  private static final int LATCH_TO_BYTE;
+
+  private static final int ECI_USER_DEFINED;
+
+  private static final int ECI_GENERAL_PURPOSE;
+
+  private static final int ECI_CHARSET;
+
+  private static final byte[] TEXT_MIXED_RAW;
+
+  private static final byte[] TEXT_PUNCTUATION_RAW;
+
+  private static final byte[] MIXED;
+
+  private static final byte[] PUNCTUATION;
+
+  private static final java.nio.charset.Charset DEFAULT_ENCODING;
+
+  static final boolean $assertionsDisabled;
+
+  private com.google.zxing.pdf417.encoder.PDF417HighLevelEncoder();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  static java.lang.String encodeHighLevel(java.lang.String, com.google.zxing.pdf417.encoder.Compaction, java.nio.charset.Charset, boolean) throws com.google.zxing.WriterException;
+    Code:
+       0: aload_0
+       1: invokevirtual #2                  // Method java/lang/String.isEmpty:()Z
+       4: ifeq          17
+       7: new           #3                  // class com/google/zxing/WriterException
+      10: dup
+      11: ldc           #4                  // String Empty message not allowed
+      13: invokespecial #5                  // Method com/google/zxing/WriterException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: aload_2
+      18: ifnonnull     106
+      21: iload_3
+      22: ifne          106
+      25: iconst_0
+      26: istore        4
+      28: iload         4
+      30: aload_0
+      31: invokevirtual #6                  // Method java/lang/String.length:()I
+      34: if_icmpge     106
+      37: aload_0
+      38: iload         4
+      40: invokevirtual #7                  // Method java/lang/String.charAt:(I)C
+      43: sipush        255
+      46: if_icmple     100
+      49: new           #3                  // class com/google/zxing/WriterException
+      52: dup
+      53: new           #8                  // class java/lang/StringBuilder
+      56: dup
+      57: invokespecial #9                  // Method java/lang/StringBuilder."<init>":()V
+      60: ldc           #10                 // String Non-encodable character detected:
+      62: invokevirtual #11                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      65: aload_0
+      66: iload         4
+      68: invokevirtual #7                  // Method java/lang/String.charAt:(I)C
+      71: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      74: ldc           #13                 // String  (Unicode:
+      76: invokevirtual #11                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      79: aload_0
+      80: iload         4
+      82: invokevirtual #7                  // Method java/lang/String.charAt:(I)C
+      85: invokevirtual #14                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      88: ldc           #15                 // String ). Consider specifying EncodeHintType.PDF417_AUTO_ECI and/or EncodeTypeHint.CHARACTER_SET.
+      90: invokevirtual #11                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      93: invokevirtual #16                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      96: invokespecial #5                  // Method com/google/zxing/WriterException."<init>":(Ljava/lang/String;)V
+      99: athrow
+     100: iinc          4, 1
+     103: goto          28
+     106: new           #8                  // class java/lang/StringBuilder
+     109: dup
+     110: aload_0
+     111: invokevirtual #6                  // Method java/lang/String.length:()I
+     114: invokespecial #17                 // Method java/lang/StringBuilder."<init>":(I)V
+     117: astore        4
+     119: iload_3
+     120: ifeq          138
+     123: new           #18                 // class com/google/zxing/common/MinimalECIInput
+     126: dup
+     127: aload_0
+     128: aload_2
+     129: iconst_m1
+     130: invokespecial #19                 // Method com/google/zxing/common/MinimalECIInput."<init>":(Ljava/lang/String;Ljava/nio/charset/Charset;I)V
+     133: astore        5
+     135: goto          191
+     138: new           #20                 // class com/google/zxing/pdf417/encoder/PDF417HighLevelEncoder$NoECIInput
+     141: dup
+     142: aload_0
+     143: aconst_null
+     144: invokespecial #21                 // Method com/google/zxing/pdf417/encoder/PDF417HighLevelEncoder$NoECIInput."<init>":(Ljava/lang/String;Lcom/google/zxing/pdf417/encoder/PDF417HighLevelEncoder$1;)V
+     147: astore        5
+     149: aload_2
+     150: ifnonnull     160
+     153: getstatic     #22                 // Field DEFAULT_ENCODING:Ljava/nio/charset/Charset;
+     156: astore_2
+     157: goto          191
+     160: getstatic     #22                 // Field DEFAULT_ENCODING:Ljava/nio/charset/Charset;
+     163: aload_2
+     164: invokevirtual #23                 // Method java/nio/charset/Charset.equals:(Ljava/lang/Object;)Z
+     167: ifne          191
+     170: aload_2
+     171: invokestatic  #24                 // Method com/google/zxing/common/CharacterSetECI.getCharacterSetECI:(Ljava/nio/charset/Charset;)Lcom/google/zxing/common/CharacterSetECI;
+     174: astore        6
+     176: aload         6
+     178: ifnull        191
+     181: aload         6
+     183: invokevirtual #25                 // Method com/google/zxing/common/CharacterSetECI.getValue:()I
+     186: aload         4
+     188: invokestatic  #26                 // Method encodingECI:(ILjava/lang/StringBuilder;)V
+     191: aload         5
+     193: invokeinterface #27,  1           // InterfaceMethod com/google/zxing/common/ECIInput.length:()I
+     198: istore        6
+     200: iconst_0
+     201: istore        7
+     203: iconst_0
+     204: istore        8
+     206: getstatic     #29                 // Field com/google/zxing/pdf417/encoder/PDF417HighLevelEncoder$1.$SwitchMap$com$google$zxing$pdf417$encoder$Compaction:[I
+     209: aload_1
+     210: invokevirtual #30                 // Method com/google/zxing/pdf417/encoder/Compaction.ordinal:()I
+     213: iaload
+     214: tableswitch   { // 1 to 3
+                     1: 240
+                     2: 257
+                     3: 307
+               default: 330
+          }
+     240: aload         5
+     242: iload         7
+     244: iload         6
+     246: aload         4
+     248: iload         8
+     250: invokestatic  #31                 // Method encodeText:(Lcom/google/zxing/common/ECIInput;IILjava/lang/StringBuilder;I)I
+     253: pop
+     254: goto          678
+     257: iload_3
+     258: ifeq          280
+     261: aload         5
+     263: iconst_0
+     264: aload         5
+     266: invokeinterface #27,  1           // InterfaceMethod com/google/zxing/common/ECIInput.length:()I
+     271: iconst_0
+     272: aload         4
+     274: invokestatic  #32                 // Method encodeMultiECIBinary:(Lcom/google/zxing/common/ECIInput;IIILjava/lang/StringBuilder;)V
+     277: goto          678
+     280: aload         5
+     282: invokevirtual #33                 // Method java/lang/Object.toString:()Ljava/lang/String;
+     285: aload_2
+     286: invokevirtual #34                 // Method java/lang/String.getBytes:(Ljava/nio/charset/Charset;)[B
+     289: astore        9
+     291: aload         9
+     293: iload         7
+     295: aload         9
+     297: arraylength
+     298: iconst_1
+     299: aload         4
+     301: invokestatic  #35                 // Method encodeBinary:([BIIILjava/lang/StringBuilder;)V
+     304: goto          678
+     307: aload         4
+     309: sipush        902
+     312: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     315: pop
+     316: aload         5
+     318: iload         7
+     320: iload         6
+     322: aload         4
+     324: invokestatic  #36                 // Method encodeNumeric:(Lcom/google/zxing/common/ECIInput;IILjava/lang/StringBuilder;)V
+     327: goto          678
+     330: iconst_0
+     331: istore        9
+     333: iload         7
+     335: iload         6
+     337: if_icmpge     678
+     340: iload         7
+     342: iload         6
+     344: if_icmpge     379
+     347: aload         5
+     349: iload         7
+     351: invokeinterface #37,  2           // InterfaceMethod com/google/zxing/common/ECIInput.isECI:(I)Z
+     356: ifeq          379
+     359: aload         5
+     361: iload         7
+     363: invokeinterface #38,  2           // InterfaceMethod com/google/zxing/common/ECIInput.getECIValue:(I)I
+     368: aload         4
+     370: invokestatic  #26                 // Method encodingECI:(ILjava/lang/StringBuilder;)V
+     373: iinc          7, 1
+     376: goto          340
+     379: iload         7
+     381: iload         6
+     383: if_icmplt     389
+     386: goto          678
+     389: aload         5
+     391: iload         7
+     393: invokestatic  #39                 // Method determineConsecutiveDigitCount:(Lcom/google/zxing/common/ECIInput;I)I
+     396: istore        10
+     398: iload         10
+     400: bipush        13
+     402: if_icmplt     441
+     405: aload         4
+     407: sipush        902
+     410: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     413: pop
+     414: iconst_2
+     415: istore        9
+     417: iconst_0
+     418: istore        8
+     420: aload         5
+     422: iload         7
+     424: iload         10
+     426: aload         4
+     428: invokestatic  #36                 // Method encodeNumeric:(Lcom/google/zxing/common/ECIInput;IILjava/lang/StringBuilder;)V
+     431: iload         7
+     433: iload         10
+     435: iadd
+     436: istore        7
+     438: goto          675
+     441: aload         5
+     443: iload         7
+     445: invokestatic  #40                 // Method determineConsecutiveTextCount:(Lcom/google/zxing/common/ECIInput;I)I
+     448: istore        11
+     450: iload         11
+     452: iconst_5
+     453: if_icmpge     463
+     456: iload         10
+     458: iload         6
+     460: if_icmpne     508
+     463: iload         9
+     465: ifeq          483
+     468: aload         4
+     470: sipush        900
+     473: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     476: pop
+     477: iconst_0
+     478: istore        9
+     480: iconst_0
+     481: istore        8
+     483: aload         5
+     485: iload         7
+     487: iload         11
+     489: aload         4
+     491: iload         8
+     493: invokestatic  #31                 // Method encodeText:(Lcom/google/zxing/common/ECIInput;IILjava/lang/StringBuilder;I)I
+     496: istore        8
+     498: iload         7
+     500: iload         11
+     502: iadd
+     503: istore        7
+     505: goto          675
+     508: aload         5
+     510: iload         7
+     512: iload_3
+     513: ifeq          520
+     516: aconst_null
+     517: goto          521
+     520: aload_2
+     521: invokestatic  #41                 // Method determineConsecutiveBinaryCount:(Lcom/google/zxing/common/ECIInput;ILjava/nio/charset/Charset;)I
+     524: istore        12
+     526: iload         12
+     528: ifne          534
+     531: iconst_1
+     532: istore        12
+     534: iload_3
+     535: ifeq          542
+     538: aconst_null
+     539: goto          565
+     542: aload         5
+     544: iload         7
+     546: iload         7
+     548: iload         12
+     550: iadd
+     551: invokeinterface #42,  3           // InterfaceMethod com/google/zxing/common/ECIInput.subSequence:(II)Ljava/lang/CharSequence;
+     556: invokeinterface #43,  1           // InterfaceMethod java/lang/CharSequence.toString:()Ljava/lang/String;
+     561: aload_2
+     562: invokevirtual #34                 // Method java/lang/String.getBytes:(Ljava/nio/charset/Charset;)[B
+     565: astore        13
+     567: aload         13
+     569: ifnonnull     578
+     572: iload         12
+     574: iconst_1
+     575: if_icmpeq     590
+     578: aload         13
+     580: ifnull        626
+     583: aload         13
+     585: arraylength
+     586: iconst_1
+     587: if_icmpne     626
+     590: iload         9
+     592: ifne          626
+     595: iload_3
+     596: ifeq          613
+     599: aload         5
+     601: iload         7
+     603: iconst_1
+     604: iconst_0
+     605: aload         4
+     607: invokestatic  #32                 // Method encodeMultiECIBinary:(Lcom/google/zxing/common/ECIInput;IIILjava/lang/StringBuilder;)V
+     610: goto          668
+     613: aload         13
+     615: iconst_0
+     616: iconst_1
+     617: iconst_0
+     618: aload         4
+     620: invokestatic  #35                 // Method encodeBinary:([BIIILjava/lang/StringBuilder;)V
+     623: goto          668
+     626: iload_3
+     627: ifeq          649
+     630: aload         5
+     632: iload         7
+     634: iload         7
+     636: iload         12
+     638: iadd
+     639: iload         9
+     641: aload         4
+     643: invokestatic  #32                 // Method encodeMultiECIBinary:(Lcom/google/zxing/common/ECIInput;IIILjava/lang/StringBuilder;)V
+     646: goto          662
+     649: aload         13
+     651: iconst_0
+     652: aload         13
+     654: arraylength
+     655: iload         9
+     657: aload         4
+     659: invokestatic  #35                 // Method encodeBinary:([BIIILjava/lang/StringBuilder;)V
+     662: iconst_1
+     663: istore        9
+     665: iconst_0
+     666: istore        8
+     668: iload         7
+     670: iload         12
+     672: iadd
+     673: istore        7
+     675: goto          333
+     678: aload         4
+     680: invokevirtual #16                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     683: areturn
+
+  private static int encodeText(com.google.zxing.common.ECIInput, int, int, java.lang.StringBuilder, int) throws com.google.zxing.WriterException;
+    Code:
+       0: new           #8                  // class java/lang/StringBuilder
+       3: dup
+       4: iload_2
+       5: invokespecial #17                 // Method java/lang/StringBuilder."<init>":(I)V
+       8: astore        5
+      10: iload         4
+      12: istore        6
+      14: iconst_0
+      15: istore        7
+      17: aload_0
+      18: iload_1
+      19: iload         7
+      21: iadd
+      22: invokeinterface #37,  2           // InterfaceMethod com/google/zxing/common/ECIInput.isECI:(I)Z
+      27: ifeq          50
+      30: aload_0
+      31: iload_1
+      32: iload         7
+      34: iadd
+      35: invokeinterface #38,  2           // InterfaceMethod com/google/zxing/common/ECIInput.getECIValue:(I)I
+      40: aload_3
+      41: invokestatic  #26                 // Method encodingECI:(ILjava/lang/StringBuilder;)V
+      44: iinc          7, 1
+      47: goto          17
+      50: aload_0
+      51: iload_1
+      52: iload         7
+      54: iadd
+      55: invokeinterface #44,  2           // InterfaceMethod com/google/zxing/common/ECIInput.charAt:(I)C
+      60: istore        8
+      62: iload         6
+      64: tableswitch   { // 0 to 2
+                     0: 92
+                     1: 201
+                     2: 319
+               default: 468
+          }
+      92: iload         8
+      94: invokestatic  #45                 // Method isAlphaUpper:(C)Z
+      97: ifeq          133
+     100: iload         8
+     102: bipush        32
+     104: if_icmpne     118
+     107: aload         5
+     109: bipush        26
+     111: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     114: pop
+     115: goto          506
+     118: aload         5
+     120: iload         8
+     122: bipush        65
+     124: isub
+     125: i2c
+     126: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     129: pop
+     130: goto          506
+     133: iload         8
+     135: invokestatic  #46                 // Method isAlphaLower:(C)Z
+     138: ifeq          155
+     141: iconst_1
+     142: istore        6
+     144: aload         5
+     146: bipush        27
+     148: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     151: pop
+     152: goto          17
+     155: iload         8
+     157: invokestatic  #47                 // Method isMixed:(C)Z
+     160: ifeq          177
+     163: iconst_2
+     164: istore        6
+     166: aload         5
+     168: bipush        28
+     170: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     173: pop
+     174: goto          17
+     177: aload         5
+     179: bipush        29
+     181: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     184: pop
+     185: aload         5
+     187: getstatic     #48                 // Field PUNCTUATION:[B
+     190: iload         8
+     192: baload
+     193: i2c
+     194: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     197: pop
+     198: goto          506
+     201: iload         8
+     203: invokestatic  #46                 // Method isAlphaLower:(C)Z
+     206: ifeq          242
+     209: iload         8
+     211: bipush        32
+     213: if_icmpne     227
+     216: aload         5
+     218: bipush        26
+     220: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     223: pop
+     224: goto          506
+     227: aload         5
+     229: iload         8
+     231: bipush        97
+     233: isub
+     234: i2c
+     235: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     238: pop
+     239: goto          506
+     242: iload         8
+     244: invokestatic  #45                 // Method isAlphaUpper:(C)Z
+     247: ifeq          273
+     250: aload         5
+     252: bipush        27
+     254: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     257: pop
+     258: aload         5
+     260: iload         8
+     262: bipush        65
+     264: isub
+     265: i2c
+     266: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     269: pop
+     270: goto          506
+     273: iload         8
+     275: invokestatic  #47                 // Method isMixed:(C)Z
+     278: ifeq          295
+     281: iconst_2
+     282: istore        6
+     284: aload         5
+     286: bipush        28
+     288: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     291: pop
+     292: goto          17
+     295: aload         5
+     297: bipush        29
+     299: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     302: pop
+     303: aload         5
+     305: getstatic     #48                 // Field PUNCTUATION:[B
+     308: iload         8
+     310: baload
+     311: i2c
+     312: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     315: pop
+     316: goto          506
+     319: iload         8
+     321: invokestatic  #47                 // Method isMixed:(C)Z
+     324: ifeq          343
+     327: aload         5
+     329: getstatic     #49                 // Field MIXED:[B
+     332: iload         8
+     334: baload
+     335: i2c
+     336: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     339: pop
+     340: goto          506
+     343: iload         8
+     345: invokestatic  #45                 // Method isAlphaUpper:(C)Z
+     348: ifeq          365
+     351: iconst_0
+     352: istore        6
+     354: aload         5
+     356: bipush        28
+     358: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     361: pop
+     362: goto          17
+     365: iload         8
+     367: invokestatic  #46                 // Method isAlphaLower:(C)Z
+     370: ifeq          387
+     373: iconst_1
+     374: istore        6
+     376: aload         5
+     378: bipush        27
+     380: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     383: pop
+     384: goto          17
+     387: iload_1
+     388: iload         7
+     390: iadd
+     391: iconst_1
+     392: iadd
+     393: iload_2
+     394: if_icmpge     444
+     397: aload_0
+     398: iload_1
+     399: iload         7
+     401: iadd
+     402: iconst_1
+     403: iadd
+     404: invokeinterface #37,  2           // InterfaceMethod com/google/zxing/common/ECIInput.isECI:(I)Z
+     409: ifne          444
+     412: aload_0
+     413: iload_1
+     414: iload         7
+     416: iadd
+     417: iconst_1
+     418: iadd
+     419: invokeinterface #44,  2           // InterfaceMethod com/google/zxing/common/ECIInput.charAt:(I)C
+     424: invokestatic  #50                 // Method isPunctuation:(C)Z
+     427: ifeq          444
+     430: iconst_3
+     431: istore        6
+     433: aload         5
+     435: bipush        25
+     437: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     440: pop
+     441: goto          17
+     444: aload         5
+     446: bipush        29
+     448: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     451: pop
+     452: aload         5
+     454: getstatic     #48                 // Field PUNCTUATION:[B
+     457: iload         8
+     459: baload
+     460: i2c
+     461: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     464: pop
+     465: goto          506
+     468: iload         8
+     470: invokestatic  #50                 // Method isPunctuation:(C)Z
+     473: ifeq          492
+     476: aload         5
+     478: getstatic     #48                 // Field PUNCTUATION:[B
+     481: iload         8
+     483: baload
+     484: i2c
+     485: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     488: pop
+     489: goto          506
+     492: iconst_0
+     493: istore        6
+     495: aload         5
+     497: bipush        29
+     499: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     502: pop
+     503: goto          17
+     506: iinc          7, 1
+     509: iload         7
+     511: iload_2
+     512: if_icmplt     518
+     515: goto          521
+     518: goto          17
+     521: iconst_0
+     522: istore        8
+     524: aload         5
+     526: invokevirtual #51                 // Method java/lang/StringBuilder.length:()I
+     529: istore        9
+     531: iconst_0
+     532: istore        10
+     534: iload         10
+     536: iload         9
+     538: if_icmpge     601
+     541: iload         10
+     543: iconst_2
+     544: irem
+     545: ifeq          552
+     548: iconst_1
+     549: goto          553
+     552: iconst_0
+     553: istore        11
+     555: iload         11
+     557: ifeq          586
+     560: iload         8
+     562: bipush        30
+     564: imul
+     565: aload         5
+     567: iload         10
+     569: invokevirtual #52                 // Method java/lang/StringBuilder.charAt:(I)C
+     572: iadd
+     573: i2c
+     574: istore        8
+     576: aload_3
+     577: iload         8
+     579: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     582: pop
+     583: goto          595
+     586: aload         5
+     588: iload         10
+     590: invokevirtual #52                 // Method java/lang/StringBuilder.charAt:(I)C
+     593: istore        8
+     595: iinc          10, 1
+     598: goto          534
+     601: iload         9
+     603: iconst_2
+     604: irem
+     605: ifeq          622
+     608: aload_3
+     609: iload         8
+     611: bipush        30
+     613: imul
+     614: bipush        29
+     616: iadd
+     617: i2c
+     618: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     621: pop
+     622: iload         6
+     624: ireturn
+
+  private static void encodeMultiECIBinary(com.google.zxing.common.ECIInput, int, int, int, java.lang.StringBuilder) throws com.google.zxing.WriterException;
+    Code:
+       0: iload_1
+       1: iload_2
+       2: iadd
+       3: aload_0
+       4: invokeinterface #27,  1           // InterfaceMethod com/google/zxing/common/ECIInput.length:()I
+       9: invokestatic  #53                 // Method java/lang/Math.min:(II)I
+      12: istore        5
+      14: iload_1
+      15: istore        6
+      17: iload         6
+      19: iload         5
+      21: if_icmpge     54
+      24: aload_0
+      25: iload         6
+      27: invokeinterface #37,  2           // InterfaceMethod com/google/zxing/common/ECIInput.isECI:(I)Z
+      32: ifeq          54
+      35: aload_0
+      36: iload         6
+      38: invokeinterface #38,  2           // InterfaceMethod com/google/zxing/common/ECIInput.getECIValue:(I)I
+      43: aload         4
+      45: invokestatic  #26                 // Method encodingECI:(ILjava/lang/StringBuilder;)V
+      48: iinc          6, 1
+      51: goto          17
+      54: iload         6
+      56: istore        7
+      58: iload         7
+      60: iload         5
+      62: if_icmpge     82
+      65: aload_0
+      66: iload         7
+      68: invokeinterface #37,  2           // InterfaceMethod com/google/zxing/common/ECIInput.isECI:(I)Z
+      73: ifne          82
+      76: iinc          7, 1
+      79: goto          58
+      82: iload         7
+      84: iload         6
+      86: isub
+      87: istore        8
+      89: iload         8
+      91: ifgt          97
+      94: goto          131
+      97: aload_0
+      98: iload         6
+     100: iload         7
+     102: invokestatic  #54                 // Method subBytes:(Lcom/google/zxing/common/ECIInput;II)[B
+     105: iconst_0
+     106: iload         8
+     108: iload         6
+     110: iload_1
+     111: if_icmpne     118
+     114: iload_3
+     115: goto          119
+     118: iconst_1
+     119: aload         4
+     121: invokestatic  #35                 // Method encodeBinary:([BIIILjava/lang/StringBuilder;)V
+     124: iload         7
+     126: istore        6
+     128: goto          17
+     131: return
+
+  static byte[] subBytes(com.google.zxing.common.ECIInput, int, int);
+    Code:
+       0: iload_2
+       1: iload_1
+       2: isub
+       3: istore_3
+       4: iload_3
+       5: newarray       byte
+       7: astore        4
+       9: iload_1
+      10: istore        5
+      12: iload         5
+      14: iload_2
+      15: if_icmpge     44
+      18: aload         4
+      20: iload         5
+      22: iload_1
+      23: isub
+      24: aload_0
+      25: iload         5
+      27: invokeinterface #44,  2           // InterfaceMethod com/google/zxing/common/ECIInput.charAt:(I)C
+      32: sipush        255
+      35: iand
+      36: i2b
+      37: bastore
+      38: iinc          5, 1
+      41: goto          12
+      44: aload         4
+      46: areturn
+
+  private static void encodeBinary(byte[], int, int, int, java.lang.StringBuilder);
+    Code:
+       0: iload_2
+       1: iconst_1
+       2: if_icmpne     21
+       5: iload_3
+       6: ifne          21
+       9: aload         4
+      11: sipush        913
+      14: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      17: pop
+      18: goto          49
+      21: iload_2
+      22: bipush        6
+      24: irem
+      25: ifne          40
+      28: aload         4
+      30: sipush        924
+      33: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      36: pop
+      37: goto          49
+      40: aload         4
+      42: sipush        901
+      45: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      48: pop
+      49: iload_1
+      50: istore        5
+      52: iload_2
+      53: bipush        6
+      55: if_icmplt     188
+      58: iconst_5
+      59: newarray       char
+      61: astore        6
+      63: iload_1
+      64: iload_2
+      65: iadd
+      66: iload         5
+      68: isub
+      69: bipush        6
+      71: if_icmplt     188
+      74: lconst_0
+      75: lstore        7
+      77: iconst_0
+      78: istore        9
+      80: iload         9
+      82: bipush        6
+      84: if_icmpge     117
+      87: lload         7
+      89: bipush        8
+      91: lshl
+      92: lstore        7
+      94: lload         7
+      96: aload_0
+      97: iload         5
+      99: iload         9
+     101: iadd
+     102: baload
+     103: sipush        255
+     106: iand
+     107: i2l
+     108: ladd
+     109: lstore        7
+     111: iinc          9, 1
+     114: goto          80
+     117: iconst_0
+     118: istore        9
+     120: iload         9
+     122: iconst_5
+     123: if_icmpge     153
+     126: aload         6
+     128: iload         9
+     130: lload         7
+     132: ldc2_w        #55                 // long 900l
+     135: lrem
+     136: l2i
+     137: i2c
+     138: castore
+     139: lload         7
+     141: ldc2_w        #55                 // long 900l
+     144: ldiv
+     145: lstore        7
+     147: iinc          9, 1
+     150: goto          120
+     153: aload         6
+     155: arraylength
+     156: iconst_1
+     157: isub
+     158: istore        9
+     160: iload         9
+     162: iflt          182
+     165: aload         4
+     167: aload         6
+     169: iload         9
+     171: caload
+     172: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     175: pop
+     176: iinc          9, -1
+     179: goto          160
+     182: iinc          5, 6
+     185: goto          63
+     188: iload         5
+     190: istore        6
+     192: iload         6
+     194: iload_1
+     195: iload_2
+     196: iadd
+     197: if_icmpge     225
+     200: aload_0
+     201: iload         6
+     203: baload
+     204: sipush        255
+     207: iand
+     208: istore        7
+     210: aload         4
+     212: iload         7
+     214: i2c
+     215: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     218: pop
+     219: iinc          6, 1
+     222: goto          192
+     225: return
+
+  private static void encodeNumeric(com.google.zxing.common.ECIInput, int, int, java.lang.StringBuilder);
+    Code:
+       0: iconst_0
+       1: istore        4
+       3: new           #8                  // class java/lang/StringBuilder
+       6: dup
+       7: iload_2
+       8: iconst_3
+       9: idiv
+      10: iconst_1
+      11: iadd
+      12: invokespecial #17                 // Method java/lang/StringBuilder."<init>":(I)V
+      15: astore        5
+      17: ldc2_w        #55                 // long 900l
+      20: invokestatic  #57                 // Method java/math/BigInteger.valueOf:(J)Ljava/math/BigInteger;
+      23: astore        6
+      25: lconst_0
+      26: invokestatic  #57                 // Method java/math/BigInteger.valueOf:(J)Ljava/math/BigInteger;
+      29: astore        7
+      31: iload         4
+      33: iload_2
+      34: if_icmpge     180
+      37: aload         5
+      39: iconst_0
+      40: invokevirtual #58                 // Method java/lang/StringBuilder.setLength:(I)V
+      43: bipush        44
+      45: iload_2
+      46: iload         4
+      48: isub
+      49: invokestatic  #53                 // Method java/lang/Math.min:(II)I
+      52: istore        8
+      54: new           #8                  // class java/lang/StringBuilder
+      57: dup
+      58: invokespecial #9                  // Method java/lang/StringBuilder."<init>":()V
+      61: ldc           #59                 // String 1
+      63: invokevirtual #11                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      66: aload_0
+      67: iload_1
+      68: iload         4
+      70: iadd
+      71: iload_1
+      72: iload         4
+      74: iadd
+      75: iload         8
+      77: iadd
+      78: invokeinterface #42,  3           // InterfaceMethod com/google/zxing/common/ECIInput.subSequence:(II)Ljava/lang/CharSequence;
+      83: invokevirtual #60                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      86: invokevirtual #16                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      89: astore        9
+      91: new           #61                 // class java/math/BigInteger
+      94: dup
+      95: aload         9
+      97: invokespecial #62                 // Method java/math/BigInteger."<init>":(Ljava/lang/String;)V
+     100: astore        10
+     102: aload         5
+     104: aload         10
+     106: aload         6
+     108: invokevirtual #63                 // Method java/math/BigInteger.mod:(Ljava/math/BigInteger;)Ljava/math/BigInteger;
+     111: invokevirtual #64                 // Method java/math/BigInteger.intValue:()I
+     114: i2c
+     115: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     118: pop
+     119: aload         10
+     121: aload         6
+     123: invokevirtual #65                 // Method java/math/BigInteger.divide:(Ljava/math/BigInteger;)Ljava/math/BigInteger;
+     126: astore        10
+     128: aload         10
+     130: aload         7
+     132: invokevirtual #66                 // Method java/math/BigInteger.equals:(Ljava/lang/Object;)Z
+     135: ifeq          102
+     138: aload         5
+     140: invokevirtual #51                 // Method java/lang/StringBuilder.length:()I
+     143: iconst_1
+     144: isub
+     145: istore        11
+     147: iload         11
+     149: iflt          170
+     152: aload_3
+     153: aload         5
+     155: iload         11
+     157: invokevirtual #52                 // Method java/lang/StringBuilder.charAt:(I)C
+     160: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     163: pop
+     164: iinc          11, -1
+     167: goto          147
+     170: iload         4
+     172: iload         8
+     174: iadd
+     175: istore        4
+     177: goto          31
+     180: return
+
+  private static boolean isDigit(char);
+    Code:
+       0: iload_0
+       1: bipush        48
+       3: if_icmplt     16
+       6: iload_0
+       7: bipush        57
+       9: if_icmpgt     16
+      12: iconst_1
+      13: goto          17
+      16: iconst_0
+      17: ireturn
+
+  private static boolean isAlphaUpper(char);
+    Code:
+       0: iload_0
+       1: bipush        32
+       3: if_icmpeq     18
+       6: iload_0
+       7: bipush        65
+       9: if_icmplt     22
+      12: iload_0
+      13: bipush        90
+      15: if_icmpgt     22
+      18: iconst_1
+      19: goto          23
+      22: iconst_0
+      23: ireturn
+
+  private static boolean isAlphaLower(char);
+    Code:
+       0: iload_0
+       1: bipush        32
+       3: if_icmpeq     18
+       6: iload_0
+       7: bipush        97
+       9: if_icmplt     22
+      12: iload_0
+      13: bipush        122
+      15: if_icmpgt     22
+      18: iconst_1
+      19: goto          23
+      22: iconst_0
+      23: ireturn
+
+  private static boolean isMixed(char);
+    Code:
+       0: getstatic     #49                 // Field MIXED:[B
+       3: iload_0
+       4: baload
+       5: iconst_m1
+       6: if_icmpeq     13
+       9: iconst_1
+      10: goto          14
+      13: iconst_0
+      14: ireturn
+
+  private static boolean isPunctuation(char);
+    Code:
+       0: getstatic     #48                 // Field PUNCTUATION:[B
+       3: iload_0
+       4: baload
+       5: iconst_m1
+       6: if_icmpeq     13
+       9: iconst_1
+      10: goto          14
+      13: iconst_0
+      14: ireturn
+
+  private static boolean isText(char);
+    Code:
+       0: iload_0
+       1: bipush        9
+       3: if_icmpeq     30
+       6: iload_0
+       7: bipush        10
+       9: if_icmpeq     30
+      12: iload_0
+      13: bipush        13
+      15: if_icmpeq     30
+      18: iload_0
+      19: bipush        32
+      21: if_icmplt     34
+      24: iload_0
+      25: bipush        126
+      27: if_icmpgt     34
+      30: iconst_1
+      31: goto          35
+      34: iconst_0
+      35: ireturn
+
+  private static int determineConsecutiveDigitCount(com.google.zxing.common.ECIInput, int);
+    Code:
+       0: iconst_0
+       1: istore_2
+       2: aload_0
+       3: invokeinterface #27,  1           // InterfaceMethod com/google/zxing/common/ECIInput.length:()I
+       8: istore_3
+       9: iload_1
+      10: istore        4
+      12: iload         4
+      14: iload_3
+      15: if_icmpge     58
+      18: iload         4
+      20: iload_3
+      21: if_icmpge     58
+      24: aload_0
+      25: iload         4
+      27: invokeinterface #37,  2           // InterfaceMethod com/google/zxing/common/ECIInput.isECI:(I)Z
+      32: ifne          58
+      35: aload_0
+      36: iload         4
+      38: invokeinterface #44,  2           // InterfaceMethod com/google/zxing/common/ECIInput.charAt:(I)C
+      43: invokestatic  #67                 // Method isDigit:(C)Z
+      46: ifeq          58
+      49: iinc          2, 1
+      52: iinc          4, 1
+      55: goto          18
+      58: iload_2
+      59: ireturn
+
+  private static int determineConsecutiveTextCount(com.google.zxing.common.ECIInput, int);
+    Code:
+       0: aload_0
+       1: invokeinterface #27,  1           // InterfaceMethod com/google/zxing/common/ECIInput.length:()I
+       6: istore_2
+       7: iload_1
+       8: istore_3
+       9: iload_3
+      10: iload_2
+      11: if_icmpge     115
+      14: iconst_0
+      15: istore        4
+      17: iload         4
+      19: bipush        13
+      21: if_icmpge     61
+      24: iload_3
+      25: iload_2
+      26: if_icmpge     61
+      29: aload_0
+      30: iload_3
+      31: invokeinterface #37,  2           // InterfaceMethod com/google/zxing/common/ECIInput.isECI:(I)Z
+      36: ifne          61
+      39: aload_0
+      40: iload_3
+      41: invokeinterface #44,  2           // InterfaceMethod com/google/zxing/common/ECIInput.charAt:(I)C
+      46: invokestatic  #67                 // Method isDigit:(C)Z
+      49: ifeq          61
+      52: iinc          4, 1
+      55: iinc          3, 1
+      58: goto          17
+      61: iload         4
+      63: bipush        13
+      65: if_icmplt     75
+      68: iload_3
+      69: iload_1
+      70: isub
+      71: iload         4
+      73: isub
+      74: ireturn
+      75: iload         4
+      77: ifle          83
+      80: goto          9
+      83: aload_0
+      84: iload_3
+      85: invokeinterface #37,  2           // InterfaceMethod com/google/zxing/common/ECIInput.isECI:(I)Z
+      90: ifne          115
+      93: aload_0
+      94: iload_3
+      95: invokeinterface #44,  2           // InterfaceMethod com/google/zxing/common/ECIInput.charAt:(I)C
+     100: invokestatic  #68                 // Method isText:(C)Z
+     103: ifne          109
+     106: goto          115
+     109: iinc          3, 1
+     112: goto          9
+     115: iload_3
+     116: iload_1
+     117: isub
+     118: ireturn
+
+  private static int determineConsecutiveBinaryCount(com.google.zxing.common.ECIInput, int, java.nio.charset.Charset) throws com.google.zxing.WriterException;
+    Code:
+       0: aload_2
+       1: ifnonnull     8
+       4: aconst_null
+       5: goto          12
+       8: aload_2
+       9: invokevirtual #69                 // Method java/nio/charset/Charset.newEncoder:()Ljava/nio/charset/CharsetEncoder;
+      12: astore_3
+      13: aload_0
+      14: invokeinterface #27,  1           // InterfaceMethod com/google/zxing/common/ECIInput.length:()I
+      19: istore        4
+      21: iload_1
+      22: istore        5
+      24: iload         5
+      26: iload         4
+      28: if_icmpge     201
+      31: iconst_0
+      32: istore        6
+      34: iload         5
+      36: istore        7
+      38: iload         6
+      40: bipush        13
+      42: if_icmpge     90
+      45: aload_0
+      46: iload         7
+      48: invokeinterface #37,  2           // InterfaceMethod com/google/zxing/common/ECIInput.isECI:(I)Z
+      53: ifne          90
+      56: aload_0
+      57: iload         7
+      59: invokeinterface #44,  2           // InterfaceMethod com/google/zxing/common/ECIInput.charAt:(I)C
+      64: invokestatic  #67                 // Method isDigit:(C)Z
+      67: ifeq          90
+      70: iinc          6, 1
+      73: iload         5
+      75: iload         6
+      77: iadd
+      78: istore        7
+      80: iload         7
+      82: iload         4
+      84: if_icmplt     38
+      87: goto          90
+      90: iload         6
+      92: bipush        13
+      94: if_icmplt     102
+      97: iload         5
+      99: iload_1
+     100: isub
+     101: ireturn
+     102: aload_3
+     103: ifnull        195
+     106: aload_3
+     107: aload_0
+     108: iload         5
+     110: invokeinterface #44,  2           // InterfaceMethod com/google/zxing/common/ECIInput.charAt:(I)C
+     115: invokevirtual #70                 // Method java/nio/charset/CharsetEncoder.canEncode:(C)Z
+     118: ifne          195
+     121: getstatic     #71                 // Field $assertionsDisabled:Z
+     124: ifne          142
+     127: aload_0
+     128: instanceof    #20                 // class com/google/zxing/pdf417/encoder/PDF417HighLevelEncoder$NoECIInput
+     131: ifne          142
+     134: new           #72                 // class java/lang/AssertionError
+     137: dup
+     138: invokespecial #73                 // Method java/lang/AssertionError."<init>":()V
+     141: athrow
+     142: aload_0
+     143: iload         5
+     145: invokeinterface #44,  2           // InterfaceMethod com/google/zxing/common/ECIInput.charAt:(I)C
+     150: istore        8
+     152: new           #3                  // class com/google/zxing/WriterException
+     155: dup
+     156: new           #8                  // class java/lang/StringBuilder
+     159: dup
+     160: invokespecial #9                  // Method java/lang/StringBuilder."<init>":()V
+     163: ldc           #10                 // String Non-encodable character detected:
+     165: invokevirtual #11                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     168: iload         8
+     170: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     173: ldc           #13                 // String  (Unicode:
+     175: invokevirtual #11                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     178: iload         8
+     180: invokevirtual #14                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     183: bipush        41
+     185: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+     188: invokevirtual #16                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     191: invokespecial #5                  // Method com/google/zxing/WriterException."<init>":(Ljava/lang/String;)V
+     194: athrow
+     195: iinc          5, 1
+     198: goto          24
+     201: iload         5
+     203: iload_1
+     204: isub
+     205: ireturn
+
+  private static void encodingECI(int, java.lang.StringBuilder) throws com.google.zxing.WriterException;
+    Code:
+       0: iload_0
+       1: iflt          29
+       4: iload_0
+       5: sipush        900
+       8: if_icmpge     29
+      11: aload_1
+      12: sipush        927
+      15: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      18: pop
+      19: aload_1
+      20: iload_0
+      21: i2c
+      22: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      25: pop
+      26: goto          124
+      29: iload_0
+      30: ldc           #74                 // int 810900
+      32: if_icmpge     70
+      35: aload_1
+      36: sipush        926
+      39: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      42: pop
+      43: aload_1
+      44: iload_0
+      45: sipush        900
+      48: idiv
+      49: iconst_1
+      50: isub
+      51: i2c
+      52: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      55: pop
+      56: aload_1
+      57: iload_0
+      58: sipush        900
+      61: irem
+      62: i2c
+      63: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      66: pop
+      67: goto          124
+      70: iload_0
+      71: ldc           #75                 // int 811800
+      73: if_icmpge     97
+      76: aload_1
+      77: sipush        925
+      80: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      83: pop
+      84: aload_1
+      85: ldc           #74                 // int 810900
+      87: iload_0
+      88: isub
+      89: i2c
+      90: invokevirtual #12                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      93: pop
+      94: goto          124
+      97: new           #3                  // class com/google/zxing/WriterException
+     100: dup
+     101: new           #8                  // class java/lang/StringBuilder
+     104: dup
+     105: invokespecial #9                  // Method java/lang/StringBuilder."<init>":()V
+     108: ldc           #76                 // String ECI number not in valid range from 0..811799, but was
+     110: invokevirtual #11                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     113: iload_0
+     114: invokevirtual #14                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     117: invokevirtual #16                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     120: invokespecial #5                  // Method com/google/zxing/WriterException."<init>":(Ljava/lang/String;)V
+     123: athrow
+     124: return
+
+  static {};
+    Code:
+       0: ldc           #28                 // class com/google/zxing/pdf417/encoder/PDF417HighLevelEncoder
+       2: invokevirtual #77                 // Method java/lang/Class.desiredAssertionStatus:()Z
+       5: ifne          12
+       8: iconst_1
+       9: goto          13
+      12: iconst_0
+      13: putstatic     #71                 // Field $assertionsDisabled:Z
+      16: bipush        30
+      18: newarray       byte
+      20: dup
+      21: iconst_0
+      22: bipush        48
+      24: bastore
+      25: dup
+      26: iconst_1
+      27: bipush        49
+      29: bastore
+      30: dup
+      31: iconst_2
+      32: bipush        50
+      34: bastore
+      35: dup
+      36: iconst_3
+      37: bipush        51
+      39: bastore
+      40: dup
+      41: iconst_4
+      42: bipush        52
+      44: bastore
+      45: dup
+      46: iconst_5
+      47: bipush        53
+      49: bastore
+      50: dup
+      51: bipush        6
+      53: bipush        54
+      55: bastore
+      56: dup
+      57: bipush        7
+      59: bipush        55
+      61: bastore
+      62: dup
+      63: bipush        8
+      65: bipush        56
+      67: bastore
+      68: dup
+      69: bipush        9
+      71: bipush        57
+      73: bastore
+      74: dup
+      75: bipush        10
+      77: bipush        38
+      79: bastore
+      80: dup
+      81: bipush        11
+      83: bipush        13
+      85: bastore
+      86: dup
+      87: bipush        12
+      89: bipush        9
+      91: bastore
+      92: dup
+      93: bipush        13
+      95: bipush        44
+      97: bastore
+      98: dup
+      99: bipush        14
+     101: bipush        58
+     103: bastore
+     104: dup
+     105: bipush        15
+     107: bipush        35
+     109: bastore
+     110: dup
+     111: bipush        16
+     113: bipush        45
+     115: bastore
+     116: dup
+     117: bipush        17
+     119: bipush        46
+     121: bastore
+     122: dup
+     123: bipush        18
+     125: bipush        36
+     127: bastore
+     128: dup
+     129: bipush        19
+     131: bipush        47
+     133: bastore
+     134: dup
+     135: bipush        20
+     137: bipush        43
+     139: bastore
+     140: dup
+     141: bipush        21
+     143: bipush        37
+     145: bastore
+     146: dup
+     147: bipush        22
+     149: bipush        42
+     151: bastore
+     152: dup
+     153: bipush        23
+     155: bipush        61
+     157: bastore
+     158: dup
+     159: bipush        24
+     161: bipush        94
+     163: bastore
+     164: dup
+     165: bipush        25
+     167: iconst_0
+     168: bastore
+     169: dup
+     170: bipush        26
+     172: bipush        32
+     174: bastore
+     175: dup
+     176: bipush        27
+     178: iconst_0
+     179: bastore
+     180: dup
+     181: bipush        28
+     183: iconst_0
+     184: bastore
+     185: dup
+     186: bipush        29
+     188: iconst_0
+     189: bastore
+     190: putstatic     #78                 // Field TEXT_MIXED_RAW:[B
+     193: bipush        30
+     195: newarray       byte
+     197: dup
+     198: iconst_0
+     199: bipush        59
+     201: bastore
+     202: dup
+     203: iconst_1
+     204: bipush        60
+     206: bastore
+     207: dup
+     208: iconst_2
+     209: bipush        62
+     211: bastore
+     212: dup
+     213: iconst_3
+     214: bipush        64
+     216: bastore
+     217: dup
+     218: iconst_4
+     219: bipush        91
+     221: bastore
+     222: dup
+     223: iconst_5
+     224: bipush        92
+     226: bastore
+     227: dup
+     228: bipush        6
+     230: bipush        93
+     232: bastore
+     233: dup
+     234: bipush        7
+     236: bipush        95
+     238: bastore
+     239: dup
+     240: bipush        8
+     242: bipush        96
+     244: bastore
+     245: dup
+     246: bipush        9
+     248: bipush        126
+     250: bastore
+     251: dup
+     252: bipush        10
+     254: bipush        33
+     256: bastore
+     257: dup
+     258: bipush        11
+     260: bipush        13
+     262: bastore
+     263: dup
+     264: bipush        12
+     266: bipush        9
+     268: bastore
+     269: dup
+     270: bipush        13
+     272: bipush        44
+     274: bastore
+     275: dup
+     276: bipush        14
+     278: bipush        58
+     280: bastore
+     281: dup
+     282: bipush        15
+     284: bipush        10
+     286: bastore
+     287: dup
+     288: bipush        16
+     290: bipush        45
+     292: bastore
+     293: dup
+     294: bipush        17
+     296: bipush        46
+     298: bastore
+     299: dup
+     300: bipush        18
+     302: bipush        36
+     304: bastore
+     305: dup
+     306: bipush        19
+     308: bipush        47
+     310: bastore
+     311: dup
+     312: bipush        20
+     314: bipush        34
+     316: bastore
+     317: dup
+     318: bipush        21
+     320: bipush        124
+     322: bastore
+     323: dup
+     324: bipush        22
+     326: bipush        42
+     328: bastore
+     329: dup
+     330: bipush        23
+     332: bipush        40
+     334: bastore
+     335: dup
+     336: bipush        24
+     338: bipush        41
+     340: bastore
+     341: dup
+     342: bipush        25
+     344: bipush        63
+     346: bastore
+     347: dup
+     348: bipush        26
+     350: bipush        123
+     352: bastore
+     353: dup
+     354: bipush        27
+     356: bipush        125
+     358: bastore
+     359: dup
+     360: bipush        28
+     362: bipush        39
+     364: bastore
+     365: dup
+     366: bipush        29
+     368: iconst_0
+     369: bastore
+     370: putstatic     #79                 // Field TEXT_PUNCTUATION_RAW:[B
+     373: sipush        128
+     376: newarray       byte
+     378: putstatic     #49                 // Field MIXED:[B
+     381: sipush        128
+     384: newarray       byte
+     386: putstatic     #48                 // Field PUNCTUATION:[B
+     389: getstatic     #80                 // Field java/nio/charset/StandardCharsets.ISO_8859_1:Ljava/nio/charset/Charset;
+     392: putstatic     #22                 // Field DEFAULT_ENCODING:Ljava/nio/charset/Charset;
+     395: getstatic     #49                 // Field MIXED:[B
+     398: iconst_m1
+     399: invokestatic  #81                 // Method java/util/Arrays.fill:([BB)V
+     402: iconst_0
+     403: istore_0
+     404: iload_0
+     405: getstatic     #78                 // Field TEXT_MIXED_RAW:[B
+     408: arraylength
+     409: if_icmpge     435
+     412: getstatic     #78                 // Field TEXT_MIXED_RAW:[B
+     415: iload_0
+     416: baload
+     417: istore_1
+     418: iload_1
+     419: ifle          429
+     422: getstatic     #49                 // Field MIXED:[B
+     425: iload_1
+     426: iload_0
+     427: i2b
+     428: bastore
+     429: iinc          0, 1
+     432: goto          404
+     435: getstatic     #48                 // Field PUNCTUATION:[B
+     438: iconst_m1
+     439: invokestatic  #81                 // Method java/util/Arrays.fill:([BB)V
+     442: iconst_0
+     443: istore_0
+     444: iload_0
+     445: getstatic     #79                 // Field TEXT_PUNCTUATION_RAW:[B
+     448: arraylength
+     449: if_icmpge     475
+     452: getstatic     #79                 // Field TEXT_PUNCTUATION_RAW:[B
+     455: iload_0
+     456: baload
+     457: istore_1
+     458: iload_1
+     459: ifle          469
+     462: getstatic     #48                 // Field PUNCTUATION:[B
+     465: iload_1
+     466: iload_0
+     467: i2b
+     468: bastore
+     469: iinc          0, 1
+     472: goto          444
+     475: return
+}
