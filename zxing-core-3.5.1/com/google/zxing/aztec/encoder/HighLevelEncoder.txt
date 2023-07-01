@@ -1,0 +1,1022 @@
+Compiled from "HighLevelEncoder.java"
+public final class com.google.zxing.aztec.encoder.HighLevelEncoder {
+  static final java.lang.String[] MODE_NAMES;
+
+  static final int MODE_UPPER;
+
+  static final int MODE_LOWER;
+
+  static final int MODE_DIGIT;
+
+  static final int MODE_MIXED;
+
+  static final int MODE_PUNCT;
+
+  static final int[][] LATCH_TABLE;
+
+  private static final int[][] CHAR_MAP;
+
+  static final int[][] SHIFT_TABLE;
+
+  private final byte[] text;
+
+  private final java.nio.charset.Charset charset;
+
+  public com.google.zxing.aztec.encoder.HighLevelEncoder(byte[]);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field text:[B
+       9: aload_0
+      10: aconst_null
+      11: putfield      #3                  // Field charset:Ljava/nio/charset/Charset;
+      14: return
+
+  public com.google.zxing.aztec.encoder.HighLevelEncoder(byte[], java.nio.charset.Charset);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field text:[B
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field charset:Ljava/nio/charset/Charset;
+      14: return
+
+  public com.google.zxing.common.BitArray encode();
+    Code:
+       0: getstatic     #4                  // Field com/google/zxing/aztec/encoder/State.INITIAL_STATE:Lcom/google/zxing/aztec/encoder/State;
+       3: astore_1
+       4: aload_0
+       5: getfield      #3                  // Field charset:Ljava/nio/charset/Charset;
+       8: ifnull        63
+      11: aload_0
+      12: getfield      #3                  // Field charset:Ljava/nio/charset/Charset;
+      15: invokestatic  #5                  // Method com/google/zxing/common/CharacterSetECI.getCharacterSetECI:(Ljava/nio/charset/Charset;)Lcom/google/zxing/common/CharacterSetECI;
+      18: astore_2
+      19: aconst_null
+      20: aload_2
+      21: if_acmpne     54
+      24: new           #6                  // class java/lang/IllegalArgumentException
+      27: dup
+      28: new           #7                  // class java/lang/StringBuilder
+      31: dup
+      32: invokespecial #8                  // Method java/lang/StringBuilder."<init>":()V
+      35: ldc           #9                  // String No ECI code for character set
+      37: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      40: aload_0
+      41: getfield      #3                  // Field charset:Ljava/nio/charset/Charset;
+      44: invokevirtual #11                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      47: invokevirtual #12                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      50: invokespecial #13                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      53: athrow
+      54: aload_1
+      55: aload_2
+      56: invokevirtual #14                 // Method com/google/zxing/common/CharacterSetECI.getValue:()I
+      59: invokevirtual #15                 // Method com/google/zxing/aztec/encoder/State.appendFLGn:(I)Lcom/google/zxing/aztec/encoder/State;
+      62: astore_1
+      63: aload_1
+      64: invokestatic  #16                 // Method java/util/Collections.singletonList:(Ljava/lang/Object;)Ljava/util/List;
+      67: astore_2
+      68: iconst_0
+      69: istore_3
+      70: iload_3
+      71: aload_0
+      72: getfield      #2                  // Field text:[B
+      75: arraylength
+      76: if_icmpge     255
+      79: iload_3
+      80: iconst_1
+      81: iadd
+      82: aload_0
+      83: getfield      #2                  // Field text:[B
+      86: arraylength
+      87: if_icmpge     101
+      90: aload_0
+      91: getfield      #2                  // Field text:[B
+      94: iload_3
+      95: iconst_1
+      96: iadd
+      97: baload
+      98: goto          102
+     101: iconst_0
+     102: istore        5
+     104: aload_0
+     105: getfield      #2                  // Field text:[B
+     108: iload_3
+     109: baload
+     110: lookupswitch  { // 4
+                    13: 152
+                    44: 186
+                    46: 169
+                    58: 203
+               default: 220
+          }
+     152: iload         5
+     154: bipush        10
+     156: if_icmpne     163
+     159: iconst_2
+     160: goto          164
+     163: iconst_0
+     164: istore        4
+     166: goto          223
+     169: iload         5
+     171: bipush        32
+     173: if_icmpne     180
+     176: iconst_3
+     177: goto          181
+     180: iconst_0
+     181: istore        4
+     183: goto          223
+     186: iload         5
+     188: bipush        32
+     190: if_icmpne     197
+     193: iconst_4
+     194: goto          198
+     197: iconst_0
+     198: istore        4
+     200: goto          223
+     203: iload         5
+     205: bipush        32
+     207: if_icmpne     214
+     210: iconst_5
+     211: goto          215
+     214: iconst_0
+     215: istore        4
+     217: goto          223
+     220: iconst_0
+     221: istore        4
+     223: iload         4
+     225: ifle          242
+     228: aload_2
+     229: iload_3
+     230: iload         4
+     232: invokestatic  #17                 // Method updateStateListForPair:(Ljava/lang/Iterable;II)Ljava/util/Collection;
+     235: astore_2
+     236: iinc          3, 1
+     239: goto          249
+     242: aload_0
+     243: aload_2
+     244: iload_3
+     245: invokespecial #18                 // Method updateStateListForChar:(Ljava/lang/Iterable;I)Ljava/util/Collection;
+     248: astore_2
+     249: iinc          3, 1
+     252: goto          70
+     255: aload_2
+     256: new           #19                 // class com/google/zxing/aztec/encoder/HighLevelEncoder$1
+     259: dup
+     260: aload_0
+     261: invokespecial #20                 // Method com/google/zxing/aztec/encoder/HighLevelEncoder$1."<init>":(Lcom/google/zxing/aztec/encoder/HighLevelEncoder;)V
+     264: invokestatic  #21                 // Method java/util/Collections.min:(Ljava/util/Collection;Ljava/util/Comparator;)Ljava/lang/Object;
+     267: checkcast     #22                 // class com/google/zxing/aztec/encoder/State
+     270: astore_3
+     271: aload_3
+     272: aload_0
+     273: getfield      #2                  // Field text:[B
+     276: invokevirtual #23                 // Method com/google/zxing/aztec/encoder/State.toBitArray:([B)Lcom/google/zxing/common/BitArray;
+     279: areturn
+
+  private java.util.Collection<com.google.zxing.aztec.encoder.State> updateStateListForChar(java.lang.Iterable<com.google.zxing.aztec.encoder.State>, int);
+    Code:
+       0: new           #24                 // class java/util/LinkedList
+       3: dup
+       4: invokespecial #25                 // Method java/util/LinkedList."<init>":()V
+       7: astore_3
+       8: aload_1
+       9: invokeinterface #26,  1           // InterfaceMethod java/lang/Iterable.iterator:()Ljava/util/Iterator;
+      14: astore        4
+      16: aload         4
+      18: invokeinterface #27,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      23: ifeq          49
+      26: aload         4
+      28: invokeinterface #28,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      33: checkcast     #22                 // class com/google/zxing/aztec/encoder/State
+      36: astore        5
+      38: aload_0
+      39: aload         5
+      41: iload_2
+      42: aload_3
+      43: invokespecial #29                 // Method updateStateForChar:(Lcom/google/zxing/aztec/encoder/State;ILjava/util/Collection;)V
+      46: goto          16
+      49: aload_3
+      50: invokestatic  #30                 // Method simplifyStates:(Ljava/lang/Iterable;)Ljava/util/Collection;
+      53: areturn
+
+  private void updateStateForChar(com.google.zxing.aztec.encoder.State, int, java.util.Collection<com.google.zxing.aztec.encoder.State>);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field text:[B
+       4: iload_2
+       5: baload
+       6: sipush        255
+       9: iand
+      10: i2c
+      11: istore        4
+      13: getstatic     #31                 // Field CHAR_MAP:[[I
+      16: aload_1
+      17: invokevirtual #32                 // Method com/google/zxing/aztec/encoder/State.getMode:()I
+      20: aaload
+      21: iload         4
+      23: iaload
+      24: ifle          31
+      27: iconst_1
+      28: goto          32
+      31: iconst_0
+      32: istore        5
+      34: aconst_null
+      35: astore        6
+      37: iconst_0
+      38: istore        7
+      40: iload         7
+      42: iconst_4
+      43: if_icmpgt     159
+      46: getstatic     #31                 // Field CHAR_MAP:[[I
+      49: iload         7
+      51: aaload
+      52: iload         4
+      54: iaload
+      55: istore        8
+      57: iload         8
+      59: ifle          153
+      62: aload         6
+      64: ifnonnull     74
+      67: aload_1
+      68: iload_2
+      69: invokevirtual #34                 // Method com/google/zxing/aztec/encoder/State.endBinaryShift:(I)Lcom/google/zxing/aztec/encoder/State;
+      72: astore        6
+      74: iload         5
+      76: ifeq          94
+      79: iload         7
+      81: aload_1
+      82: invokevirtual #32                 // Method com/google/zxing/aztec/encoder/State.getMode:()I
+      85: if_icmpeq     94
+      88: iload         7
+      90: iconst_2
+      91: if_icmpne     114
+      94: aload         6
+      96: iload         7
+      98: iload         8
+     100: invokevirtual #35                 // Method com/google/zxing/aztec/encoder/State.latchAndAppend:(II)Lcom/google/zxing/aztec/encoder/State;
+     103: astore        9
+     105: aload_3
+     106: aload         9
+     108: invokeinterface #36,  2           // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+     113: pop
+     114: iload         5
+     116: ifne          153
+     119: getstatic     #37                 // Field SHIFT_TABLE:[[I
+     122: aload_1
+     123: invokevirtual #32                 // Method com/google/zxing/aztec/encoder/State.getMode:()I
+     126: aaload
+     127: iload         7
+     129: iaload
+     130: iflt          153
+     133: aload         6
+     135: iload         7
+     137: iload         8
+     139: invokevirtual #38                 // Method com/google/zxing/aztec/encoder/State.shiftAndAppend:(II)Lcom/google/zxing/aztec/encoder/State;
+     142: astore        9
+     144: aload_3
+     145: aload         9
+     147: invokeinterface #36,  2           // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+     152: pop
+     153: iinc          7, 1
+     156: goto          40
+     159: aload_1
+     160: invokevirtual #39                 // Method com/google/zxing/aztec/encoder/State.getBinaryShiftByteCount:()I
+     163: ifgt          180
+     166: getstatic     #31                 // Field CHAR_MAP:[[I
+     169: aload_1
+     170: invokevirtual #32                 // Method com/google/zxing/aztec/encoder/State.getMode:()I
+     173: aaload
+     174: iload         4
+     176: iaload
+     177: ifne          196
+     180: aload_1
+     181: iload_2
+     182: invokevirtual #40                 // Method com/google/zxing/aztec/encoder/State.addBinaryShiftChar:(I)Lcom/google/zxing/aztec/encoder/State;
+     185: astore        7
+     187: aload_3
+     188: aload         7
+     190: invokeinterface #36,  2           // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+     195: pop
+     196: return
+
+  private static java.util.Collection<com.google.zxing.aztec.encoder.State> updateStateListForPair(java.lang.Iterable<com.google.zxing.aztec.encoder.State>, int, int);
+    Code:
+       0: new           #24                 // class java/util/LinkedList
+       3: dup
+       4: invokespecial #25                 // Method java/util/LinkedList."<init>":()V
+       7: astore_3
+       8: aload_0
+       9: invokeinterface #26,  1           // InterfaceMethod java/lang/Iterable.iterator:()Ljava/util/Iterator;
+      14: astore        4
+      16: aload         4
+      18: invokeinterface #27,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      23: ifeq          49
+      26: aload         4
+      28: invokeinterface #28,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      33: checkcast     #22                 // class com/google/zxing/aztec/encoder/State
+      36: astore        5
+      38: aload         5
+      40: iload_1
+      41: iload_2
+      42: aload_3
+      43: invokestatic  #41                 // Method updateStateForPair:(Lcom/google/zxing/aztec/encoder/State;IILjava/util/Collection;)V
+      46: goto          16
+      49: aload_3
+      50: invokestatic  #30                 // Method simplifyStates:(Ljava/lang/Iterable;)Ljava/util/Collection;
+      53: areturn
+
+  private static void updateStateForPair(com.google.zxing.aztec.encoder.State, int, int, java.util.Collection<com.google.zxing.aztec.encoder.State>);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: invokevirtual #34                 // Method com/google/zxing/aztec/encoder/State.endBinaryShift:(I)Lcom/google/zxing/aztec/encoder/State;
+       5: astore        4
+       7: aload_3
+       8: aload         4
+      10: iconst_4
+      11: iload_2
+      12: invokevirtual #35                 // Method com/google/zxing/aztec/encoder/State.latchAndAppend:(II)Lcom/google/zxing/aztec/encoder/State;
+      15: invokeinterface #36,  2           // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+      20: pop
+      21: aload_0
+      22: invokevirtual #32                 // Method com/google/zxing/aztec/encoder/State.getMode:()I
+      25: iconst_4
+      26: if_icmpeq     43
+      29: aload_3
+      30: aload         4
+      32: iconst_4
+      33: iload_2
+      34: invokevirtual #38                 // Method com/google/zxing/aztec/encoder/State.shiftAndAppend:(II)Lcom/google/zxing/aztec/encoder/State;
+      37: invokeinterface #36,  2           // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+      42: pop
+      43: iload_2
+      44: iconst_3
+      45: if_icmpeq     53
+      48: iload_2
+      49: iconst_4
+      50: if_icmpne     79
+      53: aload         4
+      55: iconst_2
+      56: bipush        16
+      58: iload_2
+      59: isub
+      60: invokevirtual #35                 // Method com/google/zxing/aztec/encoder/State.latchAndAppend:(II)Lcom/google/zxing/aztec/encoder/State;
+      63: iconst_2
+      64: iconst_1
+      65: invokevirtual #35                 // Method com/google/zxing/aztec/encoder/State.latchAndAppend:(II)Lcom/google/zxing/aztec/encoder/State;
+      68: astore        5
+      70: aload_3
+      71: aload         5
+      73: invokeinterface #36,  2           // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+      78: pop
+      79: aload_0
+      80: invokevirtual #39                 // Method com/google/zxing/aztec/encoder/State.getBinaryShiftByteCount:()I
+      83: ifle          108
+      86: aload_0
+      87: iload_1
+      88: invokevirtual #40                 // Method com/google/zxing/aztec/encoder/State.addBinaryShiftChar:(I)Lcom/google/zxing/aztec/encoder/State;
+      91: iload_1
+      92: iconst_1
+      93: iadd
+      94: invokevirtual #40                 // Method com/google/zxing/aztec/encoder/State.addBinaryShiftChar:(I)Lcom/google/zxing/aztec/encoder/State;
+      97: astore        5
+      99: aload_3
+     100: aload         5
+     102: invokeinterface #36,  2           // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+     107: pop
+     108: return
+
+  private static java.util.Collection<com.google.zxing.aztec.encoder.State> simplifyStates(java.lang.Iterable<com.google.zxing.aztec.encoder.State>);
+    Code:
+       0: new           #24                 // class java/util/LinkedList
+       3: dup
+       4: invokespecial #25                 // Method java/util/LinkedList."<init>":()V
+       7: astore_1
+       8: aload_0
+       9: invokeinterface #26,  1           // InterfaceMethod java/lang/Iterable.iterator:()Ljava/util/Iterator;
+      14: astore_2
+      15: aload_2
+      16: invokeinterface #27,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      21: ifeq          116
+      24: aload_2
+      25: invokeinterface #28,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      30: checkcast     #22                 // class com/google/zxing/aztec/encoder/State
+      33: astore_3
+      34: iconst_1
+      35: istore        4
+      37: aload_1
+      38: invokeinterface #42,  1           // InterfaceMethod java/util/Deque.iterator:()Ljava/util/Iterator;
+      43: astore        5
+      45: aload         5
+      47: invokeinterface #27,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      52: ifeq          101
+      55: aload         5
+      57: invokeinterface #28,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      62: checkcast     #22                 // class com/google/zxing/aztec/encoder/State
+      65: astore        6
+      67: aload         6
+      69: aload_3
+      70: invokevirtual #43                 // Method com/google/zxing/aztec/encoder/State.isBetterThanOrEqualTo:(Lcom/google/zxing/aztec/encoder/State;)Z
+      73: ifeq          82
+      76: iconst_0
+      77: istore        4
+      79: goto          101
+      82: aload_3
+      83: aload         6
+      85: invokevirtual #43                 // Method com/google/zxing/aztec/encoder/State.isBetterThanOrEqualTo:(Lcom/google/zxing/aztec/encoder/State;)Z
+      88: ifeq          98
+      91: aload         5
+      93: invokeinterface #44,  1           // InterfaceMethod java/util/Iterator.remove:()V
+      98: goto          45
+     101: iload         4
+     103: ifeq          113
+     106: aload_1
+     107: aload_3
+     108: invokeinterface #45,  2           // InterfaceMethod java/util/Deque.addFirst:(Ljava/lang/Object;)V
+     113: goto          15
+     116: aload_1
+     117: areturn
+
+  static {};
+    Code:
+       0: iconst_5
+       1: anewarray     #46                 // class java/lang/String
+       4: dup
+       5: iconst_0
+       6: ldc           #47                 // String UPPER
+       8: aastore
+       9: dup
+      10: iconst_1
+      11: ldc           #48                 // String LOWER
+      13: aastore
+      14: dup
+      15: iconst_2
+      16: ldc           #49                 // String DIGIT
+      18: aastore
+      19: dup
+      20: iconst_3
+      21: ldc           #50                 // String MIXED
+      23: aastore
+      24: dup
+      25: iconst_4
+      26: ldc           #51                 // String PUNCT
+      28: aastore
+      29: putstatic     #52                 // Field MODE_NAMES:[Ljava/lang/String;
+      32: iconst_5
+      33: anewarray     #53                 // class "[I"
+      36: dup
+      37: iconst_0
+      38: iconst_5
+      39: newarray       int
+      41: dup
+      42: iconst_0
+      43: iconst_0
+      44: iastore
+      45: dup
+      46: iconst_1
+      47: ldc           #54                 // int 327708
+      49: iastore
+      50: dup
+      51: iconst_2
+      52: ldc           #55                 // int 327710
+      54: iastore
+      55: dup
+      56: iconst_3
+      57: ldc           #56                 // int 327709
+      59: iastore
+      60: dup
+      61: iconst_4
+      62: ldc           #57                 // int 656318
+      64: iastore
+      65: aastore
+      66: dup
+      67: iconst_1
+      68: iconst_5
+      69: newarray       int
+      71: dup
+      72: iconst_0
+      73: ldc           #58                 // int 590318
+      75: iastore
+      76: dup
+      77: iconst_1
+      78: iconst_0
+      79: iastore
+      80: dup
+      81: iconst_2
+      82: ldc           #55                 // int 327710
+      84: iastore
+      85: dup
+      86: iconst_3
+      87: ldc           #56                 // int 327709
+      89: iastore
+      90: dup
+      91: iconst_4
+      92: ldc           #57                 // int 656318
+      94: iastore
+      95: aastore
+      96: dup
+      97: iconst_2
+      98: iconst_5
+      99: newarray       int
+     101: dup
+     102: iconst_0
+     103: ldc           #59                 // int 262158
+     105: iastore
+     106: dup
+     107: iconst_1
+     108: ldc           #60                 // int 590300
+     110: iastore
+     111: dup
+     112: iconst_2
+     113: iconst_0
+     114: iastore
+     115: dup
+     116: iconst_3
+     117: ldc           #61                 // int 590301
+     119: iastore
+     120: dup
+     121: iconst_4
+     122: ldc           #62                 // int 932798
+     124: iastore
+     125: aastore
+     126: dup
+     127: iconst_3
+     128: iconst_5
+     129: newarray       int
+     131: dup
+     132: iconst_0
+     133: ldc           #56                 // int 327709
+     135: iastore
+     136: dup
+     137: iconst_1
+     138: ldc           #54                 // int 327708
+     140: iastore
+     141: dup
+     142: iconst_2
+     143: ldc           #57                 // int 656318
+     145: iastore
+     146: dup
+     147: iconst_3
+     148: iconst_0
+     149: iastore
+     150: dup
+     151: iconst_4
+     152: ldc           #55                 // int 327710
+     154: iastore
+     155: aastore
+     156: dup
+     157: iconst_4
+     158: iconst_5
+     159: newarray       int
+     161: dup
+     162: iconst_0
+     163: ldc           #63                 // int 327711
+     165: iastore
+     166: dup
+     167: iconst_1
+     168: ldc           #64                 // int 656380
+     170: iastore
+     171: dup
+     172: iconst_2
+     173: ldc           #65                 // int 656382
+     175: iastore
+     176: dup
+     177: iconst_3
+     178: ldc           #66                 // int 656381
+     180: iastore
+     181: dup
+     182: iconst_4
+     183: iconst_0
+     184: iastore
+     185: aastore
+     186: putstatic     #67                 // Field LATCH_TABLE:[[I
+     189: iconst_5
+     190: sipush        256
+     193: multianewarray #68,  2            // class "[[I"
+     197: putstatic     #31                 // Field CHAR_MAP:[[I
+     200: getstatic     #31                 // Field CHAR_MAP:[[I
+     203: iconst_0
+     204: aaload
+     205: bipush        32
+     207: iconst_1
+     208: iastore
+     209: bipush        65
+     211: istore_0
+     212: iload_0
+     213: bipush        90
+     215: if_icmpgt     237
+     218: getstatic     #31                 // Field CHAR_MAP:[[I
+     221: iconst_0
+     222: aaload
+     223: iload_0
+     224: iload_0
+     225: bipush        65
+     227: isub
+     228: iconst_2
+     229: iadd
+     230: iastore
+     231: iinc          0, 1
+     234: goto          212
+     237: getstatic     #31                 // Field CHAR_MAP:[[I
+     240: iconst_1
+     241: aaload
+     242: bipush        32
+     244: iconst_1
+     245: iastore
+     246: bipush        97
+     248: istore_0
+     249: iload_0
+     250: bipush        122
+     252: if_icmpgt     274
+     255: getstatic     #31                 // Field CHAR_MAP:[[I
+     258: iconst_1
+     259: aaload
+     260: iload_0
+     261: iload_0
+     262: bipush        97
+     264: isub
+     265: iconst_2
+     266: iadd
+     267: iastore
+     268: iinc          0, 1
+     271: goto          249
+     274: getstatic     #31                 // Field CHAR_MAP:[[I
+     277: iconst_2
+     278: aaload
+     279: bipush        32
+     281: iconst_1
+     282: iastore
+     283: bipush        48
+     285: istore_0
+     286: iload_0
+     287: bipush        57
+     289: if_icmpgt     311
+     292: getstatic     #31                 // Field CHAR_MAP:[[I
+     295: iconst_2
+     296: aaload
+     297: iload_0
+     298: iload_0
+     299: bipush        48
+     301: isub
+     302: iconst_2
+     303: iadd
+     304: iastore
+     305: iinc          0, 1
+     308: goto          286
+     311: getstatic     #31                 // Field CHAR_MAP:[[I
+     314: iconst_2
+     315: aaload
+     316: bipush        44
+     318: bipush        12
+     320: iastore
+     321: getstatic     #31                 // Field CHAR_MAP:[[I
+     324: iconst_2
+     325: aaload
+     326: bipush        46
+     328: bipush        13
+     330: iastore
+     331: bipush        28
+     333: newarray       int
+     335: dup
+     336: iconst_0
+     337: iconst_0
+     338: iastore
+     339: dup
+     340: iconst_1
+     341: bipush        32
+     343: iastore
+     344: dup
+     345: iconst_2
+     346: iconst_1
+     347: iastore
+     348: dup
+     349: iconst_3
+     350: iconst_2
+     351: iastore
+     352: dup
+     353: iconst_4
+     354: iconst_3
+     355: iastore
+     356: dup
+     357: iconst_5
+     358: iconst_4
+     359: iastore
+     360: dup
+     361: bipush        6
+     363: iconst_5
+     364: iastore
+     365: dup
+     366: bipush        7
+     368: bipush        6
+     370: iastore
+     371: dup
+     372: bipush        8
+     374: bipush        7
+     376: iastore
+     377: dup
+     378: bipush        9
+     380: bipush        8
+     382: iastore
+     383: dup
+     384: bipush        10
+     386: bipush        9
+     388: iastore
+     389: dup
+     390: bipush        11
+     392: bipush        10
+     394: iastore
+     395: dup
+     396: bipush        12
+     398: bipush        11
+     400: iastore
+     401: dup
+     402: bipush        13
+     404: bipush        12
+     406: iastore
+     407: dup
+     408: bipush        14
+     410: bipush        13
+     412: iastore
+     413: dup
+     414: bipush        15
+     416: bipush        27
+     418: iastore
+     419: dup
+     420: bipush        16
+     422: bipush        28
+     424: iastore
+     425: dup
+     426: bipush        17
+     428: bipush        29
+     430: iastore
+     431: dup
+     432: bipush        18
+     434: bipush        30
+     436: iastore
+     437: dup
+     438: bipush        19
+     440: bipush        31
+     442: iastore
+     443: dup
+     444: bipush        20
+     446: bipush        64
+     448: iastore
+     449: dup
+     450: bipush        21
+     452: bipush        92
+     454: iastore
+     455: dup
+     456: bipush        22
+     458: bipush        94
+     460: iastore
+     461: dup
+     462: bipush        23
+     464: bipush        95
+     466: iastore
+     467: dup
+     468: bipush        24
+     470: bipush        96
+     472: iastore
+     473: dup
+     474: bipush        25
+     476: bipush        124
+     478: iastore
+     479: dup
+     480: bipush        26
+     482: bipush        126
+     484: iastore
+     485: dup
+     486: bipush        27
+     488: bipush        127
+     490: iastore
+     491: astore_0
+     492: iconst_0
+     493: istore_1
+     494: iload_1
+     495: aload_0
+     496: arraylength
+     497: if_icmpge     516
+     500: getstatic     #31                 // Field CHAR_MAP:[[I
+     503: iconst_3
+     504: aaload
+     505: aload_0
+     506: iload_1
+     507: iaload
+     508: iload_1
+     509: iastore
+     510: iinc          1, 1
+     513: goto          494
+     516: bipush        31
+     518: newarray       int
+     520: dup
+     521: iconst_0
+     522: iconst_0
+     523: iastore
+     524: dup
+     525: iconst_1
+     526: bipush        13
+     528: iastore
+     529: dup
+     530: iconst_2
+     531: iconst_0
+     532: iastore
+     533: dup
+     534: iconst_3
+     535: iconst_0
+     536: iastore
+     537: dup
+     538: iconst_4
+     539: iconst_0
+     540: iastore
+     541: dup
+     542: iconst_5
+     543: iconst_0
+     544: iastore
+     545: dup
+     546: bipush        6
+     548: bipush        33
+     550: iastore
+     551: dup
+     552: bipush        7
+     554: bipush        39
+     556: iastore
+     557: dup
+     558: bipush        8
+     560: bipush        35
+     562: iastore
+     563: dup
+     564: bipush        9
+     566: bipush        36
+     568: iastore
+     569: dup
+     570: bipush        10
+     572: bipush        37
+     574: iastore
+     575: dup
+     576: bipush        11
+     578: bipush        38
+     580: iastore
+     581: dup
+     582: bipush        12
+     584: bipush        39
+     586: iastore
+     587: dup
+     588: bipush        13
+     590: bipush        40
+     592: iastore
+     593: dup
+     594: bipush        14
+     596: bipush        41
+     598: iastore
+     599: dup
+     600: bipush        15
+     602: bipush        42
+     604: iastore
+     605: dup
+     606: bipush        16
+     608: bipush        43
+     610: iastore
+     611: dup
+     612: bipush        17
+     614: bipush        44
+     616: iastore
+     617: dup
+     618: bipush        18
+     620: bipush        45
+     622: iastore
+     623: dup
+     624: bipush        19
+     626: bipush        46
+     628: iastore
+     629: dup
+     630: bipush        20
+     632: bipush        47
+     634: iastore
+     635: dup
+     636: bipush        21
+     638: bipush        58
+     640: iastore
+     641: dup
+     642: bipush        22
+     644: bipush        59
+     646: iastore
+     647: dup
+     648: bipush        23
+     650: bipush        60
+     652: iastore
+     653: dup
+     654: bipush        24
+     656: bipush        61
+     658: iastore
+     659: dup
+     660: bipush        25
+     662: bipush        62
+     664: iastore
+     665: dup
+     666: bipush        26
+     668: bipush        63
+     670: iastore
+     671: dup
+     672: bipush        27
+     674: bipush        91
+     676: iastore
+     677: dup
+     678: bipush        28
+     680: bipush        93
+     682: iastore
+     683: dup
+     684: bipush        29
+     686: bipush        123
+     688: iastore
+     689: dup
+     690: bipush        30
+     692: bipush        125
+     694: iastore
+     695: astore_1
+     696: iconst_0
+     697: istore_2
+     698: iload_2
+     699: aload_1
+     700: arraylength
+     701: if_icmpge     726
+     704: aload_1
+     705: iload_2
+     706: iaload
+     707: ifle          720
+     710: getstatic     #31                 // Field CHAR_MAP:[[I
+     713: iconst_4
+     714: aaload
+     715: aload_1
+     716: iload_2
+     717: iaload
+     718: iload_2
+     719: iastore
+     720: iinc          2, 1
+     723: goto          698
+     726: bipush        6
+     728: bipush        6
+     730: multianewarray #68,  2            // class "[[I"
+     734: putstatic     #37                 // Field SHIFT_TABLE:[[I
+     737: getstatic     #37                 // Field SHIFT_TABLE:[[I
+     740: astore_0
+     741: aload_0
+     742: arraylength
+     743: istore_1
+     744: iconst_0
+     745: istore_2
+     746: iload_2
+     747: iload_1
+     748: if_icmpge     766
+     751: aload_0
+     752: iload_2
+     753: aaload
+     754: astore_3
+     755: aload_3
+     756: iconst_m1
+     757: invokestatic  #69                 // Method java/util/Arrays.fill:([II)V
+     760: iinc          2, 1
+     763: goto          746
+     766: getstatic     #37                 // Field SHIFT_TABLE:[[I
+     769: iconst_0
+     770: aaload
+     771: iconst_4
+     772: iconst_0
+     773: iastore
+     774: getstatic     #37                 // Field SHIFT_TABLE:[[I
+     777: iconst_1
+     778: aaload
+     779: iconst_4
+     780: iconst_0
+     781: iastore
+     782: getstatic     #37                 // Field SHIFT_TABLE:[[I
+     785: iconst_1
+     786: aaload
+     787: iconst_0
+     788: bipush        28
+     790: iastore
+     791: getstatic     #37                 // Field SHIFT_TABLE:[[I
+     794: iconst_3
+     795: aaload
+     796: iconst_4
+     797: iconst_0
+     798: iastore
+     799: getstatic     #37                 // Field SHIFT_TABLE:[[I
+     802: iconst_2
+     803: aaload
+     804: iconst_4
+     805: iconst_0
+     806: iastore
+     807: getstatic     #37                 // Field SHIFT_TABLE:[[I
+     810: iconst_2
+     811: aaload
+     812: iconst_0
+     813: bipush        15
+     815: iastore
+     816: return
+}

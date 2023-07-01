@@ -1,0 +1,166 @@
+Compiled from "PemSslStoreBundle.java"
+public class org.springframework.boot.ssl.pem.PemSslStoreBundle implements org.springframework.boot.ssl.SslStoreBundle {
+  private static final java.lang.String DEFAULT_KEY_ALIAS;
+
+  private final org.springframework.boot.ssl.pem.PemSslStoreDetails keyStoreDetails;
+
+  private final org.springframework.boot.ssl.pem.PemSslStoreDetails trustStoreDetails;
+
+  private final java.lang.String keyAlias;
+
+  public org.springframework.boot.ssl.pem.PemSslStoreBundle(org.springframework.boot.ssl.pem.PemSslStoreDetails, org.springframework.boot.ssl.pem.PemSslStoreDetails);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: aconst_null
+       4: invokespecial #1                  // Method "<init>":(Lorg/springframework/boot/ssl/pem/PemSslStoreDetails;Lorg/springframework/boot/ssl/pem/PemSslStoreDetails;Ljava/lang/String;)V
+       7: return
+
+  public org.springframework.boot.ssl.pem.PemSslStoreBundle(org.springframework.boot.ssl.pem.PemSslStoreDetails, org.springframework.boot.ssl.pem.PemSslStoreDetails, java.lang.String);
+    Code:
+       0: aload_0
+       1: invokespecial #7                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_3
+       6: putfield      #12                 // Field keyAlias:Ljava/lang/String;
+       9: aload_0
+      10: aload_1
+      11: putfield      #16                 // Field keyStoreDetails:Lorg/springframework/boot/ssl/pem/PemSslStoreDetails;
+      14: aload_0
+      15: aload_2
+      16: putfield      #20                 // Field trustStoreDetails:Lorg/springframework/boot/ssl/pem/PemSslStoreDetails;
+      19: return
+
+  public java.security.KeyStore getKeyStore();
+    Code:
+       0: aload_0
+       1: ldc           #23                 // String key
+       3: aload_0
+       4: getfield      #16                 // Field keyStoreDetails:Lorg/springframework/boot/ssl/pem/PemSslStoreDetails;
+       7: invokevirtual #25                 // Method createKeyStore:(Ljava/lang/String;Lorg/springframework/boot/ssl/pem/PemSslStoreDetails;)Ljava/security/KeyStore;
+      10: areturn
+
+  public java.lang.String getKeyStorePassword();
+    Code:
+       0: aconst_null
+       1: areturn
+
+  public java.security.KeyStore getTrustStore();
+    Code:
+       0: aload_0
+       1: ldc           #29                 // String trust
+       3: aload_0
+       4: getfield      #20                 // Field trustStoreDetails:Lorg/springframework/boot/ssl/pem/PemSslStoreDetails;
+       7: invokevirtual #25                 // Method createKeyStore:(Ljava/lang/String;Lorg/springframework/boot/ssl/pem/PemSslStoreDetails;)Ljava/security/KeyStore;
+      10: areturn
+
+  private java.security.KeyStore createKeyStore(java.lang.String, org.springframework.boot.ssl.pem.PemSslStoreDetails);
+    Code:
+       0: aload_2
+       1: ifnull        11
+       4: aload_2
+       5: invokevirtual #31                 // Method org/springframework/boot/ssl/pem/PemSslStoreDetails.isEmpty:()Z
+       8: ifeq          13
+      11: aconst_null
+      12: areturn
+      13: aload_2
+      14: invokevirtual #37                 // Method org/springframework/boot/ssl/pem/PemSslStoreDetails.certificate:()Ljava/lang/String;
+      17: ldc           #41                 // String CertificateContent must not be null
+      19: invokestatic  #43                 // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      22: aload_2
+      23: invokevirtual #49                 // Method org/springframework/boot/ssl/pem/PemSslStoreDetails.type:()Ljava/lang/String;
+      26: invokestatic  #52                 // Method org/springframework/util/StringUtils.hasText:(Ljava/lang/String;)Z
+      29: ifne          38
+      32: invokestatic  #58                 // Method java/security/KeyStore.getDefaultType:()Ljava/lang/String;
+      35: goto          42
+      38: aload_2
+      39: invokevirtual #49                 // Method org/springframework/boot/ssl/pem/PemSslStoreDetails.type:()Ljava/lang/String;
+      42: astore_3
+      43: aload_3
+      44: invokestatic  #63                 // Method java/security/KeyStore.getInstance:(Ljava/lang/String;)Ljava/security/KeyStore;
+      47: astore        4
+      49: aload         4
+      51: aconst_null
+      52: invokevirtual #67                 // Method java/security/KeyStore.load:(Ljava/security/KeyStore$LoadStoreParameter;)V
+      55: aload_2
+      56: invokevirtual #37                 // Method org/springframework/boot/ssl/pem/PemSslStoreDetails.certificate:()Ljava/lang/String;
+      59: invokestatic  #71                 // Method org/springframework/boot/ssl/pem/PemContent.load:(Ljava/lang/String;)Ljava/lang/String;
+      62: astore        5
+      64: aload_2
+      65: invokevirtual #76                 // Method org/springframework/boot/ssl/pem/PemSslStoreDetails.privateKey:()Ljava/lang/String;
+      68: invokestatic  #71                 // Method org/springframework/boot/ssl/pem/PemContent.load:(Ljava/lang/String;)Ljava/lang/String;
+      71: astore        6
+      73: aload         5
+      75: invokestatic  #79                 // Method org/springframework/boot/ssl/pem/PemCertificateParser.parse:(Ljava/lang/String;)[Ljava/security/cert/X509Certificate;
+      78: astore        7
+      80: aload         6
+      82: invokestatic  #85                 // Method org/springframework/boot/ssl/pem/PemPrivateKeyParser.parse:(Ljava/lang/String;)Ljava/security/PrivateKey;
+      85: astore        8
+      87: aload_0
+      88: aload         4
+      90: aload         7
+      92: aload         8
+      94: invokevirtual #90                 // Method addCertificates:(Ljava/security/KeyStore;[Ljava/security/cert/X509Certificate;Ljava/security/PrivateKey;)V
+      97: aload         4
+      99: areturn
+     100: astore_3
+     101: new           #96                 // class java/lang/IllegalStateException
+     104: dup
+     105: ldc           #98                 // String Unable to create %s store: %s
+     107: iconst_2
+     108: anewarray     #8                  // class java/lang/Object
+     111: dup
+     112: iconst_0
+     113: aload_1
+     114: aastore
+     115: dup
+     116: iconst_1
+     117: aload_3
+     118: invokevirtual #100                // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+     121: aastore
+     122: invokevirtual #103                // Method java/lang/String.formatted:([Ljava/lang/Object;)Ljava/lang/String;
+     125: aload_3
+     126: invokespecial #109                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+     129: athrow
+    Exception table:
+       from    to  target type
+          13    99   100   Class java/lang/Exception
+
+  private void addCertificates(java.security.KeyStore, java.security.cert.X509Certificate[], java.security.PrivateKey) throws java.security.KeyStoreException;
+    Code:
+       0: aload_0
+       1: getfield      #12                 // Field keyAlias:Ljava/lang/String;
+       4: ifnull        14
+       7: aload_0
+       8: getfield      #12                 // Field keyAlias:Ljava/lang/String;
+      11: goto          16
+      14: ldc           #112                // String ssl
+      16: astore        4
+      18: aload_3
+      19: ifnull        34
+      22: aload_1
+      23: aload         4
+      25: aload_3
+      26: aconst_null
+      27: aload_2
+      28: invokevirtual #114                // Method java/security/KeyStore.setKeyEntry:(Ljava/lang/String;Ljava/security/Key;[C[Ljava/security/cert/Certificate;)V
+      31: goto          67
+      34: iconst_0
+      35: istore        5
+      37: iload         5
+      39: aload_2
+      40: arraylength
+      41: if_icmpge     67
+      44: aload_1
+      45: aload         4
+      47: iload         5
+      49: invokedynamic #118,  0            // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;I)Ljava/lang/String;
+      54: aload_2
+      55: iload         5
+      57: aaload
+      58: invokevirtual #122                // Method java/security/KeyStore.setCertificateEntry:(Ljava/lang/String;Ljava/security/cert/Certificate;)V
+      61: iinc          5, 1
+      64: goto          37
+      67: return
+}

@@ -1,0 +1,1274 @@
+Compiled from "BitMatrix.java"
+public final class com.google.zxing.common.BitMatrix implements java.lang.Cloneable {
+  private int width;
+
+  private int height;
+
+  private int rowSize;
+
+  private int[] bits;
+
+  public com.google.zxing.common.BitMatrix(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: iload_1
+       3: invokespecial #1                  // Method "<init>":(II)V
+       6: return
+
+  public com.google.zxing.common.BitMatrix(int, int);
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: iload_1
+       5: iconst_1
+       6: if_icmplt     14
+       9: iload_2
+      10: iconst_1
+      11: if_icmpge     24
+      14: new           #3                  // class java/lang/IllegalArgumentException
+      17: dup
+      18: ldc           #4                  // String Both dimensions must be greater than 0
+      20: invokespecial #5                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      23: athrow
+      24: aload_0
+      25: iload_1
+      26: putfield      #6                  // Field width:I
+      29: aload_0
+      30: iload_2
+      31: putfield      #7                  // Field height:I
+      34: aload_0
+      35: iload_1
+      36: bipush        31
+      38: iadd
+      39: bipush        32
+      41: idiv
+      42: putfield      #8                  // Field rowSize:I
+      45: aload_0
+      46: aload_0
+      47: getfield      #8                  // Field rowSize:I
+      50: iload_2
+      51: imul
+      52: newarray       int
+      54: putfield      #9                  // Field bits:[I
+      57: return
+
+  private com.google.zxing.common.BitMatrix(int, int, int, int[]);
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iload_1
+       6: putfield      #6                  // Field width:I
+       9: aload_0
+      10: iload_2
+      11: putfield      #7                  // Field height:I
+      14: aload_0
+      15: iload_3
+      16: putfield      #8                  // Field rowSize:I
+      19: aload_0
+      20: aload         4
+      22: putfield      #9                  // Field bits:[I
+      25: return
+
+  public static com.google.zxing.common.BitMatrix parse(boolean[][]);
+    Code:
+       0: aload_0
+       1: arraylength
+       2: istore_1
+       3: aload_0
+       4: iconst_0
+       5: aaload
+       6: arraylength
+       7: istore_2
+       8: new           #10                 // class com/google/zxing/common/BitMatrix
+      11: dup
+      12: iload_2
+      13: iload_1
+      14: invokespecial #1                  // Method "<init>":(II)V
+      17: astore_3
+      18: iconst_0
+      19: istore        4
+      21: iload         4
+      23: iload_1
+      24: if_icmpge     70
+      27: aload_0
+      28: iload         4
+      30: aaload
+      31: astore        5
+      33: iconst_0
+      34: istore        6
+      36: iload         6
+      38: iload_2
+      39: if_icmpge     64
+      42: aload         5
+      44: iload         6
+      46: baload
+      47: ifeq          58
+      50: aload_3
+      51: iload         6
+      53: iload         4
+      55: invokevirtual #11                 // Method set:(II)V
+      58: iinc          6, 1
+      61: goto          36
+      64: iinc          4, 1
+      67: goto          21
+      70: aload_3
+      71: areturn
+
+  public static com.google.zxing.common.BitMatrix parse(java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: aload_0
+       1: ifnonnull     12
+       4: new           #3                  // class java/lang/IllegalArgumentException
+       7: dup
+       8: invokespecial #12                 // Method java/lang/IllegalArgumentException."<init>":()V
+      11: athrow
+      12: aload_0
+      13: invokevirtual #13                 // Method java/lang/String.length:()I
+      16: newarray       boolean
+      18: astore_3
+      19: iconst_0
+      20: istore        4
+      22: iconst_0
+      23: istore        5
+      25: iconst_m1
+      26: istore        6
+      28: iconst_0
+      29: istore        7
+      31: iconst_0
+      32: istore        8
+      34: iload         8
+      36: aload_0
+      37: invokevirtual #13                 // Method java/lang/String.length:()I
+      40: if_icmpge     213
+      43: aload_0
+      44: iload         8
+      46: invokevirtual #14                 // Method java/lang/String.charAt:(I)C
+      49: bipush        10
+      51: if_icmpeq     65
+      54: aload_0
+      55: iload         8
+      57: invokevirtual #14                 // Method java/lang/String.charAt:(I)C
+      60: bipush        13
+      62: if_icmpne     121
+      65: iload         4
+      67: iload         5
+      69: if_icmple     115
+      72: iload         6
+      74: iconst_m1
+      75: if_icmpne     88
+      78: iload         4
+      80: iload         5
+      82: isub
+      83: istore        6
+      85: goto          108
+      88: iload         4
+      90: iload         5
+      92: isub
+      93: iload         6
+      95: if_icmpeq     108
+      98: new           #3                  // class java/lang/IllegalArgumentException
+     101: dup
+     102: ldc           #15                 // String row lengths do not match
+     104: invokespecial #5                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     107: athrow
+     108: iload         4
+     110: istore        5
+     112: iinc          7, 1
+     115: iinc          8, 1
+     118: goto          34
+     121: aload_0
+     122: aload_1
+     123: iload         8
+     125: invokevirtual #16                 // Method java/lang/String.startsWith:(Ljava/lang/String;I)Z
+     128: ifeq          151
+     131: iload         8
+     133: aload_1
+     134: invokevirtual #13                 // Method java/lang/String.length:()I
+     137: iadd
+     138: istore        8
+     140: aload_3
+     141: iload         4
+     143: iconst_1
+     144: bastore
+     145: iinc          4, 1
+     148: goto          34
+     151: aload_0
+     152: aload_2
+     153: iload         8
+     155: invokevirtual #16                 // Method java/lang/String.startsWith:(Ljava/lang/String;I)Z
+     158: ifeq          181
+     161: iload         8
+     163: aload_2
+     164: invokevirtual #13                 // Method java/lang/String.length:()I
+     167: iadd
+     168: istore        8
+     170: aload_3
+     171: iload         4
+     173: iconst_0
+     174: bastore
+     175: iinc          4, 1
+     178: goto          34
+     181: new           #3                  // class java/lang/IllegalArgumentException
+     184: dup
+     185: new           #17                 // class java/lang/StringBuilder
+     188: dup
+     189: invokespecial #18                 // Method java/lang/StringBuilder."<init>":()V
+     192: ldc           #19                 // String illegal character encountered:
+     194: invokevirtual #20                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     197: aload_0
+     198: iload         8
+     200: invokevirtual #21                 // Method java/lang/String.substring:(I)Ljava/lang/String;
+     203: invokevirtual #20                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     206: invokevirtual #22                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     209: invokespecial #5                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     212: athrow
+     213: iload         4
+     215: iload         5
+     217: if_icmple     259
+     220: iload         6
+     222: iconst_m1
+     223: if_icmpne     236
+     226: iload         4
+     228: iload         5
+     230: isub
+     231: istore        6
+     233: goto          256
+     236: iload         4
+     238: iload         5
+     240: isub
+     241: iload         6
+     243: if_icmpeq     256
+     246: new           #3                  // class java/lang/IllegalArgumentException
+     249: dup
+     250: ldc           #15                 // String row lengths do not match
+     252: invokespecial #5                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     255: athrow
+     256: iinc          7, 1
+     259: new           #10                 // class com/google/zxing/common/BitMatrix
+     262: dup
+     263: iload         6
+     265: iload         7
+     267: invokespecial #1                  // Method "<init>":(II)V
+     270: astore        9
+     272: iconst_0
+     273: istore        10
+     275: iload         10
+     277: iload         4
+     279: if_icmpge     310
+     282: aload_3
+     283: iload         10
+     285: baload
+     286: ifeq          304
+     289: aload         9
+     291: iload         10
+     293: iload         6
+     295: irem
+     296: iload         10
+     298: iload         6
+     300: idiv
+     301: invokevirtual #11                 // Method set:(II)V
+     304: iinc          10, 1
+     307: goto          275
+     310: aload         9
+     312: areturn
+
+  public boolean get(int, int);
+    Code:
+       0: iload_2
+       1: aload_0
+       2: getfield      #8                  // Field rowSize:I
+       5: imul
+       6: iload_1
+       7: bipush        32
+       9: idiv
+      10: iadd
+      11: istore_3
+      12: aload_0
+      13: getfield      #9                  // Field bits:[I
+      16: iload_3
+      17: iaload
+      18: iload_1
+      19: bipush        31
+      21: iand
+      22: iushr
+      23: iconst_1
+      24: iand
+      25: ifeq          32
+      28: iconst_1
+      29: goto          33
+      32: iconst_0
+      33: ireturn
+
+  public void set(int, int);
+    Code:
+       0: iload_2
+       1: aload_0
+       2: getfield      #8                  // Field rowSize:I
+       5: imul
+       6: iload_1
+       7: bipush        32
+       9: idiv
+      10: iadd
+      11: istore_3
+      12: aload_0
+      13: getfield      #9                  // Field bits:[I
+      16: iload_3
+      17: dup2
+      18: iaload
+      19: iconst_1
+      20: iload_1
+      21: bipush        31
+      23: iand
+      24: ishl
+      25: ior
+      26: iastore
+      27: return
+
+  public void unset(int, int);
+    Code:
+       0: iload_2
+       1: aload_0
+       2: getfield      #8                  // Field rowSize:I
+       5: imul
+       6: iload_1
+       7: bipush        32
+       9: idiv
+      10: iadd
+      11: istore_3
+      12: aload_0
+      13: getfield      #9                  // Field bits:[I
+      16: iload_3
+      17: dup2
+      18: iaload
+      19: iconst_1
+      20: iload_1
+      21: bipush        31
+      23: iand
+      24: ishl
+      25: iconst_m1
+      26: ixor
+      27: iand
+      28: iastore
+      29: return
+
+  public void flip(int, int);
+    Code:
+       0: iload_2
+       1: aload_0
+       2: getfield      #8                  // Field rowSize:I
+       5: imul
+       6: iload_1
+       7: bipush        32
+       9: idiv
+      10: iadd
+      11: istore_3
+      12: aload_0
+      13: getfield      #9                  // Field bits:[I
+      16: iload_3
+      17: dup2
+      18: iaload
+      19: iconst_1
+      20: iload_1
+      21: bipush        31
+      23: iand
+      24: ishl
+      25: ixor
+      26: iastore
+      27: return
+
+  public void flip();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field bits:[I
+       4: arraylength
+       5: istore_1
+       6: iconst_0
+       7: istore_2
+       8: iload_2
+       9: iload_1
+      10: if_icmpge     33
+      13: aload_0
+      14: getfield      #9                  // Field bits:[I
+      17: iload_2
+      18: aload_0
+      19: getfield      #9                  // Field bits:[I
+      22: iload_2
+      23: iaload
+      24: iconst_m1
+      25: ixor
+      26: iastore
+      27: iinc          2, 1
+      30: goto          8
+      33: return
+
+  public void xor(com.google.zxing.common.BitMatrix);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field width:I
+       4: aload_1
+       5: getfield      #6                  // Field width:I
+       8: if_icmpne     33
+      11: aload_0
+      12: getfield      #7                  // Field height:I
+      15: aload_1
+      16: getfield      #7                  // Field height:I
+      19: if_icmpne     33
+      22: aload_0
+      23: getfield      #8                  // Field rowSize:I
+      26: aload_1
+      27: getfield      #8                  // Field rowSize:I
+      30: if_icmpeq     43
+      33: new           #3                  // class java/lang/IllegalArgumentException
+      36: dup
+      37: ldc           #23                 // String input matrix dimensions do not match
+      39: invokespecial #5                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      42: athrow
+      43: new           #24                 // class com/google/zxing/common/BitArray
+      46: dup
+      47: aload_0
+      48: getfield      #6                  // Field width:I
+      51: invokespecial #25                 // Method com/google/zxing/common/BitArray."<init>":(I)V
+      54: astore_2
+      55: iconst_0
+      56: istore_3
+      57: iload_3
+      58: aload_0
+      59: getfield      #7                  // Field height:I
+      62: if_icmpge     126
+      65: iload_3
+      66: aload_0
+      67: getfield      #8                  // Field rowSize:I
+      70: imul
+      71: istore        4
+      73: aload_1
+      74: iload_3
+      75: aload_2
+      76: invokevirtual #26                 // Method getRow:(ILcom/google/zxing/common/BitArray;)Lcom/google/zxing/common/BitArray;
+      79: invokevirtual #27                 // Method com/google/zxing/common/BitArray.getBitArray:()[I
+      82: astore        5
+      84: iconst_0
+      85: istore        6
+      87: iload         6
+      89: aload_0
+      90: getfield      #8                  // Field rowSize:I
+      93: if_icmpge     120
+      96: aload_0
+      97: getfield      #9                  // Field bits:[I
+     100: iload         4
+     102: iload         6
+     104: iadd
+     105: dup2
+     106: iaload
+     107: aload         5
+     109: iload         6
+     111: iaload
+     112: ixor
+     113: iastore
+     114: iinc          6, 1
+     117: goto          87
+     120: iinc          3, 1
+     123: goto          57
+     126: return
+
+  public void clear();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field bits:[I
+       4: arraylength
+       5: istore_1
+       6: iconst_0
+       7: istore_2
+       8: iload_2
+       9: iload_1
+      10: if_icmpge     26
+      13: aload_0
+      14: getfield      #9                  // Field bits:[I
+      17: iload_2
+      18: iconst_0
+      19: iastore
+      20: iinc          2, 1
+      23: goto          8
+      26: return
+
+  public void setRegion(int, int, int, int);
+    Code:
+       0: iload_2
+       1: iflt          8
+       4: iload_1
+       5: ifge          18
+       8: new           #3                  // class java/lang/IllegalArgumentException
+      11: dup
+      12: ldc           #28                 // String Left and top must be nonnegative
+      14: invokespecial #5                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      17: athrow
+      18: iload         4
+      20: iconst_1
+      21: if_icmplt     29
+      24: iload_3
+      25: iconst_1
+      26: if_icmpge     39
+      29: new           #3                  // class java/lang/IllegalArgumentException
+      32: dup
+      33: ldc           #29                 // String Height and width must be at least 1
+      35: invokespecial #5                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      38: athrow
+      39: iload_1
+      40: iload_3
+      41: iadd
+      42: istore        5
+      44: iload_2
+      45: iload         4
+      47: iadd
+      48: istore        6
+      50: iload         6
+      52: aload_0
+      53: getfield      #7                  // Field height:I
+      56: if_icmpgt     68
+      59: iload         5
+      61: aload_0
+      62: getfield      #6                  // Field width:I
+      65: if_icmple     78
+      68: new           #3                  // class java/lang/IllegalArgumentException
+      71: dup
+      72: ldc           #30                 // String The region must fit inside the matrix
+      74: invokespecial #5                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      77: athrow
+      78: iload_2
+      79: istore        7
+      81: iload         7
+      83: iload         6
+      85: if_icmpge     142
+      88: iload         7
+      90: aload_0
+      91: getfield      #8                  // Field rowSize:I
+      94: imul
+      95: istore        8
+      97: iload_1
+      98: istore        9
+     100: iload         9
+     102: iload         5
+     104: if_icmpge     136
+     107: aload_0
+     108: getfield      #9                  // Field bits:[I
+     111: iload         8
+     113: iload         9
+     115: bipush        32
+     117: idiv
+     118: iadd
+     119: dup2
+     120: iaload
+     121: iconst_1
+     122: iload         9
+     124: bipush        31
+     126: iand
+     127: ishl
+     128: ior
+     129: iastore
+     130: iinc          9, 1
+     133: goto          100
+     136: iinc          7, 1
+     139: goto          81
+     142: return
+
+  public com.google.zxing.common.BitArray getRow(int, com.google.zxing.common.BitArray);
+    Code:
+       0: aload_2
+       1: ifnull        15
+       4: aload_2
+       5: invokevirtual #31                 // Method com/google/zxing/common/BitArray.getSize:()I
+       8: aload_0
+       9: getfield      #6                  // Field width:I
+      12: if_icmpge     30
+      15: new           #24                 // class com/google/zxing/common/BitArray
+      18: dup
+      19: aload_0
+      20: getfield      #6                  // Field width:I
+      23: invokespecial #25                 // Method com/google/zxing/common/BitArray."<init>":(I)V
+      26: astore_2
+      27: goto          34
+      30: aload_2
+      31: invokevirtual #32                 // Method com/google/zxing/common/BitArray.clear:()V
+      34: iload_1
+      35: aload_0
+      36: getfield      #8                  // Field rowSize:I
+      39: imul
+      40: istore_3
+      41: iconst_0
+      42: istore        4
+      44: iload         4
+      46: aload_0
+      47: getfield      #8                  // Field rowSize:I
+      50: if_icmpge     77
+      53: aload_2
+      54: iload         4
+      56: bipush        32
+      58: imul
+      59: aload_0
+      60: getfield      #9                  // Field bits:[I
+      63: iload_3
+      64: iload         4
+      66: iadd
+      67: iaload
+      68: invokevirtual #33                 // Method com/google/zxing/common/BitArray.setBulk:(II)V
+      71: iinc          4, 1
+      74: goto          44
+      77: aload_2
+      78: areturn
+
+  public void setRow(int, com.google.zxing.common.BitArray);
+    Code:
+       0: aload_2
+       1: invokevirtual #27                 // Method com/google/zxing/common/BitArray.getBitArray:()[I
+       4: iconst_0
+       5: aload_0
+       6: getfield      #9                  // Field bits:[I
+       9: iload_1
+      10: aload_0
+      11: getfield      #8                  // Field rowSize:I
+      14: imul
+      15: aload_0
+      16: getfield      #8                  // Field rowSize:I
+      19: invokestatic  #34                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+      22: return
+
+  public void rotate(int);
+    Code:
+       0: iload_1
+       1: sipush        360
+       4: irem
+       5: lookupswitch  { // 4
+                     0: 48
+                    90: 49
+                   180: 54
+                   270: 59
+               default: 68
+          }
+      48: return
+      49: aload_0
+      50: invokevirtual #35                 // Method rotate90:()V
+      53: return
+      54: aload_0
+      55: invokevirtual #36                 // Method rotate180:()V
+      58: return
+      59: aload_0
+      60: invokevirtual #35                 // Method rotate90:()V
+      63: aload_0
+      64: invokevirtual #36                 // Method rotate180:()V
+      67: return
+      68: new           #3                  // class java/lang/IllegalArgumentException
+      71: dup
+      72: ldc           #37                 // String degrees must be a multiple of 0, 90, 180, or 270
+      74: invokespecial #5                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      77: athrow
+
+  public void rotate180();
+    Code:
+       0: new           #24                 // class com/google/zxing/common/BitArray
+       3: dup
+       4: aload_0
+       5: getfield      #6                  // Field width:I
+       8: invokespecial #25                 // Method com/google/zxing/common/BitArray."<init>":(I)V
+      11: astore_1
+      12: new           #24                 // class com/google/zxing/common/BitArray
+      15: dup
+      16: aload_0
+      17: getfield      #6                  // Field width:I
+      20: invokespecial #25                 // Method com/google/zxing/common/BitArray."<init>":(I)V
+      23: astore_2
+      24: aload_0
+      25: getfield      #7                  // Field height:I
+      28: iconst_1
+      29: iadd
+      30: iconst_2
+      31: idiv
+      32: istore_3
+      33: iconst_0
+      34: istore        4
+      36: iload         4
+      38: iload_3
+      39: if_icmpge     97
+      42: aload_0
+      43: iload         4
+      45: aload_1
+      46: invokevirtual #26                 // Method getRow:(ILcom/google/zxing/common/BitArray;)Lcom/google/zxing/common/BitArray;
+      49: astore_1
+      50: aload_0
+      51: getfield      #7                  // Field height:I
+      54: iconst_1
+      55: isub
+      56: iload         4
+      58: isub
+      59: istore        5
+      61: aload_0
+      62: iload         5
+      64: aload_2
+      65: invokevirtual #26                 // Method getRow:(ILcom/google/zxing/common/BitArray;)Lcom/google/zxing/common/BitArray;
+      68: astore_2
+      69: aload_1
+      70: invokevirtual #38                 // Method com/google/zxing/common/BitArray.reverse:()V
+      73: aload_2
+      74: invokevirtual #38                 // Method com/google/zxing/common/BitArray.reverse:()V
+      77: aload_0
+      78: iload         4
+      80: aload_2
+      81: invokevirtual #39                 // Method setRow:(ILcom/google/zxing/common/BitArray;)V
+      84: aload_0
+      85: iload         5
+      87: aload_1
+      88: invokevirtual #39                 // Method setRow:(ILcom/google/zxing/common/BitArray;)V
+      91: iinc          4, 1
+      94: goto          36
+      97: return
+
+  public void rotate90();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field height:I
+       4: istore_1
+       5: aload_0
+       6: getfield      #6                  // Field width:I
+       9: istore_2
+      10: iload_1
+      11: bipush        31
+      13: iadd
+      14: bipush        32
+      16: idiv
+      17: istore_3
+      18: iload_3
+      19: iload_2
+      20: imul
+      21: newarray       int
+      23: astore        4
+      25: iconst_0
+      26: istore        5
+      28: iload         5
+      30: aload_0
+      31: getfield      #7                  // Field height:I
+      34: if_icmpge     125
+      37: iconst_0
+      38: istore        6
+      40: iload         6
+      42: aload_0
+      43: getfield      #6                  // Field width:I
+      46: if_icmpge     119
+      49: iload         5
+      51: aload_0
+      52: getfield      #8                  // Field rowSize:I
+      55: imul
+      56: iload         6
+      58: bipush        32
+      60: idiv
+      61: iadd
+      62: istore        7
+      64: aload_0
+      65: getfield      #9                  // Field bits:[I
+      68: iload         7
+      70: iaload
+      71: iload         6
+      73: bipush        31
+      75: iand
+      76: iushr
+      77: iconst_1
+      78: iand
+      79: ifeq          113
+      82: iload_2
+      83: iconst_1
+      84: isub
+      85: iload         6
+      87: isub
+      88: iload_3
+      89: imul
+      90: iload         5
+      92: bipush        32
+      94: idiv
+      95: iadd
+      96: istore        8
+      98: aload         4
+     100: iload         8
+     102: dup2
+     103: iaload
+     104: iconst_1
+     105: iload         5
+     107: bipush        31
+     109: iand
+     110: ishl
+     111: ior
+     112: iastore
+     113: iinc          6, 1
+     116: goto          40
+     119: iinc          5, 1
+     122: goto          28
+     125: aload_0
+     126: iload_1
+     127: putfield      #6                  // Field width:I
+     130: aload_0
+     131: iload_2
+     132: putfield      #7                  // Field height:I
+     135: aload_0
+     136: iload_3
+     137: putfield      #8                  // Field rowSize:I
+     140: aload_0
+     141: aload         4
+     143: putfield      #9                  // Field bits:[I
+     146: return
+
+  public int[] getEnclosingRectangle();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field width:I
+       4: istore_1
+       5: aload_0
+       6: getfield      #7                  // Field height:I
+       9: istore_2
+      10: iconst_m1
+      11: istore_3
+      12: iconst_m1
+      13: istore        4
+      15: iconst_0
+      16: istore        5
+      18: iload         5
+      20: aload_0
+      21: getfield      #7                  // Field height:I
+      24: if_icmpge     194
+      27: iconst_0
+      28: istore        6
+      30: iload         6
+      32: aload_0
+      33: getfield      #8                  // Field rowSize:I
+      36: if_icmpge     188
+      39: aload_0
+      40: getfield      #9                  // Field bits:[I
+      43: iload         5
+      45: aload_0
+      46: getfield      #8                  // Field rowSize:I
+      49: imul
+      50: iload         6
+      52: iadd
+      53: iaload
+      54: istore        7
+      56: iload         7
+      58: ifeq          182
+      61: iload         5
+      63: iload_2
+      64: if_icmpge     70
+      67: iload         5
+      69: istore_2
+      70: iload         5
+      72: iload         4
+      74: if_icmple     81
+      77: iload         5
+      79: istore        4
+      81: iload         6
+      83: bipush        32
+      85: imul
+      86: iload_1
+      87: if_icmpge     131
+      90: iconst_0
+      91: istore        8
+      93: iload         7
+      95: bipush        31
+      97: iload         8
+      99: isub
+     100: ishl
+     101: ifne          110
+     104: iinc          8, 1
+     107: goto          93
+     110: iload         6
+     112: bipush        32
+     114: imul
+     115: iload         8
+     117: iadd
+     118: iload_1
+     119: if_icmpge     131
+     122: iload         6
+     124: bipush        32
+     126: imul
+     127: iload         8
+     129: iadd
+     130: istore_1
+     131: iload         6
+     133: bipush        32
+     135: imul
+     136: bipush        31
+     138: iadd
+     139: iload_3
+     140: if_icmple     182
+     143: bipush        31
+     145: istore        8
+     147: iload         7
+     149: iload         8
+     151: iushr
+     152: ifne          161
+     155: iinc          8, -1
+     158: goto          147
+     161: iload         6
+     163: bipush        32
+     165: imul
+     166: iload         8
+     168: iadd
+     169: iload_3
+     170: if_icmple     182
+     173: iload         6
+     175: bipush        32
+     177: imul
+     178: iload         8
+     180: iadd
+     181: istore_3
+     182: iinc          6, 1
+     185: goto          30
+     188: iinc          5, 1
+     191: goto          18
+     194: iload_3
+     195: iload_1
+     196: if_icmplt     205
+     199: iload         4
+     201: iload_2
+     202: if_icmpge     207
+     205: aconst_null
+     206: areturn
+     207: iconst_4
+     208: newarray       int
+     210: dup
+     211: iconst_0
+     212: iload_1
+     213: iastore
+     214: dup
+     215: iconst_1
+     216: iload_2
+     217: iastore
+     218: dup
+     219: iconst_2
+     220: iload_3
+     221: iload_1
+     222: isub
+     223: iconst_1
+     224: iadd
+     225: iastore
+     226: dup
+     227: iconst_3
+     228: iload         4
+     230: iload_2
+     231: isub
+     232: iconst_1
+     233: iadd
+     234: iastore
+     235: areturn
+
+  public int[] getTopLeftOnBit();
+    Code:
+       0: iconst_0
+       1: istore_1
+       2: iload_1
+       3: aload_0
+       4: getfield      #9                  // Field bits:[I
+       7: arraylength
+       8: if_icmpge     26
+      11: aload_0
+      12: getfield      #9                  // Field bits:[I
+      15: iload_1
+      16: iaload
+      17: ifne          26
+      20: iinc          1, 1
+      23: goto          2
+      26: iload_1
+      27: aload_0
+      28: getfield      #9                  // Field bits:[I
+      31: arraylength
+      32: if_icmpne     37
+      35: aconst_null
+      36: areturn
+      37: iload_1
+      38: aload_0
+      39: getfield      #8                  // Field rowSize:I
+      42: idiv
+      43: istore_2
+      44: iload_1
+      45: aload_0
+      46: getfield      #8                  // Field rowSize:I
+      49: irem
+      50: bipush        32
+      52: imul
+      53: istore_3
+      54: aload_0
+      55: getfield      #9                  // Field bits:[I
+      58: iload_1
+      59: iaload
+      60: istore        4
+      62: iconst_0
+      63: istore        5
+      65: iload         4
+      67: bipush        31
+      69: iload         5
+      71: isub
+      72: ishl
+      73: ifne          82
+      76: iinc          5, 1
+      79: goto          65
+      82: iload_3
+      83: iload         5
+      85: iadd
+      86: istore_3
+      87: iconst_2
+      88: newarray       int
+      90: dup
+      91: iconst_0
+      92: iload_3
+      93: iastore
+      94: dup
+      95: iconst_1
+      96: iload_2
+      97: iastore
+      98: areturn
+
+  public int[] getBottomRightOnBit();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field bits:[I
+       4: arraylength
+       5: iconst_1
+       6: isub
+       7: istore_1
+       8: iload_1
+       9: iflt          27
+      12: aload_0
+      13: getfield      #9                  // Field bits:[I
+      16: iload_1
+      17: iaload
+      18: ifne          27
+      21: iinc          1, -1
+      24: goto          8
+      27: iload_1
+      28: ifge          33
+      31: aconst_null
+      32: areturn
+      33: iload_1
+      34: aload_0
+      35: getfield      #8                  // Field rowSize:I
+      38: idiv
+      39: istore_2
+      40: iload_1
+      41: aload_0
+      42: getfield      #8                  // Field rowSize:I
+      45: irem
+      46: bipush        32
+      48: imul
+      49: istore_3
+      50: aload_0
+      51: getfield      #9                  // Field bits:[I
+      54: iload_1
+      55: iaload
+      56: istore        4
+      58: bipush        31
+      60: istore        5
+      62: iload         4
+      64: iload         5
+      66: iushr
+      67: ifne          76
+      70: iinc          5, -1
+      73: goto          62
+      76: iload_3
+      77: iload         5
+      79: iadd
+      80: istore_3
+      81: iconst_2
+      82: newarray       int
+      84: dup
+      85: iconst_0
+      86: iload_3
+      87: iastore
+      88: dup
+      89: iconst_1
+      90: iload_2
+      91: iastore
+      92: areturn
+
+  public int getWidth();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field width:I
+       4: ireturn
+
+  public int getHeight();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field height:I
+       4: ireturn
+
+  public int getRowSize();
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field rowSize:I
+       4: ireturn
+
+  public boolean equals(java.lang.Object);
+    Code:
+       0: aload_1
+       1: instanceof    #10                 // class com/google/zxing/common/BitMatrix
+       4: ifne          9
+       7: iconst_0
+       8: ireturn
+       9: aload_1
+      10: checkcast     #10                 // class com/google/zxing/common/BitMatrix
+      13: astore_2
+      14: aload_0
+      15: getfield      #6                  // Field width:I
+      18: aload_2
+      19: getfield      #6                  // Field width:I
+      22: if_icmpne     65
+      25: aload_0
+      26: getfield      #7                  // Field height:I
+      29: aload_2
+      30: getfield      #7                  // Field height:I
+      33: if_icmpne     65
+      36: aload_0
+      37: getfield      #8                  // Field rowSize:I
+      40: aload_2
+      41: getfield      #8                  // Field rowSize:I
+      44: if_icmpne     65
+      47: aload_0
+      48: getfield      #9                  // Field bits:[I
+      51: aload_2
+      52: getfield      #9                  // Field bits:[I
+      55: invokestatic  #40                 // Method java/util/Arrays.equals:([I[I)Z
+      58: ifeq          65
+      61: iconst_1
+      62: goto          66
+      65: iconst_0
+      66: ireturn
+
+  public int hashCode();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field width:I
+       4: istore_1
+       5: bipush        31
+       7: iload_1
+       8: imul
+       9: aload_0
+      10: getfield      #6                  // Field width:I
+      13: iadd
+      14: istore_1
+      15: bipush        31
+      17: iload_1
+      18: imul
+      19: aload_0
+      20: getfield      #7                  // Field height:I
+      23: iadd
+      24: istore_1
+      25: bipush        31
+      27: iload_1
+      28: imul
+      29: aload_0
+      30: getfield      #8                  // Field rowSize:I
+      33: iadd
+      34: istore_1
+      35: bipush        31
+      37: iload_1
+      38: imul
+      39: aload_0
+      40: getfield      #9                  // Field bits:[I
+      43: invokestatic  #41                 // Method java/util/Arrays.hashCode:([I)I
+      46: iadd
+      47: istore_1
+      48: iload_1
+      49: ireturn
+
+  public java.lang.String toString();
+    Code:
+       0: aload_0
+       1: ldc           #42                 // String X
+       3: ldc           #43                 // String
+       5: invokevirtual #44                 // Method toString:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+       8: areturn
+
+  public java.lang.String toString(java.lang.String, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: ldc           #45                 // String \n
+       5: invokespecial #46                 // Method buildToString:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+       8: areturn
+
+  public java.lang.String toString(java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: aload_3
+       4: invokespecial #46                 // Method buildToString:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+       7: areturn
+
+  private java.lang.String buildToString(java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: new           #17                 // class java/lang/StringBuilder
+       3: dup
+       4: aload_0
+       5: getfield      #7                  // Field height:I
+       8: aload_0
+       9: getfield      #6                  // Field width:I
+      12: iconst_1
+      13: iadd
+      14: imul
+      15: invokespecial #47                 // Method java/lang/StringBuilder."<init>":(I)V
+      18: astore        4
+      20: iconst_0
+      21: istore        5
+      23: iload         5
+      25: aload_0
+      26: getfield      #7                  // Field height:I
+      29: if_icmpge     85
+      32: iconst_0
+      33: istore        6
+      35: iload         6
+      37: aload_0
+      38: getfield      #6                  // Field width:I
+      41: if_icmpge     72
+      44: aload         4
+      46: aload_0
+      47: iload         6
+      49: iload         5
+      51: invokevirtual #48                 // Method get:(II)Z
+      54: ifeq          61
+      57: aload_1
+      58: goto          62
+      61: aload_2
+      62: invokevirtual #20                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      65: pop
+      66: iinc          6, 1
+      69: goto          35
+      72: aload         4
+      74: aload_3
+      75: invokevirtual #20                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      78: pop
+      79: iinc          5, 1
+      82: goto          23
+      85: aload         4
+      87: invokevirtual #22                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      90: areturn
+
+  public com.google.zxing.common.BitMatrix clone();
+    Code:
+       0: new           #10                 // class com/google/zxing/common/BitMatrix
+       3: dup
+       4: aload_0
+       5: getfield      #6                  // Field width:I
+       8: aload_0
+       9: getfield      #7                  // Field height:I
+      12: aload_0
+      13: getfield      #8                  // Field rowSize:I
+      16: aload_0
+      17: getfield      #9                  // Field bits:[I
+      20: invokevirtual #49                 // Method "[I".clone:()Ljava/lang/Object;
+      23: checkcast     #50                 // class "[I"
+      26: invokespecial #51                 // Method "<init>":(III[I)V
+      29: areturn
+
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+    Code:
+       0: aload_0
+       1: invokevirtual #52                 // Method clone:()Lcom/google/zxing/common/BitMatrix;
+       4: areturn
+}

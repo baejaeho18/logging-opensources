@@ -1,0 +1,188 @@
+Compiled from "MustacheView.java"
+public class org.springframework.boot.web.reactive.result.view.MustacheView extends org.springframework.web.reactive.result.view.AbstractUrlBasedView {
+  private com.samskivert.mustache.Mustache$Compiler compiler;
+
+  private java.lang.String charset;
+
+  public org.springframework.boot.web.reactive.result.view.MustacheView();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method org/springframework/web/reactive/result/view/AbstractUrlBasedView."<init>":()V
+       4: return
+
+  public void setCompiler(com.samskivert.mustache.Mustache$Compiler);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #7                  // Field compiler:Lcom/samskivert/mustache/Mustache$Compiler;
+       5: return
+
+  public void setCharset(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #13                 // Field charset:Ljava/lang/String;
+       5: return
+
+  public boolean checkResourceExists(java.util.Locale) throws java.lang.Exception;
+    Code:
+       0: aload_0
+       1: invokevirtual #17                 // Method resolveResource:()Lorg/springframework/core/io/Resource;
+       4: ifnull        11
+       7: iconst_1
+       8: goto          12
+      11: iconst_0
+      12: ireturn
+
+  protected reactor.core.publisher.Mono<java.lang.Void> renderInternal(java.util.Map<java.lang.String, java.lang.Object>, org.springframework.http.MediaType, org.springframework.web.server.ServerWebExchange);
+    Code:
+       0: aload_0
+       1: invokevirtual #17                 // Method resolveResource:()Lorg/springframework/core/io/Resource;
+       4: astore        4
+       6: aload         4
+       8: ifnonnull     31
+      11: new           #21                 // class java/lang/IllegalStateException
+      14: dup
+      15: aload_0
+      16: invokevirtual #23                 // Method getUrl:()Ljava/lang/String;
+      19: invokedynamic #27,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      24: invokespecial #31                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      27: invokestatic  #34                 // Method reactor/core/publisher/Mono.error:(Ljava/lang/Throwable;)Lreactor/core/publisher/Mono;
+      30: areturn
+      31: aload_3
+      32: invokeinterface #40,  1           // InterfaceMethod org/springframework/web/server/ServerWebExchange.getResponse:()Lorg/springframework/http/server/reactive/ServerHttpResponse;
+      37: invokeinterface #46,  1           // InterfaceMethod org/springframework/http/server/reactive/ServerHttpResponse.bufferFactory:()Lorg/springframework/core/io/buffer/DataBufferFactory;
+      42: sipush        256
+      45: invokeinterface #54,  2           // InterfaceMethod org/springframework/core/io/buffer/DataBufferFactory.allocateBuffer:(I)Lorg/springframework/core/io/buffer/DataBuffer;
+      50: astore        5
+      52: aload_0
+      53: aload         4
+      55: invokevirtual #60                 // Method getReader:(Lorg/springframework/core/io/Resource;)Ljava/io/Reader;
+      58: astore        6
+      60: aload_0
+      61: getfield      #7                  // Field compiler:Lcom/samskivert/mustache/Mustache$Compiler;
+      64: aload         6
+      66: invokevirtual #64                 // Method com/samskivert/mustache/Mustache$Compiler.compile:(Ljava/io/Reader;)Lcom/samskivert/mustache/Template;
+      69: astore        7
+      71: aload_0
+      72: aload_2
+      73: invokevirtual #70                 // Method getCharset:(Lorg/springframework/http/MediaType;)Ljava/util/Optional;
+      76: aload_0
+      77: invokedynamic #74,  0             // InvokeDynamic #1:get:(Lorg/springframework/boot/web/reactive/result/view/MustacheView;)Ljava/util/function/Supplier;
+      82: invokevirtual #78                 // Method java/util/Optional.orElseGet:(Ljava/util/function/Supplier;)Ljava/lang/Object;
+      85: checkcast     #84                 // class java/nio/charset/Charset
+      88: astore        8
+      90: new           #86                 // class java/io/OutputStreamWriter
+      93: dup
+      94: aload         5
+      96: invokeinterface #88,  1           // InterfaceMethod org/springframework/core/io/buffer/DataBuffer.asOutputStream:()Ljava/io/OutputStream;
+     101: aload         8
+     103: invokespecial #94                 // Method java/io/OutputStreamWriter."<init>":(Ljava/io/OutputStream;Ljava/nio/charset/Charset;)V
+     106: astore        9
+     108: aload         7
+     110: aload_1
+     111: aload         9
+     113: invokevirtual #97                 // Method com/samskivert/mustache/Template.execute:(Ljava/lang/Object;Ljava/io/Writer;)V
+     116: aload         9
+     118: invokevirtual #103                // Method java/io/Writer.flush:()V
+     121: aload         9
+     123: invokevirtual #108                // Method java/io/Writer.close:()V
+     126: goto          151
+     129: astore        10
+     131: aload         9
+     133: invokevirtual #108                // Method java/io/Writer.close:()V
+     136: goto          148
+     139: astore        11
+     141: aload         10
+     143: aload         11
+     145: invokevirtual #113                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     148: aload         10
+     150: athrow
+     151: aload         6
+     153: ifnull        191
+     156: aload         6
+     158: invokevirtual #117                // Method java/io/Reader.close:()V
+     161: goto          191
+     164: astore        7
+     166: aload         6
+     168: ifnull        188
+     171: aload         6
+     173: invokevirtual #117                // Method java/io/Reader.close:()V
+     176: goto          188
+     179: astore        8
+     181: aload         7
+     183: aload         8
+     185: invokevirtual #113                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     188: aload         7
+     190: athrow
+     191: goto          208
+     194: astore        6
+     196: aload         5
+     198: invokestatic  #122                // Method org/springframework/core/io/buffer/DataBufferUtils.release:(Lorg/springframework/core/io/buffer/DataBuffer;)Z
+     201: pop
+     202: aload         6
+     204: invokestatic  #34                 // Method reactor/core/publisher/Mono.error:(Ljava/lang/Throwable;)Lreactor/core/publisher/Mono;
+     207: areturn
+     208: aload_3
+     209: invokeinterface #40,  1           // InterfaceMethod org/springframework/web/server/ServerWebExchange.getResponse:()Lorg/springframework/http/server/reactive/ServerHttpResponse;
+     214: aload         5
+     216: invokestatic  #128                // Method reactor/core/publisher/Flux.just:(Ljava/lang/Object;)Lreactor/core/publisher/Flux;
+     219: invokeinterface #134,  2          // InterfaceMethod org/springframework/http/server/reactive/ServerHttpResponse.writeWith:(Lorg/reactivestreams/Publisher;)Lreactor/core/publisher/Mono;
+     224: areturn
+    Exception table:
+       from    to  target type
+         108   121   129   Class java/lang/Throwable
+         131   136   139   Class java/lang/Throwable
+          60   151   164   Class java/lang/Throwable
+         171   176   179   Class java/lang/Throwable
+          52   191   194   Class java/lang/Exception
+
+  private org.springframework.core.io.Resource resolveResource();
+    Code:
+       0: aload_0
+       1: invokevirtual #138                // Method getApplicationContext:()Lorg/springframework/context/ApplicationContext;
+       4: aload_0
+       5: invokevirtual #23                 // Method getUrl:()Ljava/lang/String;
+       8: invokeinterface #142,  2          // InterfaceMethod org/springframework/context/ApplicationContext.getResource:(Ljava/lang/String;)Lorg/springframework/core/io/Resource;
+      13: astore_1
+      14: aload_1
+      15: ifnull        27
+      18: aload_1
+      19: invokeinterface #148,  1          // InterfaceMethod org/springframework/core/io/Resource.exists:()Z
+      24: ifne          29
+      27: aconst_null
+      28: areturn
+      29: aload_1
+      30: areturn
+
+  private java.io.Reader getReader(org.springframework.core.io.Resource) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field charset:Ljava/lang/String;
+       4: ifnull        25
+       7: new           #154                // class java/io/InputStreamReader
+      10: dup
+      11: aload_1
+      12: invokeinterface #156,  1          // InterfaceMethod org/springframework/core/io/Resource.getInputStream:()Ljava/io/InputStream;
+      17: aload_0
+      18: getfield      #13                 // Field charset:Ljava/lang/String;
+      21: invokespecial #160                // Method java/io/InputStreamReader."<init>":(Ljava/io/InputStream;Ljava/lang/String;)V
+      24: areturn
+      25: new           #154                // class java/io/InputStreamReader
+      28: dup
+      29: aload_1
+      30: invokeinterface #156,  1          // InterfaceMethod org/springframework/core/io/Resource.getInputStream:()Ljava/io/InputStream;
+      35: invokespecial #163                // Method java/io/InputStreamReader."<init>":(Ljava/io/InputStream;)V
+      38: areturn
+
+  private java.util.Optional<java.nio.charset.Charset> getCharset(org.springframework.http.MediaType);
+    Code:
+       0: aload_1
+       1: ifnull        11
+       4: aload_1
+       5: invokevirtual #166                // Method org/springframework/http/MediaType.getCharset:()Ljava/nio/charset/Charset;
+       8: goto          12
+      11: aconst_null
+      12: invokestatic  #171                // Method java/util/Optional.ofNullable:(Ljava/lang/Object;)Ljava/util/Optional;
+      15: areturn
+}

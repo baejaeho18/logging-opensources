@@ -1,0 +1,164 @@
+Compiled from "UndertowServletWebServerFactory.java"
+class org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory$SuppliedSameSiteCookieHandler implements io.undertow.server.HttpHandler {
+  private final io.undertow.server.HttpHandler next;
+
+  private final java.util.List<org.springframework.boot.web.servlet.server.CookieSameSiteSupplier> suppliers;
+
+  org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory$SuppliedSameSiteCookieHandler(io.undertow.server.HttpHandler, java.util.List<org.springframework.boot.web.servlet.server.CookieSameSiteSupplier>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #7                  // Field next:Lio/undertow/server/HttpHandler;
+       9: aload_0
+      10: aload_2
+      11: putfield      #13                 // Field suppliers:Ljava/util/List;
+      14: return
+
+  public void handleRequest(io.undertow.server.HttpServerExchange) throws java.lang.Exception;
+    Code:
+       0: aload_1
+       1: aload_0
+       2: invokedynamic #17,  0             // InvokeDynamic #0:beforeCommit:(Lorg/springframework/boot/web/embedded/undertow/UndertowServletWebServerFactory$SuppliedSameSiteCookieHandler;)Lio/undertow/server/ResponseCommitListener;
+       7: invokevirtual #21                 // Method io/undertow/server/HttpServerExchange.addResponseCommitListener:(Lio/undertow/server/ResponseCommitListener;)V
+      10: aload_0
+      11: getfield      #7                  // Field next:Lio/undertow/server/HttpHandler;
+      14: aload_1
+      15: invokeinterface #27,  2           // InterfaceMethod io/undertow/server/HttpHandler.handleRequest:(Lio/undertow/server/HttpServerExchange;)V
+      20: return
+
+  private void beforeCommit(io.undertow.server.HttpServerExchange);
+    Code:
+       0: aload_1
+       1: invokevirtual #33                 // Method io/undertow/server/HttpServerExchange.responseCookies:()Ljava/lang/Iterable;
+       4: invokeinterface #37,  1           // InterfaceMethod java/lang/Iterable.iterator:()Ljava/util/Iterator;
+       9: astore_2
+      10: aload_2
+      11: invokeinterface #43,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      16: ifeq          60
+      19: aload_2
+      20: invokeinterface #49,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      25: checkcast     #52                 // class io/undertow/server/handlers/Cookie
+      28: astore_3
+      29: aload_0
+      30: aload_0
+      31: aload_3
+      32: invokevirtual #54                 // Method asServletCookie:(Lio/undertow/server/handlers/Cookie;)Ljakarta/servlet/http/Cookie;
+      35: invokevirtual #58                 // Method getSameSite:(Ljakarta/servlet/http/Cookie;)Lorg/springframework/boot/web/server/Cookie$SameSite;
+      38: astore        4
+      40: aload         4
+      42: ifnull        57
+      45: aload_3
+      46: aload         4
+      48: invokevirtual #62                 // Method org/springframework/boot/web/server/Cookie$SameSite.attributeValue:()Ljava/lang/String;
+      51: invokeinterface #68,  2           // InterfaceMethod io/undertow/server/handlers/Cookie.setSameSiteMode:(Ljava/lang/String;)Lio/undertow/server/handlers/Cookie;
+      56: pop
+      57: goto          10
+      60: return
+
+  private jakarta.servlet.http.Cookie asServletCookie(io.undertow.server.handlers.Cookie);
+    Code:
+       0: invokestatic  #72                 // Method org/springframework/boot/context/properties/PropertyMapper.get:()Lorg/springframework/boot/context/properties/PropertyMapper;
+       3: invokevirtual #78                 // Method org/springframework/boot/context/properties/PropertyMapper.alwaysApplyingWhenNonNull:()Lorg/springframework/boot/context/properties/PropertyMapper;
+       6: astore_2
+       7: new           #81                 // class jakarta/servlet/http/Cookie
+      10: dup
+      11: aload_1
+      12: invokeinterface #83,  1           // InterfaceMethod io/undertow/server/handlers/Cookie.getName:()Ljava/lang/String;
+      17: aload_1
+      18: invokeinterface #86,  1           // InterfaceMethod io/undertow/server/handlers/Cookie.getValue:()Ljava/lang/String;
+      23: invokespecial #89                 // Method jakarta/servlet/http/Cookie."<init>":(Ljava/lang/String;Ljava/lang/String;)V
+      26: astore_3
+      27: aload_2
+      28: aload_1
+      29: dup
+      30: invokestatic  #92                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+      33: pop
+      34: invokedynamic #98,  0             // InvokeDynamic #1:get:(Lio/undertow/server/handlers/Cookie;)Ljava/util/function/Supplier;
+      39: invokevirtual #101                // Method org/springframework/boot/context/properties/PropertyMapper.from:(Ljava/util/function/Supplier;)Lorg/springframework/boot/context/properties/PropertyMapper$Source;
+      42: aload_3
+      43: dup
+      44: invokestatic  #92                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+      47: pop
+      48: invokedynamic #105,  0            // InvokeDynamic #2:accept:(Ljakarta/servlet/http/Cookie;)Ljava/util/function/Consumer;
+      53: invokevirtual #109                // Method org/springframework/boot/context/properties/PropertyMapper$Source.to:(Ljava/util/function/Consumer;)V
+      56: aload_2
+      57: aload_1
+      58: dup
+      59: invokestatic  #92                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+      62: pop
+      63: invokedynamic #115,  0            // InvokeDynamic #3:get:(Lio/undertow/server/handlers/Cookie;)Ljava/util/function/Supplier;
+      68: invokevirtual #101                // Method org/springframework/boot/context/properties/PropertyMapper.from:(Ljava/util/function/Supplier;)Lorg/springframework/boot/context/properties/PropertyMapper$Source;
+      71: aload_3
+      72: dup
+      73: invokestatic  #92                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+      76: pop
+      77: invokedynamic #116,  0            // InvokeDynamic #4:accept:(Ljakarta/servlet/http/Cookie;)Ljava/util/function/Consumer;
+      82: invokevirtual #109                // Method org/springframework/boot/context/properties/PropertyMapper$Source.to:(Ljava/util/function/Consumer;)V
+      85: aload_2
+      86: aload_1
+      87: dup
+      88: invokestatic  #92                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+      91: pop
+      92: invokedynamic #117,  0            // InvokeDynamic #5:get:(Lio/undertow/server/handlers/Cookie;)Ljava/util/function/Supplier;
+      97: invokevirtual #101                // Method org/springframework/boot/context/properties/PropertyMapper.from:(Ljava/util/function/Supplier;)Lorg/springframework/boot/context/properties/PropertyMapper$Source;
+     100: aload_3
+     101: dup
+     102: invokestatic  #92                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+     105: pop
+     106: invokedynamic #118,  0            // InvokeDynamic #6:accept:(Ljakarta/servlet/http/Cookie;)Ljava/util/function/Consumer;
+     111: invokevirtual #109                // Method org/springframework/boot/context/properties/PropertyMapper$Source.to:(Ljava/util/function/Consumer;)V
+     114: aload_2
+     115: aload_1
+     116: dup
+     117: invokestatic  #92                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+     120: pop
+     121: invokedynamic #119,  0            // InvokeDynamic #7:get:(Lio/undertow/server/handlers/Cookie;)Ljava/util/function/Supplier;
+     126: invokevirtual #101                // Method org/springframework/boot/context/properties/PropertyMapper.from:(Ljava/util/function/Supplier;)Lorg/springframework/boot/context/properties/PropertyMapper$Source;
+     129: aload_3
+     130: dup
+     131: invokestatic  #92                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+     134: pop
+     135: invokedynamic #120,  0            // InvokeDynamic #8:accept:(Ljakarta/servlet/http/Cookie;)Ljava/util/function/Consumer;
+     140: invokevirtual #109                // Method org/springframework/boot/context/properties/PropertyMapper$Source.to:(Ljava/util/function/Consumer;)V
+     143: aload_3
+     144: aload_1
+     145: invokeinterface #121,  1          // InterfaceMethod io/undertow/server/handlers/Cookie.isSecure:()Z
+     150: invokevirtual #124                // Method jakarta/servlet/http/Cookie.setSecure:(Z)V
+     153: aload_3
+     154: aload_1
+     155: invokeinterface #128,  1          // InterfaceMethod io/undertow/server/handlers/Cookie.getVersion:()I
+     160: invokevirtual #132                // Method jakarta/servlet/http/Cookie.setVersion:(I)V
+     163: aload_3
+     164: aload_1
+     165: invokeinterface #136,  1          // InterfaceMethod io/undertow/server/handlers/Cookie.isHttpOnly:()Z
+     170: invokevirtual #139                // Method jakarta/servlet/http/Cookie.setHttpOnly:(Z)V
+     173: aload_3
+     174: areturn
+
+  private org.springframework.boot.web.server.Cookie$SameSite getSameSite(jakarta.servlet.http.Cookie);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field suppliers:Ljava/util/List;
+       4: invokeinterface #142,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       9: astore_2
+      10: aload_2
+      11: invokeinterface #43,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      16: ifeq          49
+      19: aload_2
+      20: invokeinterface #49,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      25: checkcast     #145                // class org/springframework/boot/web/servlet/server/CookieSameSiteSupplier
+      28: astore_3
+      29: aload_3
+      30: aload_1
+      31: invokeinterface #147,  2          // InterfaceMethod org/springframework/boot/web/servlet/server/CookieSameSiteSupplier.getSameSite:(Ljakarta/servlet/http/Cookie;)Lorg/springframework/boot/web/server/Cookie$SameSite;
+      36: astore        4
+      38: aload         4
+      40: ifnull        46
+      43: aload         4
+      45: areturn
+      46: goto          10
+      49: aconst_null
+      50: areturn
+}

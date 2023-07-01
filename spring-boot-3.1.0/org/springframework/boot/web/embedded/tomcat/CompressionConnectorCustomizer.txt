@@ -1,0 +1,85 @@
+Compiled from "CompressionConnectorCustomizer.java"
+class org.springframework.boot.web.embedded.tomcat.CompressionConnectorCustomizer implements org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer {
+  private final org.springframework.boot.web.server.Compression compression;
+
+  org.springframework.boot.web.embedded.tomcat.CompressionConnectorCustomizer(org.springframework.boot.web.server.Compression);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #7                  // Field compression:Lorg/springframework/boot/web/server/Compression;
+       9: return
+
+  public void customize(org.apache.catalina.connector.Connector);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field compression:Lorg/springframework/boot/web/server/Compression;
+       4: ifnull        37
+       7: aload_0
+       8: getfield      #7                  // Field compression:Lorg/springframework/boot/web/server/Compression;
+      11: invokevirtual #13                 // Method org/springframework/boot/web/server/Compression.getEnabled:()Z
+      14: ifeq          37
+      17: aload_1
+      18: invokevirtual #19                 // Method org/apache/catalina/connector/Connector.getProtocolHandler:()Lorg/apache/coyote/ProtocolHandler;
+      21: astore_2
+      22: aload_2
+      23: instanceof    #25                 // class org/apache/coyote/http11/AbstractHttp11Protocol
+      26: ifeq          37
+      29: aload_0
+      30: aload_2
+      31: checkcast     #25                 // class org/apache/coyote/http11/AbstractHttp11Protocol
+      34: invokevirtual #27                 // Method customize:(Lorg/apache/coyote/http11/AbstractHttp11Protocol;)V
+      37: return
+
+  private void customize(org.apache.coyote.http11.AbstractHttp11Protocol<?>);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field compression:Lorg/springframework/boot/web/server/Compression;
+       4: astore_2
+       5: aload_1
+       6: ldc           #31                 // String on
+       8: invokevirtual #33                 // Method org/apache/coyote/http11/AbstractHttp11Protocol.setCompression:(Ljava/lang/String;)V
+      11: aload_1
+      12: aload_0
+      13: aload_2
+      14: invokevirtual #37                 // Method getMinResponseSize:(Lorg/springframework/boot/web/server/Compression;)I
+      17: invokevirtual #41                 // Method org/apache/coyote/http11/AbstractHttp11Protocol.setCompressionMinSize:(I)V
+      20: aload_1
+      21: aload_0
+      22: aload_2
+      23: invokevirtual #45                 // Method getMimeTypes:(Lorg/springframework/boot/web/server/Compression;)Ljava/lang/String;
+      26: invokevirtual #49                 // Method org/apache/coyote/http11/AbstractHttp11Protocol.setCompressibleMimeType:(Ljava/lang/String;)V
+      29: aload_0
+      30: getfield      #7                  // Field compression:Lorg/springframework/boot/web/server/Compression;
+      33: invokevirtual #52                 // Method org/springframework/boot/web/server/Compression.getExcludedUserAgents:()[Ljava/lang/String;
+      36: ifnull        47
+      39: aload_1
+      40: aload_0
+      41: invokevirtual #56                 // Method getExcludedUserAgents:()Ljava/lang/String;
+      44: invokevirtual #59                 // Method org/apache/coyote/http11/AbstractHttp11Protocol.setNoCompressionUserAgents:(Ljava/lang/String;)V
+      47: return
+
+  private int getMinResponseSize(org.springframework.boot.web.server.Compression);
+    Code:
+       0: aload_1
+       1: invokevirtual #62                 // Method org/springframework/boot/web/server/Compression.getMinResponseSize:()Lorg/springframework/util/unit/DataSize;
+       4: invokevirtual #65                 // Method org/springframework/util/unit/DataSize.toBytes:()J
+       7: l2i
+       8: ireturn
+
+  private java.lang.String getMimeTypes(org.springframework.boot.web.server.Compression);
+    Code:
+       0: aload_1
+       1: invokevirtual #71                 // Method org/springframework/boot/web/server/Compression.getMimeTypes:()[Ljava/lang/String;
+       4: invokestatic  #73                 // Method org/springframework/util/StringUtils.arrayToCommaDelimitedString:([Ljava/lang/Object;)Ljava/lang/String;
+       7: areturn
+
+  private java.lang.String getExcludedUserAgents();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field compression:Lorg/springframework/boot/web/server/Compression;
+       4: invokevirtual #52                 // Method org/springframework/boot/web/server/Compression.getExcludedUserAgents:()[Ljava/lang/String;
+       7: invokestatic  #73                 // Method org/springframework/util/StringUtils.arrayToCommaDelimitedString:([Ljava/lang/Object;)Ljava/lang/String;
+      10: areturn
+}

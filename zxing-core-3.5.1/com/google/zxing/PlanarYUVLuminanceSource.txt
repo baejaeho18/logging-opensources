@@ -1,0 +1,369 @@
+Compiled from "PlanarYUVLuminanceSource.java"
+public final class com.google.zxing.PlanarYUVLuminanceSource extends com.google.zxing.LuminanceSource {
+  private static final int THUMBNAIL_SCALE_FACTOR;
+
+  private final byte[] yuvData;
+
+  private final int dataWidth;
+
+  private final int dataHeight;
+
+  private final int left;
+
+  private final int top;
+
+  public com.google.zxing.PlanarYUVLuminanceSource(byte[], int, int, int, int, int, int, boolean);
+    Code:
+       0: aload_0
+       1: iload         6
+       3: iload         7
+       5: invokespecial #1                  // Method com/google/zxing/LuminanceSource."<init>":(II)V
+       8: iload         4
+      10: iload         6
+      12: iadd
+      13: iload_2
+      14: if_icmpgt     26
+      17: iload         5
+      19: iload         7
+      21: iadd
+      22: iload_3
+      23: if_icmple     36
+      26: new           #2                  // class java/lang/IllegalArgumentException
+      29: dup
+      30: ldc           #3                  // String Crop rectangle does not fit within image data.
+      32: invokespecial #4                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      35: athrow
+      36: aload_0
+      37: aload_1
+      38: putfield      #5                  // Field yuvData:[B
+      41: aload_0
+      42: iload_2
+      43: putfield      #6                  // Field dataWidth:I
+      46: aload_0
+      47: iload_3
+      48: putfield      #7                  // Field dataHeight:I
+      51: aload_0
+      52: iload         4
+      54: putfield      #8                  // Field left:I
+      57: aload_0
+      58: iload         5
+      60: putfield      #9                  // Field top:I
+      63: iload         8
+      65: ifeq          76
+      68: aload_0
+      69: iload         6
+      71: iload         7
+      73: invokespecial #10                 // Method reverseHorizontal:(II)V
+      76: return
+
+  public byte[] getRow(int, byte[]);
+    Code:
+       0: iload_1
+       1: iflt          12
+       4: iload_1
+       5: aload_0
+       6: invokevirtual #11                 // Method getHeight:()I
+       9: if_icmplt     39
+      12: new           #2                  // class java/lang/IllegalArgumentException
+      15: dup
+      16: new           #12                 // class java/lang/StringBuilder
+      19: dup
+      20: invokespecial #13                 // Method java/lang/StringBuilder."<init>":()V
+      23: ldc           #14                 // String Requested row is outside the image:
+      25: invokevirtual #15                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      28: iload_1
+      29: invokevirtual #16                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      32: invokevirtual #17                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      35: invokespecial #4                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      38: athrow
+      39: aload_0
+      40: invokevirtual #18                 // Method getWidth:()I
+      43: istore_3
+      44: aload_2
+      45: ifnull        54
+      48: aload_2
+      49: arraylength
+      50: iload_3
+      51: if_icmpge     58
+      54: iload_3
+      55: newarray       byte
+      57: astore_2
+      58: iload_1
+      59: aload_0
+      60: getfield      #9                  // Field top:I
+      63: iadd
+      64: aload_0
+      65: getfield      #6                  // Field dataWidth:I
+      68: imul
+      69: aload_0
+      70: getfield      #8                  // Field left:I
+      73: iadd
+      74: istore        4
+      76: aload_0
+      77: getfield      #5                  // Field yuvData:[B
+      80: iload         4
+      82: aload_2
+      83: iconst_0
+      84: iload_3
+      85: invokestatic  #19                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+      88: aload_2
+      89: areturn
+
+  public byte[] getMatrix();
+    Code:
+       0: aload_0
+       1: invokevirtual #18                 // Method getWidth:()I
+       4: istore_1
+       5: aload_0
+       6: invokevirtual #11                 // Method getHeight:()I
+       9: istore_2
+      10: iload_1
+      11: aload_0
+      12: getfield      #6                  // Field dataWidth:I
+      15: if_icmpne     31
+      18: iload_2
+      19: aload_0
+      20: getfield      #7                  // Field dataHeight:I
+      23: if_icmpne     31
+      26: aload_0
+      27: getfield      #5                  // Field yuvData:[B
+      30: areturn
+      31: iload_1
+      32: iload_2
+      33: imul
+      34: istore_3
+      35: iload_3
+      36: newarray       byte
+      38: astore        4
+      40: aload_0
+      41: getfield      #9                  // Field top:I
+      44: aload_0
+      45: getfield      #6                  // Field dataWidth:I
+      48: imul
+      49: aload_0
+      50: getfield      #8                  // Field left:I
+      53: iadd
+      54: istore        5
+      56: iload_1
+      57: aload_0
+      58: getfield      #6                  // Field dataWidth:I
+      61: if_icmpne     80
+      64: aload_0
+      65: getfield      #5                  // Field yuvData:[B
+      68: iload         5
+      70: aload         4
+      72: iconst_0
+      73: iload_3
+      74: invokestatic  #19                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+      77: aload         4
+      79: areturn
+      80: iconst_0
+      81: istore        6
+      83: iload         6
+      85: iload_2
+      86: if_icmpge     124
+      89: iload         6
+      91: iload_1
+      92: imul
+      93: istore        7
+      95: aload_0
+      96: getfield      #5                  // Field yuvData:[B
+      99: iload         5
+     101: aload         4
+     103: iload         7
+     105: iload_1
+     106: invokestatic  #19                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+     109: iload         5
+     111: aload_0
+     112: getfield      #6                  // Field dataWidth:I
+     115: iadd
+     116: istore        5
+     118: iinc          6, 1
+     121: goto          83
+     124: aload         4
+     126: areturn
+
+  public boolean isCropSupported();
+    Code:
+       0: iconst_1
+       1: ireturn
+
+  public com.google.zxing.LuminanceSource crop(int, int, int, int);
+    Code:
+       0: new           #20                 // class com/google/zxing/PlanarYUVLuminanceSource
+       3: dup
+       4: aload_0
+       5: getfield      #5                  // Field yuvData:[B
+       8: aload_0
+       9: getfield      #6                  // Field dataWidth:I
+      12: aload_0
+      13: getfield      #7                  // Field dataHeight:I
+      16: aload_0
+      17: getfield      #8                  // Field left:I
+      20: iload_1
+      21: iadd
+      22: aload_0
+      23: getfield      #9                  // Field top:I
+      26: iload_2
+      27: iadd
+      28: iload_3
+      29: iload         4
+      31: iconst_0
+      32: invokespecial #21                 // Method "<init>":([BIIIIIIZ)V
+      35: areturn
+
+  public int[] renderThumbnail();
+    Code:
+       0: aload_0
+       1: invokevirtual #18                 // Method getWidth:()I
+       4: iconst_2
+       5: idiv
+       6: istore_1
+       7: aload_0
+       8: invokevirtual #11                 // Method getHeight:()I
+      11: iconst_2
+      12: idiv
+      13: istore_2
+      14: iload_1
+      15: iload_2
+      16: imul
+      17: newarray       int
+      19: astore_3
+      20: aload_0
+      21: getfield      #5                  // Field yuvData:[B
+      24: astore        4
+      26: aload_0
+      27: getfield      #9                  // Field top:I
+      30: aload_0
+      31: getfield      #6                  // Field dataWidth:I
+      34: imul
+      35: aload_0
+      36: getfield      #8                  // Field left:I
+      39: iadd
+      40: istore        5
+      42: iconst_0
+      43: istore        6
+      45: iload         6
+      47: iload_2
+      48: if_icmpge     120
+      51: iload         6
+      53: iload_1
+      54: imul
+      55: istore        7
+      57: iconst_0
+      58: istore        8
+      60: iload         8
+      62: iload_1
+      63: if_icmpge     103
+      66: aload         4
+      68: iload         5
+      70: iload         8
+      72: iconst_2
+      73: imul
+      74: iadd
+      75: baload
+      76: sipush        255
+      79: iand
+      80: istore        9
+      82: aload_3
+      83: iload         7
+      85: iload         8
+      87: iadd
+      88: ldc           #22                 // int -16777216
+      90: iload         9
+      92: ldc           #23                 // int 65793
+      94: imul
+      95: ior
+      96: iastore
+      97: iinc          8, 1
+     100: goto          60
+     103: iload         5
+     105: aload_0
+     106: getfield      #6                  // Field dataWidth:I
+     109: iconst_2
+     110: imul
+     111: iadd
+     112: istore        5
+     114: iinc          6, 1
+     117: goto          45
+     120: aload_3
+     121: areturn
+
+  public int getThumbnailWidth();
+    Code:
+       0: aload_0
+       1: invokevirtual #18                 // Method getWidth:()I
+       4: iconst_2
+       5: idiv
+       6: ireturn
+
+  public int getThumbnailHeight();
+    Code:
+       0: aload_0
+       1: invokevirtual #11                 // Method getHeight:()I
+       4: iconst_2
+       5: idiv
+       6: ireturn
+
+  private void reverseHorizontal(int, int);
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field yuvData:[B
+       4: astore_3
+       5: iconst_0
+       6: istore        4
+       8: aload_0
+       9: getfield      #9                  // Field top:I
+      12: aload_0
+      13: getfield      #6                  // Field dataWidth:I
+      16: imul
+      17: aload_0
+      18: getfield      #8                  // Field left:I
+      21: iadd
+      22: istore        5
+      24: iload         4
+      26: iload_2
+      27: if_icmpge     101
+      30: iload         5
+      32: iload_1
+      33: iconst_2
+      34: idiv
+      35: iadd
+      36: istore        6
+      38: iload         5
+      40: istore        7
+      42: iload         5
+      44: iload_1
+      45: iadd
+      46: iconst_1
+      47: isub
+      48: istore        8
+      50: iload         7
+      52: iload         6
+      54: if_icmpge     86
+      57: aload_3
+      58: iload         7
+      60: baload
+      61: istore        9
+      63: aload_3
+      64: iload         7
+      66: aload_3
+      67: iload         8
+      69: baload
+      70: bastore
+      71: aload_3
+      72: iload         8
+      74: iload         9
+      76: bastore
+      77: iinc          7, 1
+      80: iinc          8, -1
+      83: goto          50
+      86: iinc          4, 1
+      89: iload         5
+      91: aload_0
+      92: getfield      #6                  // Field dataWidth:I
+      95: iadd
+      96: istore        5
+      98: goto          24
+     101: return
+}

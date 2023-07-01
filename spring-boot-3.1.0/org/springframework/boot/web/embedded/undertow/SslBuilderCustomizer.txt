@@ -1,0 +1,91 @@
+Compiled from "SslBuilderCustomizer.java"
+class org.springframework.boot.web.embedded.undertow.SslBuilderCustomizer implements org.springframework.boot.web.embedded.undertow.UndertowBuilderCustomizer {
+  private final int port;
+
+  private final java.net.InetAddress address;
+
+  private final org.springframework.boot.web.server.Ssl$ClientAuth clientAuth;
+
+  private final org.springframework.boot.ssl.SslBundle sslBundle;
+
+  org.springframework.boot.web.embedded.undertow.SslBuilderCustomizer(int, java.net.InetAddress, org.springframework.boot.web.server.Ssl$ClientAuth, org.springframework.boot.ssl.SslBundle);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iload_1
+       6: putfield      #7                  // Field port:I
+       9: aload_0
+      10: aload_2
+      11: putfield      #13                 // Field address:Ljava/net/InetAddress;
+      14: aload_0
+      15: aload_3
+      16: putfield      #17                 // Field clientAuth:Lorg/springframework/boot/web/server/Ssl$ClientAuth;
+      19: aload_0
+      20: aload         4
+      22: putfield      #21                 // Field sslBundle:Lorg/springframework/boot/ssl/SslBundle;
+      25: return
+
+  public void customize(io.undertow.Undertow$Builder);
+    Code:
+       0: aload_0
+       1: getfield      #21                 // Field sslBundle:Lorg/springframework/boot/ssl/SslBundle;
+       4: invokeinterface #25,  1           // InterfaceMethod org/springframework/boot/ssl/SslBundle.getOptions:()Lorg/springframework/boot/ssl/SslOptions;
+       9: astore_2
+      10: aload_0
+      11: getfield      #21                 // Field sslBundle:Lorg/springframework/boot/ssl/SslBundle;
+      14: invokeinterface #31,  1           // InterfaceMethod org/springframework/boot/ssl/SslBundle.createSslContext:()Ljavax/net/ssl/SSLContext;
+      19: astore_3
+      20: aload_1
+      21: aload_0
+      22: getfield      #7                  // Field port:I
+      25: aload_0
+      26: invokevirtual #35                 // Method getListenAddress:()Ljava/lang/String;
+      29: aload_3
+      30: invokevirtual #39                 // Method io/undertow/Undertow$Builder.addHttpsListener:(ILjava/lang/String;Ljavax/net/ssl/SSLContext;)Lio/undertow/Undertow$Builder;
+      33: pop
+      34: aload_1
+      35: getstatic     #45                 // Field org/xnio/Options.SSL_CLIENT_AUTH_MODE:Lorg/xnio/Option;
+      38: aload_0
+      39: getfield      #17                 // Field clientAuth:Lorg/springframework/boot/web/server/Ssl$ClientAuth;
+      42: getstatic     #51                 // Field org/xnio/SslClientAuthMode.NOT_REQUESTED:Lorg/xnio/SslClientAuthMode;
+      45: getstatic     #57                 // Field org/xnio/SslClientAuthMode.REQUESTED:Lorg/xnio/SslClientAuthMode;
+      48: getstatic     #60                 // Field org/xnio/SslClientAuthMode.REQUIRED:Lorg/xnio/SslClientAuthMode;
+      51: invokestatic  #63                 // Method org/springframework/boot/web/server/Ssl$ClientAuth.map:(Lorg/springframework/boot/web/server/Ssl$ClientAuth;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      54: checkcast     #52                 // class org/xnio/SslClientAuthMode
+      57: invokevirtual #69                 // Method io/undertow/Undertow$Builder.setSocketOption:(Lorg/xnio/Option;Ljava/lang/Object;)Lio/undertow/Undertow$Builder;
+      60: pop
+      61: aload_2
+      62: invokeinterface #73,  1           // InterfaceMethod org/springframework/boot/ssl/SslOptions.getEnabledProtocols:()[Ljava/lang/String;
+      67: ifnull        87
+      70: aload_1
+      71: getstatic     #79                 // Field org/xnio/Options.SSL_ENABLED_PROTOCOLS:Lorg/xnio/Option;
+      74: aload_2
+      75: invokeinterface #73,  1           // InterfaceMethod org/springframework/boot/ssl/SslOptions.getEnabledProtocols:()[Ljava/lang/String;
+      80: invokestatic  #82                 // Method org/xnio/Sequence.of:([Ljava/lang/Object;)Lorg/xnio/Sequence;
+      83: invokevirtual #69                 // Method io/undertow/Undertow$Builder.setSocketOption:(Lorg/xnio/Option;Ljava/lang/Object;)Lio/undertow/Undertow$Builder;
+      86: pop
+      87: aload_2
+      88: invokeinterface #88,  1           // InterfaceMethod org/springframework/boot/ssl/SslOptions.getCiphers:()[Ljava/lang/String;
+      93: ifnull        113
+      96: aload_1
+      97: getstatic     #91                 // Field org/xnio/Options.SSL_ENABLED_CIPHER_SUITES:Lorg/xnio/Option;
+     100: aload_2
+     101: invokeinterface #88,  1           // InterfaceMethod org/springframework/boot/ssl/SslOptions.getCiphers:()[Ljava/lang/String;
+     106: invokestatic  #82                 // Method org/xnio/Sequence.of:([Ljava/lang/Object;)Lorg/xnio/Sequence;
+     109: invokevirtual #69                 // Method io/undertow/Undertow$Builder.setSocketOption:(Lorg/xnio/Option;Ljava/lang/Object;)Lio/undertow/Undertow$Builder;
+     112: pop
+     113: return
+
+  private java.lang.String getListenAddress();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field address:Ljava/net/InetAddress;
+       4: ifnonnull     10
+       7: ldc           #94                 // String 0.0.0.0
+       9: areturn
+      10: aload_0
+      11: getfield      #13                 // Field address:Ljava/net/InetAddress;
+      14: invokevirtual #96                 // Method java/net/InetAddress.getHostAddress:()Ljava/lang/String;
+      17: areturn
+}

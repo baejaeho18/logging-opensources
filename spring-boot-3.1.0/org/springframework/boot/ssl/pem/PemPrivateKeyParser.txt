@@ -1,0 +1,300 @@
+Compiled from "PemPrivateKeyParser.java"
+final class org.springframework.boot.ssl.pem.PemPrivateKeyParser {
+  private static final java.lang.String PKCS1_HEADER;
+
+  private static final java.lang.String PKCS1_FOOTER;
+
+  private static final java.lang.String PKCS8_HEADER;
+
+  private static final java.lang.String PKCS8_FOOTER;
+
+  private static final java.lang.String EC_HEADER;
+
+  private static final java.lang.String EC_FOOTER;
+
+  private static final java.lang.String BASE64_TEXT;
+
+  private static final java.util.List<org.springframework.boot.ssl.pem.PemPrivateKeyParser$PemParser> PEM_PARSERS;
+
+  private static final int[] RSA_ALGORITHM;
+
+  private static final int[] EC_ALGORITHM;
+
+  private static final int[] EC_PARAMETERS;
+
+  private org.springframework.boot.ssl.pem.PemPrivateKeyParser();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  private static java.security.spec.PKCS8EncodedKeySpec createKeySpecForPkcs1(byte[]);
+    Code:
+       0: aload_0
+       1: getstatic     #7                  // Field RSA_ALGORITHM:[I
+       4: aconst_null
+       5: invokestatic  #13                 // Method createKeySpecForAlgorithm:([B[I[I)Ljava/security/spec/PKCS8EncodedKeySpec;
+       8: areturn
+
+  private static java.security.spec.PKCS8EncodedKeySpec createKeySpecForEc(byte[]);
+    Code:
+       0: aload_0
+       1: getstatic     #17                 // Field EC_ALGORITHM:[I
+       4: getstatic     #20                 // Field EC_PARAMETERS:[I
+       7: invokestatic  #13                 // Method createKeySpecForAlgorithm:([B[I[I)Ljava/security/spec/PKCS8EncodedKeySpec;
+      10: areturn
+
+  private static java.security.spec.PKCS8EncodedKeySpec createKeySpecForAlgorithm(byte[], int[], int[]);
+    Code:
+       0: new           #23                 // class org/springframework/boot/ssl/pem/PemPrivateKeyParser$DerEncoder
+       3: dup
+       4: invokespecial #25                 // Method org/springframework/boot/ssl/pem/PemPrivateKeyParser$DerEncoder."<init>":()V
+       7: astore_3
+       8: aload_3
+       9: iconst_1
+      10: newarray       int
+      12: dup
+      13: iconst_0
+      14: iconst_0
+      15: iastore
+      16: invokevirtual #26                 // Method org/springframework/boot/ssl/pem/PemPrivateKeyParser$DerEncoder.integer:([I)V
+      19: new           #23                 // class org/springframework/boot/ssl/pem/PemPrivateKeyParser$DerEncoder
+      22: dup
+      23: invokespecial #25                 // Method org/springframework/boot/ssl/pem/PemPrivateKeyParser$DerEncoder."<init>":()V
+      26: astore        4
+      28: aload         4
+      30: aload_1
+      31: invokevirtual #30                 // Method org/springframework/boot/ssl/pem/PemPrivateKeyParser$DerEncoder.objectIdentifier:([I)V
+      34: aload         4
+      36: aload_2
+      37: invokevirtual #30                 // Method org/springframework/boot/ssl/pem/PemPrivateKeyParser$DerEncoder.objectIdentifier:([I)V
+      40: aload         4
+      42: invokevirtual #33                 // Method org/springframework/boot/ssl/pem/PemPrivateKeyParser$DerEncoder.toByteArray:()[B
+      45: astore        5
+      47: aload_3
+      48: aload         5
+      50: invokevirtual #37                 // Method org/springframework/boot/ssl/pem/PemPrivateKeyParser$DerEncoder.sequence:([B)V
+      53: aload_3
+      54: aload_0
+      55: invokevirtual #41                 // Method org/springframework/boot/ssl/pem/PemPrivateKeyParser$DerEncoder.octetString:([B)V
+      58: new           #44                 // class java/security/spec/PKCS8EncodedKeySpec
+      61: dup
+      62: aload_3
+      63: invokevirtual #46                 // Method org/springframework/boot/ssl/pem/PemPrivateKeyParser$DerEncoder.toSequence:()[B
+      66: invokespecial #49                 // Method java/security/spec/PKCS8EncodedKeySpec."<init>":([B)V
+      69: areturn
+      70: astore_3
+      71: new           #53                 // class java/lang/IllegalStateException
+      74: dup
+      75: aload_3
+      76: invokespecial #55                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/Throwable;)V
+      79: athrow
+    Exception table:
+       from    to  target type
+           0    69    70   Class java/io/IOException
+
+  static java.security.PrivateKey parse(java.lang.String);
+    Code:
+       0: aload_0
+       1: ifnonnull     6
+       4: aconst_null
+       5: areturn
+       6: getstatic     #58                 // Field PEM_PARSERS:Ljava/util/List;
+       9: invokeinterface #62,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      14: astore_1
+      15: aload_1
+      16: invokeinterface #68,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      21: ifeq          49
+      24: aload_1
+      25: invokeinterface #74,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      30: checkcast     #78                 // class org/springframework/boot/ssl/pem/PemPrivateKeyParser$PemParser
+      33: astore_2
+      34: aload_2
+      35: aload_0
+      36: invokevirtual #80                 // Method org/springframework/boot/ssl/pem/PemPrivateKeyParser$PemParser.parse:(Ljava/lang/String;)Ljava/security/PrivateKey;
+      39: astore_3
+      40: aload_3
+      41: ifnull        46
+      44: aload_3
+      45: areturn
+      46: goto          15
+      49: new           #53                 // class java/lang/IllegalStateException
+      52: dup
+      53: ldc           #84                 // String Unrecognized private key format
+      55: invokespecial #86                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      58: athrow
+      59: astore_1
+      60: new           #53                 // class java/lang/IllegalStateException
+      63: dup
+      64: aload_1
+      65: invokevirtual #91                 // Method java/lang/Exception.getMessage:()Ljava/lang/String;
+      68: invokedynamic #95,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      73: aload_1
+      74: invokespecial #99                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      77: athrow
+    Exception table:
+       from    to  target type
+           6    45    59   Class java/lang/Exception
+          46    59    59   Class java/lang/Exception
+
+  static {};
+    Code:
+       0: new           #102                // class java/util/ArrayList
+       3: dup
+       4: invokespecial #104                // Method java/util/ArrayList."<init>":()V
+       7: astore_0
+       8: aload_0
+       9: new           #78                 // class org/springframework/boot/ssl/pem/PemPrivateKeyParser$PemParser
+      12: dup
+      13: ldc           #105                // String -+BEGIN\\s+RSA\\s+PRIVATE\\s+KEY[^-]*-+(?:\\s|\\r|\\n)+
+      15: ldc           #107                // String -+END\\s+RSA\\s+PRIVATE\\s+KEY[^-]*-+
+      17: invokedynamic #109,  0            // InvokeDynamic #1:apply:()Ljava/util/function/Function;
+      22: iconst_1
+      23: anewarray     #113                // class java/lang/String
+      26: dup
+      27: iconst_0
+      28: ldc           #115                // String RSA
+      30: aastore
+      31: invokespecial #117                // Method org/springframework/boot/ssl/pem/PemPrivateKeyParser$PemParser."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/util/function/Function;[Ljava/lang/String;)V
+      34: invokeinterface #120,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      39: pop
+      40: aload_0
+      41: new           #78                 // class org/springframework/boot/ssl/pem/PemPrivateKeyParser$PemParser
+      44: dup
+      45: ldc           #124                // String -+BEGIN\\s+EC\\s+PRIVATE\\s+KEY[^-]*-+(?:\\s|\\r|\\n)+
+      47: ldc           #126                // String -+END\\s+EC\\s+PRIVATE\\s+KEY[^-]*-+
+      49: invokedynamic #128,  0            // InvokeDynamic #2:apply:()Ljava/util/function/Function;
+      54: iconst_1
+      55: anewarray     #113                // class java/lang/String
+      58: dup
+      59: iconst_0
+      60: ldc           #129                // String EC
+      62: aastore
+      63: invokespecial #117                // Method org/springframework/boot/ssl/pem/PemPrivateKeyParser$PemParser."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/util/function/Function;[Ljava/lang/String;)V
+      66: invokeinterface #120,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      71: pop
+      72: aload_0
+      73: new           #78                 // class org/springframework/boot/ssl/pem/PemPrivateKeyParser$PemParser
+      76: dup
+      77: ldc           #131                // String -+BEGIN\\s+PRIVATE\\s+KEY[^-]*-+(?:\\s|\\r|\\n)+
+      79: ldc           #133                // String -+END\\s+PRIVATE\\s+KEY[^-]*-+
+      81: invokedynamic #135,  0            // InvokeDynamic #3:apply:()Ljava/util/function/Function;
+      86: iconst_4
+      87: anewarray     #113                // class java/lang/String
+      90: dup
+      91: iconst_0
+      92: ldc           #115                // String RSA
+      94: aastore
+      95: dup
+      96: iconst_1
+      97: ldc           #129                // String EC
+      99: aastore
+     100: dup
+     101: iconst_2
+     102: ldc           #136                // String DSA
+     104: aastore
+     105: dup
+     106: iconst_3
+     107: ldc           #138                // String Ed25519
+     109: aastore
+     110: invokespecial #117                // Method org/springframework/boot/ssl/pem/PemPrivateKeyParser$PemParser."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/util/function/Function;[Ljava/lang/String;)V
+     113: invokeinterface #120,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     118: pop
+     119: aload_0
+     120: invokestatic  #140                // Method java/util/Collections.unmodifiableList:(Ljava/util/List;)Ljava/util/List;
+     123: putstatic     #58                 // Field PEM_PARSERS:Ljava/util/List;
+     126: bipush        9
+     128: newarray       int
+     130: dup
+     131: iconst_0
+     132: bipush        42
+     134: iastore
+     135: dup
+     136: iconst_1
+     137: sipush        134
+     140: iastore
+     141: dup
+     142: iconst_2
+     143: bipush        72
+     145: iastore
+     146: dup
+     147: iconst_3
+     148: sipush        134
+     151: iastore
+     152: dup
+     153: iconst_4
+     154: sipush        247
+     157: iastore
+     158: dup
+     159: iconst_5
+     160: bipush        13
+     162: iastore
+     163: dup
+     164: bipush        6
+     166: iconst_1
+     167: iastore
+     168: dup
+     169: bipush        7
+     171: iconst_1
+     172: iastore
+     173: dup
+     174: bipush        8
+     176: iconst_1
+     177: iastore
+     178: putstatic     #7                  // Field RSA_ALGORITHM:[I
+     181: bipush        7
+     183: newarray       int
+     185: dup
+     186: iconst_0
+     187: bipush        42
+     189: iastore
+     190: dup
+     191: iconst_1
+     192: sipush        134
+     195: iastore
+     196: dup
+     197: iconst_2
+     198: bipush        72
+     200: iastore
+     201: dup
+     202: iconst_3
+     203: sipush        206
+     206: iastore
+     207: dup
+     208: iconst_4
+     209: bipush        61
+     211: iastore
+     212: dup
+     213: iconst_5
+     214: iconst_2
+     215: iastore
+     216: dup
+     217: bipush        6
+     219: iconst_1
+     220: iastore
+     221: putstatic     #17                 // Field EC_ALGORITHM:[I
+     224: iconst_5
+     225: newarray       int
+     227: dup
+     228: iconst_0
+     229: bipush        43
+     231: iastore
+     232: dup
+     233: iconst_1
+     234: sipush        129
+     237: iastore
+     238: dup
+     239: iconst_2
+     240: iconst_4
+     241: iastore
+     242: dup
+     243: iconst_3
+     244: iconst_0
+     245: iastore
+     246: dup
+     247: iconst_4
+     248: bipush        34
+     250: iastore
+     251: putstatic     #20                 // Field EC_PARAMETERS:[I
+     254: return
+}

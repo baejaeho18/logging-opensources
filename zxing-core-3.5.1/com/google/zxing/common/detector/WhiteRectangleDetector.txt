@@ -1,0 +1,636 @@
+Compiled from "WhiteRectangleDetector.java"
+public final class com.google.zxing.common.detector.WhiteRectangleDetector {
+  private static final int INIT_SIZE;
+
+  private static final int CORR;
+
+  private final com.google.zxing.common.BitMatrix image;
+
+  private final int height;
+
+  private final int width;
+
+  private final int leftInit;
+
+  private final int rightInit;
+
+  private final int downInit;
+
+  private final int upInit;
+
+  public com.google.zxing.common.detector.WhiteRectangleDetector(com.google.zxing.common.BitMatrix) throws com.google.zxing.NotFoundException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: bipush        10
+       4: aload_1
+       5: invokevirtual #2                  // Method com/google/zxing/common/BitMatrix.getWidth:()I
+       8: iconst_2
+       9: idiv
+      10: aload_1
+      11: invokevirtual #3                  // Method com/google/zxing/common/BitMatrix.getHeight:()I
+      14: iconst_2
+      15: idiv
+      16: invokespecial #4                  // Method "<init>":(Lcom/google/zxing/common/BitMatrix;III)V
+      19: return
+
+  public com.google.zxing.common.detector.WhiteRectangleDetector(com.google.zxing.common.BitMatrix, int, int, int) throws com.google.zxing.NotFoundException;
+    Code:
+       0: aload_0
+       1: invokespecial #5                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #6                  // Field image:Lcom/google/zxing/common/BitMatrix;
+       9: aload_0
+      10: aload_1
+      11: invokevirtual #3                  // Method com/google/zxing/common/BitMatrix.getHeight:()I
+      14: putfield      #7                  // Field height:I
+      17: aload_0
+      18: aload_1
+      19: invokevirtual #2                  // Method com/google/zxing/common/BitMatrix.getWidth:()I
+      22: putfield      #8                  // Field width:I
+      25: iload_2
+      26: iconst_2
+      27: idiv
+      28: istore        5
+      30: aload_0
+      31: iload_3
+      32: iload         5
+      34: isub
+      35: putfield      #9                  // Field leftInit:I
+      38: aload_0
+      39: iload_3
+      40: iload         5
+      42: iadd
+      43: putfield      #10                 // Field rightInit:I
+      46: aload_0
+      47: iload         4
+      49: iload         5
+      51: isub
+      52: putfield      #11                 // Field upInit:I
+      55: aload_0
+      56: iload         4
+      58: iload         5
+      60: iadd
+      61: putfield      #12                 // Field downInit:I
+      64: aload_0
+      65: getfield      #11                 // Field upInit:I
+      68: iflt          100
+      71: aload_0
+      72: getfield      #9                  // Field leftInit:I
+      75: iflt          100
+      78: aload_0
+      79: getfield      #12                 // Field downInit:I
+      82: aload_0
+      83: getfield      #7                  // Field height:I
+      86: if_icmpge     100
+      89: aload_0
+      90: getfield      #10                 // Field rightInit:I
+      93: aload_0
+      94: getfield      #8                  // Field width:I
+      97: if_icmplt     104
+     100: invokestatic  #13                 // Method com/google/zxing/NotFoundException.getNotFoundInstance:()Lcom/google/zxing/NotFoundException;
+     103: athrow
+     104: return
+
+  public com.google.zxing.ResultPoint[] detect() throws com.google.zxing.NotFoundException;
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field leftInit:I
+       4: istore_1
+       5: aload_0
+       6: getfield      #10                 // Field rightInit:I
+       9: istore_2
+      10: aload_0
+      11: getfield      #11                 // Field upInit:I
+      14: istore_3
+      15: aload_0
+      16: getfield      #12                 // Field downInit:I
+      19: istore        4
+      21: iconst_0
+      22: istore        5
+      24: iconst_1
+      25: istore        6
+      27: iconst_0
+      28: istore        7
+      30: iconst_0
+      31: istore        8
+      33: iconst_0
+      34: istore        9
+      36: iconst_0
+      37: istore        10
+      39: iload         6
+      41: ifeq          331
+      44: iconst_0
+      45: istore        6
+      47: iconst_1
+      48: istore        11
+      50: iload         11
+      52: ifne          60
+      55: iload         7
+      57: ifne          107
+      60: iload_2
+      61: aload_0
+      62: getfield      #8                  // Field width:I
+      65: if_icmpge     107
+      68: aload_0
+      69: iload_3
+      70: iload         4
+      72: iload_2
+      73: iconst_0
+      74: invokespecial #14                 // Method containsBlackPoint:(IIIZ)Z
+      77: istore        11
+      79: iload         11
+      81: ifeq          96
+      84: iinc          2, 1
+      87: iconst_1
+      88: istore        6
+      90: iconst_1
+      91: istore        7
+      93: goto          50
+      96: iload         7
+      98: ifne          50
+     101: iinc          2, 1
+     104: goto          50
+     107: iload_2
+     108: aload_0
+     109: getfield      #8                  // Field width:I
+     112: if_icmplt     121
+     115: iconst_1
+     116: istore        5
+     118: goto          331
+     121: iconst_1
+     122: istore        12
+     124: iload         12
+     126: ifne          134
+     129: iload         8
+     131: ifne          182
+     134: iload         4
+     136: aload_0
+     137: getfield      #7                  // Field height:I
+     140: if_icmpge     182
+     143: aload_0
+     144: iload_1
+     145: iload_2
+     146: iload         4
+     148: iconst_1
+     149: invokespecial #14                 // Method containsBlackPoint:(IIIZ)Z
+     152: istore        12
+     154: iload         12
+     156: ifeq          171
+     159: iinc          4, 1
+     162: iconst_1
+     163: istore        6
+     165: iconst_1
+     166: istore        8
+     168: goto          124
+     171: iload         8
+     173: ifne          124
+     176: iinc          4, 1
+     179: goto          124
+     182: iload         4
+     184: aload_0
+     185: getfield      #7                  // Field height:I
+     188: if_icmplt     197
+     191: iconst_1
+     192: istore        5
+     194: goto          331
+     197: iconst_1
+     198: istore        13
+     200: iload         13
+     202: ifne          210
+     205: iload         9
+     207: ifne          253
+     210: iload_1
+     211: iflt          253
+     214: aload_0
+     215: iload_3
+     216: iload         4
+     218: iload_1
+     219: iconst_0
+     220: invokespecial #14                 // Method containsBlackPoint:(IIIZ)Z
+     223: istore        13
+     225: iload         13
+     227: ifeq          242
+     230: iinc          1, -1
+     233: iconst_1
+     234: istore        6
+     236: iconst_1
+     237: istore        9
+     239: goto          200
+     242: iload         9
+     244: ifne          200
+     247: iinc          1, -1
+     250: goto          200
+     253: iload_1
+     254: ifge          263
+     257: iconst_1
+     258: istore        5
+     260: goto          331
+     263: iconst_1
+     264: istore        14
+     266: iload         14
+     268: ifne          276
+     271: iload         10
+     273: ifne          318
+     276: iload_3
+     277: iflt          318
+     280: aload_0
+     281: iload_1
+     282: iload_2
+     283: iload_3
+     284: iconst_1
+     285: invokespecial #14                 // Method containsBlackPoint:(IIIZ)Z
+     288: istore        14
+     290: iload         14
+     292: ifeq          307
+     295: iinc          3, -1
+     298: iconst_1
+     299: istore        6
+     301: iconst_1
+     302: istore        10
+     304: goto          266
+     307: iload         10
+     309: ifne          266
+     312: iinc          3, -1
+     315: goto          266
+     318: iload_3
+     319: ifge          328
+     322: iconst_1
+     323: istore        5
+     325: goto          331
+     328: goto          39
+     331: iload         5
+     333: ifne          570
+     336: iload_2
+     337: iload_1
+     338: isub
+     339: istore        11
+     341: aconst_null
+     342: astore        12
+     344: iconst_1
+     345: istore        13
+     347: aload         12
+     349: ifnonnull     387
+     352: iload         13
+     354: iload         11
+     356: if_icmpge     387
+     359: aload_0
+     360: iload_1
+     361: i2f
+     362: iload         4
+     364: iload         13
+     366: isub
+     367: i2f
+     368: iload_1
+     369: iload         13
+     371: iadd
+     372: i2f
+     373: iload         4
+     375: i2f
+     376: invokespecial #15                 // Method getBlackPointOnSegment:(FFFF)Lcom/google/zxing/ResultPoint;
+     379: astore        12
+     381: iinc          13, 1
+     384: goto          347
+     387: aload         12
+     389: ifnonnull     396
+     392: invokestatic  #13                 // Method com/google/zxing/NotFoundException.getNotFoundInstance:()Lcom/google/zxing/NotFoundException;
+     395: athrow
+     396: aconst_null
+     397: astore        13
+     399: iconst_1
+     400: istore        14
+     402: aload         13
+     404: ifnonnull     440
+     407: iload         14
+     409: iload         11
+     411: if_icmpge     440
+     414: aload_0
+     415: iload_1
+     416: i2f
+     417: iload_3
+     418: iload         14
+     420: iadd
+     421: i2f
+     422: iload_1
+     423: iload         14
+     425: iadd
+     426: i2f
+     427: iload_3
+     428: i2f
+     429: invokespecial #15                 // Method getBlackPointOnSegment:(FFFF)Lcom/google/zxing/ResultPoint;
+     432: astore        13
+     434: iinc          14, 1
+     437: goto          402
+     440: aload         13
+     442: ifnonnull     449
+     445: invokestatic  #13                 // Method com/google/zxing/NotFoundException.getNotFoundInstance:()Lcom/google/zxing/NotFoundException;
+     448: athrow
+     449: aconst_null
+     450: astore        14
+     452: iconst_1
+     453: istore        15
+     455: aload         14
+     457: ifnonnull     493
+     460: iload         15
+     462: iload         11
+     464: if_icmpge     493
+     467: aload_0
+     468: iload_2
+     469: i2f
+     470: iload_3
+     471: iload         15
+     473: iadd
+     474: i2f
+     475: iload_2
+     476: iload         15
+     478: isub
+     479: i2f
+     480: iload_3
+     481: i2f
+     482: invokespecial #15                 // Method getBlackPointOnSegment:(FFFF)Lcom/google/zxing/ResultPoint;
+     485: astore        14
+     487: iinc          15, 1
+     490: goto          455
+     493: aload         14
+     495: ifnonnull     502
+     498: invokestatic  #13                 // Method com/google/zxing/NotFoundException.getNotFoundInstance:()Lcom/google/zxing/NotFoundException;
+     501: athrow
+     502: aconst_null
+     503: astore        15
+     505: iconst_1
+     506: istore        16
+     508: aload         15
+     510: ifnonnull     548
+     513: iload         16
+     515: iload         11
+     517: if_icmpge     548
+     520: aload_0
+     521: iload_2
+     522: i2f
+     523: iload         4
+     525: iload         16
+     527: isub
+     528: i2f
+     529: iload_2
+     530: iload         16
+     532: isub
+     533: i2f
+     534: iload         4
+     536: i2f
+     537: invokespecial #15                 // Method getBlackPointOnSegment:(FFFF)Lcom/google/zxing/ResultPoint;
+     540: astore        15
+     542: iinc          16, 1
+     545: goto          508
+     548: aload         15
+     550: ifnonnull     557
+     553: invokestatic  #13                 // Method com/google/zxing/NotFoundException.getNotFoundInstance:()Lcom/google/zxing/NotFoundException;
+     556: athrow
+     557: aload_0
+     558: aload         15
+     560: aload         12
+     562: aload         14
+     564: aload         13
+     566: invokespecial #16                 // Method centerEdges:(Lcom/google/zxing/ResultPoint;Lcom/google/zxing/ResultPoint;Lcom/google/zxing/ResultPoint;Lcom/google/zxing/ResultPoint;)[Lcom/google/zxing/ResultPoint;
+     569: areturn
+     570: invokestatic  #13                 // Method com/google/zxing/NotFoundException.getNotFoundInstance:()Lcom/google/zxing/NotFoundException;
+     573: athrow
+
+  private com.google.zxing.ResultPoint getBlackPointOnSegment(float, float, float, float);
+    Code:
+       0: fload_1
+       1: fload_2
+       2: fload_3
+       3: fload         4
+       5: invokestatic  #17                 // Method com/google/zxing/common/detector/MathUtils.distance:(FFFF)F
+       8: invokestatic  #18                 // Method com/google/zxing/common/detector/MathUtils.round:(F)I
+      11: istore        5
+      13: fload_3
+      14: fload_1
+      15: fsub
+      16: iload         5
+      18: i2f
+      19: fdiv
+      20: fstore        6
+      22: fload         4
+      24: fload_2
+      25: fsub
+      26: iload         5
+      28: i2f
+      29: fdiv
+      30: fstore        7
+      32: iconst_0
+      33: istore        8
+      35: iload         8
+      37: iload         5
+      39: if_icmpge     102
+      42: fload_1
+      43: iload         8
+      45: i2f
+      46: fload         6
+      48: fmul
+      49: fadd
+      50: invokestatic  #18                 // Method com/google/zxing/common/detector/MathUtils.round:(F)I
+      53: istore        9
+      55: fload_2
+      56: iload         8
+      58: i2f
+      59: fload         7
+      61: fmul
+      62: fadd
+      63: invokestatic  #18                 // Method com/google/zxing/common/detector/MathUtils.round:(F)I
+      66: istore        10
+      68: aload_0
+      69: getfield      #6                  // Field image:Lcom/google/zxing/common/BitMatrix;
+      72: iload         9
+      74: iload         10
+      76: invokevirtual #19                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+      79: ifeq          96
+      82: new           #20                 // class com/google/zxing/ResultPoint
+      85: dup
+      86: iload         9
+      88: i2f
+      89: iload         10
+      91: i2f
+      92: invokespecial #21                 // Method com/google/zxing/ResultPoint."<init>":(FF)V
+      95: areturn
+      96: iinc          8, 1
+      99: goto          35
+     102: aconst_null
+     103: areturn
+
+  private com.google.zxing.ResultPoint[] centerEdges(com.google.zxing.ResultPoint, com.google.zxing.ResultPoint, com.google.zxing.ResultPoint, com.google.zxing.ResultPoint);
+    Code:
+       0: aload_1
+       1: invokevirtual #22                 // Method com/google/zxing/ResultPoint.getX:()F
+       4: fstore        5
+       6: aload_1
+       7: invokevirtual #23                 // Method com/google/zxing/ResultPoint.getY:()F
+      10: fstore        6
+      12: aload_2
+      13: invokevirtual #22                 // Method com/google/zxing/ResultPoint.getX:()F
+      16: fstore        7
+      18: aload_2
+      19: invokevirtual #23                 // Method com/google/zxing/ResultPoint.getY:()F
+      22: fstore        8
+      24: aload_3
+      25: invokevirtual #22                 // Method com/google/zxing/ResultPoint.getX:()F
+      28: fstore        9
+      30: aload_3
+      31: invokevirtual #23                 // Method com/google/zxing/ResultPoint.getY:()F
+      34: fstore        10
+      36: aload         4
+      38: invokevirtual #22                 // Method com/google/zxing/ResultPoint.getX:()F
+      41: fstore        11
+      43: aload         4
+      45: invokevirtual #23                 // Method com/google/zxing/ResultPoint.getY:()F
+      48: fstore        12
+      50: fload         5
+      52: aload_0
+      53: getfield      #8                  // Field width:I
+      56: i2f
+      57: fconst_2
+      58: fdiv
+      59: fcmpg
+      60: ifge          140
+      63: iconst_4
+      64: anewarray     #20                 // class com/google/zxing/ResultPoint
+      67: dup
+      68: iconst_0
+      69: new           #20                 // class com/google/zxing/ResultPoint
+      72: dup
+      73: fload         11
+      75: fconst_1
+      76: fsub
+      77: fload         12
+      79: fconst_1
+      80: fadd
+      81: invokespecial #21                 // Method com/google/zxing/ResultPoint."<init>":(FF)V
+      84: aastore
+      85: dup
+      86: iconst_1
+      87: new           #20                 // class com/google/zxing/ResultPoint
+      90: dup
+      91: fload         7
+      93: fconst_1
+      94: fadd
+      95: fload         8
+      97: fconst_1
+      98: fadd
+      99: invokespecial #21                 // Method com/google/zxing/ResultPoint."<init>":(FF)V
+     102: aastore
+     103: dup
+     104: iconst_2
+     105: new           #20                 // class com/google/zxing/ResultPoint
+     108: dup
+     109: fload         9
+     111: fconst_1
+     112: fsub
+     113: fload         10
+     115: fconst_1
+     116: fsub
+     117: invokespecial #21                 // Method com/google/zxing/ResultPoint."<init>":(FF)V
+     120: aastore
+     121: dup
+     122: iconst_3
+     123: new           #20                 // class com/google/zxing/ResultPoint
+     126: dup
+     127: fload         5
+     129: fconst_1
+     130: fadd
+     131: fload         6
+     133: fconst_1
+     134: fsub
+     135: invokespecial #21                 // Method com/google/zxing/ResultPoint."<init>":(FF)V
+     138: aastore
+     139: areturn
+     140: iconst_4
+     141: anewarray     #20                 // class com/google/zxing/ResultPoint
+     144: dup
+     145: iconst_0
+     146: new           #20                 // class com/google/zxing/ResultPoint
+     149: dup
+     150: fload         11
+     152: fconst_1
+     153: fadd
+     154: fload         12
+     156: fconst_1
+     157: fadd
+     158: invokespecial #21                 // Method com/google/zxing/ResultPoint."<init>":(FF)V
+     161: aastore
+     162: dup
+     163: iconst_1
+     164: new           #20                 // class com/google/zxing/ResultPoint
+     167: dup
+     168: fload         7
+     170: fconst_1
+     171: fadd
+     172: fload         8
+     174: fconst_1
+     175: fsub
+     176: invokespecial #21                 // Method com/google/zxing/ResultPoint."<init>":(FF)V
+     179: aastore
+     180: dup
+     181: iconst_2
+     182: new           #20                 // class com/google/zxing/ResultPoint
+     185: dup
+     186: fload         9
+     188: fconst_1
+     189: fsub
+     190: fload         10
+     192: fconst_1
+     193: fadd
+     194: invokespecial #21                 // Method com/google/zxing/ResultPoint."<init>":(FF)V
+     197: aastore
+     198: dup
+     199: iconst_3
+     200: new           #20                 // class com/google/zxing/ResultPoint
+     203: dup
+     204: fload         5
+     206: fconst_1
+     207: fsub
+     208: fload         6
+     210: fconst_1
+     211: fsub
+     212: invokespecial #21                 // Method com/google/zxing/ResultPoint."<init>":(FF)V
+     215: aastore
+     216: areturn
+
+  private boolean containsBlackPoint(int, int, int, boolean);
+    Code:
+       0: iload         4
+       2: ifeq          38
+       5: iload_1
+       6: istore        5
+       8: iload         5
+      10: iload_2
+      11: if_icmpgt     35
+      14: aload_0
+      15: getfield      #6                  // Field image:Lcom/google/zxing/common/BitMatrix;
+      18: iload         5
+      20: iload_3
+      21: invokevirtual #19                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+      24: ifeq          29
+      27: iconst_1
+      28: ireturn
+      29: iinc          5, 1
+      32: goto          8
+      35: goto          68
+      38: iload_1
+      39: istore        5
+      41: iload         5
+      43: iload_2
+      44: if_icmpgt     68
+      47: aload_0
+      48: getfield      #6                  // Field image:Lcom/google/zxing/common/BitMatrix;
+      51: iload_3
+      52: iload         5
+      54: invokevirtual #19                 // Method com/google/zxing/common/BitMatrix.get:(II)Z
+      57: ifeq          62
+      60: iconst_1
+      61: ireturn
+      62: iinc          5, 1
+      65: goto          41
+      68: iconst_0
+      69: ireturn
+}

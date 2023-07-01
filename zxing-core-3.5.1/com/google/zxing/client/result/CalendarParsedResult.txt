@@ -1,0 +1,451 @@
+Compiled from "CalendarParsedResult.java"
+public final class com.google.zxing.client.result.CalendarParsedResult extends com.google.zxing.client.result.ParsedResult {
+  private static final java.util.regex.Pattern RFC2445_DURATION;
+
+  private static final long[] RFC2445_DURATION_FIELD_UNITS;
+
+  private static final java.util.regex.Pattern DATE_TIME;
+
+  private final java.lang.String summary;
+
+  private final long start;
+
+  private final boolean startAllDay;
+
+  private final long end;
+
+  private final boolean endAllDay;
+
+  private final java.lang.String location;
+
+  private final java.lang.String organizer;
+
+  private final java.lang.String[] attendees;
+
+  private final java.lang.String description;
+
+  private final double latitude;
+
+  private final double longitude;
+
+  public com.google.zxing.client.result.CalendarParsedResult(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String[], java.lang.String, double, double);
+    Code:
+       0: aload_0
+       1: getstatic     #1                  // Field com/google/zxing/client/result/ParsedResultType.CALENDAR:Lcom/google/zxing/client/result/ParsedResultType;
+       4: invokespecial #2                  // Method com/google/zxing/client/result/ParsedResult."<init>":(Lcom/google/zxing/client/result/ParsedResultType;)V
+       7: aload_0
+       8: aload_1
+       9: putfield      #3                  // Field summary:Ljava/lang/String;
+      12: aload_0
+      13: aload_2
+      14: invokestatic  #4                  // Method parseDate:(Ljava/lang/String;)J
+      17: putfield      #5                  // Field start:J
+      20: goto          38
+      23: astore        13
+      25: new           #7                  // class java/lang/IllegalArgumentException
+      28: dup
+      29: aload         13
+      31: invokevirtual #8                  // Method java/text/ParseException.toString:()Ljava/lang/String;
+      34: invokespecial #9                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      37: athrow
+      38: aload_3
+      39: ifnonnull     76
+      42: aload         4
+      44: invokestatic  #10                 // Method parseDurationMS:(Ljava/lang/CharSequence;)J
+      47: lstore        13
+      49: aload_0
+      50: lload         13
+      52: lconst_0
+      53: lcmp
+      54: ifge          63
+      57: ldc2_w        #11                 // long -1l
+      60: goto          70
+      63: aload_0
+      64: getfield      #5                  // Field start:J
+      67: lload         13
+      69: ladd
+      70: putfield      #13                 // Field end:J
+      73: goto          102
+      76: aload_0
+      77: aload_3
+      78: invokestatic  #4                  // Method parseDate:(Ljava/lang/String;)J
+      81: putfield      #13                 // Field end:J
+      84: goto          102
+      87: astore        13
+      89: new           #7                  // class java/lang/IllegalArgumentException
+      92: dup
+      93: aload         13
+      95: invokevirtual #8                  // Method java/text/ParseException.toString:()Ljava/lang/String;
+      98: invokespecial #9                  // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+     101: athrow
+     102: aload_0
+     103: aload_2
+     104: invokevirtual #14                 // Method java/lang/String.length:()I
+     107: bipush        8
+     109: if_icmpne     116
+     112: iconst_1
+     113: goto          117
+     116: iconst_0
+     117: putfield      #15                 // Field startAllDay:Z
+     120: aload_0
+     121: aload_3
+     122: ifnull        138
+     125: aload_3
+     126: invokevirtual #14                 // Method java/lang/String.length:()I
+     129: bipush        8
+     131: if_icmpne     138
+     134: iconst_1
+     135: goto          139
+     138: iconst_0
+     139: putfield      #16                 // Field endAllDay:Z
+     142: aload_0
+     143: aload         5
+     145: putfield      #17                 // Field location:Ljava/lang/String;
+     148: aload_0
+     149: aload         6
+     151: putfield      #18                 // Field organizer:Ljava/lang/String;
+     154: aload_0
+     155: aload         7
+     157: putfield      #19                 // Field attendees:[Ljava/lang/String;
+     160: aload_0
+     161: aload         8
+     163: putfield      #20                 // Field description:Ljava/lang/String;
+     166: aload_0
+     167: dload         9
+     169: putfield      #21                 // Field latitude:D
+     172: aload_0
+     173: dload         11
+     175: putfield      #22                 // Field longitude:D
+     178: return
+    Exception table:
+       from    to  target type
+          12    20    23   Class java/text/ParseException
+          76    84    87   Class java/text/ParseException
+
+  public java.lang.String getSummary();
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field summary:Ljava/lang/String;
+       4: areturn
+
+  public java.util.Date getStart();
+    Code:
+       0: new           #23                 // class java/util/Date
+       3: dup
+       4: aload_0
+       5: getfield      #5                  // Field start:J
+       8: invokespecial #24                 // Method java/util/Date."<init>":(J)V
+      11: areturn
+
+  public long getStartTimestamp();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field start:J
+       4: lreturn
+
+  public boolean isStartAllDay();
+    Code:
+       0: aload_0
+       1: getfield      #15                 // Field startAllDay:Z
+       4: ireturn
+
+  public java.util.Date getEnd();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field end:J
+       4: lconst_0
+       5: lcmp
+       6: ifge          13
+       9: aconst_null
+      10: goto          24
+      13: new           #23                 // class java/util/Date
+      16: dup
+      17: aload_0
+      18: getfield      #13                 // Field end:J
+      21: invokespecial #24                 // Method java/util/Date."<init>":(J)V
+      24: areturn
+
+  public long getEndTimestamp();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field end:J
+       4: lreturn
+
+  public boolean isEndAllDay();
+    Code:
+       0: aload_0
+       1: getfield      #16                 // Field endAllDay:Z
+       4: ireturn
+
+  public java.lang.String getLocation();
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field location:Ljava/lang/String;
+       4: areturn
+
+  public java.lang.String getOrganizer();
+    Code:
+       0: aload_0
+       1: getfield      #18                 // Field organizer:Ljava/lang/String;
+       4: areturn
+
+  public java.lang.String[] getAttendees();
+    Code:
+       0: aload_0
+       1: getfield      #19                 // Field attendees:[Ljava/lang/String;
+       4: areturn
+
+  public java.lang.String getDescription();
+    Code:
+       0: aload_0
+       1: getfield      #20                 // Field description:Ljava/lang/String;
+       4: areturn
+
+  public double getLatitude();
+    Code:
+       0: aload_0
+       1: getfield      #21                 // Field latitude:D
+       4: dreturn
+
+  public double getLongitude();
+    Code:
+       0: aload_0
+       1: getfield      #22                 // Field longitude:D
+       4: dreturn
+
+  public java.lang.String getDisplayResult();
+    Code:
+       0: new           #25                 // class java/lang/StringBuilder
+       3: dup
+       4: bipush        100
+       6: invokespecial #26                 // Method java/lang/StringBuilder."<init>":(I)V
+       9: astore_1
+      10: aload_0
+      11: getfield      #3                  // Field summary:Ljava/lang/String;
+      14: aload_1
+      15: invokestatic  #27                 // Method maybeAppend:(Ljava/lang/String;Ljava/lang/StringBuilder;)V
+      18: aload_0
+      19: getfield      #15                 // Field startAllDay:Z
+      22: aload_0
+      23: getfield      #5                  // Field start:J
+      26: invokestatic  #28                 // Method format:(ZJ)Ljava/lang/String;
+      29: aload_1
+      30: invokestatic  #27                 // Method maybeAppend:(Ljava/lang/String;Ljava/lang/StringBuilder;)V
+      33: aload_0
+      34: getfield      #16                 // Field endAllDay:Z
+      37: aload_0
+      38: getfield      #13                 // Field end:J
+      41: invokestatic  #28                 // Method format:(ZJ)Ljava/lang/String;
+      44: aload_1
+      45: invokestatic  #27                 // Method maybeAppend:(Ljava/lang/String;Ljava/lang/StringBuilder;)V
+      48: aload_0
+      49: getfield      #17                 // Field location:Ljava/lang/String;
+      52: aload_1
+      53: invokestatic  #27                 // Method maybeAppend:(Ljava/lang/String;Ljava/lang/StringBuilder;)V
+      56: aload_0
+      57: getfield      #18                 // Field organizer:Ljava/lang/String;
+      60: aload_1
+      61: invokestatic  #27                 // Method maybeAppend:(Ljava/lang/String;Ljava/lang/StringBuilder;)V
+      64: aload_0
+      65: getfield      #19                 // Field attendees:[Ljava/lang/String;
+      68: aload_1
+      69: invokestatic  #29                 // Method maybeAppend:([Ljava/lang/String;Ljava/lang/StringBuilder;)V
+      72: aload_0
+      73: getfield      #20                 // Field description:Ljava/lang/String;
+      76: aload_1
+      77: invokestatic  #27                 // Method maybeAppend:(Ljava/lang/String;Ljava/lang/StringBuilder;)V
+      80: aload_1
+      81: invokevirtual #30                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      84: areturn
+
+  private static long parseDate(java.lang.String) throws java.text.ParseException;
+    Code:
+       0: getstatic     #31                 // Field DATE_TIME:Ljava/util/regex/Pattern;
+       3: aload_0
+       4: invokevirtual #32                 // Method java/util/regex/Pattern.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+       7: invokevirtual #33                 // Method java/util/regex/Matcher.matches:()Z
+      10: ifne          23
+      13: new           #6                  // class java/text/ParseException
+      16: dup
+      17: aload_0
+      18: iconst_0
+      19: invokespecial #34                 // Method java/text/ParseException."<init>":(Ljava/lang/String;I)V
+      22: athrow
+      23: aload_0
+      24: invokevirtual #14                 // Method java/lang/String.length:()I
+      27: bipush        8
+      29: if_icmpne     63
+      32: new           #35                 // class java/text/SimpleDateFormat
+      35: dup
+      36: ldc           #36                 // String yyyyMMdd
+      38: getstatic     #37                 // Field java/util/Locale.ENGLISH:Ljava/util/Locale;
+      41: invokespecial #38                 // Method java/text/SimpleDateFormat."<init>":(Ljava/lang/String;Ljava/util/Locale;)V
+      44: astore_1
+      45: aload_1
+      46: ldc           #39                 // String GMT
+      48: invokestatic  #40                 // Method java/util/TimeZone.getTimeZone:(Ljava/lang/String;)Ljava/util/TimeZone;
+      51: invokevirtual #41                 // Method java/text/DateFormat.setTimeZone:(Ljava/util/TimeZone;)V
+      54: aload_1
+      55: aload_0
+      56: invokevirtual #42                 // Method java/text/DateFormat.parse:(Ljava/lang/String;)Ljava/util/Date;
+      59: invokevirtual #43                 // Method java/util/Date.getTime:()J
+      62: lreturn
+      63: aload_0
+      64: invokevirtual #14                 // Method java/lang/String.length:()I
+      67: bipush        16
+      69: if_icmpne     134
+      72: aload_0
+      73: bipush        15
+      75: invokevirtual #44                 // Method java/lang/String.charAt:(I)C
+      78: bipush        90
+      80: if_icmpne     134
+      83: aload_0
+      84: iconst_0
+      85: bipush        15
+      87: invokevirtual #45                 // Method java/lang/String.substring:(II)Ljava/lang/String;
+      90: invokestatic  #46                 // Method parseDateTimeString:(Ljava/lang/String;)J
+      93: lstore_1
+      94: new           #47                 // class java/util/GregorianCalendar
+      97: dup
+      98: invokespecial #48                 // Method java/util/GregorianCalendar."<init>":()V
+     101: astore_3
+     102: lload_1
+     103: aload_3
+     104: bipush        15
+     106: invokevirtual #50                 // Method java/util/Calendar.get:(I)I
+     109: i2l
+     110: ladd
+     111: lstore_1
+     112: aload_3
+     113: new           #23                 // class java/util/Date
+     116: dup
+     117: lload_1
+     118: invokespecial #24                 // Method java/util/Date."<init>":(J)V
+     121: invokevirtual #51                 // Method java/util/Calendar.setTime:(Ljava/util/Date;)V
+     124: lload_1
+     125: aload_3
+     126: bipush        16
+     128: invokevirtual #50                 // Method java/util/Calendar.get:(I)I
+     131: i2l
+     132: ladd
+     133: lreturn
+     134: aload_0
+     135: invokestatic  #46                 // Method parseDateTimeString:(Ljava/lang/String;)J
+     138: lreturn
+
+  private static java.lang.String format(boolean, long);
+    Code:
+       0: lload_1
+       1: lconst_0
+       2: lcmp
+       3: ifge          8
+       6: aconst_null
+       7: areturn
+       8: iload_0
+       9: ifeq          19
+      12: iconst_2
+      13: invokestatic  #53                 // Method java/text/DateFormat.getDateInstance:(I)Ljava/text/DateFormat;
+      16: goto          24
+      19: iconst_2
+      20: iconst_2
+      21: invokestatic  #54                 // Method java/text/DateFormat.getDateTimeInstance:(II)Ljava/text/DateFormat;
+      24: astore_3
+      25: aload_3
+      26: lload_1
+      27: invokestatic  #55                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+      30: invokevirtual #56                 // Method java/text/DateFormat.format:(Ljava/lang/Object;)Ljava/lang/String;
+      33: areturn
+
+  private static long parseDurationMS(java.lang.CharSequence);
+    Code:
+       0: aload_0
+       1: ifnonnull     8
+       4: ldc2_w        #11                 // long -1l
+       7: lreturn
+       8: getstatic     #57                 // Field RFC2445_DURATION:Ljava/util/regex/Pattern;
+      11: aload_0
+      12: invokevirtual #32                 // Method java/util/regex/Pattern.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+      15: astore_1
+      16: aload_1
+      17: invokevirtual #33                 // Method java/util/regex/Matcher.matches:()Z
+      20: ifne          27
+      23: ldc2_w        #11                 // long -1l
+      26: lreturn
+      27: lconst_0
+      28: lstore_2
+      29: iconst_0
+      30: istore        4
+      32: iload         4
+      34: getstatic     #58                 // Field RFC2445_DURATION_FIELD_UNITS:[J
+      37: arraylength
+      38: if_icmpge     78
+      41: aload_1
+      42: iload         4
+      44: iconst_1
+      45: iadd
+      46: invokevirtual #59                 // Method java/util/regex/Matcher.group:(I)Ljava/lang/String;
+      49: astore        5
+      51: aload         5
+      53: ifnull        72
+      56: lload_2
+      57: getstatic     #58                 // Field RFC2445_DURATION_FIELD_UNITS:[J
+      60: iload         4
+      62: laload
+      63: aload         5
+      65: invokestatic  #60                 // Method java/lang/Integer.parseInt:(Ljava/lang/String;)I
+      68: i2l
+      69: lmul
+      70: ladd
+      71: lstore_2
+      72: iinc          4, 1
+      75: goto          32
+      78: lload_2
+      79: lreturn
+
+  private static long parseDateTimeString(java.lang.String) throws java.text.ParseException;
+    Code:
+       0: new           #35                 // class java/text/SimpleDateFormat
+       3: dup
+       4: ldc           #61                 // String yyyyMMdd\'T\'HHmmss
+       6: getstatic     #37                 // Field java/util/Locale.ENGLISH:Ljava/util/Locale;
+       9: invokespecial #38                 // Method java/text/SimpleDateFormat."<init>":(Ljava/lang/String;Ljava/util/Locale;)V
+      12: astore_1
+      13: aload_1
+      14: aload_0
+      15: invokevirtual #42                 // Method java/text/DateFormat.parse:(Ljava/lang/String;)Ljava/util/Date;
+      18: invokevirtual #43                 // Method java/util/Date.getTime:()J
+      21: lreturn
+
+  static {};
+    Code:
+       0: ldc           #62                 // String P(?:(\\d+)W)?(?:(\\d+)D)?(?:T(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+)S)?)?
+       2: invokestatic  #63                 // Method java/util/regex/Pattern.compile:(Ljava/lang/String;)Ljava/util/regex/Pattern;
+       5: putstatic     #57                 // Field RFC2445_DURATION:Ljava/util/regex/Pattern;
+       8: iconst_5
+       9: newarray       long
+      11: dup
+      12: iconst_0
+      13: ldc2_w        #64                 // long 604800000l
+      16: lastore
+      17: dup
+      18: iconst_1
+      19: ldc2_w        #66                 // long 86400000l
+      22: lastore
+      23: dup
+      24: iconst_2
+      25: ldc2_w        #68                 // long 3600000l
+      28: lastore
+      29: dup
+      30: iconst_3
+      31: ldc2_w        #70                 // long 60000l
+      34: lastore
+      35: dup
+      36: iconst_4
+      37: ldc2_w        #72                 // long 1000l
+      40: lastore
+      41: putstatic     #58                 // Field RFC2445_DURATION_FIELD_UNITS:[J
+      44: ldc           #74                 // String [0-9]{8}(T[0-9]{6}Z?)?
+      46: invokestatic  #63                 // Method java/util/regex/Pattern.compile:(Ljava/lang/String;)Ljava/util/regex/Pattern;
+      49: putstatic     #31                 // Field DATE_TIME:Ljava/util/regex/Pattern;
+      52: return
+}

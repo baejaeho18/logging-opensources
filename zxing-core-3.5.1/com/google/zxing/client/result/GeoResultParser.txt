@@ -1,0 +1,109 @@
+Compiled from "GeoResultParser.java"
+public final class com.google.zxing.client.result.GeoResultParser extends com.google.zxing.client.result.ResultParser {
+  private static final java.util.regex.Pattern GEO_URL_PATTERN;
+
+  public com.google.zxing.client.result.GeoResultParser();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method com/google/zxing/client/result/ResultParser."<init>":()V
+       4: return
+
+  public com.google.zxing.client.result.GeoParsedResult parse(com.google.zxing.Result);
+    Code:
+       0: aload_1
+       1: invokestatic  #2                  // Method getMassagedText:(Lcom/google/zxing/Result;)Ljava/lang/String;
+       4: astore_2
+       5: getstatic     #3                  // Field GEO_URL_PATTERN:Ljava/util/regex/Pattern;
+       8: aload_2
+       9: invokevirtual #4                  // Method java/util/regex/Pattern.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+      12: astore_3
+      13: aload_3
+      14: invokevirtual #5                  // Method java/util/regex/Matcher.matches:()Z
+      17: ifne          22
+      20: aconst_null
+      21: areturn
+      22: aload_3
+      23: iconst_4
+      24: invokevirtual #6                  // Method java/util/regex/Matcher.group:(I)Ljava/lang/String;
+      27: astore        4
+      29: aload_3
+      30: iconst_1
+      31: invokevirtual #6                  // Method java/util/regex/Matcher.group:(I)Ljava/lang/String;
+      34: invokestatic  #7                  // Method java/lang/Double.parseDouble:(Ljava/lang/String;)D
+      37: dstore        5
+      39: dload         5
+      41: ldc2_w        #8                  // double 90.0d
+      44: dcmpl
+      45: ifgt          57
+      48: dload         5
+      50: ldc2_w        #10                 // double -90.0d
+      53: dcmpg
+      54: ifge          59
+      57: aconst_null
+      58: areturn
+      59: aload_3
+      60: iconst_2
+      61: invokevirtual #6                  // Method java/util/regex/Matcher.group:(I)Ljava/lang/String;
+      64: invokestatic  #7                  // Method java/lang/Double.parseDouble:(Ljava/lang/String;)D
+      67: dstore        7
+      69: dload         7
+      71: ldc2_w        #12                 // double 180.0d
+      74: dcmpl
+      75: ifgt          87
+      78: dload         7
+      80: ldc2_w        #14                 // double -180.0d
+      83: dcmpg
+      84: ifge          89
+      87: aconst_null
+      88: areturn
+      89: aload_3
+      90: iconst_3
+      91: invokevirtual #6                  // Method java/util/regex/Matcher.group:(I)Ljava/lang/String;
+      94: ifnonnull     103
+      97: dconst_0
+      98: dstore        9
+     100: goto          122
+     103: aload_3
+     104: iconst_3
+     105: invokevirtual #6                  // Method java/util/regex/Matcher.group:(I)Ljava/lang/String;
+     108: invokestatic  #7                  // Method java/lang/Double.parseDouble:(Ljava/lang/String;)D
+     111: dstore        9
+     113: dload         9
+     115: dconst_0
+     116: dcmpg
+     117: ifge          122
+     120: aconst_null
+     121: areturn
+     122: goto          129
+     125: astore        11
+     127: aconst_null
+     128: areturn
+     129: new           #17                 // class com/google/zxing/client/result/GeoParsedResult
+     132: dup
+     133: dload         5
+     135: dload         7
+     137: dload         9
+     139: aload         4
+     141: invokespecial #18                 // Method com/google/zxing/client/result/GeoParsedResult."<init>":(DDDLjava/lang/String;)V
+     144: areturn
+    Exception table:
+       from    to  target type
+          29    58   125   Class java/lang/NumberFormatException
+          59    88   125   Class java/lang/NumberFormatException
+          89   121   125   Class java/lang/NumberFormatException
+
+  public com.google.zxing.client.result.ParsedResult parse(com.google.zxing.Result);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #19                 // Method parse:(Lcom/google/zxing/Result;)Lcom/google/zxing/client/result/GeoParsedResult;
+       5: areturn
+
+  static {};
+    Code:
+       0: ldc           #20                 // String geo:([\\-0-9.]+),([\\-0-9.]+)(?:,([\\-0-9.]+))?(?:\\?(.*))?
+       2: iconst_2
+       3: invokestatic  #22                 // Method java/util/regex/Pattern.compile:(Ljava/lang/String;I)Ljava/util/regex/Pattern;
+       6: putstatic     #3                  // Field GEO_URL_PATTERN:Ljava/util/regex/Pattern;
+       9: return
+}

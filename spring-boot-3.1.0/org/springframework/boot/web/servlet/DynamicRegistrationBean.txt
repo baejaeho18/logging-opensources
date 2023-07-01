@@ -1,0 +1,176 @@
+Compiled from "DynamicRegistrationBean.java"
+public abstract class org.springframework.boot.web.servlet.DynamicRegistrationBean<D extends jakarta.servlet.Registration$Dynamic> extends org.springframework.boot.web.servlet.RegistrationBean implements org.springframework.beans.factory.BeanNameAware {
+  private static final org.apache.commons.logging.Log logger;
+
+  private java.lang.String name;
+
+  private boolean asyncSupported;
+
+  private java.util.Map<java.lang.String, java.lang.String> initParameters;
+
+  private java.lang.String beanName;
+
+  private boolean ignoreRegistrationFailure;
+
+  public org.springframework.boot.web.servlet.DynamicRegistrationBean();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method org/springframework/boot/web/servlet/RegistrationBean."<init>":()V
+       4: aload_0
+       5: iconst_1
+       6: putfield      #7                  // Field asyncSupported:Z
+       9: aload_0
+      10: new           #13                 // class java/util/LinkedHashMap
+      13: dup
+      14: invokespecial #15                 // Method java/util/LinkedHashMap."<init>":()V
+      17: putfield      #16                 // Field initParameters:Ljava/util/Map;
+      20: return
+
+  public void setName(java.lang.String);
+    Code:
+       0: aload_1
+       1: ldc           #20                 // String Name must not be empty
+       3: invokestatic  #22                 // Method org/springframework/util/Assert.hasLength:(Ljava/lang/String;Ljava/lang/String;)V
+       6: aload_0
+       7: aload_1
+       8: putfield      #28                 // Field name:Ljava/lang/String;
+      11: return
+
+  public void setAsyncSupported(boolean);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: putfield      #7                  // Field asyncSupported:Z
+       5: return
+
+  public boolean isAsyncSupported();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field asyncSupported:Z
+       4: ireturn
+
+  public void setInitParameters(java.util.Map<java.lang.String, java.lang.String>);
+    Code:
+       0: aload_1
+       1: ldc           #32                 // String InitParameters must not be null
+       3: invokestatic  #34                 // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: aload_0
+       7: new           #13                 // class java/util/LinkedHashMap
+      10: dup
+      11: aload_1
+      12: invokespecial #38                 // Method java/util/LinkedHashMap."<init>":(Ljava/util/Map;)V
+      15: putfield      #16                 // Field initParameters:Ljava/util/Map;
+      18: return
+
+  public java.util.Map<java.lang.String, java.lang.String> getInitParameters();
+    Code:
+       0: aload_0
+       1: getfield      #16                 // Field initParameters:Ljava/util/Map;
+       4: areturn
+
+  public void addInitParameter(java.lang.String, java.lang.String);
+    Code:
+       0: aload_1
+       1: ldc           #41                 // String Name must not be null
+       3: invokestatic  #34                 // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: aload_0
+       7: getfield      #16                 // Field initParameters:Ljava/util/Map;
+      10: aload_1
+      11: aload_2
+      12: invokeinterface #43,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      17: pop
+      18: return
+
+  protected final void register(java.lang.String, jakarta.servlet.ServletContext);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokevirtual #49                 // Method addRegistration:(Ljava/lang/String;Ljakarta/servlet/ServletContext;)Ljakarta/servlet/Registration$Dynamic;
+       6: astore_3
+       7: aload_3
+       8: ifnonnull     57
+      11: aload_0
+      12: getfield      #53                 // Field ignoreRegistrationFailure:Z
+      15: ifeq          36
+      18: getstatic     #56                 // Field logger:Lorg/apache/commons/logging/Log;
+      21: aload_1
+      22: invokestatic  #60                 // Method org/springframework/util/StringUtils.capitalize:(Ljava/lang/String;)Ljava/lang/String;
+      25: invokedynamic #66,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      30: invokeinterface #69,  2           // InterfaceMethod org/apache/commons/logging/Log.info:(Ljava/lang/Object;)V
+      35: return
+      36: new           #75                 // class java/lang/IllegalStateException
+      39: dup
+      40: ldc           #77                 // String Failed to register \'%s\' on the servlet context. Possibly already registered?
+      42: iconst_1
+      43: anewarray     #79                 // class java/lang/Object
+      46: dup
+      47: iconst_0
+      48: aload_1
+      49: aastore
+      50: invokevirtual #81                 // Method java/lang/String.formatted:([Ljava/lang/Object;)Ljava/lang/String;
+      53: invokespecial #87                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      56: athrow
+      57: aload_0
+      58: aload_3
+      59: invokevirtual #90                 // Method configure:(Ljakarta/servlet/Registration$Dynamic;)V
+      62: return
+
+  public void setIgnoreRegistrationFailure(boolean);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: putfield      #53                 // Field ignoreRegistrationFailure:Z
+       5: return
+
+  public void setBeanName(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #94                 // Field beanName:Ljava/lang/String;
+       5: return
+
+  protected abstract D addRegistration(java.lang.String, jakarta.servlet.ServletContext);
+
+  protected void configure(D);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: getfield      #7                  // Field asyncSupported:Z
+       5: invokeinterface #97,  2           // InterfaceMethod jakarta/servlet/Registration$Dynamic.setAsyncSupported:(Z)V
+      10: aload_0
+      11: getfield      #16                 // Field initParameters:Ljava/util/Map;
+      14: invokeinterface #103,  1          // InterfaceMethod java/util/Map.isEmpty:()Z
+      19: ifne          33
+      22: aload_1
+      23: aload_0
+      24: getfield      #16                 // Field initParameters:Ljava/util/Map;
+      27: invokeinterface #107,  2          // InterfaceMethod jakarta/servlet/Registration$Dynamic.setInitParameters:(Ljava/util/Map;)Ljava/util/Set;
+      32: pop
+      33: return
+
+  protected final java.lang.String getOrDeduceName(java.lang.Object);
+    Code:
+       0: aload_0
+       1: getfield      #28                 // Field name:Ljava/lang/String;
+       4: ifnull        12
+       7: aload_0
+       8: getfield      #28                 // Field name:Ljava/lang/String;
+      11: areturn
+      12: aload_0
+      13: getfield      #94                 // Field beanName:Ljava/lang/String;
+      16: ifnull        24
+      19: aload_0
+      20: getfield      #94                 // Field beanName:Ljava/lang/String;
+      23: areturn
+      24: aload_1
+      25: invokestatic  #111                // Method org/springframework/core/Conventions.getVariableName:(Ljava/lang/Object;)Ljava/lang/String;
+      28: areturn
+
+  static {};
+    Code:
+       0: ldc           #2                  // class org/springframework/boot/web/servlet/RegistrationBean
+       2: invokestatic  #117                // Method org/apache/commons/logging/LogFactory.getLog:(Ljava/lang/Class;)Lorg/apache/commons/logging/Log;
+       5: putstatic     #56                 // Field logger:Lorg/apache/commons/logging/Log;
+       8: return
+}

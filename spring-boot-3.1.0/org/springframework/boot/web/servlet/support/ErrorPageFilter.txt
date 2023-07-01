@@ -1,0 +1,504 @@
+Compiled from "ErrorPageFilter.java"
+public class org.springframework.boot.web.servlet.support.ErrorPageFilter implements jakarta.servlet.Filter,org.springframework.boot.web.server.ErrorPageRegistry,org.springframework.core.Ordered {
+  private static final org.apache.commons.logging.Log logger;
+
+  private static final java.lang.String ERROR_EXCEPTION;
+
+  private static final java.lang.String ERROR_EXCEPTION_TYPE;
+
+  private static final java.lang.String ERROR_MESSAGE;
+
+  public static final java.lang.String ERROR_REQUEST_URI;
+
+  private static final java.lang.String ERROR_STATUS_CODE;
+
+  private static final java.util.Set<java.lang.Class<?>> CLIENT_ABORT_EXCEPTIONS;
+
+  private java.lang.String global;
+
+  private final java.util.Map<java.lang.Integer, java.lang.String> statuses;
+
+  private final java.util.Map<java.lang.Class<?>, java.lang.String> exceptions;
+
+  private final org.springframework.web.filter.OncePerRequestFilter delegate;
+
+  public org.springframework.boot.web.servlet.support.ErrorPageFilter();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #7                  // class java/util/HashMap
+       8: dup
+       9: invokespecial #9                  // Method java/util/HashMap."<init>":()V
+      12: putfield      #10                 // Field statuses:Ljava/util/Map;
+      15: aload_0
+      16: new           #7                  // class java/util/HashMap
+      19: dup
+      20: invokespecial #9                  // Method java/util/HashMap."<init>":()V
+      23: putfield      #16                 // Field exceptions:Ljava/util/Map;
+      26: aload_0
+      27: new           #19                 // class org/springframework/boot/web/servlet/support/ErrorPageFilter$1
+      30: dup
+      31: aload_0
+      32: invokespecial #21                 // Method org/springframework/boot/web/servlet/support/ErrorPageFilter$1."<init>":(Lorg/springframework/boot/web/servlet/support/ErrorPageFilter;)V
+      35: putfield      #24                 // Field delegate:Lorg/springframework/web/filter/OncePerRequestFilter;
+      38: return
+
+  public void init(jakarta.servlet.FilterConfig) throws jakarta.servlet.ServletException;
+    Code:
+       0: aload_0
+       1: getfield      #24                 // Field delegate:Lorg/springframework/web/filter/OncePerRequestFilter;
+       4: aload_1
+       5: invokevirtual #28                 // Method org/springframework/web/filter/OncePerRequestFilter.init:(Ljakarta/servlet/FilterConfig;)V
+       8: return
+
+  public void doFilter(jakarta.servlet.ServletRequest, jakarta.servlet.ServletResponse, jakarta.servlet.FilterChain) throws java.io.IOException, jakarta.servlet.ServletException;
+    Code:
+       0: aload_0
+       1: getfield      #24                 // Field delegate:Lorg/springframework/web/filter/OncePerRequestFilter;
+       4: aload_1
+       5: aload_2
+       6: aload_3
+       7: invokevirtual #34                 // Method org/springframework/web/filter/OncePerRequestFilter.doFilter:(Ljakarta/servlet/ServletRequest;Ljakarta/servlet/ServletResponse;Ljakarta/servlet/FilterChain;)V
+      10: return
+
+  private void doFilter(jakarta.servlet.http.HttpServletRequest, jakarta.servlet.http.HttpServletResponse, jakarta.servlet.FilterChain) throws java.io.IOException, jakarta.servlet.ServletException;
+    Code:
+       0: new           #38                 // class org/springframework/boot/web/servlet/support/ErrorPageFilter$ErrorWrapperResponse
+       3: dup
+       4: aload_2
+       5: invokespecial #40                 // Method org/springframework/boot/web/servlet/support/ErrorPageFilter$ErrorWrapperResponse."<init>":(Ljakarta/servlet/http/HttpServletResponse;)V
+       8: astore        4
+      10: aload_3
+      11: aload_1
+      12: aload         4
+      14: invokeinterface #43,  3           // InterfaceMethod jakarta/servlet/FilterChain.doFilter:(Ljakarta/servlet/ServletRequest;Ljakarta/servlet/ServletResponse;)V
+      19: aload         4
+      21: invokevirtual #48                 // Method org/springframework/boot/web/servlet/support/ErrorPageFilter$ErrorWrapperResponse.hasErrorToSend:()Z
+      24: ifeq          52
+      27: aload_0
+      28: aload_1
+      29: aload_2
+      30: aload         4
+      32: invokevirtual #52                 // Method org/springframework/boot/web/servlet/support/ErrorPageFilter$ErrorWrapperResponse.getStatus:()I
+      35: aload         4
+      37: invokevirtual #56                 // Method org/springframework/boot/web/servlet/support/ErrorPageFilter$ErrorWrapperResponse.getMessage:()Ljava/lang/String;
+      40: invokevirtual #60                 // Method handleErrorStatus:(Ljakarta/servlet/http/HttpServletRequest;Ljakarta/servlet/http/HttpServletResponse;ILjava/lang/String;)V
+      43: aload_2
+      44: invokeinterface #64,  1           // InterfaceMethod jakarta/servlet/http/HttpServletResponse.flushBuffer:()V
+      49: goto          76
+      52: aload_1
+      53: invokeinterface #69,  1           // InterfaceMethod jakarta/servlet/http/HttpServletRequest.isAsyncStarted:()Z
+      58: ifne          76
+      61: aload_2
+      62: invokeinterface #74,  1           // InterfaceMethod jakarta/servlet/http/HttpServletResponse.isCommitted:()Z
+      67: ifne          76
+      70: aload_2
+      71: invokeinterface #64,  1           // InterfaceMethod jakarta/servlet/http/HttpServletResponse.flushBuffer:()V
+      76: goto          132
+      79: astore        5
+      81: aload         5
+      83: astore        6
+      85: aload         5
+      87: instanceof    #79                 // class jakarta/servlet/ServletException
+      90: ifeq          116
+      93: aload         5
+      95: checkcast     #79                 // class jakarta/servlet/ServletException
+      98: astore        7
+     100: aload         7
+     102: invokevirtual #81                 // Method jakarta/servlet/ServletException.getRootCause:()Ljava/lang/Throwable;
+     105: astore        8
+     107: aload         8
+     109: ifnull        116
+     112: aload         8
+     114: astore        6
+     116: aload_0
+     117: aload_1
+     118: aload_2
+     119: aload         4
+     121: aload         6
+     123: invokevirtual #85                 // Method handleException:(Ljakarta/servlet/http/HttpServletRequest;Ljakarta/servlet/http/HttpServletResponse;Lorg/springframework/boot/web/servlet/support/ErrorPageFilter$ErrorWrapperResponse;Ljava/lang/Throwable;)V
+     126: aload_2
+     127: invokeinterface #64,  1           // InterfaceMethod jakarta/servlet/http/HttpServletResponse.flushBuffer:()V
+     132: return
+    Exception table:
+       from    to  target type
+          10    76    79   Class java/lang/Throwable
+
+  private void handleErrorStatus(jakarta.servlet.http.HttpServletRequest, jakarta.servlet.http.HttpServletResponse, int, java.lang.String) throws jakarta.servlet.ServletException, java.io.IOException;
+    Code:
+       0: aload_2
+       1: invokeinterface #74,  1           // InterfaceMethod jakarta/servlet/http/HttpServletResponse.isCommitted:()Z
+       6: ifeq          16
+       9: aload_0
+      10: aload_1
+      11: aconst_null
+      12: invokevirtual #89                 // Method handleCommittedResponse:(Ljakarta/servlet/http/HttpServletRequest;Ljava/lang/Throwable;)V
+      15: return
+      16: aload_0
+      17: aload_0
+      18: getfield      #10                 // Field statuses:Ljava/util/Map;
+      21: iload_3
+      22: invokestatic  #93                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      25: invokevirtual #99                 // Method getErrorPath:(Ljava/util/Map;Ljava/lang/Integer;)Ljava/lang/String;
+      28: astore        5
+      30: aload         5
+      32: ifnonnull     45
+      35: aload_2
+      36: iload_3
+      37: aload         4
+      39: invokeinterface #103,  3          // InterfaceMethod jakarta/servlet/http/HttpServletResponse.sendError:(ILjava/lang/String;)V
+      44: return
+      45: aload_2
+      46: iload_3
+      47: invokeinterface #107,  2          // InterfaceMethod jakarta/servlet/http/HttpServletResponse.setStatus:(I)V
+      52: aload_0
+      53: aload_1
+      54: iload_3
+      55: aload         4
+      57: invokevirtual #111                // Method setErrorAttributes:(Ljakarta/servlet/http/HttpServletRequest;ILjava/lang/String;)V
+      60: aload_1
+      61: aload         5
+      63: invokeinterface #115,  2          // InterfaceMethod jakarta/servlet/http/HttpServletRequest.getRequestDispatcher:(Ljava/lang/String;)Ljakarta/servlet/RequestDispatcher;
+      68: aload_1
+      69: aload_2
+      70: invokeinterface #119,  3          // InterfaceMethod jakarta/servlet/RequestDispatcher.forward:(Ljakarta/servlet/ServletRequest;Ljakarta/servlet/ServletResponse;)V
+      75: return
+
+  private void handleException(jakarta.servlet.http.HttpServletRequest, jakarta.servlet.http.HttpServletResponse, org.springframework.boot.web.servlet.support.ErrorPageFilter$ErrorWrapperResponse, java.lang.Throwable) throws java.io.IOException, jakarta.servlet.ServletException;
+    Code:
+       0: aload         4
+       2: invokevirtual #124                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       5: astore        5
+       7: aload_0
+       8: aload         5
+      10: invokevirtual #128                // Method getErrorPath:(Ljava/lang/Class;)Ljava/lang/String;
+      13: astore        6
+      15: aload         6
+      17: ifnonnull     27
+      20: aload_0
+      21: aload         4
+      23: invokevirtual #131                // Method rethrow:(Ljava/lang/Throwable;)V
+      26: return
+      27: aload_2
+      28: invokeinterface #74,  1           // InterfaceMethod jakarta/servlet/http/HttpServletResponse.isCommitted:()Z
+      33: ifeq          44
+      36: aload_0
+      37: aload_1
+      38: aload         4
+      40: invokevirtual #89                 // Method handleCommittedResponse:(Ljakarta/servlet/http/HttpServletRequest;Ljava/lang/Throwable;)V
+      43: return
+      44: aload_0
+      45: aload         6
+      47: aload_1
+      48: aload_3
+      49: aload         4
+      51: invokevirtual #135                // Method forwardToErrorPage:(Ljava/lang/String;Ljakarta/servlet/http/HttpServletRequest;Ljakarta/servlet/http/HttpServletResponse;Ljava/lang/Throwable;)V
+      54: return
+
+  private void forwardToErrorPage(java.lang.String, jakarta.servlet.http.HttpServletRequest, jakarta.servlet.http.HttpServletResponse, java.lang.Throwable) throws jakarta.servlet.ServletException, java.io.IOException;
+    Code:
+       0: getstatic     #139                // Field logger:Lorg/apache/commons/logging/Log;
+       3: invokeinterface #143,  1          // InterfaceMethod org/apache/commons/logging/Log.isErrorEnabled:()Z
+       8: ifeq          40
+      11: aload_0
+      12: aload_2
+      13: invokevirtual #148                // Method getDescription:(Ljakarta/servlet/http/HttpServletRequest;)Ljava/lang/String;
+      16: aload         4
+      18: invokevirtual #152                // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+      21: invokedynamic #153,  0            // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      26: astore        5
+      28: getstatic     #139                // Field logger:Lorg/apache/commons/logging/Log;
+      31: aload         5
+      33: aload         4
+      35: invokeinterface #157,  3          // InterfaceMethod org/apache/commons/logging/Log.error:(Ljava/lang/Object;Ljava/lang/Throwable;)V
+      40: aload_0
+      41: aload_2
+      42: sipush        500
+      45: aload         4
+      47: invokevirtual #152                // Method java/lang/Throwable.getMessage:()Ljava/lang/String;
+      50: invokevirtual #111                // Method setErrorAttributes:(Ljakarta/servlet/http/HttpServletRequest;ILjava/lang/String;)V
+      53: aload_2
+      54: ldc           #161                // String jakarta.servlet.error.exception
+      56: aload         4
+      58: invokeinterface #163,  3          // InterfaceMethod jakarta/servlet/http/HttpServletRequest.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+      63: aload_2
+      64: ldc           #167                // String jakarta.servlet.error.exception_type
+      66: aload         4
+      68: invokevirtual #124                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      71: invokeinterface #163,  3          // InterfaceMethod jakarta/servlet/http/HttpServletRequest.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+      76: aload_3
+      77: invokeinterface #169,  1          // InterfaceMethod jakarta/servlet/http/HttpServletResponse.reset:()V
+      82: aload_3
+      83: sipush        500
+      86: invokeinterface #107,  2          // InterfaceMethod jakarta/servlet/http/HttpServletResponse.setStatus:(I)V
+      91: aload_2
+      92: aload_1
+      93: invokeinterface #115,  2          // InterfaceMethod jakarta/servlet/http/HttpServletRequest.getRequestDispatcher:(Ljava/lang/String;)Ljakarta/servlet/RequestDispatcher;
+      98: aload_2
+      99: aload_3
+     100: invokeinterface #119,  3          // InterfaceMethod jakarta/servlet/RequestDispatcher.forward:(Ljakarta/servlet/ServletRequest;Ljakarta/servlet/ServletResponse;)V
+     105: aload_2
+     106: ldc           #161                // String jakarta.servlet.error.exception
+     108: invokeinterface #172,  2          // InterfaceMethod jakarta/servlet/http/HttpServletRequest.removeAttribute:(Ljava/lang/String;)V
+     113: aload_2
+     114: ldc           #167                // String jakarta.servlet.error.exception_type
+     116: invokeinterface #172,  2          // InterfaceMethod jakarta/servlet/http/HttpServletRequest.removeAttribute:(Ljava/lang/String;)V
+     121: return
+
+  protected java.lang.String getDescription(jakarta.servlet.http.HttpServletRequest);
+    Code:
+       0: aload_1
+       1: invokeinterface #176,  1          // InterfaceMethod jakarta/servlet/http/HttpServletRequest.getPathInfo:()Ljava/lang/String;
+       6: ifnull        18
+       9: aload_1
+      10: invokeinterface #176,  1          // InterfaceMethod jakarta/servlet/http/HttpServletRequest.getPathInfo:()Ljava/lang/String;
+      15: goto          20
+      18: ldc           #179                // String
+      20: astore_2
+      21: aload_1
+      22: invokeinterface #181,  1          // InterfaceMethod jakarta/servlet/http/HttpServletRequest.getServletPath:()Ljava/lang/String;
+      27: aload_2
+      28: invokedynamic #184,  0            // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      33: areturn
+
+  private void handleCommittedResponse(jakarta.servlet.http.HttpServletRequest, java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: aload_2
+       2: invokevirtual #185                // Method isClientAbortException:(Ljava/lang/Throwable;)Z
+       5: ifeq          9
+       8: return
+       9: aload_0
+      10: aload_1
+      11: invokevirtual #148                // Method getDescription:(Ljakarta/servlet/http/HttpServletRequest;)Ljava/lang/String;
+      14: invokedynamic #189,  0            // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      19: astore_3
+      20: aload_2
+      21: ifnonnull     36
+      24: getstatic     #139                // Field logger:Lorg/apache/commons/logging/Log;
+      27: aload_3
+      28: invokeinterface #192,  2          // InterfaceMethod org/apache/commons/logging/Log.error:(Ljava/lang/Object;)V
+      33: goto          46
+      36: getstatic     #139                // Field logger:Lorg/apache/commons/logging/Log;
+      39: aload_3
+      40: aload_2
+      41: invokeinterface #157,  3          // InterfaceMethod org/apache/commons/logging/Log.error:(Ljava/lang/Object;Ljava/lang/Throwable;)V
+      46: return
+
+  private boolean isClientAbortException(java.lang.Throwable);
+    Code:
+       0: aload_1
+       1: ifnonnull     6
+       4: iconst_0
+       5: ireturn
+       6: getstatic     #195                // Field CLIENT_ABORT_EXCEPTIONS:Ljava/util/Set;
+       9: invokeinterface #199,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      14: astore_2
+      15: aload_2
+      16: invokeinterface #205,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      21: ifeq          47
+      24: aload_2
+      25: invokeinterface #210,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      30: checkcast     #214                // class java/lang/Class
+      33: astore_3
+      34: aload_3
+      35: aload_1
+      36: invokevirtual #216                // Method java/lang/Class.isInstance:(Ljava/lang/Object;)Z
+      39: ifeq          44
+      42: iconst_1
+      43: ireturn
+      44: goto          15
+      47: aload_0
+      48: aload_1
+      49: invokevirtual #220                // Method java/lang/Throwable.getCause:()Ljava/lang/Throwable;
+      52: invokevirtual #185                // Method isClientAbortException:(Ljava/lang/Throwable;)Z
+      55: ireturn
+
+  private java.lang.String getErrorPath(java.util.Map<java.lang.Integer, java.lang.String>, java.lang.Integer);
+    Code:
+       0: aload_1
+       1: aload_2
+       2: invokeinterface #223,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+       7: ifeq          21
+      10: aload_1
+      11: aload_2
+      12: invokeinterface #228,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      17: checkcast     #232                // class java/lang/String
+      20: areturn
+      21: aload_0
+      22: getfield      #234                // Field global:Ljava/lang/String;
+      25: areturn
+
+  private java.lang.String getErrorPath(java.lang.Class<?>);
+    Code:
+       0: aload_1
+       1: ldc           #2                  // class java/lang/Object
+       3: if_acmpeq     34
+       6: aload_0
+       7: getfield      #16                 // Field exceptions:Ljava/util/Map;
+      10: aload_1
+      11: invokeinterface #228,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      16: checkcast     #232                // class java/lang/String
+      19: astore_2
+      20: aload_2
+      21: ifnull        26
+      24: aload_2
+      25: areturn
+      26: aload_1
+      27: invokevirtual #238                // Method java/lang/Class.getSuperclass:()Ljava/lang/Class;
+      30: astore_1
+      31: goto          0
+      34: aload_0
+      35: getfield      #234                // Field global:Ljava/lang/String;
+      38: areturn
+
+  private void setErrorAttributes(jakarta.servlet.http.HttpServletRequest, int, java.lang.String);
+    Code:
+       0: aload_1
+       1: ldc           #241                // String jakarta.servlet.error.status_code
+       3: iload_2
+       4: invokestatic  #93                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       7: invokeinterface #163,  3          // InterfaceMethod jakarta/servlet/http/HttpServletRequest.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+      12: aload_1
+      13: ldc           #243                // String jakarta.servlet.error.message
+      15: aload_3
+      16: invokeinterface #163,  3          // InterfaceMethod jakarta/servlet/http/HttpServletRequest.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+      21: aload_1
+      22: ldc           #245                // String jakarta.servlet.error.request_uri
+      24: aload_1
+      25: invokeinterface #247,  1          // InterfaceMethod jakarta/servlet/http/HttpServletRequest.getRequestURI:()Ljava/lang/String;
+      30: invokeinterface #163,  3          // InterfaceMethod jakarta/servlet/http/HttpServletRequest.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+      35: return
+
+  private void rethrow(java.lang.Throwable) throws java.io.IOException, jakarta.servlet.ServletException;
+    Code:
+       0: aload_1
+       1: instanceof    #250                // class java/lang/RuntimeException
+       4: ifeq          14
+       7: aload_1
+       8: checkcast     #250                // class java/lang/RuntimeException
+      11: astore_2
+      12: aload_2
+      13: athrow
+      14: aload_1
+      15: instanceof    #252                // class java/lang/Error
+      18: ifeq          28
+      21: aload_1
+      22: checkcast     #252                // class java/lang/Error
+      25: astore_2
+      26: aload_2
+      27: athrow
+      28: aload_1
+      29: instanceof    #254                // class java/io/IOException
+      32: ifeq          42
+      35: aload_1
+      36: checkcast     #254                // class java/io/IOException
+      39: astore_2
+      40: aload_2
+      41: athrow
+      42: aload_1
+      43: instanceof    #79                 // class jakarta/servlet/ServletException
+      46: ifeq          56
+      49: aload_1
+      50: checkcast     #79                 // class jakarta/servlet/ServletException
+      53: astore_2
+      54: aload_2
+      55: athrow
+      56: new           #256                // class java/lang/IllegalStateException
+      59: dup
+      60: aload_1
+      61: invokespecial #258                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/Throwable;)V
+      64: athrow
+
+  public void addErrorPages(org.springframework.boot.web.server.ErrorPage...);
+    Code:
+       0: aload_1
+       1: astore_2
+       2: aload_2
+       3: arraylength
+       4: istore_3
+       5: iconst_0
+       6: istore        4
+       8: iload         4
+      10: iload_3
+      11: if_icmpge     103
+      14: aload_2
+      15: iload         4
+      17: aaload
+      18: astore        5
+      20: aload         5
+      22: invokevirtual #260                // Method org/springframework/boot/web/server/ErrorPage.isGlobal:()Z
+      25: ifeq          40
+      28: aload_0
+      29: aload         5
+      31: invokevirtual #265                // Method org/springframework/boot/web/server/ErrorPage.getPath:()Ljava/lang/String;
+      34: putfield      #234                // Field global:Ljava/lang/String;
+      37: goto          97
+      40: aload         5
+      42: invokevirtual #268                // Method org/springframework/boot/web/server/ErrorPage.getStatus:()Lorg/springframework/http/HttpStatus;
+      45: ifnull        77
+      48: aload_0
+      49: getfield      #10                 // Field statuses:Ljava/util/Map;
+      52: aload         5
+      54: invokevirtual #268                // Method org/springframework/boot/web/server/ErrorPage.getStatus:()Lorg/springframework/http/HttpStatus;
+      57: invokevirtual #271                // Method org/springframework/http/HttpStatus.value:()I
+      60: invokestatic  #93                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      63: aload         5
+      65: invokevirtual #265                // Method org/springframework/boot/web/server/ErrorPage.getPath:()Ljava/lang/String;
+      68: invokeinterface #276,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      73: pop
+      74: goto          97
+      77: aload_0
+      78: getfield      #16                 // Field exceptions:Ljava/util/Map;
+      81: aload         5
+      83: invokevirtual #280                // Method org/springframework/boot/web/server/ErrorPage.getException:()Ljava/lang/Class;
+      86: aload         5
+      88: invokevirtual #265                // Method org/springframework/boot/web/server/ErrorPage.getPath:()Ljava/lang/String;
+      91: invokeinterface #276,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      96: pop
+      97: iinc          4, 1
+     100: goto          8
+     103: return
+
+  public void destroy();
+    Code:
+       0: return
+
+  public int getOrder();
+    Code:
+       0: ldc_w         #285                // int -2147483647
+       3: ireturn
+
+  private static void addClassIfPresent(java.util.Collection<java.lang.Class<?>>, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aconst_null
+       3: invokestatic  #286                // Method org/springframework/util/ClassUtils.forName:(Ljava/lang/String;Ljava/lang/ClassLoader;)Ljava/lang/Class;
+       6: invokeinterface #292,  2          // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+      11: pop
+      12: goto          16
+      15: astore_2
+      16: return
+    Exception table:
+       from    to  target type
+           0    12    15   Class java/lang/Throwable
+
+  static {};
+    Code:
+       0: ldc           #11                 // class org/springframework/boot/web/servlet/support/ErrorPageFilter
+       2: invokestatic  #297                // Method org/apache/commons/logging/LogFactory.getLog:(Ljava/lang/Class;)Lorg/apache/commons/logging/Log;
+       5: putstatic     #139                // Field logger:Lorg/apache/commons/logging/Log;
+       8: new           #303                // class java/util/HashSet
+      11: dup
+      12: invokespecial #305                // Method java/util/HashSet."<init>":()V
+      15: astore_0
+      16: aload_0
+      17: ldc_w         #306                // String org.apache.catalina.connector.ClientAbortException
+      20: invokestatic  #308                // Method addClassIfPresent:(Ljava/util/Collection;Ljava/lang/String;)V
+      23: aload_0
+      24: invokestatic  #312                // Method java/util/Collections.unmodifiableSet:(Ljava/util/Set;)Ljava/util/Set;
+      27: putstatic     #195                // Field CLIENT_ABORT_EXCEPTIONS:Ljava/util/Set;
+      30: return
+}

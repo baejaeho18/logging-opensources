@@ -1,0 +1,1456 @@
+Compiled from "TomcatServletWebServerFactory.java"
+public class org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory extends org.springframework.boot.web.servlet.server.AbstractServletWebServerFactory implements org.springframework.boot.web.embedded.tomcat.ConfigurableTomcatWebServerFactory,org.springframework.context.ResourceLoaderAware {
+  private static final java.nio.charset.Charset DEFAULT_CHARSET;
+
+  private static final java.util.Set<java.lang.Class<?>> NO_CLASSES;
+
+  public static final java.lang.String DEFAULT_PROTOCOL;
+
+  private java.io.File baseDirectory;
+
+  private java.util.List<org.apache.catalina.Valve> engineValves;
+
+  private java.util.List<org.apache.catalina.Valve> contextValves;
+
+  private java.util.List<org.apache.catalina.LifecycleListener> contextLifecycleListeners;
+
+  private final java.util.List<org.apache.catalina.LifecycleListener> serverLifecycleListeners;
+
+  private java.util.Set<org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer> tomcatContextCustomizers;
+
+  private java.util.Set<org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer> tomcatConnectorCustomizers;
+
+  private java.util.Set<org.springframework.boot.web.embedded.tomcat.TomcatProtocolHandlerCustomizer<?>> tomcatProtocolHandlerCustomizers;
+
+  private final java.util.List<org.apache.catalina.connector.Connector> additionalTomcatConnectors;
+
+  private org.springframework.core.io.ResourceLoader resourceLoader;
+
+  private java.lang.String protocol;
+
+  private java.util.Set<java.lang.String> tldSkipPatterns;
+
+  private final java.util.Set<java.lang.String> tldScanPatterns;
+
+  private java.nio.charset.Charset uriEncoding;
+
+  private int backgroundProcessorDelay;
+
+  private boolean disableMBeanRegistry;
+
+  public org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory();
+    Code:
+       0: aload_0
+       1: invokespecial #7                  // Method org/springframework/boot/web/servlet/server/AbstractServletWebServerFactory."<init>":()V
+       4: aload_0
+       5: new           #13                 // class java/util/ArrayList
+       8: dup
+       9: invokespecial #15                 // Method java/util/ArrayList."<init>":()V
+      12: putfield      #16                 // Field engineValves:Ljava/util/List;
+      15: aload_0
+      16: new           #13                 // class java/util/ArrayList
+      19: dup
+      20: invokespecial #15                 // Method java/util/ArrayList."<init>":()V
+      23: putfield      #20                 // Field contextValves:Ljava/util/List;
+      26: aload_0
+      27: new           #13                 // class java/util/ArrayList
+      30: dup
+      31: invokespecial #15                 // Method java/util/ArrayList."<init>":()V
+      34: putfield      #23                 // Field contextLifecycleListeners:Ljava/util/List;
+      37: aload_0
+      38: invokestatic  #26                 // Method getDefaultServerLifecycleListeners:()Ljava/util/List;
+      41: putfield      #29                 // Field serverLifecycleListeners:Ljava/util/List;
+      44: aload_0
+      45: new           #32                 // class java/util/LinkedHashSet
+      48: dup
+      49: invokespecial #34                 // Method java/util/LinkedHashSet."<init>":()V
+      52: putfield      #35                 // Field tomcatContextCustomizers:Ljava/util/Set;
+      55: aload_0
+      56: new           #32                 // class java/util/LinkedHashSet
+      59: dup
+      60: invokespecial #34                 // Method java/util/LinkedHashSet."<init>":()V
+      63: putfield      #39                 // Field tomcatConnectorCustomizers:Ljava/util/Set;
+      66: aload_0
+      67: new           #32                 // class java/util/LinkedHashSet
+      70: dup
+      71: invokespecial #34                 // Method java/util/LinkedHashSet."<init>":()V
+      74: putfield      #42                 // Field tomcatProtocolHandlerCustomizers:Ljava/util/Set;
+      77: aload_0
+      78: new           #13                 // class java/util/ArrayList
+      81: dup
+      82: invokespecial #15                 // Method java/util/ArrayList."<init>":()V
+      85: putfield      #45                 // Field additionalTomcatConnectors:Ljava/util/List;
+      88: aload_0
+      89: ldc           #48                 // String org.apache.coyote.http11.Http11NioProtocol
+      91: putfield      #50                 // Field protocol:Ljava/lang/String;
+      94: aload_0
+      95: new           #32                 // class java/util/LinkedHashSet
+      98: dup
+      99: getstatic     #54                 // Field org/springframework/boot/web/embedded/tomcat/TldPatterns.DEFAULT_SKIP:Ljava/util/Set;
+     102: invokespecial #59                 // Method java/util/LinkedHashSet."<init>":(Ljava/util/Collection;)V
+     105: putfield      #62                 // Field tldSkipPatterns:Ljava/util/Set;
+     108: aload_0
+     109: new           #32                 // class java/util/LinkedHashSet
+     112: dup
+     113: getstatic     #65                 // Field org/springframework/boot/web/embedded/tomcat/TldPatterns.DEFAULT_SCAN:Ljava/util/Set;
+     116: invokespecial #59                 // Method java/util/LinkedHashSet."<init>":(Ljava/util/Collection;)V
+     119: putfield      #68                 // Field tldScanPatterns:Ljava/util/Set;
+     122: aload_0
+     123: getstatic     #71                 // Field DEFAULT_CHARSET:Ljava/nio/charset/Charset;
+     126: putfield      #75                 // Field uriEncoding:Ljava/nio/charset/Charset;
+     129: aload_0
+     130: iconst_1
+     131: putfield      #78                 // Field disableMBeanRegistry:Z
+     134: return
+
+  public org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: invokespecial #82                 // Method org/springframework/boot/web/servlet/server/AbstractServletWebServerFactory."<init>":(I)V
+       5: aload_0
+       6: new           #13                 // class java/util/ArrayList
+       9: dup
+      10: invokespecial #15                 // Method java/util/ArrayList."<init>":()V
+      13: putfield      #16                 // Field engineValves:Ljava/util/List;
+      16: aload_0
+      17: new           #13                 // class java/util/ArrayList
+      20: dup
+      21: invokespecial #15                 // Method java/util/ArrayList."<init>":()V
+      24: putfield      #20                 // Field contextValves:Ljava/util/List;
+      27: aload_0
+      28: new           #13                 // class java/util/ArrayList
+      31: dup
+      32: invokespecial #15                 // Method java/util/ArrayList."<init>":()V
+      35: putfield      #23                 // Field contextLifecycleListeners:Ljava/util/List;
+      38: aload_0
+      39: invokestatic  #26                 // Method getDefaultServerLifecycleListeners:()Ljava/util/List;
+      42: putfield      #29                 // Field serverLifecycleListeners:Ljava/util/List;
+      45: aload_0
+      46: new           #32                 // class java/util/LinkedHashSet
+      49: dup
+      50: invokespecial #34                 // Method java/util/LinkedHashSet."<init>":()V
+      53: putfield      #35                 // Field tomcatContextCustomizers:Ljava/util/Set;
+      56: aload_0
+      57: new           #32                 // class java/util/LinkedHashSet
+      60: dup
+      61: invokespecial #34                 // Method java/util/LinkedHashSet."<init>":()V
+      64: putfield      #39                 // Field tomcatConnectorCustomizers:Ljava/util/Set;
+      67: aload_0
+      68: new           #32                 // class java/util/LinkedHashSet
+      71: dup
+      72: invokespecial #34                 // Method java/util/LinkedHashSet."<init>":()V
+      75: putfield      #42                 // Field tomcatProtocolHandlerCustomizers:Ljava/util/Set;
+      78: aload_0
+      79: new           #13                 // class java/util/ArrayList
+      82: dup
+      83: invokespecial #15                 // Method java/util/ArrayList."<init>":()V
+      86: putfield      #45                 // Field additionalTomcatConnectors:Ljava/util/List;
+      89: aload_0
+      90: ldc           #48                 // String org.apache.coyote.http11.Http11NioProtocol
+      92: putfield      #50                 // Field protocol:Ljava/lang/String;
+      95: aload_0
+      96: new           #32                 // class java/util/LinkedHashSet
+      99: dup
+     100: getstatic     #54                 // Field org/springframework/boot/web/embedded/tomcat/TldPatterns.DEFAULT_SKIP:Ljava/util/Set;
+     103: invokespecial #59                 // Method java/util/LinkedHashSet."<init>":(Ljava/util/Collection;)V
+     106: putfield      #62                 // Field tldSkipPatterns:Ljava/util/Set;
+     109: aload_0
+     110: new           #32                 // class java/util/LinkedHashSet
+     113: dup
+     114: getstatic     #65                 // Field org/springframework/boot/web/embedded/tomcat/TldPatterns.DEFAULT_SCAN:Ljava/util/Set;
+     117: invokespecial #59                 // Method java/util/LinkedHashSet."<init>":(Ljava/util/Collection;)V
+     120: putfield      #68                 // Field tldScanPatterns:Ljava/util/Set;
+     123: aload_0
+     124: getstatic     #71                 // Field DEFAULT_CHARSET:Ljava/nio/charset/Charset;
+     127: putfield      #75                 // Field uriEncoding:Ljava/nio/charset/Charset;
+     130: aload_0
+     131: iconst_1
+     132: putfield      #78                 // Field disableMBeanRegistry:Z
+     135: return
+
+  public org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory(java.lang.String, int);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iload_2
+       3: invokespecial #85                 // Method org/springframework/boot/web/servlet/server/AbstractServletWebServerFactory."<init>":(Ljava/lang/String;I)V
+       6: aload_0
+       7: new           #13                 // class java/util/ArrayList
+      10: dup
+      11: invokespecial #15                 // Method java/util/ArrayList."<init>":()V
+      14: putfield      #16                 // Field engineValves:Ljava/util/List;
+      17: aload_0
+      18: new           #13                 // class java/util/ArrayList
+      21: dup
+      22: invokespecial #15                 // Method java/util/ArrayList."<init>":()V
+      25: putfield      #20                 // Field contextValves:Ljava/util/List;
+      28: aload_0
+      29: new           #13                 // class java/util/ArrayList
+      32: dup
+      33: invokespecial #15                 // Method java/util/ArrayList."<init>":()V
+      36: putfield      #23                 // Field contextLifecycleListeners:Ljava/util/List;
+      39: aload_0
+      40: invokestatic  #26                 // Method getDefaultServerLifecycleListeners:()Ljava/util/List;
+      43: putfield      #29                 // Field serverLifecycleListeners:Ljava/util/List;
+      46: aload_0
+      47: new           #32                 // class java/util/LinkedHashSet
+      50: dup
+      51: invokespecial #34                 // Method java/util/LinkedHashSet."<init>":()V
+      54: putfield      #35                 // Field tomcatContextCustomizers:Ljava/util/Set;
+      57: aload_0
+      58: new           #32                 // class java/util/LinkedHashSet
+      61: dup
+      62: invokespecial #34                 // Method java/util/LinkedHashSet."<init>":()V
+      65: putfield      #39                 // Field tomcatConnectorCustomizers:Ljava/util/Set;
+      68: aload_0
+      69: new           #32                 // class java/util/LinkedHashSet
+      72: dup
+      73: invokespecial #34                 // Method java/util/LinkedHashSet."<init>":()V
+      76: putfield      #42                 // Field tomcatProtocolHandlerCustomizers:Ljava/util/Set;
+      79: aload_0
+      80: new           #13                 // class java/util/ArrayList
+      83: dup
+      84: invokespecial #15                 // Method java/util/ArrayList."<init>":()V
+      87: putfield      #45                 // Field additionalTomcatConnectors:Ljava/util/List;
+      90: aload_0
+      91: ldc           #48                 // String org.apache.coyote.http11.Http11NioProtocol
+      93: putfield      #50                 // Field protocol:Ljava/lang/String;
+      96: aload_0
+      97: new           #32                 // class java/util/LinkedHashSet
+     100: dup
+     101: getstatic     #54                 // Field org/springframework/boot/web/embedded/tomcat/TldPatterns.DEFAULT_SKIP:Ljava/util/Set;
+     104: invokespecial #59                 // Method java/util/LinkedHashSet."<init>":(Ljava/util/Collection;)V
+     107: putfield      #62                 // Field tldSkipPatterns:Ljava/util/Set;
+     110: aload_0
+     111: new           #32                 // class java/util/LinkedHashSet
+     114: dup
+     115: getstatic     #65                 // Field org/springframework/boot/web/embedded/tomcat/TldPatterns.DEFAULT_SCAN:Ljava/util/Set;
+     118: invokespecial #59                 // Method java/util/LinkedHashSet."<init>":(Ljava/util/Collection;)V
+     121: putfield      #68                 // Field tldScanPatterns:Ljava/util/Set;
+     124: aload_0
+     125: getstatic     #71                 // Field DEFAULT_CHARSET:Ljava/nio/charset/Charset;
+     128: putfield      #75                 // Field uriEncoding:Ljava/nio/charset/Charset;
+     131: aload_0
+     132: iconst_1
+     133: putfield      #78                 // Field disableMBeanRegistry:Z
+     136: return
+
+  private static java.util.List<org.apache.catalina.LifecycleListener> getDefaultServerLifecycleListeners();
+    Code:
+       0: new           #13                 // class java/util/ArrayList
+       3: dup
+       4: invokespecial #15                 // Method java/util/ArrayList."<init>":()V
+       7: astore_0
+       8: invokestatic  #88                 // Method org/springframework/core/NativeDetector.inNativeImage:()Z
+      11: ifne          34
+      14: new           #94                 // class org/apache/catalina/core/AprLifecycleListener
+      17: dup
+      18: invokespecial #96                 // Method org/apache/catalina/core/AprLifecycleListener."<init>":()V
+      21: astore_1
+      22: invokestatic  #97                 // Method org/apache/catalina/core/AprLifecycleListener.isAprAvailable:()Z
+      25: ifeq          34
+      28: aload_0
+      29: aload_1
+      30: invokevirtual #100                // Method java/util/ArrayList.add:(Ljava/lang/Object;)Z
+      33: pop
+      34: aload_0
+      35: areturn
+
+  public org.springframework.boot.web.server.WebServer getWebServer(org.springframework.boot.web.servlet.ServletContextInitializer...);
+    Code:
+       0: aload_0
+       1: getfield      #78                 // Field disableMBeanRegistry:Z
+       4: ifeq          10
+       7: invokestatic  #104                // Method org/apache/tomcat/util/modeler/Registry.disableRegistry:()V
+      10: new           #109                // class org/apache/catalina/startup/Tomcat
+      13: dup
+      14: invokespecial #111                // Method org/apache/catalina/startup/Tomcat."<init>":()V
+      17: astore_2
+      18: aload_0
+      19: getfield      #112                // Field baseDirectory:Ljava/io/File;
+      22: ifnull        32
+      25: aload_0
+      26: getfield      #112                // Field baseDirectory:Ljava/io/File;
+      29: goto          38
+      32: aload_0
+      33: ldc           #116                // String tomcat
+      35: invokevirtual #118                // Method createTempDir:(Ljava/lang/String;)Ljava/io/File;
+      38: astore_3
+      39: aload_2
+      40: aload_3
+      41: invokevirtual #122                // Method java/io/File.getAbsolutePath:()Ljava/lang/String;
+      44: invokevirtual #128                // Method org/apache/catalina/startup/Tomcat.setBaseDir:(Ljava/lang/String;)V
+      47: aload_0
+      48: getfield      #29                 // Field serverLifecycleListeners:Ljava/util/List;
+      51: invokeinterface #132,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      56: astore        4
+      58: aload         4
+      60: invokeinterface #138,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      65: ifeq          94
+      68: aload         4
+      70: invokeinterface #143,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      75: checkcast     #147                // class org/apache/catalina/LifecycleListener
+      78: astore        5
+      80: aload_2
+      81: invokevirtual #149                // Method org/apache/catalina/startup/Tomcat.getServer:()Lorg/apache/catalina/Server;
+      84: aload         5
+      86: invokeinterface #153,  2          // InterfaceMethod org/apache/catalina/Server.addLifecycleListener:(Lorg/apache/catalina/LifecycleListener;)V
+      91: goto          58
+      94: new           #159                // class org/apache/catalina/connector/Connector
+      97: dup
+      98: aload_0
+      99: getfield      #50                 // Field protocol:Ljava/lang/String;
+     102: invokespecial #161                // Method org/apache/catalina/connector/Connector."<init>":(Ljava/lang/String;)V
+     105: astore        4
+     107: aload         4
+     109: iconst_1
+     110: invokevirtual #163                // Method org/apache/catalina/connector/Connector.setThrowOnFailure:(Z)V
+     113: aload_2
+     114: invokevirtual #167                // Method org/apache/catalina/startup/Tomcat.getService:()Lorg/apache/catalina/Service;
+     117: aload         4
+     119: invokeinterface #171,  2          // InterfaceMethod org/apache/catalina/Service.addConnector:(Lorg/apache/catalina/connector/Connector;)V
+     124: aload_0
+     125: aload         4
+     127: invokevirtual #177                // Method customizeConnector:(Lorg/apache/catalina/connector/Connector;)V
+     130: aload_2
+     131: aload         4
+     133: invokevirtual #180                // Method org/apache/catalina/startup/Tomcat.setConnector:(Lorg/apache/catalina/connector/Connector;)V
+     136: aload_2
+     137: invokevirtual #183                // Method org/apache/catalina/startup/Tomcat.getHost:()Lorg/apache/catalina/Host;
+     140: iconst_0
+     141: invokeinterface #187,  2          // InterfaceMethod org/apache/catalina/Host.setAutoDeploy:(Z)V
+     146: aload_0
+     147: aload_2
+     148: invokevirtual #192                // Method org/apache/catalina/startup/Tomcat.getEngine:()Lorg/apache/catalina/Engine;
+     151: invokevirtual #196                // Method configureEngine:(Lorg/apache/catalina/Engine;)V
+     154: aload_0
+     155: getfield      #45                 // Field additionalTomcatConnectors:Ljava/util/List;
+     158: invokeinterface #132,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     163: astore        5
+     165: aload         5
+     167: invokeinterface #138,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     172: ifeq          201
+     175: aload         5
+     177: invokeinterface #143,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     182: checkcast     #159                // class org/apache/catalina/connector/Connector
+     185: astore        6
+     187: aload_2
+     188: invokevirtual #167                // Method org/apache/catalina/startup/Tomcat.getService:()Lorg/apache/catalina/Service;
+     191: aload         6
+     193: invokeinterface #171,  2          // InterfaceMethod org/apache/catalina/Service.addConnector:(Lorg/apache/catalina/connector/Connector;)V
+     198: goto          165
+     201: aload_0
+     202: aload_2
+     203: invokevirtual #183                // Method org/apache/catalina/startup/Tomcat.getHost:()Lorg/apache/catalina/Host;
+     206: aload_1
+     207: invokevirtual #200                // Method prepareContext:(Lorg/apache/catalina/Host;[Lorg/springframework/boot/web/servlet/ServletContextInitializer;)V
+     210: aload_0
+     211: aload_2
+     212: invokevirtual #204                // Method getTomcatWebServer:(Lorg/apache/catalina/startup/Tomcat;)Lorg/springframework/boot/web/embedded/tomcat/TomcatWebServer;
+     215: areturn
+
+  private void configureEngine(org.apache.catalina.Engine);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: getfield      #208                // Field backgroundProcessorDelay:I
+       5: invokeinterface #212,  2          // InterfaceMethod org/apache/catalina/Engine.setBackgroundProcessorDelay:(I)V
+      10: aload_0
+      11: getfield      #16                 // Field engineValves:Ljava/util/List;
+      14: invokeinterface #132,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      19: astore_2
+      20: aload_2
+      21: invokeinterface #138,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      26: ifeq          54
+      29: aload_2
+      30: invokeinterface #143,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      35: checkcast     #217                // class org/apache/catalina/Valve
+      38: astore_3
+      39: aload_1
+      40: invokeinterface #219,  1          // InterfaceMethod org/apache/catalina/Engine.getPipeline:()Lorg/apache/catalina/Pipeline;
+      45: aload_3
+      46: invokeinterface #223,  2          // InterfaceMethod org/apache/catalina/Pipeline.addValve:(Lorg/apache/catalina/Valve;)V
+      51: goto          20
+      54: return
+
+  protected void prepareContext(org.apache.catalina.Host, org.springframework.boot.web.servlet.ServletContextInitializer[]);
+    Code:
+       0: aload_0
+       1: invokevirtual #229                // Method getValidDocumentRoot:()Ljava/io/File;
+       4: astore_3
+       5: new           #233                // class org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext
+       8: dup
+       9: invokespecial #235                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext."<init>":()V
+      12: astore        4
+      14: aload_3
+      15: ifnull        32
+      18: aload         4
+      20: new           #236                // class org/springframework/boot/web/embedded/tomcat/TomcatServletWebServerFactory$LoaderHidingResourceRoot
+      23: dup
+      24: aload         4
+      26: invokespecial #238                // Method org/springframework/boot/web/embedded/tomcat/TomcatServletWebServerFactory$LoaderHidingResourceRoot."<init>":(Lorg/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext;)V
+      29: invokevirtual #241                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.setResources:(Lorg/apache/catalina/WebResourceRoot;)V
+      32: aload         4
+      34: aload_0
+      35: invokevirtual #245                // Method getContextPath:()Ljava/lang/String;
+      38: invokevirtual #248                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.setName:(Ljava/lang/String;)V
+      41: aload         4
+      43: aload_0
+      44: invokevirtual #251                // Method getDisplayName:()Ljava/lang/String;
+      47: invokevirtual #254                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.setDisplayName:(Ljava/lang/String;)V
+      50: aload         4
+      52: aload_0
+      53: invokevirtual #245                // Method getContextPath:()Ljava/lang/String;
+      56: invokevirtual #257                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.setPath:(Ljava/lang/String;)V
+      59: aload_3
+      60: ifnull        67
+      63: aload_3
+      64: goto          74
+      67: aload_0
+      68: ldc_w         #260                // String tomcat-docbase
+      71: invokevirtual #118                // Method createTempDir:(Ljava/lang/String;)Ljava/io/File;
+      74: astore        5
+      76: aload         4
+      78: aload         5
+      80: invokevirtual #122                // Method java/io/File.getAbsolutePath:()Ljava/lang/String;
+      83: invokevirtual #262                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.setDocBase:(Ljava/lang/String;)V
+      86: aload         4
+      88: new           #265                // class org/apache/catalina/startup/Tomcat$FixContextListener
+      91: dup
+      92: invokespecial #267                // Method org/apache/catalina/startup/Tomcat$FixContextListener."<init>":()V
+      95: invokevirtual #268                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.addLifecycleListener:(Lorg/apache/catalina/LifecycleListener;)V
+      98: aload_0
+      99: getfield      #269                // Field resourceLoader:Lorg/springframework/core/io/ResourceLoader;
+     102: ifnull        117
+     105: aload_0
+     106: getfield      #269                // Field resourceLoader:Lorg/springframework/core/io/ResourceLoader;
+     109: invokeinterface #273,  1          // InterfaceMethod org/springframework/core/io/ResourceLoader.getClassLoader:()Ljava/lang/ClassLoader;
+     114: goto          120
+     117: invokestatic  #279                // Method org/springframework/util/ClassUtils.getDefaultClassLoader:()Ljava/lang/ClassLoader;
+     120: astore        6
+     122: aload         4
+     124: aload         6
+     126: invokevirtual #284                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.setParentClassLoader:(Ljava/lang/ClassLoader;)V
+     129: aload_0
+     130: aload         4
+     132: invokevirtual #288                // Method resetDefaultLocaleMapping:(Lorg/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext;)V
+     135: aload_0
+     136: aload         4
+     138: invokevirtual #291                // Method addLocaleMappings:(Lorg/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext;)V
+     141: aload         4
+     143: iconst_1
+     144: invokevirtual #294                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.setCreateUploadTargets:(Z)V
+     147: goto          152
+     150: astore        7
+     152: aload_0
+     153: aload         4
+     155: invokevirtual #299                // Method configureTldPatterns:(Lorg/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext;)V
+     158: new           #302                // class org/apache/catalina/loader/WebappLoader
+     161: dup
+     162: invokespecial #304                // Method org/apache/catalina/loader/WebappLoader."<init>":()V
+     165: astore        7
+     167: aload         7
+     169: new           #305                // class org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedWebappClassLoader
+     172: dup
+     173: aload         6
+     175: invokespecial #307                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedWebappClassLoader."<init>":(Ljava/lang/ClassLoader;)V
+     178: invokevirtual #309                // Method org/apache/catalina/loader/WebappLoader.setLoaderInstance:(Lorg/apache/catalina/loader/WebappClassLoaderBase;)V
+     181: aload         7
+     183: iconst_1
+     184: invokevirtual #313                // Method org/apache/catalina/loader/WebappLoader.setDelegate:(Z)V
+     187: aload         4
+     189: aload         7
+     191: invokevirtual #316                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.setLoader:(Lorg/apache/catalina/Loader;)V
+     194: aload_0
+     195: invokevirtual #320                // Method isRegisterDefaultServlet:()Z
+     198: ifeq          207
+     201: aload_0
+     202: aload         4
+     204: invokevirtual #323                // Method addDefaultServlet:(Lorg/apache/catalina/Context;)V
+     207: aload_0
+     208: invokevirtual #327                // Method shouldRegisterJspServlet:()Z
+     211: ifeq          226
+     214: aload_0
+     215: aload         4
+     217: invokevirtual #330                // Method addJspServlet:(Lorg/apache/catalina/Context;)V
+     220: aload_0
+     221: aload         4
+     223: invokevirtual #333                // Method addJasperInitializer:(Lorg/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext;)V
+     226: aload         4
+     228: new           #336                // class org/springframework/boot/web/embedded/tomcat/TomcatServletWebServerFactory$StaticResourceConfigurer
+     231: dup
+     232: aload_0
+     233: aload         4
+     235: invokespecial #338                // Method org/springframework/boot/web/embedded/tomcat/TomcatServletWebServerFactory$StaticResourceConfigurer."<init>":(Lorg/springframework/boot/web/embedded/tomcat/TomcatServletWebServerFactory;Lorg/apache/catalina/Context;)V
+     238: invokevirtual #268                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.addLifecycleListener:(Lorg/apache/catalina/LifecycleListener;)V
+     241: aload_0
+     242: aload_2
+     243: invokevirtual #341                // Method mergeInitializers:([Lorg/springframework/boot/web/servlet/ServletContextInitializer;)[Lorg/springframework/boot/web/servlet/ServletContextInitializer;
+     246: astore        8
+     248: aload_1
+     249: aload         4
+     251: invokeinterface #345,  2          // InterfaceMethod org/apache/catalina/Host.addChild:(Lorg/apache/catalina/Container;)V
+     256: aload_0
+     257: aload         4
+     259: aload         8
+     261: invokevirtual #349                // Method configureContext:(Lorg/apache/catalina/Context;[Lorg/springframework/boot/web/servlet/ServletContextInitializer;)V
+     264: aload_0
+     265: aload         4
+     267: invokevirtual #353                // Method postProcessContext:(Lorg/apache/catalina/Context;)V
+     270: return
+    Exception table:
+       from    to  target type
+         141   147   150   Class java/lang/NoSuchMethodError
+
+  private void resetDefaultLocaleMapping(org.springframework.boot.web.embedded.tomcat.TomcatEmbeddedContext);
+    Code:
+       0: aload_1
+       1: getstatic     #356                // Field java/util/Locale.ENGLISH:Ljava/util/Locale;
+       4: invokevirtual #362                // Method java/util/Locale.toString:()Ljava/lang/String;
+       7: getstatic     #71                 // Field DEFAULT_CHARSET:Ljava/nio/charset/Charset;
+      10: invokevirtual #365                // Method java/nio/charset/Charset.displayName:()Ljava/lang/String;
+      13: invokevirtual #370                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.addLocaleEncodingMappingParameter:(Ljava/lang/String;Ljava/lang/String;)V
+      16: aload_1
+      17: getstatic     #374                // Field java/util/Locale.FRENCH:Ljava/util/Locale;
+      20: invokevirtual #362                // Method java/util/Locale.toString:()Ljava/lang/String;
+      23: getstatic     #71                 // Field DEFAULT_CHARSET:Ljava/nio/charset/Charset;
+      26: invokevirtual #365                // Method java/nio/charset/Charset.displayName:()Ljava/lang/String;
+      29: invokevirtual #370                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.addLocaleEncodingMappingParameter:(Ljava/lang/String;Ljava/lang/String;)V
+      32: aload_1
+      33: getstatic     #377                // Field java/util/Locale.JAPANESE:Ljava/util/Locale;
+      36: invokevirtual #362                // Method java/util/Locale.toString:()Ljava/lang/String;
+      39: getstatic     #71                 // Field DEFAULT_CHARSET:Ljava/nio/charset/Charset;
+      42: invokevirtual #365                // Method java/nio/charset/Charset.displayName:()Ljava/lang/String;
+      45: invokevirtual #370                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.addLocaleEncodingMappingParameter:(Ljava/lang/String;Ljava/lang/String;)V
+      48: return
+
+  private void addLocaleMappings(org.springframework.boot.web.embedded.tomcat.TomcatEmbeddedContext);
+    Code:
+       0: aload_0
+       1: invokevirtual #380                // Method getLocaleCharsetMappings:()Ljava/util/Map;
+       4: aload_1
+       5: invokedynamic #384,  0            // InvokeDynamic #0:accept:(Lorg/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext;)Ljava/util/function/BiConsumer;
+      10: invokeinterface #388,  2          // InterfaceMethod java/util/Map.forEach:(Ljava/util/function/BiConsumer;)V
+      15: return
+
+  private void configureTldPatterns(org.springframework.boot.web.embedded.tomcat.TomcatEmbeddedContext);
+    Code:
+       0: new           #394                // class org/apache/tomcat/util/scan/StandardJarScanFilter
+       3: dup
+       4: invokespecial #396                // Method org/apache/tomcat/util/scan/StandardJarScanFilter."<init>":()V
+       7: astore_2
+       8: aload_2
+       9: aload_0
+      10: getfield      #62                 // Field tldSkipPatterns:Ljava/util/Set;
+      13: invokestatic  #397                // Method org/springframework/util/StringUtils.collectionToCommaDelimitedString:(Ljava/util/Collection;)Ljava/lang/String;
+      16: invokevirtual #403                // Method org/apache/tomcat/util/scan/StandardJarScanFilter.setTldSkip:(Ljava/lang/String;)V
+      19: aload_2
+      20: aload_0
+      21: getfield      #68                 // Field tldScanPatterns:Ljava/util/Set;
+      24: invokestatic  #397                // Method org/springframework/util/StringUtils.collectionToCommaDelimitedString:(Ljava/util/Collection;)Ljava/lang/String;
+      27: invokevirtual #406                // Method org/apache/tomcat/util/scan/StandardJarScanFilter.setTldScan:(Ljava/lang/String;)V
+      30: aload_1
+      31: invokevirtual #409                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.getJarScanner:()Lorg/apache/tomcat/JarScanner;
+      34: aload_2
+      35: invokeinterface #413,  2          // InterfaceMethod org/apache/tomcat/JarScanner.setJarScanFilter:(Lorg/apache/tomcat/JarScanFilter;)V
+      40: return
+
+  private void addDefaultServlet(org.apache.catalina.Context);
+    Code:
+       0: aload_1
+       1: invokeinterface #419,  1          // InterfaceMethod org/apache/catalina/Context.createWrapper:()Lorg/apache/catalina/Wrapper;
+       6: astore_2
+       7: aload_2
+       8: ldc_w         #425                // String default
+      11: invokeinterface #427,  2          // InterfaceMethod org/apache/catalina/Wrapper.setName:(Ljava/lang/String;)V
+      16: aload_2
+      17: ldc_w         #430                // String org.apache.catalina.servlets.DefaultServlet
+      20: invokeinterface #432,  2          // InterfaceMethod org/apache/catalina/Wrapper.setServletClass:(Ljava/lang/String;)V
+      25: aload_2
+      26: ldc_w         #435                // String debug
+      29: ldc_w         #437                // String 0
+      32: invokeinterface #439,  3          // InterfaceMethod org/apache/catalina/Wrapper.addInitParameter:(Ljava/lang/String;Ljava/lang/String;)V
+      37: aload_2
+      38: ldc_w         #442                // String listings
+      41: ldc_w         #444                // String false
+      44: invokeinterface #439,  3          // InterfaceMethod org/apache/catalina/Wrapper.addInitParameter:(Ljava/lang/String;Ljava/lang/String;)V
+      49: aload_2
+      50: iconst_1
+      51: invokeinterface #446,  2          // InterfaceMethod org/apache/catalina/Wrapper.setLoadOnStartup:(I)V
+      56: aload_2
+      57: iconst_1
+      58: invokeinterface #449,  2          // InterfaceMethod org/apache/catalina/Wrapper.setOverridable:(Z)V
+      63: aload_1
+      64: aload_2
+      65: invokeinterface #452,  2          // InterfaceMethod org/apache/catalina/Context.addChild:(Lorg/apache/catalina/Container;)V
+      70: aload_1
+      71: ldc_w         #453                // String /
+      74: ldc_w         #425                // String default
+      77: invokeinterface #455,  3          // InterfaceMethod org/apache/catalina/Context.addServletMappingDecoded:(Ljava/lang/String;Ljava/lang/String;)V
+      82: return
+
+  private void addJspServlet(org.apache.catalina.Context);
+    Code:
+       0: aload_1
+       1: invokeinterface #419,  1          // InterfaceMethod org/apache/catalina/Context.createWrapper:()Lorg/apache/catalina/Wrapper;
+       6: astore_2
+       7: aload_2
+       8: ldc_w         #458                // String jsp
+      11: invokeinterface #427,  2          // InterfaceMethod org/apache/catalina/Wrapper.setName:(Ljava/lang/String;)V
+      16: aload_2
+      17: aload_0
+      18: invokevirtual #460                // Method getJsp:()Lorg/springframework/boot/web/servlet/server/Jsp;
+      21: invokevirtual #464                // Method org/springframework/boot/web/servlet/server/Jsp.getClassName:()Ljava/lang/String;
+      24: invokeinterface #432,  2          // InterfaceMethod org/apache/catalina/Wrapper.setServletClass:(Ljava/lang/String;)V
+      29: aload_2
+      30: ldc_w         #469                // String fork
+      33: ldc_w         #444                // String false
+      36: invokeinterface #439,  3          // InterfaceMethod org/apache/catalina/Wrapper.addInitParameter:(Ljava/lang/String;Ljava/lang/String;)V
+      41: aload_0
+      42: invokevirtual #460                // Method getJsp:()Lorg/springframework/boot/web/servlet/server/Jsp;
+      45: invokevirtual #471                // Method org/springframework/boot/web/servlet/server/Jsp.getInitParameters:()Ljava/util/Map;
+      48: aload_2
+      49: dup
+      50: invokestatic  #474                // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+      53: pop
+      54: invokedynamic #480,  0            // InvokeDynamic #1:accept:(Lorg/apache/catalina/Wrapper;)Ljava/util/function/BiConsumer;
+      59: invokeinterface #388,  2          // InterfaceMethod java/util/Map.forEach:(Ljava/util/function/BiConsumer;)V
+      64: aload_2
+      65: iconst_3
+      66: invokeinterface #446,  2          // InterfaceMethod org/apache/catalina/Wrapper.setLoadOnStartup:(I)V
+      71: aload_1
+      72: aload_2
+      73: invokeinterface #452,  2          // InterfaceMethod org/apache/catalina/Context.addChild:(Lorg/apache/catalina/Container;)V
+      78: aload_1
+      79: ldc_w         #483                // String *.jsp
+      82: ldc_w         #458                // String jsp
+      85: invokeinterface #455,  3          // InterfaceMethod org/apache/catalina/Context.addServletMappingDecoded:(Ljava/lang/String;Ljava/lang/String;)V
+      90: aload_1
+      91: ldc_w         #485                // String *.jspx
+      94: ldc_w         #458                // String jsp
+      97: invokeinterface #455,  3          // InterfaceMethod org/apache/catalina/Context.addServletMappingDecoded:(Ljava/lang/String;Ljava/lang/String;)V
+     102: return
+
+  private void addJasperInitializer(org.springframework.boot.web.embedded.tomcat.TomcatEmbeddedContext);
+    Code:
+       0: ldc_w         #487                // String org.apache.jasper.servlet.JasperInitializer
+       3: aconst_null
+       4: invokestatic  #489                // Method org/springframework/util/ClassUtils.forName:(Ljava/lang/String;Ljava/lang/ClassLoader;)Ljava/lang/Class;
+       7: iconst_0
+       8: anewarray     #493                // class java/lang/Class
+      11: invokevirtual #495                // Method java/lang/Class.getDeclaredConstructor:([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;
+      14: iconst_0
+      15: anewarray     #499                // class java/lang/Object
+      18: invokevirtual #501                // Method java/lang/reflect/Constructor.newInstance:([Ljava/lang/Object;)Ljava/lang/Object;
+      21: checkcast     #507                // class jakarta/servlet/ServletContainerInitializer
+      24: astore_2
+      25: aload_1
+      26: aload_2
+      27: aconst_null
+      28: invokevirtual #509                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.addServletContainerInitializer:(Ljakarta/servlet/ServletContainerInitializer;Ljava/util/Set;)V
+      31: goto          35
+      34: astore_2
+      35: return
+    Exception table:
+       from    to  target type
+           0    31    34   Class java/lang/Exception
+
+  protected void customizeConnector(org.apache.catalina.connector.Connector);
+    Code:
+       0: aload_0
+       1: invokevirtual #515                // Method getPort:()I
+       4: iconst_0
+       5: invokestatic  #519                // Method java/lang/Math.max:(II)I
+       8: istore_2
+       9: aload_1
+      10: iload_2
+      11: invokevirtual #525                // Method org/apache/catalina/connector/Connector.setPort:(I)V
+      14: aload_0
+      15: invokevirtual #528                // Method getServerHeader:()Ljava/lang/String;
+      18: invokestatic  #531                // Method org/springframework/util/StringUtils.hasText:(Ljava/lang/String;)Z
+      21: ifeq          36
+      24: aload_1
+      25: ldc_w         #535                // String server
+      28: aload_0
+      29: invokevirtual #528                // Method getServerHeader:()Ljava/lang/String;
+      32: invokevirtual #537                // Method org/apache/catalina/connector/Connector.setProperty:(Ljava/lang/String;Ljava/lang/String;)Z
+      35: pop
+      36: aload_1
+      37: invokevirtual #541                // Method org/apache/catalina/connector/Connector.getProtocolHandler:()Lorg/apache/coyote/ProtocolHandler;
+      40: instanceof    #545                // class org/apache/coyote/AbstractProtocol
+      43: ifeq          57
+      46: aload_0
+      47: aload_1
+      48: invokevirtual #541                // Method org/apache/catalina/connector/Connector.getProtocolHandler:()Lorg/apache/coyote/ProtocolHandler;
+      51: checkcast     #545                // class org/apache/coyote/AbstractProtocol
+      54: invokevirtual #547                // Method customizeProtocol:(Lorg/apache/coyote/AbstractProtocol;)V
+      57: aload_0
+      58: aload_1
+      59: invokevirtual #541                // Method org/apache/catalina/connector/Connector.getProtocolHandler:()Lorg/apache/coyote/ProtocolHandler;
+      62: invokevirtual #551                // Method invokeProtocolHandlerCustomizers:(Lorg/apache/coyote/ProtocolHandler;)V
+      65: aload_0
+      66: invokevirtual #555                // Method getUriEncoding:()Ljava/nio/charset/Charset;
+      69: ifnull        83
+      72: aload_1
+      73: aload_0
+      74: invokevirtual #555                // Method getUriEncoding:()Ljava/nio/charset/Charset;
+      77: invokevirtual #559                // Method java/nio/charset/Charset.name:()Ljava/lang/String;
+      80: invokevirtual #562                // Method org/apache/catalina/connector/Connector.setURIEncoding:(Ljava/lang/String;)V
+      83: aload_1
+      84: ldc_w         #565                // String bindOnInit
+      87: ldc_w         #444                // String false
+      90: invokevirtual #537                // Method org/apache/catalina/connector/Connector.setProperty:(Ljava/lang/String;Ljava/lang/String;)Z
+      93: pop
+      94: aload_0
+      95: invokevirtual #567                // Method getHttp2:()Lorg/springframework/boot/web/server/Http2;
+      98: ifnull        122
+     101: aload_0
+     102: invokevirtual #567                // Method getHttp2:()Lorg/springframework/boot/web/server/Http2;
+     105: invokevirtual #571                // Method org/springframework/boot/web/server/Http2.isEnabled:()Z
+     108: ifeq          122
+     111: aload_1
+     112: new           #576                // class org/apache/coyote/http2/Http2Protocol
+     115: dup
+     116: invokespecial #578                // Method org/apache/coyote/http2/Http2Protocol."<init>":()V
+     119: invokevirtual #579                // Method org/apache/catalina/connector/Connector.addUpgradeProtocol:(Lorg/apache/coyote/UpgradeProtocol;)V
+     122: aload_0
+     123: invokevirtual #583                // Method getSsl:()Lorg/springframework/boot/web/server/Ssl;
+     126: invokestatic  #587                // Method org/springframework/boot/web/server/Ssl.isEnabled:(Lorg/springframework/boot/web/server/Ssl;)Z
+     129: ifeq          137
+     132: aload_0
+     133: aload_1
+     134: invokevirtual #592                // Method customizeSsl:(Lorg/apache/catalina/connector/Connector;)V
+     137: new           #595                // class org/springframework/boot/web/embedded/tomcat/CompressionConnectorCustomizer
+     140: dup
+     141: aload_0
+     142: invokevirtual #597                // Method getCompression:()Lorg/springframework/boot/web/server/Compression;
+     145: invokespecial #601                // Method org/springframework/boot/web/embedded/tomcat/CompressionConnectorCustomizer."<init>":(Lorg/springframework/boot/web/server/Compression;)V
+     148: astore_3
+     149: aload_3
+     150: aload_1
+     151: invokeinterface #604,  2          // InterfaceMethod org/springframework/boot/web/embedded/tomcat/TomcatConnectorCustomizer.customize:(Lorg/apache/catalina/connector/Connector;)V
+     156: aload_0
+     157: getfield      #39                 // Field tomcatConnectorCustomizers:Ljava/util/Set;
+     160: invokeinterface #609,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     165: astore        4
+     167: aload         4
+     169: invokeinterface #138,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     174: ifeq          200
+     177: aload         4
+     179: invokeinterface #143,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     184: checkcast     #605                // class org/springframework/boot/web/embedded/tomcat/TomcatConnectorCustomizer
+     187: astore        5
+     189: aload         5
+     191: aload_1
+     192: invokeinterface #604,  2          // InterfaceMethod org/springframework/boot/web/embedded/tomcat/TomcatConnectorCustomizer.customize:(Lorg/apache/catalina/connector/Connector;)V
+     197: goto          167
+     200: return
+
+  private void customizeProtocol(org.apache.coyote.AbstractProtocol<?>);
+    Code:
+       0: aload_0
+       1: invokevirtual #612                // Method getAddress:()Ljava/net/InetAddress;
+       4: ifnull        15
+       7: aload_1
+       8: aload_0
+       9: invokevirtual #612                // Method getAddress:()Ljava/net/InetAddress;
+      12: invokevirtual #616                // Method org/apache/coyote/AbstractProtocol.setAddress:(Ljava/net/InetAddress;)V
+      15: return
+
+  private void invokeProtocolHandlerCustomizers(org.apache.coyote.ProtocolHandler);
+    Code:
+       0: ldc_w         #620                // class org/springframework/boot/web/embedded/tomcat/TomcatProtocolHandlerCustomizer
+       3: aload_0
+       4: getfield      #42                 // Field tomcatProtocolHandlerCustomizers:Ljava/util/Set;
+       7: aload_1
+       8: iconst_0
+       9: anewarray     #499                // class java/lang/Object
+      12: invokestatic  #622                // Method org/springframework/boot/util/LambdaSafe.callbacks:(Ljava/lang/Class;Ljava/util/Collection;Ljava/lang/Object;[Ljava/lang/Object;)Lorg/springframework/boot/util/LambdaSafe$Callbacks;
+      15: aload_1
+      16: invokedynamic #628,  0            // InvokeDynamic #2:accept:(Lorg/apache/coyote/ProtocolHandler;)Ljava/util/function/Consumer;
+      21: invokevirtual #631                // Method org/springframework/boot/util/LambdaSafe$Callbacks.invoke:(Ljava/util/function/Consumer;)V
+      24: return
+
+  private void customizeSsl(org.apache.catalina.connector.Connector);
+    Code:
+       0: new           #637                // class org/springframework/boot/web/embedded/tomcat/SslConnectorCustomizer
+       3: dup
+       4: aload_0
+       5: invokevirtual #583                // Method getSsl:()Lorg/springframework/boot/web/server/Ssl;
+       8: invokevirtual #639                // Method org/springframework/boot/web/server/Ssl.getClientAuth:()Lorg/springframework/boot/web/server/Ssl$ClientAuth;
+      11: aload_0
+      12: invokevirtual #643                // Method getSslBundle:()Lorg/springframework/boot/ssl/SslBundle;
+      15: invokespecial #647                // Method org/springframework/boot/web/embedded/tomcat/SslConnectorCustomizer."<init>":(Lorg/springframework/boot/web/server/Ssl$ClientAuth;Lorg/springframework/boot/ssl/SslBundle;)V
+      18: aload_1
+      19: invokevirtual #650                // Method org/springframework/boot/web/embedded/tomcat/SslConnectorCustomizer.customize:(Lorg/apache/catalina/connector/Connector;)V
+      22: return
+
+  protected void configureContext(org.apache.catalina.Context, org.springframework.boot.web.servlet.ServletContextInitializer[]);
+    Code:
+       0: new           #651                // class org/springframework/boot/web/embedded/tomcat/TomcatStarter
+       3: dup
+       4: aload_2
+       5: invokespecial #653                // Method org/springframework/boot/web/embedded/tomcat/TomcatStarter."<init>":([Lorg/springframework/boot/web/servlet/ServletContextInitializer;)V
+       8: astore_3
+       9: aload_1
+      10: instanceof    #233                // class org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext
+      13: ifeq          37
+      16: aload_1
+      17: checkcast     #233                // class org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext
+      20: astore        4
+      22: aload         4
+      24: aload_3
+      25: invokevirtual #656                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.setStarter:(Lorg/springframework/boot/web/embedded/tomcat/TomcatStarter;)V
+      28: aload         4
+      30: iconst_1
+      31: invokestatic  #660                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      34: invokevirtual #666                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.setFailCtxIfServletStartFails:(Ljava/lang/Boolean;)V
+      37: aload_1
+      38: aload_3
+      39: getstatic     #670                // Field NO_CLASSES:Ljava/util/Set;
+      42: invokeinterface #673,  3          // InterfaceMethod org/apache/catalina/Context.addServletContainerInitializer:(Ljakarta/servlet/ServletContainerInitializer;Ljava/util/Set;)V
+      47: aload_0
+      48: getfield      #23                 // Field contextLifecycleListeners:Ljava/util/List;
+      51: invokeinterface #132,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      56: astore        4
+      58: aload         4
+      60: invokeinterface #138,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      65: ifeq          91
+      68: aload         4
+      70: invokeinterface #143,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      75: checkcast     #147                // class org/apache/catalina/LifecycleListener
+      78: astore        5
+      80: aload_1
+      81: aload         5
+      83: invokeinterface #674,  2          // InterfaceMethod org/apache/catalina/Context.addLifecycleListener:(Lorg/apache/catalina/LifecycleListener;)V
+      88: goto          58
+      91: aload_0
+      92: getfield      #20                 // Field contextValves:Ljava/util/List;
+      95: invokeinterface #132,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     100: astore        4
+     102: aload         4
+     104: invokeinterface #138,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     109: ifeq          140
+     112: aload         4
+     114: invokeinterface #143,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     119: checkcast     #217                // class org/apache/catalina/Valve
+     122: astore        5
+     124: aload_1
+     125: invokeinterface #675,  1          // InterfaceMethod org/apache/catalina/Context.getPipeline:()Lorg/apache/catalina/Pipeline;
+     130: aload         5
+     132: invokeinterface #223,  2          // InterfaceMethod org/apache/catalina/Pipeline.addValve:(Lorg/apache/catalina/Valve;)V
+     137: goto          102
+     140: aload_0
+     141: invokevirtual #676                // Method getErrorPages:()Ljava/util/Set;
+     144: invokeinterface #609,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     149: astore        4
+     151: aload         4
+     153: invokeinterface #138,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     158: ifeq          223
+     161: aload         4
+     163: invokeinterface #143,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     168: checkcast     #680                // class org/springframework/boot/web/server/ErrorPage
+     171: astore        5
+     173: new           #682                // class org/apache/tomcat/util/descriptor/web/ErrorPage
+     176: dup
+     177: invokespecial #684                // Method org/apache/tomcat/util/descriptor/web/ErrorPage."<init>":()V
+     180: astore        6
+     182: aload         6
+     184: aload         5
+     186: invokevirtual #685                // Method org/springframework/boot/web/server/ErrorPage.getPath:()Ljava/lang/String;
+     189: invokevirtual #688                // Method org/apache/tomcat/util/descriptor/web/ErrorPage.setLocation:(Ljava/lang/String;)V
+     192: aload         6
+     194: aload         5
+     196: invokevirtual #691                // Method org/springframework/boot/web/server/ErrorPage.getStatusCode:()I
+     199: invokevirtual #694                // Method org/apache/tomcat/util/descriptor/web/ErrorPage.setErrorCode:(I)V
+     202: aload         6
+     204: aload         5
+     206: invokevirtual #697                // Method org/springframework/boot/web/server/ErrorPage.getExceptionName:()Ljava/lang/String;
+     209: invokevirtual #700                // Method org/apache/tomcat/util/descriptor/web/ErrorPage.setExceptionType:(Ljava/lang/String;)V
+     212: aload_1
+     213: aload         6
+     215: invokeinterface #703,  2          // InterfaceMethod org/apache/catalina/Context.addErrorPage:(Lorg/apache/tomcat/util/descriptor/web/ErrorPage;)V
+     220: goto          151
+     223: aload_0
+     224: aload_1
+     225: invokevirtual #707                // Method setMimeMappings:(Lorg/apache/catalina/Context;)V
+     228: aload_0
+     229: aload_1
+     230: invokevirtual #710                // Method configureSession:(Lorg/apache/catalina/Context;)V
+     233: aload_0
+     234: aload_1
+     235: invokevirtual #713                // Method configureCookieProcessor:(Lorg/apache/catalina/Context;)V
+     238: new           #716                // class org/springframework/boot/web/embedded/tomcat/DisableReferenceClearingContextCustomizer
+     241: dup
+     242: invokespecial #718                // Method org/springframework/boot/web/embedded/tomcat/DisableReferenceClearingContextCustomizer."<init>":()V
+     245: aload_1
+     246: invokevirtual #719                // Method org/springframework/boot/web/embedded/tomcat/DisableReferenceClearingContextCustomizer.customize:(Lorg/apache/catalina/Context;)V
+     249: aload_0
+     250: invokevirtual #721                // Method getWebListenerClassNames:()Ljava/util/Set;
+     253: invokeinterface #609,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     258: astore        4
+     260: aload         4
+     262: invokeinterface #138,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     267: ifeq          293
+     270: aload         4
+     272: invokeinterface #143,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     277: checkcast     #724                // class java/lang/String
+     280: astore        5
+     282: aload_1
+     283: aload         5
+     285: invokeinterface #726,  2          // InterfaceMethod org/apache/catalina/Context.addApplicationListener:(Ljava/lang/String;)V
+     290: goto          260
+     293: aload_0
+     294: getfield      #35                 // Field tomcatContextCustomizers:Ljava/util/Set;
+     297: invokeinterface #609,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     302: astore        4
+     304: aload         4
+     306: invokeinterface #138,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     311: ifeq          337
+     314: aload         4
+     316: invokeinterface #143,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     321: checkcast     #729                // class org/springframework/boot/web/embedded/tomcat/TomcatContextCustomizer
+     324: astore        5
+     326: aload         5
+     328: aload_1
+     329: invokeinterface #731,  2          // InterfaceMethod org/springframework/boot/web/embedded/tomcat/TomcatContextCustomizer.customize:(Lorg/apache/catalina/Context;)V
+     334: goto          304
+     337: return
+
+  private void configureSession(org.apache.catalina.Context);
+    Code:
+       0: aload_0
+       1: invokevirtual #732                // Method getSessionTimeoutInMinutes:()J
+       4: lstore_2
+       5: aload_1
+       6: lload_2
+       7: l2i
+       8: invokeinterface #736,  2          // InterfaceMethod org/apache/catalina/Context.setSessionTimeout:(I)V
+      13: aload_0
+      14: invokevirtual #739                // Method getSession:()Lorg/springframework/boot/web/servlet/server/Session;
+      17: invokevirtual #743                // Method org/springframework/boot/web/servlet/server/Session.getCookie:()Lorg/springframework/boot/web/servlet/server/Session$Cookie;
+      20: invokevirtual #749                // Method org/springframework/boot/web/servlet/server/Session$Cookie.getHttpOnly:()Ljava/lang/Boolean;
+      23: astore        4
+      25: aload         4
+      27: ifnull        41
+      30: aload_1
+      31: aload         4
+      33: invokevirtual #755                // Method java/lang/Boolean.booleanValue:()Z
+      36: invokeinterface #758,  2          // InterfaceMethod org/apache/catalina/Context.setUseHttpOnly:(Z)V
+      41: aload_0
+      42: invokevirtual #739                // Method getSession:()Lorg/springframework/boot/web/servlet/server/Session;
+      45: invokevirtual #761                // Method org/springframework/boot/web/servlet/server/Session.isPersistent:()Z
+      48: ifeq          90
+      51: aload_1
+      52: invokeinterface #764,  1          // InterfaceMethod org/apache/catalina/Context.getManager:()Lorg/apache/catalina/Manager;
+      57: astore        5
+      59: aload         5
+      61: ifnonnull     81
+      64: new           #768                // class org/apache/catalina/session/StandardManager
+      67: dup
+      68: invokespecial #770                // Method org/apache/catalina/session/StandardManager."<init>":()V
+      71: astore        5
+      73: aload_1
+      74: aload         5
+      76: invokeinterface #771,  2          // InterfaceMethod org/apache/catalina/Context.setManager:(Lorg/apache/catalina/Manager;)V
+      81: aload_0
+      82: aload         5
+      84: invokevirtual #775                // Method configurePersistSession:(Lorg/apache/catalina/Manager;)V
+      87: goto          103
+      90: aload_1
+      91: new           #778                // class org/springframework/boot/web/embedded/tomcat/TomcatServletWebServerFactory$DisablePersistSessionListener
+      94: dup
+      95: invokespecial #780                // Method org/springframework/boot/web/embedded/tomcat/TomcatServletWebServerFactory$DisablePersistSessionListener."<init>":()V
+      98: invokeinterface #674,  2          // InterfaceMethod org/apache/catalina/Context.addLifecycleListener:(Lorg/apache/catalina/LifecycleListener;)V
+     103: return
+
+  private void setMimeMappings(org.apache.catalina.Context);
+    Code:
+       0: aload_1
+       1: instanceof    #233                // class org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext
+       4: ifeq          21
+       7: aload_1
+       8: checkcast     #233                // class org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext
+      11: astore_2
+      12: aload_2
+      13: aload_0
+      14: invokevirtual #781                // Method getMimeMappings:()Lorg/springframework/boot/web/server/MimeMappings;
+      17: invokevirtual #785                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.setMimeMappings:(Lorg/springframework/boot/web/server/MimeMappings;)V
+      20: return
+      21: aload_0
+      22: invokevirtual #781                // Method getMimeMappings:()Lorg/springframework/boot/web/server/MimeMappings;
+      25: invokevirtual #788                // Method org/springframework/boot/web/server/MimeMappings.iterator:()Ljava/util/Iterator;
+      28: astore_2
+      29: aload_2
+      30: invokeinterface #138,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      35: ifeq          65
+      38: aload_2
+      39: invokeinterface #143,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      44: checkcast     #791                // class org/springframework/boot/web/server/MimeMappings$Mapping
+      47: astore_3
+      48: aload_1
+      49: aload_3
+      50: invokevirtual #793                // Method org/springframework/boot/web/server/MimeMappings$Mapping.getExtension:()Ljava/lang/String;
+      53: aload_3
+      54: invokevirtual #796                // Method org/springframework/boot/web/server/MimeMappings$Mapping.getMimeType:()Ljava/lang/String;
+      57: invokeinterface #799,  3          // InterfaceMethod org/apache/catalina/Context.addMimeMapping:(Ljava/lang/String;Ljava/lang/String;)V
+      62: goto          29
+      65: return
+
+  private void configureCookieProcessor(org.apache.catalina.Context);
+    Code:
+       0: aload_0
+       1: invokevirtual #739                // Method getSession:()Lorg/springframework/boot/web/servlet/server/Session;
+       4: invokevirtual #743                // Method org/springframework/boot/web/servlet/server/Session.getCookie:()Lorg/springframework/boot/web/servlet/server/Session$Cookie;
+       7: invokevirtual #802                // Method org/springframework/boot/web/servlet/server/Session$Cookie.getSameSite:()Lorg/springframework/boot/web/server/Cookie$SameSite;
+      10: astore_2
+      11: new           #13                 // class java/util/ArrayList
+      14: dup
+      15: invokespecial #15                 // Method java/util/ArrayList."<init>":()V
+      18: astore_3
+      19: aload_2
+      20: ifnull        45
+      23: aload_3
+      24: aload_2
+      25: invokestatic  #806                // InterfaceMethod org/springframework/boot/web/servlet/server/CookieSameSiteSupplier.of:(Lorg/springframework/boot/web/server/Cookie$SameSite;)Lorg/springframework/boot/web/servlet/server/CookieSameSiteSupplier;
+      28: aload_1
+      29: invokedynamic #812,  0            // InvokeDynamic #3:get:(Lorg/apache/catalina/Context;)Ljava/util/function/Supplier;
+      34: invokeinterface #816,  2          // InterfaceMethod org/springframework/boot/web/servlet/server/CookieSameSiteSupplier.whenHasName:(Ljava/util/function/Supplier;)Lorg/springframework/boot/web/servlet/server/CookieSameSiteSupplier;
+      39: invokeinterface #820,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      44: pop
+      45: aload_0
+      46: invokevirtual #821                // Method getCookieSameSiteSuppliers:()Ljava/util/List;
+      49: invokestatic  #824                // Method org/springframework/util/CollectionUtils.isEmpty:(Ljava/util/Collection;)Z
+      52: ifne          66
+      55: aload_3
+      56: aload_0
+      57: invokevirtual #821                // Method getCookieSameSiteSuppliers:()Ljava/util/List;
+      60: invokeinterface #830,  2          // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+      65: pop
+      66: aload_3
+      67: invokeinterface #833,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+      72: ifne          89
+      75: aload_1
+      76: new           #835                // class org/springframework/boot/web/embedded/tomcat/TomcatServletWebServerFactory$SuppliedSameSiteCookieProcessor
+      79: dup
+      80: aload_3
+      81: invokespecial #837                // Method org/springframework/boot/web/embedded/tomcat/TomcatServletWebServerFactory$SuppliedSameSiteCookieProcessor."<init>":(Ljava/util/List;)V
+      84: invokeinterface #840,  2          // InterfaceMethod org/apache/catalina/Context.setCookieProcessor:(Lorg/apache/tomcat/util/http/CookieProcessor;)V
+      89: return
+
+  private void configurePersistSession(org.apache.catalina.Manager);
+    Code:
+       0: aload_1
+       1: instanceof    #768                // class org/apache/catalina/session/StandardManager
+       4: aload_1
+       5: invokedynamic #844,  0            // InvokeDynamic #4:get:(Lorg/apache/catalina/Manager;)Ljava/util/function/Supplier;
+      10: invokestatic  #847                // Method org/springframework/util/Assert.state:(ZLjava/util/function/Supplier;)V
+      13: aload_0
+      14: invokevirtual #853                // Method getValidSessionStoreDir:()Ljava/io/File;
+      17: astore_2
+      18: new           #123                // class java/io/File
+      21: dup
+      22: aload_2
+      23: ldc_w         #856                // String SESSIONS.ser
+      26: invokespecial #858                // Method java/io/File."<init>":(Ljava/io/File;Ljava/lang/String;)V
+      29: astore_3
+      30: aload_1
+      31: checkcast     #768                // class org/apache/catalina/session/StandardManager
+      34: aload_3
+      35: invokevirtual #122                // Method java/io/File.getAbsolutePath:()Ljava/lang/String;
+      38: invokevirtual #861                // Method org/apache/catalina/session/StandardManager.setPathname:(Ljava/lang/String;)V
+      41: return
+
+  private long getSessionTimeoutInMinutes();
+    Code:
+       0: aload_0
+       1: invokevirtual #739                // Method getSession:()Lorg/springframework/boot/web/servlet/server/Session;
+       4: invokevirtual #864                // Method org/springframework/boot/web/servlet/server/Session.getTimeout:()Ljava/time/Duration;
+       7: astore_1
+       8: aload_0
+       9: aload_1
+      10: invokevirtual #868                // Method isZeroOrLess:(Ljava/time/Duration;)Z
+      13: ifeq          18
+      16: lconst_0
+      17: lreturn
+      18: aload_1
+      19: invokevirtual #872                // Method java/time/Duration.toMinutes:()J
+      22: lconst_1
+      23: invokestatic  #877                // Method java/lang/Math.max:(JJ)J
+      26: lreturn
+
+  private boolean isZeroOrLess(java.time.Duration);
+    Code:
+       0: aload_1
+       1: ifnull        18
+       4: aload_1
+       5: invokevirtual #880                // Method java/time/Duration.isNegative:()Z
+       8: ifne          18
+      11: aload_1
+      12: invokevirtual #883                // Method java/time/Duration.isZero:()Z
+      15: ifeq          22
+      18: iconst_1
+      19: goto          23
+      22: iconst_0
+      23: ireturn
+
+  protected void postProcessContext(org.apache.catalina.Context);
+    Code:
+       0: return
+
+  protected org.springframework.boot.web.embedded.tomcat.TomcatWebServer getTomcatWebServer(org.apache.catalina.startup.Tomcat);
+    Code:
+       0: new           #886                // class org/springframework/boot/web/embedded/tomcat/TomcatWebServer
+       3: dup
+       4: aload_1
+       5: aload_0
+       6: invokevirtual #515                // Method getPort:()I
+       9: iflt          16
+      12: iconst_1
+      13: goto          17
+      16: iconst_0
+      17: aload_0
+      18: invokevirtual #888                // Method getShutdown:()Lorg/springframework/boot/web/server/Shutdown;
+      21: invokespecial #892                // Method org/springframework/boot/web/embedded/tomcat/TomcatWebServer."<init>":(Lorg/apache/catalina/startup/Tomcat;ZLorg/springframework/boot/web/server/Shutdown;)V
+      24: areturn
+
+  public void setResourceLoader(org.springframework.core.io.ResourceLoader);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #269                // Field resourceLoader:Lorg/springframework/core/io/ResourceLoader;
+       5: return
+
+  public void setBaseDirectory(java.io.File);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #112                // Field baseDirectory:Ljava/io/File;
+       5: return
+
+  public java.util.Set<java.lang.String> getTldSkipPatterns();
+    Code:
+       0: aload_0
+       1: getfield      #62                 // Field tldSkipPatterns:Ljava/util/Set;
+       4: areturn
+
+  public void setTldSkipPatterns(java.util.Collection<java.lang.String>);
+    Code:
+       0: aload_1
+       1: ldc_w         #895                // String Patterns must not be null
+       4: invokestatic  #897                // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: aload_0
+       8: new           #32                 // class java/util/LinkedHashSet
+      11: dup
+      12: aload_1
+      13: invokespecial #59                 // Method java/util/LinkedHashSet."<init>":(Ljava/util/Collection;)V
+      16: putfield      #62                 // Field tldSkipPatterns:Ljava/util/Set;
+      19: return
+
+  public void addTldSkipPatterns(java.lang.String...);
+    Code:
+       0: aload_1
+       1: ldc_w         #895                // String Patterns must not be null
+       4: invokestatic  #897                // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: aload_0
+       8: getfield      #62                 // Field tldSkipPatterns:Ljava/util/Set;
+      11: aload_1
+      12: invokestatic  #901                // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+      15: invokeinterface #907,  2          // InterfaceMethod java/util/Set.addAll:(Ljava/util/Collection;)Z
+      20: pop
+      21: return
+
+  public void setProtocol(java.lang.String);
+    Code:
+       0: aload_1
+       1: ldc_w         #908                // String Protocol must not be empty
+       4: invokestatic  #910                // Method org/springframework/util/Assert.hasLength:(Ljava/lang/String;Ljava/lang/String;)V
+       7: aload_0
+       8: aload_1
+       9: putfield      #50                 // Field protocol:Ljava/lang/String;
+      12: return
+
+  public void setEngineValves(java.util.Collection<? extends org.apache.catalina.Valve>);
+    Code:
+       0: aload_1
+       1: ldc_w         #913                // String Valves must not be null
+       4: invokestatic  #897                // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: aload_0
+       8: new           #13                 // class java/util/ArrayList
+      11: dup
+      12: aload_1
+      13: invokespecial #915                // Method java/util/ArrayList."<init>":(Ljava/util/Collection;)V
+      16: putfield      #16                 // Field engineValves:Ljava/util/List;
+      19: return
+
+  public java.util.Collection<org.apache.catalina.Valve> getEngineValves();
+    Code:
+       0: aload_0
+       1: getfield      #16                 // Field engineValves:Ljava/util/List;
+       4: areturn
+
+  public void addEngineValves(org.apache.catalina.Valve...);
+    Code:
+       0: aload_1
+       1: ldc_w         #913                // String Valves must not be null
+       4: invokestatic  #897                // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: aload_0
+       8: getfield      #16                 // Field engineValves:Ljava/util/List;
+      11: aload_1
+      12: invokestatic  #901                // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+      15: invokeinterface #830,  2          // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+      20: pop
+      21: return
+
+  public void setContextValves(java.util.Collection<? extends org.apache.catalina.Valve>);
+    Code:
+       0: aload_1
+       1: ldc_w         #913                // String Valves must not be null
+       4: invokestatic  #897                // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: aload_0
+       8: new           #13                 // class java/util/ArrayList
+      11: dup
+      12: aload_1
+      13: invokespecial #915                // Method java/util/ArrayList."<init>":(Ljava/util/Collection;)V
+      16: putfield      #20                 // Field contextValves:Ljava/util/List;
+      19: return
+
+  public java.util.Collection<org.apache.catalina.Valve> getContextValves();
+    Code:
+       0: aload_0
+       1: getfield      #20                 // Field contextValves:Ljava/util/List;
+       4: areturn
+
+  public void addContextValves(org.apache.catalina.Valve...);
+    Code:
+       0: aload_1
+       1: ldc_w         #913                // String Valves must not be null
+       4: invokestatic  #897                // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: aload_0
+       8: getfield      #20                 // Field contextValves:Ljava/util/List;
+      11: aload_1
+      12: invokestatic  #901                // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+      15: invokeinterface #830,  2          // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+      20: pop
+      21: return
+
+  public void setContextLifecycleListeners(java.util.Collection<? extends org.apache.catalina.LifecycleListener>);
+    Code:
+       0: aload_1
+       1: ldc_w         #916                // String ContextLifecycleListeners must not be null
+       4: invokestatic  #897                // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: aload_0
+       8: new           #13                 // class java/util/ArrayList
+      11: dup
+      12: aload_1
+      13: invokespecial #915                // Method java/util/ArrayList."<init>":(Ljava/util/Collection;)V
+      16: putfield      #23                 // Field contextLifecycleListeners:Ljava/util/List;
+      19: return
+
+  public java.util.Collection<org.apache.catalina.LifecycleListener> getContextLifecycleListeners();
+    Code:
+       0: aload_0
+       1: getfield      #23                 // Field contextLifecycleListeners:Ljava/util/List;
+       4: areturn
+
+  public void addContextLifecycleListeners(org.apache.catalina.LifecycleListener...);
+    Code:
+       0: aload_1
+       1: ldc_w         #916                // String ContextLifecycleListeners must not be null
+       4: invokestatic  #897                // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: aload_0
+       8: getfield      #23                 // Field contextLifecycleListeners:Ljava/util/List;
+      11: aload_1
+      12: invokestatic  #901                // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+      15: invokeinterface #830,  2          // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+      20: pop
+      21: return
+
+  public void setTomcatContextCustomizers(java.util.Collection<? extends org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer>);
+    Code:
+       0: aload_1
+       1: ldc_w         #918                // String TomcatContextCustomizers must not be null
+       4: invokestatic  #897                // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: aload_0
+       8: new           #32                 // class java/util/LinkedHashSet
+      11: dup
+      12: aload_1
+      13: invokespecial #59                 // Method java/util/LinkedHashSet."<init>":(Ljava/util/Collection;)V
+      16: putfield      #35                 // Field tomcatContextCustomizers:Ljava/util/Set;
+      19: return
+
+  public java.util.Collection<org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer> getTomcatContextCustomizers();
+    Code:
+       0: aload_0
+       1: getfield      #35                 // Field tomcatContextCustomizers:Ljava/util/Set;
+       4: areturn
+
+  public void addContextCustomizers(org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer...);
+    Code:
+       0: aload_1
+       1: ldc_w         #918                // String TomcatContextCustomizers must not be null
+       4: invokestatic  #897                // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: aload_0
+       8: getfield      #35                 // Field tomcatContextCustomizers:Ljava/util/Set;
+      11: aload_1
+      12: invokestatic  #901                // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+      15: invokeinterface #907,  2          // InterfaceMethod java/util/Set.addAll:(Ljava/util/Collection;)Z
+      20: pop
+      21: return
+
+  public void setTomcatConnectorCustomizers(java.util.Collection<? extends org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer>);
+    Code:
+       0: aload_1
+       1: ldc_w         #920                // String TomcatConnectorCustomizers must not be null
+       4: invokestatic  #897                // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: aload_0
+       8: new           #32                 // class java/util/LinkedHashSet
+      11: dup
+      12: aload_1
+      13: invokespecial #59                 // Method java/util/LinkedHashSet."<init>":(Ljava/util/Collection;)V
+      16: putfield      #39                 // Field tomcatConnectorCustomizers:Ljava/util/Set;
+      19: return
+
+  public void addConnectorCustomizers(org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer...);
+    Code:
+       0: aload_1
+       1: ldc_w         #920                // String TomcatConnectorCustomizers must not be null
+       4: invokestatic  #897                // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: aload_0
+       8: getfield      #39                 // Field tomcatConnectorCustomizers:Ljava/util/Set;
+      11: aload_1
+      12: invokestatic  #901                // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+      15: invokeinterface #907,  2          // InterfaceMethod java/util/Set.addAll:(Ljava/util/Collection;)Z
+      20: pop
+      21: return
+
+  public java.util.Collection<org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer> getTomcatConnectorCustomizers();
+    Code:
+       0: aload_0
+       1: getfield      #39                 // Field tomcatConnectorCustomizers:Ljava/util/Set;
+       4: areturn
+
+  public void setTomcatProtocolHandlerCustomizers(java.util.Collection<? extends org.springframework.boot.web.embedded.tomcat.TomcatProtocolHandlerCustomizer<?>>);
+    Code:
+       0: aload_1
+       1: ldc_w         #922                // String TomcatProtocolHandlerCustomizers must not be null
+       4: invokestatic  #897                // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: aload_0
+       8: new           #32                 // class java/util/LinkedHashSet
+      11: dup
+      12: aload_1
+      13: invokespecial #59                 // Method java/util/LinkedHashSet."<init>":(Ljava/util/Collection;)V
+      16: putfield      #42                 // Field tomcatProtocolHandlerCustomizers:Ljava/util/Set;
+      19: return
+
+  public void addProtocolHandlerCustomizers(org.springframework.boot.web.embedded.tomcat.TomcatProtocolHandlerCustomizer<?>...);
+    Code:
+       0: aload_1
+       1: ldc_w         #922                // String TomcatProtocolHandlerCustomizers must not be null
+       4: invokestatic  #897                // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: aload_0
+       8: getfield      #42                 // Field tomcatProtocolHandlerCustomizers:Ljava/util/Set;
+      11: aload_1
+      12: invokestatic  #901                // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+      15: invokeinterface #907,  2          // InterfaceMethod java/util/Set.addAll:(Ljava/util/Collection;)Z
+      20: pop
+      21: return
+
+  public java.util.Collection<org.springframework.boot.web.embedded.tomcat.TomcatProtocolHandlerCustomizer<?>> getTomcatProtocolHandlerCustomizers();
+    Code:
+       0: aload_0
+       1: getfield      #42                 // Field tomcatProtocolHandlerCustomizers:Ljava/util/Set;
+       4: areturn
+
+  public void addAdditionalTomcatConnectors(org.apache.catalina.connector.Connector...);
+    Code:
+       0: aload_1
+       1: ldc_w         #924                // String Connectors must not be null
+       4: invokestatic  #897                // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       7: aload_0
+       8: getfield      #45                 // Field additionalTomcatConnectors:Ljava/util/List;
+      11: aload_1
+      12: invokestatic  #901                // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;
+      15: invokeinterface #830,  2          // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+      20: pop
+      21: return
+
+  public java.util.List<org.apache.catalina.connector.Connector> getAdditionalTomcatConnectors();
+    Code:
+       0: aload_0
+       1: getfield      #45                 // Field additionalTomcatConnectors:Ljava/util/List;
+       4: areturn
+
+  public void setUriEncoding(java.nio.charset.Charset);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #75                 // Field uriEncoding:Ljava/nio/charset/Charset;
+       5: return
+
+  public java.nio.charset.Charset getUriEncoding();
+    Code:
+       0: aload_0
+       1: getfield      #75                 // Field uriEncoding:Ljava/nio/charset/Charset;
+       4: areturn
+
+  public void setBackgroundProcessorDelay(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: putfield      #208                // Field backgroundProcessorDelay:I
+       5: return
+
+  public void setDisableMBeanRegistry(boolean);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: putfield      #78                 // Field disableMBeanRegistry:Z
+       5: return
+
+  private static java.lang.String lambda$configurePersistSession$3(org.apache.catalina.Manager);
+    Code:
+       0: aload_0
+       1: invokevirtual #926                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       4: invokevirtual #930                // Method java/lang/Class.getName:()Ljava/lang/String;
+       7: invokedynamic #933,  0            // InvokeDynamic #5:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      12: areturn
+
+  private static java.lang.String lambda$configureCookieProcessor$2(org.apache.catalina.Context);
+    Code:
+       0: aload_0
+       1: invokestatic  #937                // Method org/apache/catalina/util/SessionConfig.getSessionCookieName:(Lorg/apache/catalina/Context;)Ljava/lang/String;
+       4: areturn
+
+  private static void lambda$invokeProtocolHandlerCustomizers$1(org.apache.coyote.ProtocolHandler, org.springframework.boot.web.embedded.tomcat.TomcatProtocolHandlerCustomizer);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: invokeinterface #943,  2          // InterfaceMethod org/springframework/boot/web/embedded/tomcat/TomcatProtocolHandlerCustomizer.customize:(Lorg/apache/coyote/ProtocolHandler;)V
+       7: return
+
+  private static void lambda$addLocaleMappings$0(org.springframework.boot.web.embedded.tomcat.TomcatEmbeddedContext, java.util.Locale, java.nio.charset.Charset);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #362                // Method java/util/Locale.toString:()Ljava/lang/String;
+       5: aload_2
+       6: invokevirtual #945                // Method java/nio/charset/Charset.toString:()Ljava/lang/String;
+       9: invokevirtual #370                // Method org/springframework/boot/web/embedded/tomcat/TomcatEmbeddedContext.addLocaleEncodingMappingParameter:(Ljava/lang/String;Ljava/lang/String;)V
+      12: return
+
+  static java.util.List access$000(org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory);
+    Code:
+       0: aload_0
+       1: invokevirtual #1                  // Method getUrlsOfJarsWithMetaInfResources:()Ljava/util/List;
+       4: areturn
+
+  static {};
+    Code:
+       0: getstatic     #946                // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+       3: putstatic     #71                 // Field DEFAULT_CHARSET:Ljava/nio/charset/Charset;
+       6: invokestatic  #951                // Method java/util/Collections.emptySet:()Ljava/util/Set;
+       9: putstatic     #670                // Field NO_CLASSES:Ljava/util/Set;
+      12: return
+}

@@ -1,0 +1,96 @@
+Compiled from "PemContent.java"
+final class org.springframework.boot.ssl.pem.PemContent {
+  private static final java.util.regex.Pattern PEM_HEADER;
+
+  private static final java.util.regex.Pattern PEM_FOOTER;
+
+  private org.springframework.boot.ssl.pem.PemContent();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  static java.lang.String load(java.lang.String);
+    Code:
+       0: aload_0
+       1: ifnull        11
+       4: aload_0
+       5: invokestatic  #7                  // Method isPemContent:(Ljava/lang/String;)Z
+       8: ifeq          13
+      11: aload_0
+      12: areturn
+      13: aload_0
+      14: invokestatic  #13                 // Method org/springframework/util/ResourceUtils.getURL:(Ljava/lang/String;)Ljava/net/URL;
+      17: astore_1
+      18: new           #19                 // class java/io/InputStreamReader
+      21: dup
+      22: aload_1
+      23: invokevirtual #21                 // Method java/net/URL.openStream:()Ljava/io/InputStream;
+      26: getstatic     #27                 // Field java/nio/charset/StandardCharsets.UTF_8:Ljava/nio/charset/Charset;
+      29: invokespecial #33                 // Method java/io/InputStreamReader."<init>":(Ljava/io/InputStream;Ljava/nio/charset/Charset;)V
+      32: astore_2
+      33: aload_2
+      34: invokestatic  #36                 // Method org/springframework/util/FileCopyUtils.copyToString:(Ljava/io/Reader;)Ljava/lang/String;
+      37: astore_3
+      38: aload_2
+      39: invokevirtual #42                 // Method java/io/Reader.close:()V
+      42: aload_3
+      43: areturn
+      44: astore_3
+      45: aload_2
+      46: invokevirtual #42                 // Method java/io/Reader.close:()V
+      49: goto          60
+      52: astore        4
+      54: aload_3
+      55: aload         4
+      57: invokevirtual #49                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+      60: aload_3
+      61: athrow
+      62: astore_1
+      63: new           #55                 // class java/lang/IllegalStateException
+      66: dup
+      67: aload_0
+      68: aload_1
+      69: invokevirtual #57                 // Method java/io/IOException.getMessage:()Ljava/lang/String;
+      72: invokedynamic #61,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      77: aload_1
+      78: invokespecial #65                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      81: athrow
+    Exception table:
+       from    to  target type
+          33    38    44   Class java/lang/Throwable
+          45    49    52   Class java/lang/Throwable
+          13    42    62   Class java/io/IOException
+          44    62    62   Class java/io/IOException
+
+  private static boolean isPemContent(java.lang.String);
+    Code:
+       0: aload_0
+       1: ifnull        34
+       4: getstatic     #68                 // Field PEM_HEADER:Ljava/util/regex/Pattern;
+       7: aload_0
+       8: invokevirtual #72                 // Method java/util/regex/Pattern.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+      11: invokevirtual #78                 // Method java/util/regex/Matcher.find:()Z
+      14: ifeq          34
+      17: getstatic     #84                 // Field PEM_FOOTER:Ljava/util/regex/Pattern;
+      20: aload_0
+      21: invokevirtual #72                 // Method java/util/regex/Pattern.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+      24: invokevirtual #78                 // Method java/util/regex/Matcher.find:()Z
+      27: ifeq          34
+      30: iconst_1
+      31: goto          35
+      34: iconst_0
+      35: ireturn
+
+  static {};
+    Code:
+       0: ldc           #87                 // String -+BEGIN\\s+[^-]*-+
+       2: iconst_2
+       3: invokestatic  #89                 // Method java/util/regex/Pattern.compile:(Ljava/lang/String;I)Ljava/util/regex/Pattern;
+       6: putstatic     #68                 // Field PEM_HEADER:Ljava/util/regex/Pattern;
+       9: ldc           #93                 // String -+END\\s+[^-]*-+
+      11: iconst_2
+      12: invokestatic  #89                 // Method java/util/regex/Pattern.compile:(Ljava/lang/String;I)Ljava/util/regex/Pattern;
+      15: putstatic     #84                 // Field PEM_FOOTER:Ljava/util/regex/Pattern;
+      18: return
+}

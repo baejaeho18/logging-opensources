@@ -1,0 +1,115 @@
+Compiled from "SslServerCustomizer.java"
+public class org.springframework.boot.web.embedded.netty.SslServerCustomizer implements org.springframework.boot.web.embedded.netty.NettyServerCustomizer {
+  private final org.springframework.boot.web.server.Http2 http2;
+
+  private final org.springframework.boot.web.server.Ssl$ClientAuth clientAuth;
+
+  private final org.springframework.boot.ssl.SslBundle sslBundle;
+
+  public org.springframework.boot.web.embedded.netty.SslServerCustomizer(org.springframework.boot.web.server.Http2, org.springframework.boot.web.server.Ssl$ClientAuth, org.springframework.boot.ssl.SslBundle);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #7                  // Field http2:Lorg/springframework/boot/web/server/Http2;
+       9: aload_0
+      10: aload_2
+      11: putfield      #13                 // Field clientAuth:Lorg/springframework/boot/web/server/Ssl$ClientAuth;
+      14: aload_0
+      15: aload_3
+      16: putfield      #17                 // Field sslBundle:Lorg/springframework/boot/ssl/SslBundle;
+      19: return
+
+  public reactor.netty.http.server.HttpServer apply(reactor.netty.http.server.HttpServer);
+    Code:
+       0: aload_0
+       1: invokevirtual #21                 // Method createSslContextSpec:()Lreactor/netty/tcp/AbstractProtocolSslContextSpec;
+       4: astore_2
+       5: aload_1
+       6: aload_2
+       7: invokedynamic #25,  0             // InvokeDynamic #0:accept:(Lreactor/netty/tcp/AbstractProtocolSslContextSpec;)Ljava/util/function/Consumer;
+      12: invokevirtual #29                 // Method reactor/netty/http/server/HttpServer.secure:(Ljava/util/function/Consumer;)Lreactor/netty/http/server/HttpServer;
+      15: areturn
+
+  protected reactor.netty.tcp.AbstractProtocolSslContextSpec<?> createSslContextSpec();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field http2:Lorg/springframework/boot/web/server/Http2;
+       4: ifnull        37
+       7: aload_0
+       8: getfield      #7                  // Field http2:Lorg/springframework/boot/web/server/Http2;
+      11: invokevirtual #35                 // Method org/springframework/boot/web/server/Http2.isEnabled:()Z
+      14: ifeq          37
+      17: aload_0
+      18: getfield      #17                 // Field sslBundle:Lorg/springframework/boot/ssl/SslBundle;
+      21: invokeinterface #41,  1           // InterfaceMethod org/springframework/boot/ssl/SslBundle.getManagers:()Lorg/springframework/boot/ssl/SslManagerBundle;
+      26: invokeinterface #47,  1           // InterfaceMethod org/springframework/boot/ssl/SslManagerBundle.getKeyManagerFactory:()Ljavax/net/ssl/KeyManagerFactory;
+      31: invokestatic  #53                 // Method reactor/netty/http/Http2SslContextSpec.forServer:(Ljavax/net/ssl/KeyManagerFactory;)Lreactor/netty/http/Http2SslContextSpec;
+      34: goto          54
+      37: aload_0
+      38: getfield      #17                 // Field sslBundle:Lorg/springframework/boot/ssl/SslBundle;
+      41: invokeinterface #41,  1           // InterfaceMethod org/springframework/boot/ssl/SslBundle.getManagers:()Lorg/springframework/boot/ssl/SslManagerBundle;
+      46: invokeinterface #47,  1           // InterfaceMethod org/springframework/boot/ssl/SslManagerBundle.getKeyManagerFactory:()Ljavax/net/ssl/KeyManagerFactory;
+      51: invokestatic  #59                 // Method reactor/netty/http/Http11SslContextSpec.forServer:(Ljavax/net/ssl/KeyManagerFactory;)Lreactor/netty/http/Http11SslContextSpec;
+      54: astore_1
+      55: aload_1
+      56: aload_0
+      57: invokedynamic #64,  0             // InvokeDynamic #1:accept:(Lorg/springframework/boot/web/embedded/netty/SslServerCustomizer;)Ljava/util/function/Consumer;
+      62: invokevirtual #67                 // Method reactor/netty/tcp/AbstractProtocolSslContextSpec.configure:(Ljava/util/function/Consumer;)Lreactor/netty/tcp/AbstractProtocolSslContextSpec;
+      65: pop
+      66: aload_1
+      67: areturn
+
+  public java.lang.Object apply(java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: checkcast     #30                 // class reactor/netty/http/server/HttpServer
+       5: invokevirtual #73                 // Method apply:(Lreactor/netty/http/server/HttpServer;)Lreactor/netty/http/server/HttpServer;
+       8: areturn
+
+  private void lambda$createSslContextSpec$1(io.netty.handler.ssl.SslContextBuilder);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: getfield      #17                 // Field sslBundle:Lorg/springframework/boot/ssl/SslBundle;
+       5: invokeinterface #41,  1           // InterfaceMethod org/springframework/boot/ssl/SslBundle.getManagers:()Lorg/springframework/boot/ssl/SslManagerBundle;
+      10: invokeinterface #77,  1           // InterfaceMethod org/springframework/boot/ssl/SslManagerBundle.getTrustManagerFactory:()Ljavax/net/ssl/TrustManagerFactory;
+      15: invokevirtual #81                 // Method io/netty/handler/ssl/SslContextBuilder.trustManager:(Ljavax/net/ssl/TrustManagerFactory;)Lio/netty/handler/ssl/SslContextBuilder;
+      18: pop
+      19: aload_0
+      20: getfield      #17                 // Field sslBundle:Lorg/springframework/boot/ssl/SslBundle;
+      23: invokeinterface #87,  1           // InterfaceMethod org/springframework/boot/ssl/SslBundle.getOptions:()Lorg/springframework/boot/ssl/SslOptions;
+      28: astore_2
+      29: aload_1
+      30: aload_2
+      31: invokeinterface #91,  1           // InterfaceMethod org/springframework/boot/ssl/SslOptions.getEnabledProtocols:()[Ljava/lang/String;
+      36: invokevirtual #97                 // Method io/netty/handler/ssl/SslContextBuilder.protocols:([Ljava/lang/String;)Lio/netty/handler/ssl/SslContextBuilder;
+      39: pop
+      40: aload_1
+      41: aload_2
+      42: invokeinterface #101,  1          // InterfaceMethod org/springframework/boot/ssl/SslOptions.getCiphers:()[Ljava/lang/String;
+      47: invokestatic  #104                // InterfaceMethod org/springframework/boot/ssl/SslOptions.asSet:([Ljava/lang/String;)Ljava/util/Set;
+      50: invokevirtual #108                // Method io/netty/handler/ssl/SslContextBuilder.ciphers:(Ljava/lang/Iterable;)Lio/netty/handler/ssl/SslContextBuilder;
+      53: pop
+      54: aload_1
+      55: aload_0
+      56: getfield      #13                 // Field clientAuth:Lorg/springframework/boot/web/server/Ssl$ClientAuth;
+      59: getstatic     #112                // Field io/netty/handler/ssl/ClientAuth.NONE:Lio/netty/handler/ssl/ClientAuth;
+      62: getstatic     #118                // Field io/netty/handler/ssl/ClientAuth.OPTIONAL:Lio/netty/handler/ssl/ClientAuth;
+      65: getstatic     #121                // Field io/netty/handler/ssl/ClientAuth.REQUIRE:Lio/netty/handler/ssl/ClientAuth;
+      68: invokestatic  #124                // Method org/springframework/boot/web/server/Ssl$ClientAuth.map:(Lorg/springframework/boot/web/server/Ssl$ClientAuth;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      71: checkcast     #113                // class io/netty/handler/ssl/ClientAuth
+      74: invokevirtual #130                // Method io/netty/handler/ssl/SslContextBuilder.clientAuth:(Lio/netty/handler/ssl/ClientAuth;)Lio/netty/handler/ssl/SslContextBuilder;
+      77: pop
+      78: return
+
+  private static void lambda$apply$0(reactor.netty.tcp.AbstractProtocolSslContextSpec, reactor.netty.tcp.SslProvider$SslContextSpec);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: invokeinterface #133,  2          // InterfaceMethod reactor/netty/tcp/SslProvider$SslContextSpec.sslContext:(Lreactor/netty/tcp/SslProvider$ProtocolSslContextSpec;)Lreactor/netty/tcp/SslProvider$Builder;
+       7: pop
+       8: return
+}

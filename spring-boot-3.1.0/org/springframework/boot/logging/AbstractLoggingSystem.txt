@@ -1,0 +1,226 @@
+Compiled from "AbstractLoggingSystem.java"
+public abstract class org.springframework.boot.logging.AbstractLoggingSystem extends org.springframework.boot.logging.LoggingSystem {
+  protected static final java.util.Comparator<org.springframework.boot.logging.LoggerConfiguration> CONFIGURATION_COMPARATOR;
+
+  private final java.lang.ClassLoader classLoader;
+
+  public org.springframework.boot.logging.AbstractLoggingSystem(java.lang.ClassLoader);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method org/springframework/boot/logging/LoggingSystem."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #7                  // Field classLoader:Ljava/lang/ClassLoader;
+       9: return
+
+  public void beforeInitialize();
+    Code:
+       0: return
+
+  public void initialize(org.springframework.boot.logging.LoggingInitializationContext, java.lang.String, org.springframework.boot.logging.LogFile);
+    Code:
+       0: aload_2
+       1: invokestatic  #13                 // Method org/springframework/util/StringUtils.hasLength:(Ljava/lang/String;)Z
+       4: ifeq          15
+       7: aload_0
+       8: aload_1
+       9: aload_2
+      10: aload_3
+      11: invokevirtual #19                 // Method initializeWithSpecificConfig:(Lorg/springframework/boot/logging/LoggingInitializationContext;Ljava/lang/String;Lorg/springframework/boot/logging/LogFile;)V
+      14: return
+      15: aload_0
+      16: aload_1
+      17: aload_3
+      18: invokevirtual #23                 // Method initializeWithConventions:(Lorg/springframework/boot/logging/LoggingInitializationContext;Lorg/springframework/boot/logging/LogFile;)V
+      21: return
+
+  private void initializeWithSpecificConfig(org.springframework.boot.logging.LoggingInitializationContext, java.lang.String, org.springframework.boot.logging.LogFile);
+    Code:
+       0: aload_2
+       1: invokestatic  #27                 // Method org/springframework/util/SystemPropertyUtils.resolvePlaceholders:(Ljava/lang/String;)Ljava/lang/String;
+       4: astore_2
+       5: aload_0
+       6: aload_1
+       7: aload_2
+       8: aload_3
+       9: invokevirtual #33                 // Method loadConfiguration:(Lorg/springframework/boot/logging/LoggingInitializationContext;Ljava/lang/String;Lorg/springframework/boot/logging/LogFile;)V
+      12: return
+
+  private void initializeWithConventions(org.springframework.boot.logging.LoggingInitializationContext, org.springframework.boot.logging.LogFile);
+    Code:
+       0: aload_0
+       1: invokevirtual #36                 // Method getSelfInitializationConfig:()Ljava/lang/String;
+       4: astore_3
+       5: aload_3
+       6: ifnull        19
+       9: aload_2
+      10: ifnonnull     19
+      13: aload_0
+      14: aload_1
+      15: invokevirtual #40                 // Method reinitialize:(Lorg/springframework/boot/logging/LoggingInitializationContext;)V
+      18: return
+      19: aload_3
+      20: ifnonnull     28
+      23: aload_0
+      24: invokevirtual #44                 // Method getSpringInitializationConfig:()Ljava/lang/String;
+      27: astore_3
+      28: aload_3
+      29: ifnull        40
+      32: aload_0
+      33: aload_1
+      34: aload_3
+      35: aload_2
+      36: invokevirtual #33                 // Method loadConfiguration:(Lorg/springframework/boot/logging/LoggingInitializationContext;Ljava/lang/String;Lorg/springframework/boot/logging/LogFile;)V
+      39: return
+      40: aload_0
+      41: aload_1
+      42: aload_2
+      43: invokevirtual #47                 // Method loadDefaults:(Lorg/springframework/boot/logging/LoggingInitializationContext;Lorg/springframework/boot/logging/LogFile;)V
+      46: return
+
+  protected java.lang.String getSelfInitializationConfig();
+    Code:
+       0: aload_0
+       1: aload_0
+       2: invokevirtual #50                 // Method getStandardConfigLocations:()[Ljava/lang/String;
+       5: invokevirtual #54                 // Method findConfig:([Ljava/lang/String;)Ljava/lang/String;
+       8: areturn
+
+  protected java.lang.String getSpringInitializationConfig();
+    Code:
+       0: aload_0
+       1: aload_0
+       2: invokevirtual #58                 // Method getSpringConfigLocations:()[Ljava/lang/String;
+       5: invokevirtual #54                 // Method findConfig:([Ljava/lang/String;)Ljava/lang/String;
+       8: areturn
+
+  private java.lang.String findConfig(java.lang.String[]);
+    Code:
+       0: aload_1
+       1: astore_2
+       2: aload_2
+       3: arraylength
+       4: istore_3
+       5: iconst_0
+       6: istore        4
+       8: iload         4
+      10: iload_3
+      11: if_icmpge     57
+      14: aload_2
+      15: iload         4
+      17: aaload
+      18: astore        5
+      20: new           #61                 // class org/springframework/core/io/ClassPathResource
+      23: dup
+      24: aload         5
+      26: aload_0
+      27: getfield      #7                  // Field classLoader:Ljava/lang/ClassLoader;
+      30: invokespecial #63                 // Method org/springframework/core/io/ClassPathResource."<init>":(Ljava/lang/String;Ljava/lang/ClassLoader;)V
+      33: astore        6
+      35: aload         6
+      37: invokevirtual #66                 // Method org/springframework/core/io/ClassPathResource.exists:()Z
+      40: ifeq          51
+      43: aload         5
+      45: invokedynamic #70,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      50: areturn
+      51: iinc          4, 1
+      54: goto          8
+      57: aconst_null
+      58: areturn
+
+  protected abstract java.lang.String[] getStandardConfigLocations();
+
+  protected java.lang.String[] getSpringConfigLocations();
+    Code:
+       0: aload_0
+       1: invokevirtual #50                 // Method getStandardConfigLocations:()[Ljava/lang/String;
+       4: astore_1
+       5: iconst_0
+       6: istore_2
+       7: iload_2
+       8: aload_1
+       9: arraylength
+      10: if_icmpge     55
+      13: aload_1
+      14: iload_2
+      15: aaload
+      16: invokestatic  #73                 // Method org/springframework/util/StringUtils.getFilenameExtension:(Ljava/lang/String;)Ljava/lang/String;
+      19: astore_3
+      20: aload_1
+      21: iload_2
+      22: aload_1
+      23: iload_2
+      24: aaload
+      25: iconst_0
+      26: aload_1
+      27: iload_2
+      28: aaload
+      29: invokevirtual #76                 // Method java/lang/String.length:()I
+      32: aload_3
+      33: invokevirtual #76                 // Method java/lang/String.length:()I
+      36: isub
+      37: iconst_1
+      38: isub
+      39: invokevirtual #82                 // Method java/lang/String.substring:(II)Ljava/lang/String;
+      42: aload_3
+      43: invokedynamic #86,  0             // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      48: aastore
+      49: iinc          2, 1
+      52: goto          7
+      55: aload_1
+      56: areturn
+
+  protected abstract void loadDefaults(org.springframework.boot.logging.LoggingInitializationContext, org.springframework.boot.logging.LogFile);
+
+  protected abstract void loadConfiguration(org.springframework.boot.logging.LoggingInitializationContext, java.lang.String, org.springframework.boot.logging.LogFile);
+
+  protected void reinitialize(org.springframework.boot.logging.LoggingInitializationContext);
+    Code:
+       0: return
+
+  protected final java.lang.ClassLoader getClassLoader();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field classLoader:Ljava/lang/ClassLoader;
+       4: areturn
+
+  protected final java.lang.String getPackagedConfigFile(java.lang.String);
+    Code:
+       0: aload_0
+       1: invokevirtual #89                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       4: invokestatic  #95                 // Method org/springframework/util/ClassUtils.getPackageName:(Ljava/lang/Class;)Ljava/lang/String;
+       7: astore_2
+       8: aload_2
+       9: bipush        46
+      11: bipush        47
+      13: invokevirtual #101                // Method java/lang/String.replace:(CC)Ljava/lang/String;
+      16: astore_2
+      17: aload_2
+      18: aload_1
+      19: invokedynamic #105,  0            // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      24: astore_2
+      25: aload_2
+      26: invokedynamic #70,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      31: astore_2
+      32: aload_2
+      33: areturn
+
+  protected final void applySystemProperties(org.springframework.core.env.Environment, org.springframework.boot.logging.LogFile);
+    Code:
+       0: new           #106                // class org/springframework/boot/logging/LoggingSystemProperties
+       3: dup
+       4: aload_1
+       5: invokespecial #108                // Method org/springframework/boot/logging/LoggingSystemProperties."<init>":(Lorg/springframework/core/env/Environment;)V
+       8: aload_2
+       9: invokevirtual #111                // Method org/springframework/boot/logging/LoggingSystemProperties.apply:(Lorg/springframework/boot/logging/LogFile;)V
+      12: return
+
+  static {};
+    Code:
+       0: new           #115                // class org/springframework/boot/logging/LoggerConfigurationComparator
+       3: dup
+       4: ldc           #117                // String ROOT
+       6: invokespecial #119                // Method org/springframework/boot/logging/LoggerConfigurationComparator."<init>":(Ljava/lang/String;)V
+       9: putstatic     #122                // Field CONFIGURATION_COMPARATOR:Ljava/util/Comparator;
+      12: return
+}

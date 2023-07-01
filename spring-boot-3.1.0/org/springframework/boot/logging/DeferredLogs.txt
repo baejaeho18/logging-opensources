@@ -1,0 +1,141 @@
+Compiled from "DeferredLogs.java"
+public class org.springframework.boot.logging.DeferredLogs implements org.springframework.boot.logging.DeferredLogFactory {
+  private final org.springframework.boot.logging.DeferredLog$Lines lines;
+
+  private final java.util.List<org.springframework.boot.logging.DeferredLog> loggers;
+
+  public org.springframework.boot.logging.DeferredLogs();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #7                  // class org/springframework/boot/logging/DeferredLog$Lines
+       8: dup
+       9: invokespecial #9                  // Method org/springframework/boot/logging/DeferredLog$Lines."<init>":()V
+      12: putfield      #10                 // Field lines:Lorg/springframework/boot/logging/DeferredLog$Lines;
+      15: aload_0
+      16: new           #16                 // class java/util/ArrayList
+      19: dup
+      20: invokespecial #18                 // Method java/util/ArrayList."<init>":()V
+      23: putfield      #19                 // Field loggers:Ljava/util/List;
+      26: return
+
+  public org.apache.commons.logging.Log getLog(java.lang.Class<?>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokedynamic #23,  0             // InvokeDynamic #0:get:(Ljava/lang/Class;)Ljava/util/function/Supplier;
+       7: invokevirtual #27                 // Method getLog:(Ljava/util/function/Supplier;)Lorg/apache/commons/logging/Log;
+      10: areturn
+
+  public org.apache.commons.logging.Log getLog(org.apache.commons.logging.Log);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokedynamic #31,  0             // InvokeDynamic #1:get:(Lorg/apache/commons/logging/Log;)Ljava/util/function/Supplier;
+       7: invokevirtual #27                 // Method getLog:(Ljava/util/function/Supplier;)Lorg/apache/commons/logging/Log;
+      10: areturn
+
+  public org.apache.commons.logging.Log getLog(java.util.function.Supplier<org.apache.commons.logging.Log>);
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field lines:Lorg/springframework/boot/logging/DeferredLog$Lines;
+       4: dup
+       5: astore_2
+       6: monitorenter
+       7: new           #34                 // class org/springframework/boot/logging/DeferredLog
+      10: dup
+      11: aload_1
+      12: aload_0
+      13: getfield      #10                 // Field lines:Lorg/springframework/boot/logging/DeferredLog$Lines;
+      16: invokespecial #36                 // Method org/springframework/boot/logging/DeferredLog."<init>":(Ljava/util/function/Supplier;Lorg/springframework/boot/logging/DeferredLog$Lines;)V
+      19: astore_3
+      20: aload_0
+      21: getfield      #19                 // Field loggers:Ljava/util/List;
+      24: aload_3
+      25: invokeinterface #39,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+      30: pop
+      31: aload_3
+      32: aload_2
+      33: monitorexit
+      34: areturn
+      35: astore        4
+      37: aload_2
+      38: monitorexit
+      39: aload         4
+      41: athrow
+    Exception table:
+       from    to  target type
+           7    34    35   any
+          35    39    35   any
+
+  public void switchOverAll();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field lines:Lorg/springframework/boot/logging/DeferredLog$Lines;
+       4: dup
+       5: astore_1
+       6: monitorenter
+       7: aload_0
+       8: getfield      #10                 // Field lines:Lorg/springframework/boot/logging/DeferredLog$Lines;
+      11: invokevirtual #45                 // Method org/springframework/boot/logging/DeferredLog$Lines.iterator:()Ljava/util/Iterator;
+      14: astore_2
+      15: aload_2
+      16: invokeinterface #49,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      21: ifeq          56
+      24: aload_2
+      25: invokeinterface #55,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      30: checkcast     #59                 // class org/springframework/boot/logging/DeferredLog$Line
+      33: astore_3
+      34: aload_3
+      35: invokevirtual #61                 // Method org/springframework/boot/logging/DeferredLog$Line.getDestination:()Lorg/apache/commons/logging/Log;
+      38: aload_3
+      39: invokevirtual #65                 // Method org/springframework/boot/logging/DeferredLog$Line.getLevel:()Lorg/springframework/boot/logging/LogLevel;
+      42: aload_3
+      43: invokevirtual #69                 // Method org/springframework/boot/logging/DeferredLog$Line.getMessage:()Ljava/lang/Object;
+      46: aload_3
+      47: invokevirtual #72                 // Method org/springframework/boot/logging/DeferredLog$Line.getThrowable:()Ljava/lang/Throwable;
+      50: invokestatic  #76                 // Method org/springframework/boot/logging/DeferredLog.logTo:(Lorg/apache/commons/logging/Log;Lorg/springframework/boot/logging/LogLevel;Ljava/lang/Object;Ljava/lang/Throwable;)V
+      53: goto          15
+      56: aload_0
+      57: getfield      #19                 // Field loggers:Ljava/util/List;
+      60: invokeinterface #80,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      65: astore_2
+      66: aload_2
+      67: invokeinterface #49,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      72: ifeq          92
+      75: aload_2
+      76: invokeinterface #55,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      81: checkcast     #34                 // class org/springframework/boot/logging/DeferredLog
+      84: astore_3
+      85: aload_3
+      86: invokevirtual #81                 // Method org/springframework/boot/logging/DeferredLog.switchOver:()V
+      89: goto          66
+      92: aload_0
+      93: getfield      #10                 // Field lines:Lorg/springframework/boot/logging/DeferredLog$Lines;
+      96: invokevirtual #84                 // Method org/springframework/boot/logging/DeferredLog$Lines.clear:()V
+      99: aload_1
+     100: monitorexit
+     101: goto          111
+     104: astore        4
+     106: aload_1
+     107: monitorexit
+     108: aload         4
+     110: athrow
+     111: return
+    Exception table:
+       from    to  target type
+           7   101   104   any
+         104   108   104   any
+
+  private static org.apache.commons.logging.Log lambda$getLog$1(org.apache.commons.logging.Log);
+    Code:
+       0: aload_0
+       1: areturn
+
+  private static org.apache.commons.logging.Log lambda$getLog$0(java.lang.Class);
+    Code:
+       0: aload_0
+       1: invokestatic  #87                 // Method org/apache/commons/logging/LogFactory.getLog:(Ljava/lang/Class;)Lorg/apache/commons/logging/Log;
+       4: areturn
+}

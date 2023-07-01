@@ -1,0 +1,242 @@
+Compiled from "SpringBootServletInitializer.java"
+public abstract class org.springframework.boot.web.servlet.support.SpringBootServletInitializer implements org.springframework.web.WebApplicationInitializer {
+  protected org.apache.commons.logging.Log logger;
+
+  private boolean registerErrorPageFilter;
+
+  public org.springframework.boot.web.servlet.support.SpringBootServletInitializer();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iconst_1
+       6: putfield      #7                  // Field registerErrorPageFilter:Z
+       9: return
+
+  protected final void setRegisterErrorPageFilter(boolean);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: putfield      #7                  // Field registerErrorPageFilter:Z
+       5: return
+
+  public void onStartup(jakarta.servlet.ServletContext) throws jakarta.servlet.ServletException;
+    Code:
+       0: aload_1
+       1: ldc           #15                 // String logging.register-shutdown-hook
+       3: iconst_0
+       4: invokestatic  #17                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+       7: invokeinterface #23,  3           // InterfaceMethod jakarta/servlet/ServletContext.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+      12: aload_0
+      13: aload_0
+      14: invokevirtual #29                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      17: invokestatic  #33                 // Method org/apache/commons/logging/LogFactory.getLog:(Ljava/lang/Class;)Lorg/apache/commons/logging/Log;
+      20: putfield      #39                 // Field logger:Lorg/apache/commons/logging/Log;
+      23: aload_0
+      24: aload_1
+      25: invokevirtual #43                 // Method createRootApplicationContext:(Ljakarta/servlet/ServletContext;)Lorg/springframework/web/context/WebApplicationContext;
+      28: astore_2
+      29: aload_2
+      30: ifnull        52
+      33: aload_1
+      34: new           #47                 // class org/springframework/boot/web/servlet/support/SpringBootServletInitializer$SpringBootContextLoaderListener
+      37: dup
+      38: aload_0
+      39: aload_2
+      40: aload_1
+      41: invokespecial #49                 // Method org/springframework/boot/web/servlet/support/SpringBootServletInitializer$SpringBootContextLoaderListener."<init>":(Lorg/springframework/boot/web/servlet/support/SpringBootServletInitializer;Lorg/springframework/web/context/WebApplicationContext;Ljakarta/servlet/ServletContext;)V
+      44: invokeinterface #52,  2           // InterfaceMethod jakarta/servlet/ServletContext.addListener:(Ljava/util/EventListener;)V
+      49: goto          63
+      52: aload_0
+      53: getfield      #39                 // Field logger:Lorg/apache/commons/logging/Log;
+      56: ldc           #56                 // String No ContextLoaderListener registered, as createRootApplicationContext() did not return an application context
+      58: invokeinterface #58,  2           // InterfaceMethod org/apache/commons/logging/Log.debug:(Ljava/lang/Object;)V
+      63: return
+
+  protected void deregisterJdbcDrivers(jakarta.servlet.ServletContext);
+    Code:
+       0: invokestatic  #64                 // Method java/sql/DriverManager.getDrivers:()Ljava/util/Enumeration;
+       3: invokestatic  #70                 // Method java/util/Collections.list:(Ljava/util/Enumeration;)Ljava/util/ArrayList;
+       6: invokevirtual #76                 // Method java/util/ArrayList.iterator:()Ljava/util/Iterator;
+       9: astore_2
+      10: aload_2
+      11: invokeinterface #82,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      16: ifeq          57
+      19: aload_2
+      20: invokeinterface #88,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      25: checkcast     #92                 // class java/sql/Driver
+      28: astore_3
+      29: aload_3
+      30: invokevirtual #29                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      33: invokevirtual #94                 // Method java/lang/Class.getClassLoader:()Ljava/lang/ClassLoader;
+      36: aload_1
+      37: invokeinterface #100,  1          // InterfaceMethod jakarta/servlet/ServletContext.getClassLoader:()Ljava/lang/ClassLoader;
+      42: if_acmpne     54
+      45: aload_3
+      46: invokestatic  #101                // Method java/sql/DriverManager.deregisterDriver:(Ljava/sql/Driver;)V
+      49: goto          54
+      52: astore        4
+      54: goto          10
+      57: return
+    Exception table:
+       from    to  target type
+          45    49    52   Class java/sql/SQLException
+
+  protected org.springframework.web.context.WebApplicationContext createRootApplicationContext(jakarta.servlet.ServletContext);
+    Code:
+       0: aload_0
+       1: invokevirtual #107                // Method createSpringApplicationBuilder:()Lorg/springframework/boot/builder/SpringApplicationBuilder;
+       4: astore_2
+       5: aload_2
+       6: aload_0
+       7: invokevirtual #29                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      10: invokevirtual #111                // Method org/springframework/boot/builder/SpringApplicationBuilder.main:(Ljava/lang/Class;)Lorg/springframework/boot/builder/SpringApplicationBuilder;
+      13: pop
+      14: aload_0
+      15: aload_1
+      16: invokevirtual #117                // Method getExistingRootWebApplicationContext:(Ljakarta/servlet/ServletContext;)Lorg/springframework/context/ApplicationContext;
+      19: astore_3
+      20: aload_3
+      21: ifnull        65
+      24: aload_0
+      25: getfield      #39                 // Field logger:Lorg/apache/commons/logging/Log;
+      28: ldc           #121                // String Root context already created (using as parent).
+      30: invokeinterface #123,  2          // InterfaceMethod org/apache/commons/logging/Log.info:(Ljava/lang/Object;)V
+      35: aload_1
+      36: getstatic     #126                // Field org/springframework/web/context/WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE:Ljava/lang/String;
+      39: aconst_null
+      40: invokeinterface #23,  3           // InterfaceMethod jakarta/servlet/ServletContext.setAttribute:(Ljava/lang/String;Ljava/lang/Object;)V
+      45: aload_2
+      46: iconst_1
+      47: anewarray     #132                // class org/springframework/context/ApplicationContextInitializer
+      50: dup
+      51: iconst_0
+      52: new           #134                // class org/springframework/boot/builder/ParentContextApplicationContextInitializer
+      55: dup
+      56: aload_3
+      57: invokespecial #136                // Method org/springframework/boot/builder/ParentContextApplicationContextInitializer."<init>":(Lorg/springframework/context/ApplicationContext;)V
+      60: aastore
+      61: invokevirtual #139                // Method org/springframework/boot/builder/SpringApplicationBuilder.initializers:([Lorg/springframework/context/ApplicationContextInitializer;)Lorg/springframework/boot/builder/SpringApplicationBuilder;
+      64: pop
+      65: aload_2
+      66: iconst_1
+      67: anewarray     #132                // class org/springframework/context/ApplicationContextInitializer
+      70: dup
+      71: iconst_0
+      72: new           #143                // class org/springframework/boot/web/servlet/support/ServletContextApplicationContextInitializer
+      75: dup
+      76: aload_1
+      77: invokespecial #145                // Method org/springframework/boot/web/servlet/support/ServletContextApplicationContextInitializer."<init>":(Ljakarta/servlet/ServletContext;)V
+      80: aastore
+      81: invokevirtual #139                // Method org/springframework/boot/builder/SpringApplicationBuilder.initializers:([Lorg/springframework/context/ApplicationContextInitializer;)Lorg/springframework/boot/builder/SpringApplicationBuilder;
+      84: pop
+      85: aload_2
+      86: invokedynamic #148,  0            // InvokeDynamic #0:create:()Lorg/springframework/boot/ApplicationContextFactory;
+      91: invokevirtual #152                // Method org/springframework/boot/builder/SpringApplicationBuilder.contextFactory:(Lorg/springframework/boot/ApplicationContextFactory;)Lorg/springframework/boot/builder/SpringApplicationBuilder;
+      94: pop
+      95: aload_0
+      96: aload_2
+      97: invokevirtual #156                // Method configure:(Lorg/springframework/boot/builder/SpringApplicationBuilder;)Lorg/springframework/boot/builder/SpringApplicationBuilder;
+     100: astore_2
+     101: aload_2
+     102: iconst_1
+     103: anewarray     #160                // class org/springframework/context/ApplicationListener
+     106: dup
+     107: iconst_0
+     108: new           #162                // class org/springframework/boot/web/servlet/support/SpringBootServletInitializer$WebEnvironmentPropertySourceInitializer
+     111: dup
+     112: aload_1
+     113: invokespecial #164                // Method org/springframework/boot/web/servlet/support/SpringBootServletInitializer$WebEnvironmentPropertySourceInitializer."<init>":(Ljakarta/servlet/ServletContext;)V
+     116: aastore
+     117: invokevirtual #165                // Method org/springframework/boot/builder/SpringApplicationBuilder.listeners:([Lorg/springframework/context/ApplicationListener;)Lorg/springframework/boot/builder/SpringApplicationBuilder;
+     120: pop
+     121: aload_2
+     122: invokevirtual #169                // Method org/springframework/boot/builder/SpringApplicationBuilder.build:()Lorg/springframework/boot/SpringApplication;
+     125: astore        4
+     127: aload         4
+     129: invokevirtual #173                // Method org/springframework/boot/SpringApplication.getAllSources:()Ljava/util/Set;
+     132: invokeinterface #179,  1          // InterfaceMethod java/util/Set.isEmpty:()Z
+     137: ifeq          172
+     140: aload_0
+     141: invokevirtual #29                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     144: getstatic     #184                // Field org/springframework/core/annotation/MergedAnnotations$SearchStrategy.TYPE_HIERARCHY:Lorg/springframework/core/annotation/MergedAnnotations$SearchStrategy;
+     147: invokestatic  #190                // InterfaceMethod org/springframework/core/annotation/MergedAnnotations.from:(Ljava/lang/reflect/AnnotatedElement;Lorg/springframework/core/annotation/MergedAnnotations$SearchStrategy;)Lorg/springframework/core/annotation/MergedAnnotations;
+     150: ldc           #196                // class org/springframework/context/annotation/Configuration
+     152: invokeinterface #198,  2          // InterfaceMethod org/springframework/core/annotation/MergedAnnotations.isPresent:(Ljava/lang/Class;)Z
+     157: ifeq          172
+     160: aload         4
+     162: aload_0
+     163: invokevirtual #29                 // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     166: invokestatic  #202                // Method java/util/Collections.singleton:(Ljava/lang/Object;)Ljava/util/Set;
+     169: invokevirtual #206                // Method org/springframework/boot/SpringApplication.addPrimarySources:(Ljava/util/Collection;)V
+     172: aload         4
+     174: invokevirtual #173                // Method org/springframework/boot/SpringApplication.getAllSources:()Ljava/util/Set;
+     177: invokeinterface #179,  1          // InterfaceMethod java/util/Set.isEmpty:()Z
+     182: ifne          189
+     185: iconst_1
+     186: goto          190
+     189: iconst_0
+     190: ldc           #210                // String No SpringApplication sources have been defined. Either override the configure method or add an @Configuration annotation
+     192: invokestatic  #212                // Method org/springframework/util/Assert.state:(ZLjava/lang/String;)V
+     195: aload_0
+     196: getfield      #7                  // Field registerErrorPageFilter:Z
+     199: ifeq          212
+     202: aload         4
+     204: ldc           #218                // class org/springframework/boot/web/servlet/support/ErrorPageFilterConfiguration
+     206: invokestatic  #202                // Method java/util/Collections.singleton:(Ljava/lang/Object;)Ljava/util/Set;
+     209: invokevirtual #206                // Method org/springframework/boot/SpringApplication.addPrimarySources:(Ljava/util/Collection;)V
+     212: aload         4
+     214: iconst_0
+     215: invokevirtual #220                // Method org/springframework/boot/SpringApplication.setRegisterShutdownHook:(Z)V
+     218: aload_0
+     219: aload         4
+     221: invokevirtual #224                // Method run:(Lorg/springframework/boot/SpringApplication;)Lorg/springframework/web/context/WebApplicationContext;
+     224: areturn
+
+  protected org.springframework.boot.builder.SpringApplicationBuilder createSpringApplicationBuilder();
+    Code:
+       0: new           #112                // class org/springframework/boot/builder/SpringApplicationBuilder
+       3: dup
+       4: iconst_0
+       5: anewarray     #95                 // class java/lang/Class
+       8: invokespecial #228                // Method org/springframework/boot/builder/SpringApplicationBuilder."<init>":([Ljava/lang/Class;)V
+      11: areturn
+
+  protected org.springframework.web.context.WebApplicationContext run(org.springframework.boot.SpringApplication);
+    Code:
+       0: aload_1
+       1: iconst_0
+       2: anewarray     #231                // class java/lang/String
+       5: invokevirtual #233                // Method org/springframework/boot/SpringApplication.run:([Ljava/lang/String;)Lorg/springframework/context/ConfigurableApplicationContext;
+       8: checkcast     #127                // class org/springframework/web/context/WebApplicationContext
+      11: areturn
+
+  private org.springframework.context.ApplicationContext getExistingRootWebApplicationContext(jakarta.servlet.ServletContext);
+    Code:
+       0: aload_1
+       1: getstatic     #126                // Field org/springframework/web/context/WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE:Ljava/lang/String;
+       4: invokeinterface #236,  2          // InterfaceMethod jakarta/servlet/ServletContext.getAttribute:(Ljava/lang/String;)Ljava/lang/Object;
+       9: astore_2
+      10: aload_2
+      11: instanceof    #240                // class org/springframework/context/ApplicationContext
+      14: ifeq          24
+      17: aload_2
+      18: checkcast     #240                // class org/springframework/context/ApplicationContext
+      21: astore_3
+      22: aload_3
+      23: areturn
+      24: aconst_null
+      25: areturn
+
+  protected org.springframework.boot.builder.SpringApplicationBuilder configure(org.springframework.boot.builder.SpringApplicationBuilder);
+    Code:
+       0: aload_1
+       1: areturn
+
+  private static org.springframework.context.ConfigurableApplicationContext lambda$createRootApplicationContext$0(org.springframework.boot.WebApplicationType);
+    Code:
+       0: new           #242                // class org/springframework/boot/web/servlet/context/AnnotationConfigServletWebServerApplicationContext
+       3: dup
+       4: invokespecial #244                // Method org/springframework/boot/web/servlet/context/AnnotationConfigServletWebServerApplicationContext."<init>":()V
+       7: areturn
+}

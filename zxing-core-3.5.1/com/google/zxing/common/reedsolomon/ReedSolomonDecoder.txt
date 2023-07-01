@@ -1,0 +1,447 @@
+Compiled from "ReedSolomonDecoder.java"
+public final class com.google.zxing.common.reedsolomon.ReedSolomonDecoder {
+  private final com.google.zxing.common.reedsolomon.GenericGF field;
+
+  public com.google.zxing.common.reedsolomon.ReedSolomonDecoder(com.google.zxing.common.reedsolomon.GenericGF);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+       9: return
+
+  public void decode(int[], int) throws com.google.zxing.common.reedsolomon.ReedSolomonException;
+    Code:
+       0: new           #3                  // class com/google/zxing/common/reedsolomon/GenericGFPoly
+       3: dup
+       4: aload_0
+       5: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+       8: aload_1
+       9: invokespecial #4                  // Method com/google/zxing/common/reedsolomon/GenericGFPoly."<init>":(Lcom/google/zxing/common/reedsolomon/GenericGF;[I)V
+      12: astore_3
+      13: iload_2
+      14: newarray       int
+      16: astore        4
+      18: iconst_1
+      19: istore        5
+      21: iconst_0
+      22: istore        6
+      24: iload         6
+      26: iload_2
+      27: if_icmpge     80
+      30: aload_3
+      31: aload_0
+      32: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+      35: iload         6
+      37: aload_0
+      38: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+      41: invokevirtual #5                  // Method com/google/zxing/common/reedsolomon/GenericGF.getGeneratorBase:()I
+      44: iadd
+      45: invokevirtual #6                  // Method com/google/zxing/common/reedsolomon/GenericGF.exp:(I)I
+      48: invokevirtual #7                  // Method com/google/zxing/common/reedsolomon/GenericGFPoly.evaluateAt:(I)I
+      51: istore        7
+      53: aload         4
+      55: aload         4
+      57: arraylength
+      58: iconst_1
+      59: isub
+      60: iload         6
+      62: isub
+      63: iload         7
+      65: iastore
+      66: iload         7
+      68: ifeq          74
+      71: iconst_0
+      72: istore        5
+      74: iinc          6, 1
+      77: goto          24
+      80: iload         5
+      82: ifeq          86
+      85: return
+      86: new           #3                  // class com/google/zxing/common/reedsolomon/GenericGFPoly
+      89: dup
+      90: aload_0
+      91: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+      94: aload         4
+      96: invokespecial #4                  // Method com/google/zxing/common/reedsolomon/GenericGFPoly."<init>":(Lcom/google/zxing/common/reedsolomon/GenericGF;[I)V
+      99: astore        6
+     101: aload_0
+     102: aload_0
+     103: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+     106: iload_2
+     107: iconst_1
+     108: invokevirtual #8                  // Method com/google/zxing/common/reedsolomon/GenericGF.buildMonomial:(II)Lcom/google/zxing/common/reedsolomon/GenericGFPoly;
+     111: aload         6
+     113: iload_2
+     114: invokespecial #9                  // Method runEuclideanAlgorithm:(Lcom/google/zxing/common/reedsolomon/GenericGFPoly;Lcom/google/zxing/common/reedsolomon/GenericGFPoly;I)[Lcom/google/zxing/common/reedsolomon/GenericGFPoly;
+     117: astore        7
+     119: aload         7
+     121: iconst_0
+     122: aaload
+     123: astore        8
+     125: aload         7
+     127: iconst_1
+     128: aaload
+     129: astore        9
+     131: aload_0
+     132: aload         8
+     134: invokespecial #10                 // Method findErrorLocations:(Lcom/google/zxing/common/reedsolomon/GenericGFPoly;)[I
+     137: astore        10
+     139: aload_0
+     140: aload         9
+     142: aload         10
+     144: invokespecial #11                 // Method findErrorMagnitudes:(Lcom/google/zxing/common/reedsolomon/GenericGFPoly;[I)[I
+     147: astore        11
+     149: iconst_0
+     150: istore        12
+     152: iload         12
+     154: aload         10
+     156: arraylength
+     157: if_icmpge     216
+     160: aload_1
+     161: arraylength
+     162: iconst_1
+     163: isub
+     164: aload_0
+     165: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+     168: aload         10
+     170: iload         12
+     172: iaload
+     173: invokevirtual #12                 // Method com/google/zxing/common/reedsolomon/GenericGF.log:(I)I
+     176: isub
+     177: istore        13
+     179: iload         13
+     181: ifge          194
+     184: new           #13                 // class com/google/zxing/common/reedsolomon/ReedSolomonException
+     187: dup
+     188: ldc           #14                 // String Bad error location
+     190: invokespecial #15                 // Method com/google/zxing/common/reedsolomon/ReedSolomonException."<init>":(Ljava/lang/String;)V
+     193: athrow
+     194: aload_1
+     195: iload         13
+     197: aload_1
+     198: iload         13
+     200: iaload
+     201: aload         11
+     203: iload         12
+     205: iaload
+     206: invokestatic  #16                 // Method com/google/zxing/common/reedsolomon/GenericGF.addOrSubtract:(II)I
+     209: iastore
+     210: iinc          12, 1
+     213: goto          152
+     216: return
+
+  private com.google.zxing.common.reedsolomon.GenericGFPoly[] runEuclideanAlgorithm(com.google.zxing.common.reedsolomon.GenericGFPoly, com.google.zxing.common.reedsolomon.GenericGFPoly, int) throws com.google.zxing.common.reedsolomon.ReedSolomonException;
+    Code:
+       0: aload_1
+       1: invokevirtual #17                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.getDegree:()I
+       4: aload_2
+       5: invokevirtual #17                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.getDegree:()I
+       8: if_icmpge     19
+      11: aload_1
+      12: astore        4
+      14: aload_2
+      15: astore_1
+      16: aload         4
+      18: astore_2
+      19: aload_1
+      20: astore        4
+      22: aload_2
+      23: astore        5
+      25: aload_0
+      26: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+      29: invokevirtual #18                 // Method com/google/zxing/common/reedsolomon/GenericGF.getZero:()Lcom/google/zxing/common/reedsolomon/GenericGFPoly;
+      32: astore        6
+      34: aload_0
+      35: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+      38: invokevirtual #19                 // Method com/google/zxing/common/reedsolomon/GenericGF.getOne:()Lcom/google/zxing/common/reedsolomon/GenericGFPoly;
+      41: astore        7
+      43: iconst_2
+      44: aload         5
+      46: invokevirtual #17                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.getDegree:()I
+      49: imul
+      50: iload_3
+      51: if_icmplt     284
+      54: aload         4
+      56: astore        8
+      58: aload         6
+      60: astore        9
+      62: aload         5
+      64: astore        4
+      66: aload         7
+      68: astore        6
+      70: aload         4
+      72: invokevirtual #20                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.isZero:()Z
+      75: ifeq          88
+      78: new           #13                 // class com/google/zxing/common/reedsolomon/ReedSolomonException
+      81: dup
+      82: ldc           #21                 // String r_{i-1} was zero
+      84: invokespecial #15                 // Method com/google/zxing/common/reedsolomon/ReedSolomonException."<init>":(Ljava/lang/String;)V
+      87: athrow
+      88: aload         8
+      90: astore        5
+      92: aload_0
+      93: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+      96: invokevirtual #18                 // Method com/google/zxing/common/reedsolomon/GenericGF.getZero:()Lcom/google/zxing/common/reedsolomon/GenericGFPoly;
+      99: astore        10
+     101: aload         4
+     103: aload         4
+     105: invokevirtual #17                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.getDegree:()I
+     108: invokevirtual #22                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.getCoefficient:(I)I
+     111: istore        11
+     113: aload_0
+     114: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+     117: iload         11
+     119: invokevirtual #23                 // Method com/google/zxing/common/reedsolomon/GenericGF.inverse:(I)I
+     122: istore        12
+     124: aload         5
+     126: invokevirtual #17                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.getDegree:()I
+     129: aload         4
+     131: invokevirtual #17                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.getDegree:()I
+     134: if_icmplt     216
+     137: aload         5
+     139: invokevirtual #20                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.isZero:()Z
+     142: ifne          216
+     145: aload         5
+     147: invokevirtual #17                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.getDegree:()I
+     150: aload         4
+     152: invokevirtual #17                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.getDegree:()I
+     155: isub
+     156: istore        13
+     158: aload_0
+     159: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+     162: aload         5
+     164: aload         5
+     166: invokevirtual #17                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.getDegree:()I
+     169: invokevirtual #22                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.getCoefficient:(I)I
+     172: iload         12
+     174: invokevirtual #24                 // Method com/google/zxing/common/reedsolomon/GenericGF.multiply:(II)I
+     177: istore        14
+     179: aload         10
+     181: aload_0
+     182: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+     185: iload         13
+     187: iload         14
+     189: invokevirtual #8                  // Method com/google/zxing/common/reedsolomon/GenericGF.buildMonomial:(II)Lcom/google/zxing/common/reedsolomon/GenericGFPoly;
+     192: invokevirtual #25                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.addOrSubtract:(Lcom/google/zxing/common/reedsolomon/GenericGFPoly;)Lcom/google/zxing/common/reedsolomon/GenericGFPoly;
+     195: astore        10
+     197: aload         5
+     199: aload         4
+     201: iload         13
+     203: iload         14
+     205: invokevirtual #26                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.multiplyByMonomial:(II)Lcom/google/zxing/common/reedsolomon/GenericGFPoly;
+     208: invokevirtual #25                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.addOrSubtract:(Lcom/google/zxing/common/reedsolomon/GenericGFPoly;)Lcom/google/zxing/common/reedsolomon/GenericGFPoly;
+     211: astore        5
+     213: goto          124
+     216: aload         10
+     218: aload         6
+     220: invokevirtual #27                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.multiply:(Lcom/google/zxing/common/reedsolomon/GenericGFPoly;)Lcom/google/zxing/common/reedsolomon/GenericGFPoly;
+     223: aload         9
+     225: invokevirtual #25                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.addOrSubtract:(Lcom/google/zxing/common/reedsolomon/GenericGFPoly;)Lcom/google/zxing/common/reedsolomon/GenericGFPoly;
+     228: astore        7
+     230: aload         5
+     232: invokevirtual #17                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.getDegree:()I
+     235: aload         4
+     237: invokevirtual #17                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.getDegree:()I
+     240: if_icmplt     281
+     243: new           #28                 // class java/lang/IllegalStateException
+     246: dup
+     247: new           #29                 // class java/lang/StringBuilder
+     250: dup
+     251: invokespecial #30                 // Method java/lang/StringBuilder."<init>":()V
+     254: ldc           #31                 // String Division algorithm failed to reduce polynomial? r:
+     256: invokevirtual #32                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     259: aload         5
+     261: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     264: ldc           #34                 // String , rLast:
+     266: invokevirtual #32                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     269: aload         4
+     271: invokevirtual #33                 // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+     274: invokevirtual #35                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     277: invokespecial #36                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     280: athrow
+     281: goto          43
+     284: aload         7
+     286: iconst_0
+     287: invokevirtual #22                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.getCoefficient:(I)I
+     290: istore        8
+     292: iload         8
+     294: ifne          307
+     297: new           #13                 // class com/google/zxing/common/reedsolomon/ReedSolomonException
+     300: dup
+     301: ldc           #37                 // String sigmaTilde(0) was zero
+     303: invokespecial #15                 // Method com/google/zxing/common/reedsolomon/ReedSolomonException."<init>":(Ljava/lang/String;)V
+     306: athrow
+     307: aload_0
+     308: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+     311: iload         8
+     313: invokevirtual #23                 // Method com/google/zxing/common/reedsolomon/GenericGF.inverse:(I)I
+     316: istore        9
+     318: aload         7
+     320: iload         9
+     322: invokevirtual #38                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.multiply:(I)Lcom/google/zxing/common/reedsolomon/GenericGFPoly;
+     325: astore        10
+     327: aload         5
+     329: iload         9
+     331: invokevirtual #38                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.multiply:(I)Lcom/google/zxing/common/reedsolomon/GenericGFPoly;
+     334: astore        11
+     336: iconst_2
+     337: anewarray     #3                  // class com/google/zxing/common/reedsolomon/GenericGFPoly
+     340: dup
+     341: iconst_0
+     342: aload         10
+     344: aastore
+     345: dup
+     346: iconst_1
+     347: aload         11
+     349: aastore
+     350: areturn
+
+  private int[] findErrorLocations(com.google.zxing.common.reedsolomon.GenericGFPoly) throws com.google.zxing.common.reedsolomon.ReedSolomonException;
+    Code:
+       0: aload_1
+       1: invokevirtual #17                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.getDegree:()I
+       4: istore_2
+       5: iload_2
+       6: iconst_1
+       7: if_icmpne     22
+      10: iconst_1
+      11: newarray       int
+      13: dup
+      14: iconst_0
+      15: aload_1
+      16: iconst_1
+      17: invokevirtual #22                 // Method com/google/zxing/common/reedsolomon/GenericGFPoly.getCoefficient:(I)I
+      20: iastore
+      21: areturn
+      22: iload_2
+      23: newarray       int
+      25: astore_3
+      26: iconst_0
+      27: istore        4
+      29: iconst_1
+      30: istore        5
+      32: iload         5
+      34: aload_0
+      35: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+      38: invokevirtual #39                 // Method com/google/zxing/common/reedsolomon/GenericGF.getSize:()I
+      41: if_icmpge     81
+      44: iload         4
+      46: iload_2
+      47: if_icmpge     81
+      50: aload_1
+      51: iload         5
+      53: invokevirtual #7                  // Method com/google/zxing/common/reedsolomon/GenericGFPoly.evaluateAt:(I)I
+      56: ifne          75
+      59: aload_3
+      60: iload         4
+      62: aload_0
+      63: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+      66: iload         5
+      68: invokevirtual #23                 // Method com/google/zxing/common/reedsolomon/GenericGF.inverse:(I)I
+      71: iastore
+      72: iinc          4, 1
+      75: iinc          5, 1
+      78: goto          32
+      81: iload         4
+      83: iload_2
+      84: if_icmpeq     97
+      87: new           #13                 // class com/google/zxing/common/reedsolomon/ReedSolomonException
+      90: dup
+      91: ldc           #40                 // String Error locator degree does not match number of roots
+      93: invokespecial #15                 // Method com/google/zxing/common/reedsolomon/ReedSolomonException."<init>":(Ljava/lang/String;)V
+      96: athrow
+      97: aload_3
+      98: areturn
+
+  private int[] findErrorMagnitudes(com.google.zxing.common.reedsolomon.GenericGFPoly, int[]);
+    Code:
+       0: aload_2
+       1: arraylength
+       2: istore_3
+       3: iload_3
+       4: newarray       int
+       6: astore        4
+       8: iconst_0
+       9: istore        5
+      11: iload         5
+      13: iload_3
+      14: if_icmpge     166
+      17: aload_0
+      18: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+      21: aload_2
+      22: iload         5
+      24: iaload
+      25: invokevirtual #23                 // Method com/google/zxing/common/reedsolomon/GenericGF.inverse:(I)I
+      28: istore        6
+      30: iconst_1
+      31: istore        7
+      33: iconst_0
+      34: istore        8
+      36: iload         8
+      38: iload_3
+      39: if_icmpge     104
+      42: iload         5
+      44: iload         8
+      46: if_icmpeq     98
+      49: aload_0
+      50: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+      53: aload_2
+      54: iload         8
+      56: iaload
+      57: iload         6
+      59: invokevirtual #24                 // Method com/google/zxing/common/reedsolomon/GenericGF.multiply:(II)I
+      62: istore        9
+      64: iload         9
+      66: iconst_1
+      67: iand
+      68: ifne          78
+      71: iload         9
+      73: iconst_1
+      74: ior
+      75: goto          83
+      78: iload         9
+      80: bipush        -2
+      82: iand
+      83: istore        10
+      85: aload_0
+      86: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+      89: iload         7
+      91: iload         10
+      93: invokevirtual #24                 // Method com/google/zxing/common/reedsolomon/GenericGF.multiply:(II)I
+      96: istore        7
+      98: iinc          8, 1
+     101: goto          36
+     104: aload         4
+     106: iload         5
+     108: aload_0
+     109: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+     112: aload_1
+     113: iload         6
+     115: invokevirtual #7                  // Method com/google/zxing/common/reedsolomon/GenericGFPoly.evaluateAt:(I)I
+     118: aload_0
+     119: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+     122: iload         7
+     124: invokevirtual #23                 // Method com/google/zxing/common/reedsolomon/GenericGF.inverse:(I)I
+     127: invokevirtual #24                 // Method com/google/zxing/common/reedsolomon/GenericGF.multiply:(II)I
+     130: iastore
+     131: aload_0
+     132: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+     135: invokevirtual #5                  // Method com/google/zxing/common/reedsolomon/GenericGF.getGeneratorBase:()I
+     138: ifeq          160
+     141: aload         4
+     143: iload         5
+     145: aload_0
+     146: getfield      #2                  // Field field:Lcom/google/zxing/common/reedsolomon/GenericGF;
+     149: aload         4
+     151: iload         5
+     153: iaload
+     154: iload         6
+     156: invokevirtual #24                 // Method com/google/zxing/common/reedsolomon/GenericGF.multiply:(II)I
+     159: iastore
+     160: iinc          5, 1
+     163: goto          11
+     166: aload         4
+     168: areturn
+}
