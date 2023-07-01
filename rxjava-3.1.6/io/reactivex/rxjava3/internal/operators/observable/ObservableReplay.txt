@@ -1,0 +1,231 @@
+Compiled from "ObservableReplay.java"
+public final class io.reactivex.rxjava3.internal.operators.observable.ObservableReplay<T> extends io.reactivex.rxjava3.observables.ConnectableObservable<T> implements io.reactivex.rxjava3.internal.fuseable.HasUpstreamObservableSource<T> {
+  final io.reactivex.rxjava3.core.ObservableSource<T> source;
+
+  final java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.internal.operators.observable.ObservableReplay$ReplayObserver<T>> current;
+
+  final io.reactivex.rxjava3.internal.operators.observable.ObservableReplay$BufferSupplier<T> bufferFactory;
+
+  final io.reactivex.rxjava3.core.ObservableSource<T> onSubscribe;
+
+  static final io.reactivex.rxjava3.internal.operators.observable.ObservableReplay$BufferSupplier DEFAULT_UNBOUNDED_FACTORY;
+
+  public static <U, R> io.reactivex.rxjava3.core.Observable<R> multicastSelector(io.reactivex.rxjava3.functions.Supplier<? extends io.reactivex.rxjava3.observables.ConnectableObservable<U>>, io.reactivex.rxjava3.functions.Function<? super io.reactivex.rxjava3.core.Observable<U>, ? extends io.reactivex.rxjava3.core.ObservableSource<R>>);
+    Code:
+       0: new           #1                  // class io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$MulticastReplay
+       3: dup
+       4: aload_0
+       5: aload_1
+       6: invokespecial #2                  // Method io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$MulticastReplay."<init>":(Lio/reactivex/rxjava3/functions/Supplier;Lio/reactivex/rxjava3/functions/Function;)V
+       9: invokestatic  #3                  // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onAssembly:(Lio/reactivex/rxjava3/core/Observable;)Lio/reactivex/rxjava3/core/Observable;
+      12: areturn
+
+  public static <T> io.reactivex.rxjava3.observables.ConnectableObservable<T> createFrom(io.reactivex.rxjava3.core.ObservableSource<? extends T>);
+    Code:
+       0: aload_0
+       1: getstatic     #4                  // Field DEFAULT_UNBOUNDED_FACTORY:Lio/reactivex/rxjava3/internal/operators/observable/ObservableReplay$BufferSupplier;
+       4: invokestatic  #5                  // Method create:(Lio/reactivex/rxjava3/core/ObservableSource;Lio/reactivex/rxjava3/internal/operators/observable/ObservableReplay$BufferSupplier;)Lio/reactivex/rxjava3/observables/ConnectableObservable;
+       7: areturn
+
+  public static <T> io.reactivex.rxjava3.observables.ConnectableObservable<T> create(io.reactivex.rxjava3.core.ObservableSource<T>, int, boolean);
+    Code:
+       0: iload_1
+       1: ldc           #7                  // int 2147483647
+       3: if_icmpne     11
+       6: aload_0
+       7: invokestatic  #8                  // Method createFrom:(Lio/reactivex/rxjava3/core/ObservableSource;)Lio/reactivex/rxjava3/observables/ConnectableObservable;
+      10: areturn
+      11: aload_0
+      12: new           #9                  // class io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$ReplayBufferSupplier
+      15: dup
+      16: iload_1
+      17: iload_2
+      18: invokespecial #10                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$ReplayBufferSupplier."<init>":(IZ)V
+      21: invokestatic  #5                  // Method create:(Lio/reactivex/rxjava3/core/ObservableSource;Lio/reactivex/rxjava3/internal/operators/observable/ObservableReplay$BufferSupplier;)Lio/reactivex/rxjava3/observables/ConnectableObservable;
+      24: areturn
+
+  public static <T> io.reactivex.rxjava3.observables.ConnectableObservable<T> create(io.reactivex.rxjava3.core.ObservableSource<T>, long, java.util.concurrent.TimeUnit, io.reactivex.rxjava3.core.Scheduler, boolean);
+    Code:
+       0: aload_0
+       1: lload_1
+       2: aload_3
+       3: aload         4
+       5: ldc           #7                  // int 2147483647
+       7: iload         5
+       9: invokestatic  #11                 // Method create:(Lio/reactivex/rxjava3/core/ObservableSource;JLjava/util/concurrent/TimeUnit;Lio/reactivex/rxjava3/core/Scheduler;IZ)Lio/reactivex/rxjava3/observables/ConnectableObservable;
+      12: areturn
+
+  public static <T> io.reactivex.rxjava3.observables.ConnectableObservable<T> create(io.reactivex.rxjava3.core.ObservableSource<T>, long, java.util.concurrent.TimeUnit, io.reactivex.rxjava3.core.Scheduler, int, boolean);
+    Code:
+       0: aload_0
+       1: new           #12                 // class io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$ScheduledReplaySupplier
+       4: dup
+       5: iload         5
+       7: lload_1
+       8: aload_3
+       9: aload         4
+      11: iload         6
+      13: invokespecial #13                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$ScheduledReplaySupplier."<init>":(IJLjava/util/concurrent/TimeUnit;Lio/reactivex/rxjava3/core/Scheduler;Z)V
+      16: invokestatic  #5                  // Method create:(Lio/reactivex/rxjava3/core/ObservableSource;Lio/reactivex/rxjava3/internal/operators/observable/ObservableReplay$BufferSupplier;)Lio/reactivex/rxjava3/observables/ConnectableObservable;
+      19: areturn
+
+  static <T> io.reactivex.rxjava3.observables.ConnectableObservable<T> create(io.reactivex.rxjava3.core.ObservableSource<T>, io.reactivex.rxjava3.internal.operators.observable.ObservableReplay$BufferSupplier<T>);
+    Code:
+       0: new           #14                 // class java/util/concurrent/atomic/AtomicReference
+       3: dup
+       4: invokespecial #15                 // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+       7: astore_2
+       8: new           #16                 // class io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$ReplaySource
+      11: dup
+      12: aload_2
+      13: aload_1
+      14: invokespecial #17                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$ReplaySource."<init>":(Ljava/util/concurrent/atomic/AtomicReference;Lio/reactivex/rxjava3/internal/operators/observable/ObservableReplay$BufferSupplier;)V
+      17: astore_3
+      18: new           #18                 // class io/reactivex/rxjava3/internal/operators/observable/ObservableReplay
+      21: dup
+      22: aload_3
+      23: aload_0
+      24: aload_2
+      25: aload_1
+      26: invokespecial #19                 // Method "<init>":(Lio/reactivex/rxjava3/core/ObservableSource;Lio/reactivex/rxjava3/core/ObservableSource;Ljava/util/concurrent/atomic/AtomicReference;Lio/reactivex/rxjava3/internal/operators/observable/ObservableReplay$BufferSupplier;)V
+      29: invokestatic  #20                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onAssembly:(Lio/reactivex/rxjava3/observables/ConnectableObservable;)Lio/reactivex/rxjava3/observables/ConnectableObservable;
+      32: areturn
+
+  private io.reactivex.rxjava3.internal.operators.observable.ObservableReplay(io.reactivex.rxjava3.core.ObservableSource<T>, io.reactivex.rxjava3.core.ObservableSource<T>, java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.internal.operators.observable.ObservableReplay$ReplayObserver<T>>, io.reactivex.rxjava3.internal.operators.observable.ObservableReplay$BufferSupplier<T>);
+    Code:
+       0: aload_0
+       1: invokespecial #21                 // Method io/reactivex/rxjava3/observables/ConnectableObservable."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #22                 // Field onSubscribe:Lio/reactivex/rxjava3/core/ObservableSource;
+       9: aload_0
+      10: aload_2
+      11: putfield      #23                 // Field source:Lio/reactivex/rxjava3/core/ObservableSource;
+      14: aload_0
+      15: aload_3
+      16: putfield      #24                 // Field current:Ljava/util/concurrent/atomic/AtomicReference;
+      19: aload_0
+      20: aload         4
+      22: putfield      #25                 // Field bufferFactory:Lio/reactivex/rxjava3/internal/operators/observable/ObservableReplay$BufferSupplier;
+      25: return
+
+  public io.reactivex.rxjava3.core.ObservableSource<T> source();
+    Code:
+       0: aload_0
+       1: getfield      #23                 // Field source:Lio/reactivex/rxjava3/core/ObservableSource;
+       4: areturn
+
+  public void reset();
+    Code:
+       0: aload_0
+       1: getfield      #24                 // Field current:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokevirtual #26                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+       7: checkcast     #27                 // class io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$ReplayObserver
+      10: astore_1
+      11: aload_1
+      12: ifnull        32
+      15: aload_1
+      16: invokevirtual #28                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$ReplayObserver.isDisposed:()Z
+      19: ifeq          32
+      22: aload_0
+      23: getfield      #24                 // Field current:Ljava/util/concurrent/atomic/AtomicReference;
+      26: aload_1
+      27: aconst_null
+      28: invokevirtual #29                 // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      31: pop
+      32: return
+
+  protected void subscribeActual(io.reactivex.rxjava3.core.Observer<? super T>);
+    Code:
+       0: aload_0
+       1: getfield      #22                 // Field onSubscribe:Lio/reactivex/rxjava3/core/ObservableSource;
+       4: aload_1
+       5: invokeinterface #30,  2           // InterfaceMethod io/reactivex/rxjava3/core/ObservableSource.subscribe:(Lio/reactivex/rxjava3/core/Observer;)V
+      10: return
+
+  public void connect(io.reactivex.rxjava3.functions.Consumer<? super io.reactivex.rxjava3.disposables.Disposable>);
+    Code:
+       0: aload_0
+       1: getfield      #24                 // Field current:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokevirtual #26                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+       7: checkcast     #27                 // class io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$ReplayObserver
+      10: astore_3
+      11: aload_3
+      12: ifnull        22
+      15: aload_3
+      16: invokevirtual #28                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$ReplayObserver.isDisposed:()Z
+      19: ifeq          67
+      22: aload_0
+      23: getfield      #25                 // Field bufferFactory:Lio/reactivex/rxjava3/internal/operators/observable/ObservableReplay$BufferSupplier;
+      26: invokeinterface #31,  1           // InterfaceMethod io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$BufferSupplier.call:()Lio/reactivex/rxjava3/internal/operators/observable/ObservableReplay$ReplayBuffer;
+      31: astore        4
+      33: new           #27                 // class io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$ReplayObserver
+      36: dup
+      37: aload         4
+      39: aload_0
+      40: getfield      #24                 // Field current:Ljava/util/concurrent/atomic/AtomicReference;
+      43: invokespecial #32                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$ReplayObserver."<init>":(Lio/reactivex/rxjava3/internal/operators/observable/ObservableReplay$ReplayBuffer;Ljava/util/concurrent/atomic/AtomicReference;)V
+      46: astore        5
+      48: aload_0
+      49: getfield      #24                 // Field current:Ljava/util/concurrent/atomic/AtomicReference;
+      52: aload_3
+      53: aload         5
+      55: invokevirtual #29                 // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      58: ifne          64
+      61: goto          0
+      64: aload         5
+      66: astore_3
+      67: aload_3
+      68: getfield      #33                 // Field io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$ReplayObserver.shouldConnect:Ljava/util/concurrent/atomic/AtomicBoolean;
+      71: invokevirtual #34                 // Method java/util/concurrent/atomic/AtomicBoolean.get:()Z
+      74: ifne          93
+      77: aload_3
+      78: getfield      #33                 // Field io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$ReplayObserver.shouldConnect:Ljava/util/concurrent/atomic/AtomicBoolean;
+      81: iconst_0
+      82: iconst_1
+      83: invokevirtual #35                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+      86: ifeq          93
+      89: iconst_1
+      90: goto          94
+      93: iconst_0
+      94: istore_2
+      95: goto          98
+      98: aload_1
+      99: aload_3
+     100: invokeinterface #36,  2           // InterfaceMethod io/reactivex/rxjava3/functions/Consumer.accept:(Ljava/lang/Object;)V
+     105: goto          140
+     108: astore        4
+     110: aload         4
+     112: invokestatic  #38                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+     115: iload_2
+     116: ifeq          129
+     119: aload_3
+     120: getfield      #33                 // Field io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$ReplayObserver.shouldConnect:Ljava/util/concurrent/atomic/AtomicBoolean;
+     123: iconst_1
+     124: iconst_0
+     125: invokevirtual #35                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+     128: pop
+     129: aload         4
+     131: invokestatic  #38                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+     134: aload         4
+     136: invokestatic  #39                 // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;
+     139: athrow
+     140: iload_2
+     141: ifeq          154
+     144: aload_0
+     145: getfield      #23                 // Field source:Lio/reactivex/rxjava3/core/ObservableSource;
+     148: aload_3
+     149: invokeinterface #30,  2           // InterfaceMethod io/reactivex/rxjava3/core/ObservableSource.subscribe:(Lio/reactivex/rxjava3/core/Observer;)V
+     154: return
+    Exception table:
+       from    to  target type
+          98   105   108   Class java/lang/Throwable
+
+  static {};
+    Code:
+       0: new           #40                 // class io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$UnBoundedFactory
+       3: dup
+       4: invokespecial #41                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableReplay$UnBoundedFactory."<init>":()V
+       7: putstatic     #4                  // Field DEFAULT_UNBOUNDED_FACTORY:Lio/reactivex/rxjava3/internal/operators/observable/ObservableReplay$BufferSupplier;
+      10: return
+}

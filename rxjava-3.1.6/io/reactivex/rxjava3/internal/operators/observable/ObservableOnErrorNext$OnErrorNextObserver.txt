@@ -1,0 +1,137 @@
+Compiled from "ObservableOnErrorNext.java"
+final class io.reactivex.rxjava3.internal.operators.observable.ObservableOnErrorNext$OnErrorNextObserver<T> implements io.reactivex.rxjava3.core.Observer<T> {
+  final io.reactivex.rxjava3.core.Observer<? super T> downstream;
+
+  final io.reactivex.rxjava3.functions.Function<? super java.lang.Throwable, ? extends io.reactivex.rxjava3.core.ObservableSource<? extends T>> nextSupplier;
+
+  final io.reactivex.rxjava3.internal.disposables.SequentialDisposable arbiter;
+
+  boolean once;
+
+  boolean done;
+
+  io.reactivex.rxjava3.internal.operators.observable.ObservableOnErrorNext$OnErrorNextObserver(io.reactivex.rxjava3.core.Observer<? super T>, io.reactivex.rxjava3.functions.Function<? super java.lang.Throwable, ? extends io.reactivex.rxjava3.core.ObservableSource<? extends T>>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field nextSupplier:Lio/reactivex/rxjava3/functions/Function;
+      14: aload_0
+      15: new           #4                  // class io/reactivex/rxjava3/internal/disposables/SequentialDisposable
+      18: dup
+      19: invokespecial #5                  // Method io/reactivex/rxjava3/internal/disposables/SequentialDisposable."<init>":()V
+      22: putfield      #6                  // Field arbiter:Lio/reactivex/rxjava3/internal/disposables/SequentialDisposable;
+      25: return
+
+  public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field arbiter:Lio/reactivex/rxjava3/internal/disposables/SequentialDisposable;
+       4: aload_1
+       5: invokevirtual #7                  // Method io/reactivex/rxjava3/internal/disposables/SequentialDisposable.replace:(Lio/reactivex/rxjava3/disposables/Disposable;)Z
+       8: pop
+       9: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field done:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      12: aload_1
+      13: invokeinterface #9,  2            // InterfaceMethod io/reactivex/rxjava3/core/Observer.onNext:(Ljava/lang/Object;)V
+      18: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field once:Z
+       4: ifeq          30
+       7: aload_0
+       8: getfield      #8                  // Field done:Z
+      11: ifeq          19
+      14: aload_1
+      15: invokestatic  #11                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      18: return
+      19: aload_0
+      20: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      23: aload_1
+      24: invokeinterface #12,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      29: return
+      30: aload_0
+      31: iconst_1
+      32: putfield      #10                 // Field once:Z
+      35: aload_0
+      36: getfield      #3                  // Field nextSupplier:Lio/reactivex/rxjava3/functions/Function;
+      39: aload_1
+      40: invokeinterface #13,  2           // InterfaceMethod io/reactivex/rxjava3/functions/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+      45: checkcast     #14                 // class io/reactivex/rxjava3/core/ObservableSource
+      48: astore_2
+      49: goto          86
+      52: astore_3
+      53: aload_3
+      54: invokestatic  #16                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      57: aload_0
+      58: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      61: new           #17                 // class io/reactivex/rxjava3/exceptions/CompositeException
+      64: dup
+      65: iconst_2
+      66: anewarray     #18                 // class java/lang/Throwable
+      69: dup
+      70: iconst_0
+      71: aload_1
+      72: aastore
+      73: dup
+      74: iconst_1
+      75: aload_3
+      76: aastore
+      77: invokespecial #19                 // Method io/reactivex/rxjava3/exceptions/CompositeException."<init>":([Ljava/lang/Throwable;)V
+      80: invokeinterface #12,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      85: return
+      86: aload_2
+      87: ifnonnull     117
+      90: new           #20                 // class java/lang/NullPointerException
+      93: dup
+      94: ldc           #21                 // String Observable is null
+      96: invokespecial #22                 // Method java/lang/NullPointerException."<init>":(Ljava/lang/String;)V
+      99: astore_3
+     100: aload_3
+     101: aload_1
+     102: invokevirtual #23                 // Method java/lang/NullPointerException.initCause:(Ljava/lang/Throwable;)Ljava/lang/Throwable;
+     105: pop
+     106: aload_0
+     107: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+     110: aload_3
+     111: invokeinterface #12,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+     116: return
+     117: aload_2
+     118: aload_0
+     119: invokeinterface #24,  2           // InterfaceMethod io/reactivex/rxjava3/core/ObservableSource.subscribe:(Lio/reactivex/rxjava3/core/Observer;)V
+     124: return
+    Exception table:
+       from    to  target type
+          35    49    52   Class java/lang/Throwable
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field done:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: iconst_1
+      10: putfield      #8                  // Field done:Z
+      13: aload_0
+      14: iconst_1
+      15: putfield      #10                 // Field once:Z
+      18: aload_0
+      19: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      22: invokeinterface #25,  1           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onComplete:()V
+      27: return
+}

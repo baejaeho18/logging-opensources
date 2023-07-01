@@ -1,0 +1,464 @@
+Compiled from "ObservableObserveOn.java"
+final class io.reactivex.rxjava3.internal.operators.observable.ObservableObserveOn$ObserveOnObserver<T> extends io.reactivex.rxjava3.internal.observers.BasicIntQueueDisposable<T> implements io.reactivex.rxjava3.core.Observer<T>, java.lang.Runnable {
+  private static final long serialVersionUID;
+
+  final io.reactivex.rxjava3.core.Observer<? super T> downstream;
+
+  final io.reactivex.rxjava3.core.Scheduler$Worker worker;
+
+  final boolean delayError;
+
+  final int bufferSize;
+
+  io.reactivex.rxjava3.operators.SimpleQueue<T> queue;
+
+  io.reactivex.rxjava3.disposables.Disposable upstream;
+
+  java.lang.Throwable error;
+
+  volatile boolean done;
+
+  volatile boolean disposed;
+
+  int sourceMode;
+
+  boolean outputFused;
+
+  io.reactivex.rxjava3.internal.operators.observable.ObservableObserveOn$ObserveOnObserver(io.reactivex.rxjava3.core.Observer<? super T>, io.reactivex.rxjava3.core.Scheduler$Worker, boolean, int);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method io/reactivex/rxjava3/internal/observers/BasicIntQueueDisposable."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      14: aload_0
+      15: iload_3
+      16: putfield      #4                  // Field delayError:Z
+      19: aload_0
+      20: iload         4
+      22: putfield      #5                  // Field bufferSize:I
+      25: return
+
+  public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+       4: aload_1
+       5: invokestatic  #7                  // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.validate:(Lio/reactivex/rxjava3/disposables/Disposable;Lio/reactivex/rxjava3/disposables/Disposable;)Z
+       8: ifeq          123
+      11: aload_0
+      12: aload_1
+      13: putfield      #6                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+      16: aload_1
+      17: instanceof    #8                  // class io/reactivex/rxjava3/operators/QueueDisposable
+      20: ifeq          98
+      23: aload_1
+      24: checkcast     #8                  // class io/reactivex/rxjava3/operators/QueueDisposable
+      27: astore_2
+      28: aload_2
+      29: bipush        7
+      31: invokeinterface #9,  2            // InterfaceMethod io/reactivex/rxjava3/operators/QueueDisposable.requestFusion:(I)I
+      36: istore_3
+      37: iload_3
+      38: iconst_1
+      39: if_icmpne     72
+      42: aload_0
+      43: iload_3
+      44: putfield      #10                 // Field sourceMode:I
+      47: aload_0
+      48: aload_2
+      49: putfield      #11                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      52: aload_0
+      53: iconst_1
+      54: putfield      #12                 // Field done:Z
+      57: aload_0
+      58: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      61: aload_0
+      62: invokeinterface #13,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onSubscribe:(Lio/reactivex/rxjava3/disposables/Disposable;)V
+      67: aload_0
+      68: invokevirtual #14                 // Method schedule:()V
+      71: return
+      72: iload_3
+      73: iconst_2
+      74: if_icmpne     98
+      77: aload_0
+      78: iload_3
+      79: putfield      #10                 // Field sourceMode:I
+      82: aload_0
+      83: aload_2
+      84: putfield      #11                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      87: aload_0
+      88: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      91: aload_0
+      92: invokeinterface #13,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onSubscribe:(Lio/reactivex/rxjava3/disposables/Disposable;)V
+      97: return
+      98: aload_0
+      99: new           #15                 // class io/reactivex/rxjava3/operators/SpscLinkedArrayQueue
+     102: dup
+     103: aload_0
+     104: getfield      #5                  // Field bufferSize:I
+     107: invokespecial #16                 // Method io/reactivex/rxjava3/operators/SpscLinkedArrayQueue."<init>":(I)V
+     110: putfield      #11                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+     113: aload_0
+     114: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+     117: aload_0
+     118: invokeinterface #13,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onSubscribe:(Lio/reactivex/rxjava3/disposables/Disposable;)V
+     123: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #12                 // Field done:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: getfield      #10                 // Field sourceMode:I
+      12: iconst_2
+      13: if_icmpeq     27
+      16: aload_0
+      17: getfield      #11                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      20: aload_1
+      21: invokeinterface #17,  2           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.offer:(Ljava/lang/Object;)Z
+      26: pop
+      27: aload_0
+      28: invokevirtual #14                 // Method schedule:()V
+      31: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #12                 // Field done:Z
+       4: ifeq          12
+       7: aload_1
+       8: invokestatic  #18                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      11: return
+      12: aload_0
+      13: aload_1
+      14: putfield      #19                 // Field error:Ljava/lang/Throwable;
+      17: aload_0
+      18: iconst_1
+      19: putfield      #12                 // Field done:Z
+      22: aload_0
+      23: invokevirtual #14                 // Method schedule:()V
+      26: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #12                 // Field done:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: iconst_1
+      10: putfield      #12                 // Field done:Z
+      13: aload_0
+      14: invokevirtual #14                 // Method schedule:()V
+      17: return
+
+  public void dispose();
+    Code:
+       0: aload_0
+       1: getfield      #20                 // Field disposed:Z
+       4: ifne          51
+       7: aload_0
+       8: iconst_1
+       9: putfield      #20                 // Field disposed:Z
+      12: aload_0
+      13: getfield      #6                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+      16: invokeinterface #21,  1           // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.dispose:()V
+      21: aload_0
+      22: getfield      #3                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      25: invokevirtual #22                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+      28: aload_0
+      29: getfield      #23                 // Field outputFused:Z
+      32: ifne          51
+      35: aload_0
+      36: invokevirtual #24                 // Method getAndIncrement:()I
+      39: ifne          51
+      42: aload_0
+      43: getfield      #11                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      46: invokeinterface #25,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.clear:()V
+      51: return
+
+  public boolean isDisposed();
+    Code:
+       0: aload_0
+       1: getfield      #20                 // Field disposed:Z
+       4: ireturn
+
+  void schedule();
+    Code:
+       0: aload_0
+       1: invokevirtual #24                 // Method getAndIncrement:()I
+       4: ifne          16
+       7: aload_0
+       8: getfield      #3                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      11: aload_0
+      12: invokevirtual #26                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.schedule:(Ljava/lang/Runnable;)Lio/reactivex/rxjava3/disposables/Disposable;
+      15: pop
+      16: return
+
+  void drainNormal();
+    Code:
+       0: iconst_1
+       1: istore_1
+       2: aload_0
+       3: getfield      #11                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+       6: astore_2
+       7: aload_0
+       8: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      11: astore_3
+      12: aload_0
+      13: aload_0
+      14: getfield      #12                 // Field done:Z
+      17: aload_2
+      18: invokeinterface #27,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.isEmpty:()Z
+      23: aload_3
+      24: invokevirtual #28                 // Method checkTerminated:(ZZLio/reactivex/rxjava3/core/Observer;)Z
+      27: ifeq          31
+      30: return
+      31: aload_0
+      32: getfield      #12                 // Field done:Z
+      35: istore        4
+      37: aload_2
+      38: invokeinterface #29,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.poll:()Ljava/lang/Object;
+      43: astore        5
+      45: goto          91
+      48: astore        6
+      50: aload         6
+      52: invokestatic  #31                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      55: aload_0
+      56: iconst_1
+      57: putfield      #20                 // Field disposed:Z
+      60: aload_0
+      61: getfield      #6                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+      64: invokeinterface #21,  1           // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.dispose:()V
+      69: aload_2
+      70: invokeinterface #25,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.clear:()V
+      75: aload_3
+      76: aload         6
+      78: invokeinterface #32,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      83: aload_0
+      84: getfield      #3                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      87: invokevirtual #22                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+      90: return
+      91: aload         5
+      93: ifnonnull     100
+      96: iconst_1
+      97: goto          101
+     100: iconst_0
+     101: istore        6
+     103: aload_0
+     104: iload         4
+     106: iload         6
+     108: aload_3
+     109: invokevirtual #28                 // Method checkTerminated:(ZZLio/reactivex/rxjava3/core/Observer;)Z
+     112: ifeq          116
+     115: return
+     116: iload         6
+     118: ifeq          124
+     121: goto          135
+     124: aload_3
+     125: aload         5
+     127: invokeinterface #33,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onNext:(Ljava/lang/Object;)V
+     132: goto          31
+     135: aload_0
+     136: iload_1
+     137: ineg
+     138: invokevirtual #34                 // Method addAndGet:(I)I
+     141: istore_1
+     142: iload_1
+     143: ifne          12
+     146: goto          149
+     149: return
+    Exception table:
+       from    to  target type
+          37    45    48   Class java/lang/Throwable
+
+  void drainFused();
+    Code:
+       0: iconst_1
+       1: istore_1
+       2: aload_0
+       3: getfield      #20                 // Field disposed:Z
+       6: ifeq          10
+       9: return
+      10: aload_0
+      11: getfield      #12                 // Field done:Z
+      14: istore_2
+      15: aload_0
+      16: getfield      #19                 // Field error:Ljava/lang/Throwable;
+      19: astore_3
+      20: aload_0
+      21: getfield      #4                  // Field delayError:Z
+      24: ifne          61
+      27: iload_2
+      28: ifeq          61
+      31: aload_3
+      32: ifnull        61
+      35: aload_0
+      36: iconst_1
+      37: putfield      #20                 // Field disposed:Z
+      40: aload_0
+      41: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      44: aload_0
+      45: getfield      #19                 // Field error:Ljava/lang/Throwable;
+      48: invokeinterface #32,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      53: aload_0
+      54: getfield      #3                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      57: invokevirtual #22                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+      60: return
+      61: aload_0
+      62: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      65: aconst_null
+      66: invokeinterface #33,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onNext:(Ljava/lang/Object;)V
+      71: iload_2
+      72: ifeq          119
+      75: aload_0
+      76: iconst_1
+      77: putfield      #20                 // Field disposed:Z
+      80: aload_0
+      81: getfield      #19                 // Field error:Ljava/lang/Throwable;
+      84: astore_3
+      85: aload_3
+      86: ifnull        102
+      89: aload_0
+      90: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      93: aload_3
+      94: invokeinterface #32,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      99: goto          111
+     102: aload_0
+     103: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+     106: invokeinterface #35,  1           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onComplete:()V
+     111: aload_0
+     112: getfield      #3                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+     115: invokevirtual #22                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+     118: return
+     119: aload_0
+     120: iload_1
+     121: ineg
+     122: invokevirtual #34                 // Method addAndGet:(I)I
+     125: istore_1
+     126: iload_1
+     127: ifne          133
+     130: goto          136
+     133: goto          2
+     136: return
+
+  public void run();
+    Code:
+       0: aload_0
+       1: getfield      #23                 // Field outputFused:Z
+       4: ifeq          14
+       7: aload_0
+       8: invokevirtual #36                 // Method drainFused:()V
+      11: goto          18
+      14: aload_0
+      15: invokevirtual #37                 // Method drainNormal:()V
+      18: return
+
+  boolean checkTerminated(boolean, boolean, io.reactivex.rxjava3.core.Observer<? super T>);
+    Code:
+       0: aload_0
+       1: getfield      #20                 // Field disposed:Z
+       4: ifeq          18
+       7: aload_0
+       8: getfield      #11                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      11: invokeinterface #25,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.clear:()V
+      16: iconst_1
+      17: ireturn
+      18: iload_1
+      19: ifeq          135
+      22: aload_0
+      23: getfield      #19                 // Field error:Ljava/lang/Throwable;
+      26: astore        4
+      28: aload_0
+      29: getfield      #4                  // Field delayError:Z
+      32: ifeq          75
+      35: iload_2
+      36: ifeq          135
+      39: aload_0
+      40: iconst_1
+      41: putfield      #20                 // Field disposed:Z
+      44: aload         4
+      46: ifnull        60
+      49: aload_3
+      50: aload         4
+      52: invokeinterface #32,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      57: goto          66
+      60: aload_3
+      61: invokeinterface #35,  1           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onComplete:()V
+      66: aload_0
+      67: getfield      #3                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      70: invokevirtual #22                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+      73: iconst_1
+      74: ireturn
+      75: aload         4
+      77: ifnull        111
+      80: aload_0
+      81: iconst_1
+      82: putfield      #20                 // Field disposed:Z
+      85: aload_0
+      86: getfield      #11                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      89: invokeinterface #25,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.clear:()V
+      94: aload_3
+      95: aload         4
+      97: invokeinterface #32,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+     102: aload_0
+     103: getfield      #3                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+     106: invokevirtual #22                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+     109: iconst_1
+     110: ireturn
+     111: iload_2
+     112: ifeq          135
+     115: aload_0
+     116: iconst_1
+     117: putfield      #20                 // Field disposed:Z
+     120: aload_3
+     121: invokeinterface #35,  1           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onComplete:()V
+     126: aload_0
+     127: getfield      #3                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+     130: invokevirtual #22                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+     133: iconst_1
+     134: ireturn
+     135: iconst_0
+     136: ireturn
+
+  public int requestFusion(int);
+    Code:
+       0: iload_1
+       1: iconst_2
+       2: iand
+       3: ifeq          13
+       6: aload_0
+       7: iconst_1
+       8: putfield      #23                 // Field outputFused:Z
+      11: iconst_2
+      12: ireturn
+      13: iconst_0
+      14: ireturn
+
+  public T poll() throws java.lang.Throwable;
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+       4: invokeinterface #29,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.poll:()Ljava/lang/Object;
+       9: areturn
+
+  public void clear();
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+       4: invokeinterface #25,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.clear:()V
+       9: return
+
+  public boolean isEmpty();
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+       4: invokeinterface #27,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.isEmpty:()Z
+       9: ireturn
+}

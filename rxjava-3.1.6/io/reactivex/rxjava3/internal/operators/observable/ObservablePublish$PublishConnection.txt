@@ -1,0 +1,290 @@
+Compiled from "ObservablePublish.java"
+final class io.reactivex.rxjava3.internal.operators.observable.ObservablePublish$PublishConnection<T> extends java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.internal.operators.observable.ObservablePublish$InnerDisposable<T>[]> implements io.reactivex.rxjava3.core.Observer<T>, io.reactivex.rxjava3.disposables.Disposable {
+  private static final long serialVersionUID;
+
+  final java.util.concurrent.atomic.AtomicBoolean connect;
+
+  final java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.internal.operators.observable.ObservablePublish$PublishConnection<T>> current;
+
+  final java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.disposables.Disposable> upstream;
+
+  static final io.reactivex.rxjava3.internal.operators.observable.ObservablePublish$InnerDisposable[] EMPTY;
+
+  static final io.reactivex.rxjava3.internal.operators.observable.ObservablePublish$InnerDisposable[] TERMINATED;
+
+  java.lang.Throwable error;
+
+  io.reactivex.rxjava3.internal.operators.observable.ObservablePublish$PublishConnection(java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.internal.operators.observable.ObservablePublish$PublishConnection<T>>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+       4: aload_0
+       5: new           #2                  // class java/util/concurrent/atomic/AtomicBoolean
+       8: dup
+       9: invokespecial #3                  // Method java/util/concurrent/atomic/AtomicBoolean."<init>":()V
+      12: putfield      #4                  // Field connect:Ljava/util/concurrent/atomic/AtomicBoolean;
+      15: aload_0
+      16: aload_1
+      17: putfield      #5                  // Field current:Ljava/util/concurrent/atomic/AtomicReference;
+      20: aload_0
+      21: new           #6                  // class java/util/concurrent/atomic/AtomicReference
+      24: dup
+      25: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+      28: putfield      #7                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      31: aload_0
+      32: getstatic     #8                  // Field EMPTY:[Lio/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable;
+      35: invokevirtual #9                  // Method lazySet:(Ljava/lang/Object;)V
+      38: return
+
+  public void dispose();
+    Code:
+       0: aload_0
+       1: getstatic     #10                 // Field TERMINATED:[Lio/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable;
+       4: invokevirtual #11                 // Method getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;
+       7: pop
+       8: aload_0
+       9: getfield      #5                  // Field current:Ljava/util/concurrent/atomic/AtomicReference;
+      12: aload_0
+      13: aconst_null
+      14: invokevirtual #12                 // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      17: pop
+      18: aload_0
+      19: getfield      #7                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      22: invokestatic  #13                 // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.dispose:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+      25: pop
+      26: return
+
+  public boolean isDisposed();
+    Code:
+       0: aload_0
+       1: invokevirtual #14                 // Method get:()Ljava/lang/Object;
+       4: getstatic     #10                 // Field TERMINATED:[Lio/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable;
+       7: if_acmpne     14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: ireturn
+
+  public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+       4: aload_1
+       5: invokestatic  #15                 // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.setOnce:(Ljava/util/concurrent/atomic/AtomicReference;Lio/reactivex/rxjava3/disposables/Disposable;)Z
+       8: pop
+       9: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: invokevirtual #14                 // Method get:()Ljava/lang/Object;
+       4: checkcast     #16                 // class "[Lio/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable;"
+       7: astore_2
+       8: aload_2
+       9: arraylength
+      10: istore_3
+      11: iconst_0
+      12: istore        4
+      14: iload         4
+      16: iload_3
+      17: if_icmpge     43
+      20: aload_2
+      21: iload         4
+      23: aaload
+      24: astore        5
+      26: aload         5
+      28: getfield      #17                 // Field io/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable.downstream:Lio/reactivex/rxjava3/core/Observer;
+      31: aload_1
+      32: invokeinterface #18,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onNext:(Ljava/lang/Object;)V
+      37: iinc          4, 1
+      40: goto          14
+      43: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokevirtual #19                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+       7: getstatic     #20                 // Field io/reactivex/rxjava3/internal/disposables/DisposableHelper.DISPOSED:Lio/reactivex/rxjava3/internal/disposables/DisposableHelper;
+      10: if_acmpeq     77
+      13: aload_0
+      14: aload_1
+      15: putfield      #21                 // Field error:Ljava/lang/Throwable;
+      18: aload_0
+      19: getfield      #7                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      22: getstatic     #20                 // Field io/reactivex/rxjava3/internal/disposables/DisposableHelper.DISPOSED:Lio/reactivex/rxjava3/internal/disposables/DisposableHelper;
+      25: invokevirtual #22                 // Method java/util/concurrent/atomic/AtomicReference.lazySet:(Ljava/lang/Object;)V
+      28: aload_0
+      29: getstatic     #10                 // Field TERMINATED:[Lio/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable;
+      32: invokevirtual #11                 // Method getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;
+      35: checkcast     #16                 // class "[Lio/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable;"
+      38: astore_2
+      39: aload_2
+      40: arraylength
+      41: istore_3
+      42: iconst_0
+      43: istore        4
+      45: iload         4
+      47: iload_3
+      48: if_icmpge     74
+      51: aload_2
+      52: iload         4
+      54: aaload
+      55: astore        5
+      57: aload         5
+      59: getfield      #17                 // Field io/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable.downstream:Lio/reactivex/rxjava3/core/Observer;
+      62: aload_1
+      63: invokeinterface #23,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      68: iinc          4, 1
+      71: goto          45
+      74: goto          81
+      77: aload_1
+      78: invokestatic  #24                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      81: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+       4: getstatic     #20                 // Field io/reactivex/rxjava3/internal/disposables/DisposableHelper.DISPOSED:Lio/reactivex/rxjava3/internal/disposables/DisposableHelper;
+       7: invokevirtual #22                 // Method java/util/concurrent/atomic/AtomicReference.lazySet:(Ljava/lang/Object;)V
+      10: aload_0
+      11: getstatic     #10                 // Field TERMINATED:[Lio/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable;
+      14: invokevirtual #11                 // Method getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;
+      17: checkcast     #16                 // class "[Lio/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable;"
+      20: astore_1
+      21: aload_1
+      22: arraylength
+      23: istore_2
+      24: iconst_0
+      25: istore_3
+      26: iload_3
+      27: iload_2
+      28: if_icmpge     52
+      31: aload_1
+      32: iload_3
+      33: aaload
+      34: astore        4
+      36: aload         4
+      38: getfield      #17                 // Field io/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable.downstream:Lio/reactivex/rxjava3/core/Observer;
+      41: invokeinterface #25,  1           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onComplete:()V
+      46: iinc          3, 1
+      49: goto          26
+      52: return
+
+  public boolean add(io.reactivex.rxjava3.internal.operators.observable.ObservablePublish$InnerDisposable<T>);
+    Code:
+       0: aload_0
+       1: invokevirtual #14                 // Method get:()Ljava/lang/Object;
+       4: checkcast     #16                 // class "[Lio/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable;"
+       7: astore_2
+       8: aload_2
+       9: getstatic     #10                 // Field TERMINATED:[Lio/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable;
+      12: if_acmpne     17
+      15: iconst_0
+      16: ireturn
+      17: aload_2
+      18: arraylength
+      19: istore_3
+      20: iload_3
+      21: iconst_1
+      22: iadd
+      23: anewarray     #26                 // class io/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable
+      26: astore        4
+      28: aload_2
+      29: iconst_0
+      30: aload         4
+      32: iconst_0
+      33: iload_3
+      34: invokestatic  #27                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+      37: aload         4
+      39: iload_3
+      40: aload_1
+      41: aastore
+      42: aload_0
+      43: aload_2
+      44: aload         4
+      46: invokevirtual #28                 // Method compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      49: ifeq          54
+      52: iconst_1
+      53: ireturn
+      54: goto          0
+
+  public void remove(io.reactivex.rxjava3.internal.operators.observable.ObservablePublish$InnerDisposable<T>);
+    Code:
+       0: aload_0
+       1: invokevirtual #14                 // Method get:()Ljava/lang/Object;
+       4: checkcast     #16                 // class "[Lio/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable;"
+       7: astore_2
+       8: aload_2
+       9: arraylength
+      10: istore_3
+      11: iload_3
+      12: ifne          16
+      15: return
+      16: iconst_m1
+      17: istore        4
+      19: iconst_0
+      20: istore        5
+      22: iload         5
+      24: iload_3
+      25: if_icmpge     49
+      28: aload_2
+      29: iload         5
+      31: aaload
+      32: aload_1
+      33: if_acmpne     43
+      36: iload         5
+      38: istore        4
+      40: goto          49
+      43: iinc          5, 1
+      46: goto          22
+      49: iload         4
+      51: ifge          55
+      54: return
+      55: getstatic     #8                  // Field EMPTY:[Lio/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable;
+      58: astore        5
+      60: iload_3
+      61: iconst_1
+      62: if_icmpeq     101
+      65: iload_3
+      66: iconst_1
+      67: isub
+      68: anewarray     #26                 // class io/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable
+      71: astore        5
+      73: aload_2
+      74: iconst_0
+      75: aload         5
+      77: iconst_0
+      78: iload         4
+      80: invokestatic  #27                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+      83: aload_2
+      84: iload         4
+      86: iconst_1
+      87: iadd
+      88: aload         5
+      90: iload         4
+      92: iload_3
+      93: iload         4
+      95: isub
+      96: iconst_1
+      97: isub
+      98: invokestatic  #27                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+     101: aload_0
+     102: aload_2
+     103: aload         5
+     105: invokevirtual #28                 // Method compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+     108: ifeq          112
+     111: return
+     112: goto          0
+
+  static {};
+    Code:
+       0: iconst_0
+       1: anewarray     #26                 // class io/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable
+       4: putstatic     #8                  // Field EMPTY:[Lio/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable;
+       7: iconst_0
+       8: anewarray     #26                 // class io/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable
+      11: putstatic     #10                 // Field TERMINATED:[Lio/reactivex/rxjava3/internal/operators/observable/ObservablePublish$InnerDisposable;
+      14: return
+}

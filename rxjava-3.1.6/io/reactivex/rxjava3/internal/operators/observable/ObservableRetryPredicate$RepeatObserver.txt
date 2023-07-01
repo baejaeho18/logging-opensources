@@ -1,0 +1,148 @@
+Compiled from "ObservableRetryPredicate.java"
+final class io.reactivex.rxjava3.internal.operators.observable.ObservableRetryPredicate$RepeatObserver<T> extends java.util.concurrent.atomic.AtomicInteger implements io.reactivex.rxjava3.core.Observer<T> {
+  private static final long serialVersionUID;
+
+  final io.reactivex.rxjava3.core.Observer<? super T> downstream;
+
+  final io.reactivex.rxjava3.internal.disposables.SequentialDisposable upstream;
+
+  final io.reactivex.rxjava3.core.ObservableSource<? extends T> source;
+
+  final io.reactivex.rxjava3.functions.Predicate<? super java.lang.Throwable> predicate;
+
+  long remaining;
+
+  io.reactivex.rxjava3.internal.operators.observable.ObservableRetryPredicate$RepeatObserver(io.reactivex.rxjava3.core.Observer<? super T>, long, io.reactivex.rxjava3.functions.Predicate<? super java.lang.Throwable>, io.reactivex.rxjava3.internal.disposables.SequentialDisposable, io.reactivex.rxjava3.core.ObservableSource<? extends T>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+       9: aload_0
+      10: aload         5
+      12: putfield      #3                  // Field upstream:Lio/reactivex/rxjava3/internal/disposables/SequentialDisposable;
+      15: aload_0
+      16: aload         6
+      18: putfield      #4                  // Field source:Lio/reactivex/rxjava3/core/ObservableSource;
+      21: aload_0
+      22: aload         4
+      24: putfield      #5                  // Field predicate:Lio/reactivex/rxjava3/functions/Predicate;
+      27: aload_0
+      28: lload_2
+      29: putfield      #6                  // Field remaining:J
+      32: return
+
+  public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field upstream:Lio/reactivex/rxjava3/internal/disposables/SequentialDisposable;
+       4: aload_1
+       5: invokevirtual #7                  // Method io/reactivex/rxjava3/internal/disposables/SequentialDisposable.replace:(Lio/reactivex/rxjava3/disposables/Disposable;)Z
+       8: pop
+       9: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+       4: aload_1
+       5: invokeinterface #8,  2            // InterfaceMethod io/reactivex/rxjava3/core/Observer.onNext:(Ljava/lang/Object;)V
+      10: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field remaining:J
+       4: lstore_2
+       5: lload_2
+       6: ldc2_w        #10                 // long 9223372036854775807l
+       9: lcmp
+      10: ifeq          20
+      13: aload_0
+      14: lload_2
+      15: lconst_1
+      16: lsub
+      17: putfield      #6                  // Field remaining:J
+      20: lload_2
+      21: lconst_0
+      22: lcmp
+      23: ifne          39
+      26: aload_0
+      27: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      30: aload_1
+      31: invokeinterface #12,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      36: goto          111
+      39: aload_0
+      40: getfield      #5                  // Field predicate:Lio/reactivex/rxjava3/functions/Predicate;
+      43: aload_1
+      44: invokeinterface #13,  2           // InterfaceMethod io/reactivex/rxjava3/functions/Predicate.test:(Ljava/lang/Object;)Z
+      49: istore        4
+      51: goto          91
+      54: astore        5
+      56: aload         5
+      58: invokestatic  #15                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      61: aload_0
+      62: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      65: new           #16                 // class io/reactivex/rxjava3/exceptions/CompositeException
+      68: dup
+      69: iconst_2
+      70: anewarray     #17                 // class java/lang/Throwable
+      73: dup
+      74: iconst_0
+      75: aload_1
+      76: aastore
+      77: dup
+      78: iconst_1
+      79: aload         5
+      81: aastore
+      82: invokespecial #18                 // Method io/reactivex/rxjava3/exceptions/CompositeException."<init>":([Ljava/lang/Throwable;)V
+      85: invokeinterface #12,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      90: return
+      91: iload         4
+      93: ifne          107
+      96: aload_0
+      97: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+     100: aload_1
+     101: invokeinterface #12,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+     106: return
+     107: aload_0
+     108: invokevirtual #19                 // Method subscribeNext:()V
+     111: return
+    Exception table:
+       from    to  target type
+          39    51    54   Class java/lang/Throwable
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+       4: invokeinterface #20,  1           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onComplete:()V
+       9: return
+
+  void subscribeNext();
+    Code:
+       0: aload_0
+       1: invokevirtual #21                 // Method getAndIncrement:()I
+       4: ifne          44
+       7: iconst_1
+       8: istore_1
+       9: aload_0
+      10: getfield      #3                  // Field upstream:Lio/reactivex/rxjava3/internal/disposables/SequentialDisposable;
+      13: invokevirtual #22                 // Method io/reactivex/rxjava3/internal/disposables/SequentialDisposable.isDisposed:()Z
+      16: ifeq          20
+      19: return
+      20: aload_0
+      21: getfield      #4                  // Field source:Lio/reactivex/rxjava3/core/ObservableSource;
+      24: aload_0
+      25: invokeinterface #23,  2           // InterfaceMethod io/reactivex/rxjava3/core/ObservableSource.subscribe:(Lio/reactivex/rxjava3/core/Observer;)V
+      30: aload_0
+      31: iload_1
+      32: ineg
+      33: invokevirtual #24                 // Method addAndGet:(I)I
+      36: istore_1
+      37: iload_1
+      38: ifne          9
+      41: goto          44
+      44: return
+}
