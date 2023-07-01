@@ -1,0 +1,836 @@
+Compiled from "LoggingApplicationListener.java"
+public class org.springframework.boot.context.logging.LoggingApplicationListener implements org.springframework.context.event.GenericApplicationListener {
+  private static final org.springframework.boot.context.properties.source.ConfigurationPropertyName LOGGING_LEVEL;
+
+  private static final org.springframework.boot.context.properties.source.ConfigurationPropertyName LOGGING_GROUP;
+
+  private static final org.springframework.boot.context.properties.bind.Bindable<java.util.Map<java.lang.String, org.springframework.boot.logging.LogLevel>> STRING_LOGLEVEL_MAP;
+
+  private static final org.springframework.boot.context.properties.bind.Bindable<java.util.Map<java.lang.String, java.util.List<java.lang.String>>> STRING_STRINGS_MAP;
+
+  public static final int DEFAULT_ORDER;
+
+  public static final java.lang.String CONFIG_PROPERTY;
+
+  public static final java.lang.String REGISTER_SHUTDOWN_HOOK_PROPERTY;
+
+  public static final java.lang.String LOGGING_SYSTEM_BEAN_NAME;
+
+  public static final java.lang.String LOG_FILE_BEAN_NAME;
+
+  public static final java.lang.String LOGGER_GROUPS_BEAN_NAME;
+
+  private static final java.lang.String LOGGING_LIFECYCLE_BEAN_NAME;
+
+  private static final java.util.Map<java.lang.String, java.util.List<java.lang.String>> DEFAULT_GROUP_LOGGERS;
+
+  private static final java.util.Map<org.springframework.boot.logging.LogLevel, java.util.List<java.lang.String>> SPRING_BOOT_LOGGING_LOGGERS;
+
+  private static final java.lang.Class<?>[] EVENT_TYPES;
+
+  private static final java.lang.Class<?>[] SOURCE_TYPES;
+
+  private static final java.util.concurrent.atomic.AtomicBoolean shutdownHookRegistered;
+
+  private final org.apache.commons.logging.Log logger;
+
+  private org.springframework.boot.logging.LoggingSystem loggingSystem;
+
+  private org.springframework.boot.logging.LogFile logFile;
+
+  private org.springframework.boot.logging.LoggerGroups loggerGroups;
+
+  private int order;
+
+  private boolean parseArgs;
+
+  private org.springframework.boot.logging.LogLevel springBootLogging;
+
+  public org.springframework.boot.context.logging.LoggingApplicationListener();
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_0
+       6: invokevirtual #9                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       9: invokestatic  #13                 // Method org/apache/commons/logging/LogFactory.getLog:(Ljava/lang/Class;)Lorg/apache/commons/logging/Log;
+      12: putfield      #19                 // Field logger:Lorg/apache/commons/logging/Log;
+      15: aload_0
+      16: ldc           #25                 // int -2147483628
+      18: putfield      #26                 // Field order:I
+      21: aload_0
+      22: iconst_1
+      23: putfield      #30                 // Field parseArgs:Z
+      26: aload_0
+      27: aconst_null
+      28: putfield      #34                 // Field springBootLogging:Lorg/springframework/boot/logging/LogLevel;
+      31: return
+
+  public boolean supportsEventType(org.springframework.core.ResolvableType);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #38                 // Method org/springframework/core/ResolvableType.getRawClass:()Ljava/lang/Class;
+       5: getstatic     #43                 // Field EVENT_TYPES:[Ljava/lang/Class;
+       8: invokevirtual #47                 // Method isAssignableFrom:(Ljava/lang/Class;[Ljava/lang/Class;)Z
+      11: ireturn
+
+  public boolean supportsSourceType(java.lang.Class<?>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: getstatic     #51                 // Field SOURCE_TYPES:[Ljava/lang/Class;
+       5: invokevirtual #47                 // Method isAssignableFrom:(Ljava/lang/Class;[Ljava/lang/Class;)Z
+       8: ireturn
+
+  private boolean isAssignableFrom(java.lang.Class<?>, java.lang.Class<?>...);
+    Code:
+       0: aload_1
+       1: ifnull        43
+       4: aload_2
+       5: astore_3
+       6: aload_3
+       7: arraylength
+       8: istore        4
+      10: iconst_0
+      11: istore        5
+      13: iload         5
+      15: iload         4
+      17: if_icmpge     43
+      20: aload_3
+      21: iload         5
+      23: aaload
+      24: astore        6
+      26: aload         6
+      28: aload_1
+      29: invokevirtual #54                 // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+      32: ifeq          37
+      35: iconst_1
+      36: ireturn
+      37: iinc          5, 1
+      40: goto          13
+      43: iconst_0
+      44: ireturn
+
+  public void onApplicationEvent(org.springframework.context.ApplicationEvent);
+    Code:
+       0: aload_1
+       1: instanceof    #59                 // class org/springframework/boot/context/event/ApplicationStartingEvent
+       4: ifeq          20
+       7: aload_1
+       8: checkcast     #59                 // class org/springframework/boot/context/event/ApplicationStartingEvent
+      11: astore_2
+      12: aload_0
+      13: aload_2
+      14: invokevirtual #61                 // Method onApplicationStartingEvent:(Lorg/springframework/boot/context/event/ApplicationStartingEvent;)V
+      17: goto          91
+      20: aload_1
+      21: instanceof    #65                 // class org/springframework/boot/context/event/ApplicationEnvironmentPreparedEvent
+      24: ifeq          40
+      27: aload_1
+      28: checkcast     #65                 // class org/springframework/boot/context/event/ApplicationEnvironmentPreparedEvent
+      31: astore_3
+      32: aload_0
+      33: aload_3
+      34: invokevirtual #67                 // Method onApplicationEnvironmentPreparedEvent:(Lorg/springframework/boot/context/event/ApplicationEnvironmentPreparedEvent;)V
+      37: goto          91
+      40: aload_1
+      41: instanceof    #71                 // class org/springframework/boot/context/event/ApplicationPreparedEvent
+      44: ifeq          62
+      47: aload_1
+      48: checkcast     #71                 // class org/springframework/boot/context/event/ApplicationPreparedEvent
+      51: astore        4
+      53: aload_0
+      54: aload         4
+      56: invokevirtual #73                 // Method onApplicationPreparedEvent:(Lorg/springframework/boot/context/event/ApplicationPreparedEvent;)V
+      59: goto          91
+      62: aload_1
+      63: instanceof    #77                 // class org/springframework/context/event/ContextClosedEvent
+      66: ifeq          80
+      69: aload_0
+      70: aload_1
+      71: checkcast     #77                 // class org/springframework/context/event/ContextClosedEvent
+      74: invokevirtual #79                 // Method onContextClosedEvent:(Lorg/springframework/context/event/ContextClosedEvent;)V
+      77: goto          91
+      80: aload_1
+      81: instanceof    #83                 // class org/springframework/boot/context/event/ApplicationFailedEvent
+      84: ifeq          91
+      87: aload_0
+      88: invokevirtual #85                 // Method onApplicationFailedEvent:()V
+      91: return
+
+  private void onApplicationStartingEvent(org.springframework.boot.context.event.ApplicationStartingEvent);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #88                 // Method org/springframework/boot/context/event/ApplicationStartingEvent.getSpringApplication:()Lorg/springframework/boot/SpringApplication;
+       5: invokevirtual #92                 // Method org/springframework/boot/SpringApplication.getClassLoader:()Ljava/lang/ClassLoader;
+       8: invokestatic  #98                 // Method org/springframework/boot/logging/LoggingSystem.get:(Ljava/lang/ClassLoader;)Lorg/springframework/boot/logging/LoggingSystem;
+      11: putfield      #104                // Field loggingSystem:Lorg/springframework/boot/logging/LoggingSystem;
+      14: aload_0
+      15: getfield      #104                // Field loggingSystem:Lorg/springframework/boot/logging/LoggingSystem;
+      18: invokevirtual #108                // Method org/springframework/boot/logging/LoggingSystem.beforeInitialize:()V
+      21: return
+
+  private void onApplicationEnvironmentPreparedEvent(org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent);
+    Code:
+       0: aload_1
+       1: invokevirtual #111                // Method org/springframework/boot/context/event/ApplicationEnvironmentPreparedEvent.getSpringApplication:()Lorg/springframework/boot/SpringApplication;
+       4: astore_2
+       5: aload_0
+       6: getfield      #104                // Field loggingSystem:Lorg/springframework/boot/logging/LoggingSystem;
+       9: ifnonnull     23
+      12: aload_0
+      13: aload_2
+      14: invokevirtual #92                 // Method org/springframework/boot/SpringApplication.getClassLoader:()Ljava/lang/ClassLoader;
+      17: invokestatic  #98                 // Method org/springframework/boot/logging/LoggingSystem.get:(Ljava/lang/ClassLoader;)Lorg/springframework/boot/logging/LoggingSystem;
+      20: putfield      #104                // Field loggingSystem:Lorg/springframework/boot/logging/LoggingSystem;
+      23: aload_0
+      24: aload_1
+      25: invokevirtual #112                // Method org/springframework/boot/context/event/ApplicationEnvironmentPreparedEvent.getEnvironment:()Lorg/springframework/core/env/ConfigurableEnvironment;
+      28: aload_2
+      29: invokevirtual #92                 // Method org/springframework/boot/SpringApplication.getClassLoader:()Ljava/lang/ClassLoader;
+      32: invokevirtual #116                // Method initialize:(Lorg/springframework/core/env/ConfigurableEnvironment;Ljava/lang/ClassLoader;)V
+      35: return
+
+  private void onApplicationPreparedEvent(org.springframework.boot.context.event.ApplicationPreparedEvent);
+    Code:
+       0: aload_1
+       1: invokevirtual #120                // Method org/springframework/boot/context/event/ApplicationPreparedEvent.getApplicationContext:()Lorg/springframework/context/ConfigurableApplicationContext;
+       4: astore_2
+       5: aload_2
+       6: invokeinterface #124,  1          // InterfaceMethod org/springframework/context/ConfigurableApplicationContext.getBeanFactory:()Lorg/springframework/beans/factory/config/ConfigurableListableBeanFactory;
+      11: astore_3
+      12: aload_3
+      13: ldc           #130                // String springBootLoggingSystem
+      15: invokeinterface #132,  2          // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.containsBean:(Ljava/lang/String;)Z
+      20: ifne          35
+      23: aload_3
+      24: ldc           #130                // String springBootLoggingSystem
+      26: aload_0
+      27: getfield      #104                // Field loggingSystem:Lorg/springframework/boot/logging/LoggingSystem;
+      30: invokeinterface #138,  3          // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.registerSingleton:(Ljava/lang/String;Ljava/lang/Object;)V
+      35: aload_0
+      36: getfield      #142                // Field logFile:Lorg/springframework/boot/logging/LogFile;
+      39: ifnull        65
+      42: aload_3
+      43: ldc           #146                // String springBootLogFile
+      45: invokeinterface #132,  2          // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.containsBean:(Ljava/lang/String;)Z
+      50: ifne          65
+      53: aload_3
+      54: ldc           #146                // String springBootLogFile
+      56: aload_0
+      57: getfield      #142                // Field logFile:Lorg/springframework/boot/logging/LogFile;
+      60: invokeinterface #138,  3          // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.registerSingleton:(Ljava/lang/String;Ljava/lang/Object;)V
+      65: aload_0
+      66: getfield      #148                // Field loggerGroups:Lorg/springframework/boot/logging/LoggerGroups;
+      69: ifnull        95
+      72: aload_3
+      73: ldc           #152                // String springBootLoggerGroups
+      75: invokeinterface #132,  2          // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.containsBean:(Ljava/lang/String;)Z
+      80: ifne          95
+      83: aload_3
+      84: ldc           #152                // String springBootLoggerGroups
+      86: aload_0
+      87: getfield      #148                // Field loggerGroups:Lorg/springframework/boot/logging/LoggerGroups;
+      90: invokeinterface #138,  3          // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.registerSingleton:(Ljava/lang/String;Ljava/lang/Object;)V
+      95: aload_3
+      96: ldc           #154                // String springBootLoggingLifecycle
+      98: invokeinterface #132,  2          // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.containsBean:(Ljava/lang/String;)Z
+     103: ifne          131
+     106: aload_2
+     107: invokeinterface #156,  1          // InterfaceMethod org/springframework/context/ConfigurableApplicationContext.getParent:()Lorg/springframework/context/ApplicationContext;
+     112: ifnonnull     131
+     115: aload_3
+     116: ldc           #154                // String springBootLoggingLifecycle
+     118: new           #160                // class org/springframework/boot/context/logging/LoggingApplicationListener$Lifecycle
+     121: dup
+     122: aload_0
+     123: invokespecial #162                // Method org/springframework/boot/context/logging/LoggingApplicationListener$Lifecycle."<init>":(Lorg/springframework/boot/context/logging/LoggingApplicationListener;)V
+     126: invokeinterface #138,  3          // InterfaceMethod org/springframework/beans/factory/config/ConfigurableListableBeanFactory.registerSingleton:(Ljava/lang/String;Ljava/lang/Object;)V
+     131: return
+
+  private void onContextClosedEvent(org.springframework.context.event.ContextClosedEvent);
+    Code:
+       0: aload_1
+       1: invokevirtual #165                // Method org/springframework/context/event/ContextClosedEvent.getApplicationContext:()Lorg/springframework/context/ApplicationContext;
+       4: astore_2
+       5: aload_2
+       6: invokeinterface #167,  1          // InterfaceMethod org/springframework/context/ApplicationContext.getParent:()Lorg/springframework/context/ApplicationContext;
+      11: ifnonnull     25
+      14: aload_2
+      15: ldc           #154                // String springBootLoggingLifecycle
+      17: invokeinterface #170,  2          // InterfaceMethod org/springframework/context/ApplicationContext.containsBean:(Ljava/lang/String;)Z
+      22: ifeq          26
+      25: return
+      26: aload_0
+      27: invokevirtual #171                // Method cleanupLoggingSystem:()V
+      30: return
+
+  void cleanupLoggingSystem();
+    Code:
+       0: aload_0
+       1: getfield      #104                // Field loggingSystem:Lorg/springframework/boot/logging/LoggingSystem;
+       4: ifnull        14
+       7: aload_0
+       8: getfield      #104                // Field loggingSystem:Lorg/springframework/boot/logging/LoggingSystem;
+      11: invokevirtual #174                // Method org/springframework/boot/logging/LoggingSystem.cleanUp:()V
+      14: return
+
+  private void onApplicationFailedEvent();
+    Code:
+       0: aload_0
+       1: invokevirtual #171                // Method cleanupLoggingSystem:()V
+       4: return
+
+  protected void initialize(org.springframework.core.env.ConfigurableEnvironment, java.lang.ClassLoader);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #177                // Method getLoggingSystemProperties:(Lorg/springframework/core/env/ConfigurableEnvironment;)Lorg/springframework/boot/logging/LoggingSystemProperties;
+       5: invokevirtual #181                // Method org/springframework/boot/logging/LoggingSystemProperties.apply:()V
+       8: aload_0
+       9: aload_1
+      10: invokestatic  #186                // Method org/springframework/boot/logging/LogFile.get:(Lorg/springframework/core/env/PropertyResolver;)Lorg/springframework/boot/logging/LogFile;
+      13: putfield      #142                // Field logFile:Lorg/springframework/boot/logging/LogFile;
+      16: aload_0
+      17: getfield      #142                // Field logFile:Lorg/springframework/boot/logging/LogFile;
+      20: ifnull        30
+      23: aload_0
+      24: getfield      #142                // Field logFile:Lorg/springframework/boot/logging/LogFile;
+      27: invokevirtual #191                // Method org/springframework/boot/logging/LogFile.applyToSystemProperties:()V
+      30: aload_0
+      31: new           #194                // class org/springframework/boot/logging/LoggerGroups
+      34: dup
+      35: getstatic     #196                // Field DEFAULT_GROUP_LOGGERS:Ljava/util/Map;
+      38: invokespecial #200                // Method org/springframework/boot/logging/LoggerGroups."<init>":(Ljava/util/Map;)V
+      41: putfield      #148                // Field loggerGroups:Lorg/springframework/boot/logging/LoggerGroups;
+      44: aload_0
+      45: aload_1
+      46: invokevirtual #203                // Method initializeEarlyLoggingLevel:(Lorg/springframework/core/env/ConfigurableEnvironment;)V
+      49: aload_0
+      50: aload_1
+      51: aload_0
+      52: getfield      #104                // Field loggingSystem:Lorg/springframework/boot/logging/LoggingSystem;
+      55: aload_0
+      56: getfield      #142                // Field logFile:Lorg/springframework/boot/logging/LogFile;
+      59: invokevirtual #207                // Method initializeSystem:(Lorg/springframework/core/env/ConfigurableEnvironment;Lorg/springframework/boot/logging/LoggingSystem;Lorg/springframework/boot/logging/LogFile;)V
+      62: aload_0
+      63: aload_1
+      64: aload_0
+      65: getfield      #104                // Field loggingSystem:Lorg/springframework/boot/logging/LoggingSystem;
+      68: invokevirtual #211                // Method initializeFinalLoggingLevels:(Lorg/springframework/core/env/ConfigurableEnvironment;Lorg/springframework/boot/logging/LoggingSystem;)V
+      71: aload_0
+      72: aload_1
+      73: aload_0
+      74: getfield      #104                // Field loggingSystem:Lorg/springframework/boot/logging/LoggingSystem;
+      77: invokevirtual #215                // Method registerShutdownHookIfNecessary:(Lorg/springframework/core/env/Environment;Lorg/springframework/boot/logging/LoggingSystem;)V
+      80: return
+
+  private org.springframework.boot.logging.LoggingSystemProperties getLoggingSystemProperties(org.springframework.core.env.ConfigurableEnvironment);
+    Code:
+       0: aload_0
+       1: getfield      #104                // Field loggingSystem:Lorg/springframework/boot/logging/LoggingSystem;
+       4: ifnull        18
+       7: aload_0
+       8: getfield      #104                // Field loggingSystem:Lorg/springframework/boot/logging/LoggingSystem;
+      11: aload_1
+      12: invokevirtual #219                // Method org/springframework/boot/logging/LoggingSystem.getSystemProperties:(Lorg/springframework/core/env/ConfigurableEnvironment;)Lorg/springframework/boot/logging/LoggingSystemProperties;
+      15: goto          26
+      18: new           #182                // class org/springframework/boot/logging/LoggingSystemProperties
+      21: dup
+      22: aload_1
+      23: invokespecial #222                // Method org/springframework/boot/logging/LoggingSystemProperties."<init>":(Lorg/springframework/core/env/Environment;)V
+      26: areturn
+
+  private void initializeEarlyLoggingLevel(org.springframework.core.env.ConfigurableEnvironment);
+    Code:
+       0: aload_0
+       1: getfield      #30                 // Field parseArgs:Z
+       4: ifeq          48
+       7: aload_0
+       8: getfield      #34                 // Field springBootLogging:Lorg/springframework/boot/logging/LogLevel;
+      11: ifnonnull     48
+      14: aload_0
+      15: aload_1
+      16: ldc           #225                // String debug
+      18: invokevirtual #227                // Method isSet:(Lorg/springframework/core/env/ConfigurableEnvironment;Ljava/lang/String;)Z
+      21: ifeq          31
+      24: aload_0
+      25: getstatic     #231                // Field org/springframework/boot/logging/LogLevel.DEBUG:Lorg/springframework/boot/logging/LogLevel;
+      28: putfield      #34                 // Field springBootLogging:Lorg/springframework/boot/logging/LogLevel;
+      31: aload_0
+      32: aload_1
+      33: ldc           #236                // String trace
+      35: invokevirtual #227                // Method isSet:(Lorg/springframework/core/env/ConfigurableEnvironment;Ljava/lang/String;)Z
+      38: ifeq          48
+      41: aload_0
+      42: getstatic     #238                // Field org/springframework/boot/logging/LogLevel.TRACE:Lorg/springframework/boot/logging/LogLevel;
+      45: putfield      #34                 // Field springBootLogging:Lorg/springframework/boot/logging/LogLevel;
+      48: return
+
+  private boolean isSet(org.springframework.core.env.ConfigurableEnvironment, java.lang.String);
+    Code:
+       0: aload_1
+       1: aload_2
+       2: invokeinterface #241,  2          // InterfaceMethod org/springframework/core/env/ConfigurableEnvironment.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+       7: astore_3
+       8: aload_3
+       9: ifnull        25
+      12: aload_3
+      13: ldc           #247                // String false
+      15: invokevirtual #249                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      18: ifne          25
+      21: iconst_1
+      22: goto          26
+      25: iconst_0
+      26: ireturn
+
+  private void initializeSystem(org.springframework.core.env.ConfigurableEnvironment, org.springframework.boot.logging.LoggingSystem, org.springframework.boot.logging.LogFile);
+    Code:
+       0: aload_1
+       1: ldc           #255                // String logging.config
+       3: invokeinterface #241,  2          // InterfaceMethod org/springframework/core/env/ConfigurableEnvironment.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+       8: astore        4
+      10: aload         4
+      12: invokestatic  #257                // Method org/springframework/util/StringUtils.hasLength:(Ljava/lang/String;)Z
+      15: ifeq          25
+      18: aload         4
+      20: invokevirtual #262                // Method java/lang/String.strip:()Ljava/lang/String;
+      23: astore        4
+      25: new           #266                // class org/springframework/boot/logging/LoggingInitializationContext
+      28: dup
+      29: aload_1
+      30: invokespecial #268                // Method org/springframework/boot/logging/LoggingInitializationContext."<init>":(Lorg/springframework/core/env/ConfigurableEnvironment;)V
+      33: astore        5
+      35: aload_0
+      36: aload         4
+      38: invokevirtual #270                // Method ignoreLogConfig:(Ljava/lang/String;)Z
+      41: ifeq          55
+      44: aload_2
+      45: aload         5
+      47: aconst_null
+      48: aload_3
+      49: invokevirtual #273                // Method org/springframework/boot/logging/LoggingSystem.initialize:(Lorg/springframework/boot/logging/LoggingInitializationContext;Ljava/lang/String;Lorg/springframework/boot/logging/LogFile;)V
+      52: goto          64
+      55: aload_2
+      56: aload         5
+      58: aload         4
+      60: aload_3
+      61: invokevirtual #273                // Method org/springframework/boot/logging/LoggingSystem.initialize:(Lorg/springframework/boot/logging/LoggingInitializationContext;Ljava/lang/String;Lorg/springframework/boot/logging/LogFile;)V
+      64: goto          141
+      67: astore        5
+      69: aload         5
+      71: astore        6
+      73: aload         6
+      75: ifnull        96
+      78: aload         6
+      80: instanceof    #278                // class java/io/FileNotFoundException
+      83: ifne          96
+      86: aload         6
+      88: invokevirtual #280                // Method java/lang/Throwable.getCause:()Ljava/lang/Throwable;
+      91: astore        6
+      93: goto          73
+      96: aload         6
+      98: ifnull        106
+     101: aload         6
+     103: goto          108
+     106: aload         5
+     108: astore        6
+     110: getstatic     #286                // Field java/lang/System.err:Ljava/io/PrintStream;
+     113: aload         4
+     115: invokedynamic #292,  0            // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+     120: invokevirtual #295                // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+     123: aload         6
+     125: getstatic     #286                // Field java/lang/System.err:Ljava/io/PrintStream;
+     128: invokevirtual #301                // Method java/lang/Throwable.printStackTrace:(Ljava/io/PrintStream;)V
+     131: new           #305                // class java/lang/IllegalStateException
+     134: dup
+     135: aload         5
+     137: invokespecial #307                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/Throwable;)V
+     140: athrow
+     141: return
+    Exception table:
+       from    to  target type
+          25    64    67   Class java/lang/Exception
+
+  private boolean ignoreLogConfig(java.lang.String);
+    Code:
+       0: aload_1
+       1: invokestatic  #257                // Method org/springframework/util/StringUtils.hasLength:(Ljava/lang/String;)Z
+       4: ifeq          17
+       7: aload_1
+       8: ldc_w         #310                // String -D
+      11: invokevirtual #312                // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+      14: ifeq          21
+      17: iconst_1
+      18: goto          22
+      21: iconst_0
+      22: ireturn
+
+  private void initializeFinalLoggingLevels(org.springframework.core.env.ConfigurableEnvironment, org.springframework.boot.logging.LoggingSystem);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #315                // Method bindLoggerGroups:(Lorg/springframework/core/env/ConfigurableEnvironment;)V
+       5: aload_0
+       6: getfield      #34                 // Field springBootLogging:Lorg/springframework/boot/logging/LogLevel;
+       9: ifnull        21
+      12: aload_0
+      13: aload_2
+      14: aload_0
+      15: getfield      #34                 // Field springBootLogging:Lorg/springframework/boot/logging/LogLevel;
+      18: invokevirtual #318                // Method initializeSpringBootLogging:(Lorg/springframework/boot/logging/LoggingSystem;Lorg/springframework/boot/logging/LogLevel;)V
+      21: aload_0
+      22: aload_2
+      23: aload_1
+      24: invokevirtual #322                // Method setLogLevels:(Lorg/springframework/boot/logging/LoggingSystem;Lorg/springframework/core/env/ConfigurableEnvironment;)V
+      27: return
+
+  private void bindLoggerGroups(org.springframework.core.env.ConfigurableEnvironment);
+    Code:
+       0: aload_0
+       1: getfield      #148                // Field loggerGroups:Lorg/springframework/boot/logging/LoggerGroups;
+       4: ifnull        39
+       7: aload_1
+       8: invokestatic  #326                // Method org/springframework/boot/context/properties/bind/Binder.get:(Lorg/springframework/core/env/Environment;)Lorg/springframework/boot/context/properties/bind/Binder;
+      11: astore_2
+      12: aload_2
+      13: getstatic     #331                // Field LOGGING_GROUP:Lorg/springframework/boot/context/properties/source/ConfigurationPropertyName;
+      16: getstatic     #335                // Field STRING_STRINGS_MAP:Lorg/springframework/boot/context/properties/bind/Bindable;
+      19: invokevirtual #339                // Method org/springframework/boot/context/properties/bind/Binder.bind:(Lorg/springframework/boot/context/properties/source/ConfigurationPropertyName;Lorg/springframework/boot/context/properties/bind/Bindable;)Lorg/springframework/boot/context/properties/bind/BindResult;
+      22: aload_0
+      23: getfield      #148                // Field loggerGroups:Lorg/springframework/boot/logging/LoggerGroups;
+      26: dup
+      27: invokestatic  #343                // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+      30: pop
+      31: invokedynamic #349,  0            // InvokeDynamic #1:accept:(Lorg/springframework/boot/logging/LoggerGroups;)Ljava/util/function/Consumer;
+      36: invokevirtual #353                // Method org/springframework/boot/context/properties/bind/BindResult.ifBound:(Ljava/util/function/Consumer;)V
+      39: return
+
+  protected void initializeSpringBootLogging(org.springframework.boot.logging.LoggingSystem, org.springframework.boot.logging.LogLevel);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #359                // Method getLogLevelConfigurer:(Lorg/springframework/boot/logging/LoggingSystem;)Ljava/util/function/BiConsumer;
+       5: astore_3
+       6: getstatic     #363                // Field SPRING_BOOT_LOGGING_LOGGERS:Ljava/util/Map;
+       9: aload_2
+      10: invokestatic  #366                // Method java/util/Collections.emptyList:()Ljava/util/List;
+      13: invokeinterface #372,  3          // InterfaceMethod java/util/Map.getOrDefault:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      18: checkcast     #378                // class java/util/List
+      21: aload_0
+      22: aload_2
+      23: aload_3
+      24: invokedynamic #380,  0            // InvokeDynamic #2:accept:(Lorg/springframework/boot/context/logging/LoggingApplicationListener;Lorg/springframework/boot/logging/LogLevel;Ljava/util/function/BiConsumer;)Ljava/util/function/Consumer;
+      29: invokeinterface #383,  2          // InterfaceMethod java/util/List.forEach:(Ljava/util/function/Consumer;)V
+      34: return
+
+  protected void setLogLevels(org.springframework.boot.logging.LoggingSystem, org.springframework.core.env.ConfigurableEnvironment);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #359                // Method getLogLevelConfigurer:(Lorg/springframework/boot/logging/LoggingSystem;)Ljava/util/function/BiConsumer;
+       5: astore_3
+       6: aload_2
+       7: invokestatic  #326                // Method org/springframework/boot/context/properties/bind/Binder.get:(Lorg/springframework/core/env/Environment;)Lorg/springframework/boot/context/properties/bind/Binder;
+      10: astore        4
+      12: aload         4
+      14: getstatic     #386                // Field LOGGING_LEVEL:Lorg/springframework/boot/context/properties/source/ConfigurationPropertyName;
+      17: getstatic     #389                // Field STRING_LOGLEVEL_MAP:Lorg/springframework/boot/context/properties/bind/Bindable;
+      20: invokevirtual #339                // Method org/springframework/boot/context/properties/bind/Binder.bind:(Lorg/springframework/boot/context/properties/source/ConfigurationPropertyName;Lorg/springframework/boot/context/properties/bind/Bindable;)Lorg/springframework/boot/context/properties/bind/BindResult;
+      23: invokedynamic #392,  0            // InvokeDynamic #3:get:()Ljava/util/function/Supplier;
+      28: invokevirtual #395                // Method org/springframework/boot/context/properties/bind/BindResult.orElseGet:(Ljava/util/function/Supplier;)Ljava/lang/Object;
+      31: checkcast     #373                // class java/util/Map
+      34: astore        5
+      36: aload         5
+      38: aload_0
+      39: aload_3
+      40: invokedynamic #399,  0            // InvokeDynamic #4:accept:(Lorg/springframework/boot/context/logging/LoggingApplicationListener;Ljava/util/function/BiConsumer;)Ljava/util/function/BiConsumer;
+      45: invokeinterface #402,  2          // InterfaceMethod java/util/Map.forEach:(Ljava/util/function/BiConsumer;)V
+      50: return
+
+  private void configureLogLevel(java.lang.String, org.springframework.boot.logging.LogLevel, java.util.function.BiConsumer<java.lang.String, org.springframework.boot.logging.LogLevel>);
+    Code:
+       0: aload_0
+       1: getfield      #148                // Field loggerGroups:Lorg/springframework/boot/logging/LoggerGroups;
+       4: ifnull        38
+       7: aload_0
+       8: getfield      #148                // Field loggerGroups:Lorg/springframework/boot/logging/LoggerGroups;
+      11: aload_1
+      12: invokevirtual #405                // Method org/springframework/boot/logging/LoggerGroups.get:(Ljava/lang/String;)Lorg/springframework/boot/logging/LoggerGroup;
+      15: astore        4
+      17: aload         4
+      19: ifnull        38
+      22: aload         4
+      24: invokevirtual #408                // Method org/springframework/boot/logging/LoggerGroup.hasMembers:()Z
+      27: ifeq          38
+      30: aload         4
+      32: aload_2
+      33: aload_3
+      34: invokevirtual #414                // Method org/springframework/boot/logging/LoggerGroup.configureLogLevel:(Lorg/springframework/boot/logging/LogLevel;Ljava/util/function/BiConsumer;)V
+      37: return
+      38: aload_3
+      39: aload_1
+      40: aload_2
+      41: invokeinterface #418,  3          // InterfaceMethod java/util/function/BiConsumer.accept:(Ljava/lang/Object;Ljava/lang/Object;)V
+      46: return
+
+  private java.util.function.BiConsumer<java.lang.String, org.springframework.boot.logging.LogLevel> getLogLevelConfigurer(org.springframework.boot.logging.LoggingSystem);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokedynamic #423,  0            // InvokeDynamic #5:accept:(Lorg/springframework/boot/context/logging/LoggingApplicationListener;Lorg/springframework/boot/logging/LoggingSystem;)Ljava/util/function/BiConsumer;
+       7: areturn
+
+  private void registerShutdownHookIfNecessary(org.springframework.core.env.Environment, org.springframework.boot.logging.LoggingSystem);
+    Code:
+       0: aload_1
+       1: ldc_w         #426                // String logging.register-shutdown-hook
+       4: ldc_w         #428                // class java/lang/Boolean
+       7: iconst_1
+       8: invokestatic  #430                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+      11: invokeinterface #434,  4          // InterfaceMethod org/springframework/core/env/Environment.getProperty:(Ljava/lang/String;Ljava/lang/Class;Ljava/lang/Object;)Ljava/lang/Object;
+      16: checkcast     #428                // class java/lang/Boolean
+      19: invokevirtual #439                // Method java/lang/Boolean.booleanValue:()Z
+      22: ifeq          50
+      25: aload_2
+      26: invokevirtual #442                // Method org/springframework/boot/logging/LoggingSystem.getShutdownHandler:()Ljava/lang/Runnable;
+      29: astore_3
+      30: aload_3
+      31: ifnull        50
+      34: getstatic     #446                // Field shutdownHookRegistered:Ljava/util/concurrent/atomic/AtomicBoolean;
+      37: iconst_0
+      38: iconst_1
+      39: invokevirtual #450                // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+      42: ifeq          50
+      45: aload_0
+      46: aload_3
+      47: invokevirtual #456                // Method registerShutdownHook:(Ljava/lang/Runnable;)V
+      50: return
+
+  void registerShutdownHook(java.lang.Runnable);
+    Code:
+       0: invokestatic  #460                // Method org/springframework/boot/SpringApplication.getShutdownHandlers:()Lorg/springframework/boot/SpringApplicationShutdownHandlers;
+       3: aload_1
+       4: invokeinterface #464,  2          // InterfaceMethod org/springframework/boot/SpringApplicationShutdownHandlers.add:(Ljava/lang/Runnable;)V
+       9: return
+
+  public void setOrder(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: putfield      #26                 // Field order:I
+       5: return
+
+  public int getOrder();
+    Code:
+       0: aload_0
+       1: getfield      #26                 // Field order:I
+       4: ireturn
+
+  public void setSpringBootLogging(org.springframework.boot.logging.LogLevel);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #34                 // Field springBootLogging:Lorg/springframework/boot/logging/LogLevel;
+       5: return
+
+  public void setParseArgs(boolean);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: putfield      #30                 // Field parseArgs:Z
+       5: return
+
+  private void lambda$getLogLevelConfigurer$2(org.springframework.boot.logging.LoggingSystem, java.lang.String, org.springframework.boot.logging.LogLevel);
+    Code:
+       0: aload_2
+       1: ldc_w         #469                // String ROOT
+       4: invokevirtual #471                // Method java/lang/String.equalsIgnoreCase:(Ljava/lang/String;)Z
+       7: ifeq          14
+      10: aconst_null
+      11: goto          15
+      14: aload_2
+      15: astore_2
+      16: aload_1
+      17: aload_2
+      18: aload_3
+      19: invokevirtual #474                // Method org/springframework/boot/logging/LoggingSystem.setLogLevel:(Ljava/lang/String;Lorg/springframework/boot/logging/LogLevel;)V
+      22: goto          44
+      25: astore        4
+      27: aload_0
+      28: getfield      #19                 // Field logger:Lorg/apache/commons/logging/Log;
+      31: ldc_w         #480                // String Cannot set level \'%s\' for \'%s\'
+      34: aload_3
+      35: aload_2
+      36: invokestatic  #482                // Method org/springframework/core/log/LogMessage.format:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)Lorg/springframework/core/log/LogMessage;
+      39: invokeinterface #488,  2          // InterfaceMethod org/apache/commons/logging/Log.error:(Ljava/lang/Object;)V
+      44: return
+    Exception table:
+       from    to  target type
+           0    22    25   Class java/lang/RuntimeException
+
+  private void lambda$setLogLevels$1(java.util.function.BiConsumer, java.lang.String, org.springframework.boot.logging.LogLevel);
+    Code:
+       0: aload_0
+       1: aload_2
+       2: aload_3
+       3: aload_1
+       4: invokevirtual #494                // Method configureLogLevel:(Ljava/lang/String;Lorg/springframework/boot/logging/LogLevel;Ljava/util/function/BiConsumer;)V
+       7: return
+
+  private void lambda$initializeSpringBootLogging$0(org.springframework.boot.logging.LogLevel, java.util.function.BiConsumer, java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_3
+       2: aload_1
+       3: aload_2
+       4: invokevirtual #494                // Method configureLogLevel:(Ljava/lang/String;Lorg/springframework/boot/logging/LogLevel;Ljava/util/function/BiConsumer;)V
+       7: return
+
+  static {};
+    Code:
+       0: ldc_w         #497                // String logging.level
+       3: invokestatic  #499                // Method org/springframework/boot/context/properties/source/ConfigurationPropertyName.of:(Ljava/lang/CharSequence;)Lorg/springframework/boot/context/properties/source/ConfigurationPropertyName;
+       6: putstatic     #386                // Field LOGGING_LEVEL:Lorg/springframework/boot/context/properties/source/ConfigurationPropertyName;
+       9: ldc_w         #505                // String logging.group
+      12: invokestatic  #499                // Method org/springframework/boot/context/properties/source/ConfigurationPropertyName.of:(Ljava/lang/CharSequence;)Lorg/springframework/boot/context/properties/source/ConfigurationPropertyName;
+      15: putstatic     #331                // Field LOGGING_GROUP:Lorg/springframework/boot/context/properties/source/ConfigurationPropertyName;
+      18: ldc           #250                // class java/lang/String
+      20: ldc           #232                // class org/springframework/boot/logging/LogLevel
+      22: invokestatic  #507                // Method org/springframework/boot/context/properties/bind/Bindable.mapOf:(Ljava/lang/Class;Ljava/lang/Class;)Lorg/springframework/boot/context/properties/bind/Bindable;
+      25: putstatic     #389                // Field STRING_LOGLEVEL_MAP:Lorg/springframework/boot/context/properties/bind/Bindable;
+      28: ldc_w         #513                // class org/springframework/util/MultiValueMap
+      31: iconst_2
+      32: anewarray     #55                 // class java/lang/Class
+      35: dup
+      36: iconst_0
+      37: ldc           #250                // class java/lang/String
+      39: aastore
+      40: dup
+      41: iconst_1
+      42: ldc           #250                // class java/lang/String
+      44: aastore
+      45: invokestatic  #515                // Method org/springframework/core/ResolvableType.forClassWithGenerics:(Ljava/lang/Class;[Ljava/lang/Class;)Lorg/springframework/core/ResolvableType;
+      48: invokevirtual #519                // Method org/springframework/core/ResolvableType.asMap:()Lorg/springframework/core/ResolvableType;
+      51: invokestatic  #523                // Method org/springframework/boot/context/properties/bind/Bindable.of:(Lorg/springframework/core/ResolvableType;)Lorg/springframework/boot/context/properties/bind/Bindable;
+      54: putstatic     #335                // Field STRING_STRINGS_MAP:Lorg/springframework/boot/context/properties/bind/Bindable;
+      57: new           #526                // class org/springframework/util/LinkedMultiValueMap
+      60: dup
+      61: invokespecial #528                // Method org/springframework/util/LinkedMultiValueMap."<init>":()V
+      64: astore_0
+      65: aload_0
+      66: ldc_w         #529                // String web
+      69: ldc_w         #531                // String org.springframework.core.codec
+      72: invokeinterface #533,  3          // InterfaceMethod org/springframework/util/MultiValueMap.add:(Ljava/lang/Object;Ljava/lang/Object;)V
+      77: aload_0
+      78: ldc_w         #529                // String web
+      81: ldc_w         #535                // String org.springframework.http
+      84: invokeinterface #533,  3          // InterfaceMethod org/springframework/util/MultiValueMap.add:(Ljava/lang/Object;Ljava/lang/Object;)V
+      89: aload_0
+      90: ldc_w         #529                // String web
+      93: ldc_w         #537                // String org.springframework.web
+      96: invokeinterface #533,  3          // InterfaceMethod org/springframework/util/MultiValueMap.add:(Ljava/lang/Object;Ljava/lang/Object;)V
+     101: aload_0
+     102: ldc_w         #529                // String web
+     105: ldc_w         #539                // String org.springframework.boot.actuate.endpoint.web
+     108: invokeinterface #533,  3          // InterfaceMethod org/springframework/util/MultiValueMap.add:(Ljava/lang/Object;Ljava/lang/Object;)V
+     113: aload_0
+     114: ldc_w         #529                // String web
+     117: ldc_w         #541                // String org.springframework.boot.web.servlet.ServletContextInitializerBeans
+     120: invokeinterface #533,  3          // InterfaceMethod org/springframework/util/MultiValueMap.add:(Ljava/lang/Object;Ljava/lang/Object;)V
+     125: aload_0
+     126: ldc_w         #543                // String sql
+     129: ldc_w         #545                // String org.springframework.jdbc.core
+     132: invokeinterface #533,  3          // InterfaceMethod org/springframework/util/MultiValueMap.add:(Ljava/lang/Object;Ljava/lang/Object;)V
+     137: aload_0
+     138: ldc_w         #543                // String sql
+     141: ldc_w         #547                // String org.hibernate.SQL
+     144: invokeinterface #533,  3          // InterfaceMethod org/springframework/util/MultiValueMap.add:(Ljava/lang/Object;Ljava/lang/Object;)V
+     149: aload_0
+     150: ldc_w         #543                // String sql
+     153: ldc_w         #549                // String org.jooq.tools.LoggerListener
+     156: invokeinterface #533,  3          // InterfaceMethod org/springframework/util/MultiValueMap.add:(Ljava/lang/Object;Ljava/lang/Object;)V
+     161: aload_0
+     162: invokestatic  #551                // Method java/util/Collections.unmodifiableMap:(Ljava/util/Map;)Ljava/util/Map;
+     165: putstatic     #196                // Field DEFAULT_GROUP_LOGGERS:Ljava/util/Map;
+     168: new           #526                // class org/springframework/util/LinkedMultiValueMap
+     171: dup
+     172: invokespecial #528                // Method org/springframework/util/LinkedMultiValueMap."<init>":()V
+     175: astore_0
+     176: aload_0
+     177: getstatic     #231                // Field org/springframework/boot/logging/LogLevel.DEBUG:Lorg/springframework/boot/logging/LogLevel;
+     180: ldc_w         #543                // String sql
+     183: invokeinterface #533,  3          // InterfaceMethod org/springframework/util/MultiValueMap.add:(Ljava/lang/Object;Ljava/lang/Object;)V
+     188: aload_0
+     189: getstatic     #231                // Field org/springframework/boot/logging/LogLevel.DEBUG:Lorg/springframework/boot/logging/LogLevel;
+     192: ldc_w         #529                // String web
+     195: invokeinterface #533,  3          // InterfaceMethod org/springframework/util/MultiValueMap.add:(Ljava/lang/Object;Ljava/lang/Object;)V
+     200: aload_0
+     201: getstatic     #231                // Field org/springframework/boot/logging/LogLevel.DEBUG:Lorg/springframework/boot/logging/LogLevel;
+     204: ldc_w         #555                // String org.springframework.boot
+     207: invokeinterface #533,  3          // InterfaceMethod org/springframework/util/MultiValueMap.add:(Ljava/lang/Object;Ljava/lang/Object;)V
+     212: aload_0
+     213: getstatic     #238                // Field org/springframework/boot/logging/LogLevel.TRACE:Lorg/springframework/boot/logging/LogLevel;
+     216: ldc_w         #557                // String org.springframework
+     219: invokeinterface #533,  3          // InterfaceMethod org/springframework/util/MultiValueMap.add:(Ljava/lang/Object;Ljava/lang/Object;)V
+     224: aload_0
+     225: getstatic     #238                // Field org/springframework/boot/logging/LogLevel.TRACE:Lorg/springframework/boot/logging/LogLevel;
+     228: ldc_w         #559                // String org.apache.tomcat
+     231: invokeinterface #533,  3          // InterfaceMethod org/springframework/util/MultiValueMap.add:(Ljava/lang/Object;Ljava/lang/Object;)V
+     236: aload_0
+     237: getstatic     #238                // Field org/springframework/boot/logging/LogLevel.TRACE:Lorg/springframework/boot/logging/LogLevel;
+     240: ldc_w         #561                // String org.apache.catalina
+     243: invokeinterface #533,  3          // InterfaceMethod org/springframework/util/MultiValueMap.add:(Ljava/lang/Object;Ljava/lang/Object;)V
+     248: aload_0
+     249: getstatic     #238                // Field org/springframework/boot/logging/LogLevel.TRACE:Lorg/springframework/boot/logging/LogLevel;
+     252: ldc_w         #563                // String org.eclipse.jetty
+     255: invokeinterface #533,  3          // InterfaceMethod org/springframework/util/MultiValueMap.add:(Ljava/lang/Object;Ljava/lang/Object;)V
+     260: aload_0
+     261: getstatic     #238                // Field org/springframework/boot/logging/LogLevel.TRACE:Lorg/springframework/boot/logging/LogLevel;
+     264: ldc_w         #565                // String org.hibernate.tool.hbm2ddl
+     267: invokeinterface #533,  3          // InterfaceMethod org/springframework/util/MultiValueMap.add:(Ljava/lang/Object;Ljava/lang/Object;)V
+     272: aload_0
+     273: invokestatic  #551                // Method java/util/Collections.unmodifiableMap:(Ljava/util/Map;)Ljava/util/Map;
+     276: putstatic     #363                // Field SPRING_BOOT_LOGGING_LOGGERS:Ljava/util/Map;
+     279: iconst_5
+     280: anewarray     #55                 // class java/lang/Class
+     283: dup
+     284: iconst_0
+     285: ldc           #59                 // class org/springframework/boot/context/event/ApplicationStartingEvent
+     287: aastore
+     288: dup
+     289: iconst_1
+     290: ldc           #65                 // class org/springframework/boot/context/event/ApplicationEnvironmentPreparedEvent
+     292: aastore
+     293: dup
+     294: iconst_2
+     295: ldc           #71                 // class org/springframework/boot/context/event/ApplicationPreparedEvent
+     297: aastore
+     298: dup
+     299: iconst_3
+     300: ldc           #77                 // class org/springframework/context/event/ContextClosedEvent
+     302: aastore
+     303: dup
+     304: iconst_4
+     305: ldc           #83                 // class org/springframework/boot/context/event/ApplicationFailedEvent
+     307: aastore
+     308: putstatic     #43                 // Field EVENT_TYPES:[Ljava/lang/Class;
+     311: iconst_2
+     312: anewarray     #55                 // class java/lang/Class
+     315: dup
+     316: iconst_0
+     317: ldc           #93                 // class org/springframework/boot/SpringApplication
+     319: aastore
+     320: dup
+     321: iconst_1
+     322: ldc           #168                // class org/springframework/context/ApplicationContext
+     324: aastore
+     325: putstatic     #51                 // Field SOURCE_TYPES:[Ljava/lang/Class;
+     328: new           #451                // class java/util/concurrent/atomic/AtomicBoolean
+     331: dup
+     332: invokespecial #567                // Method java/util/concurrent/atomic/AtomicBoolean."<init>":()V
+     335: putstatic     #446                // Field shutdownHookRegistered:Ljava/util/concurrent/atomic/AtomicBoolean;
+     338: return
+}

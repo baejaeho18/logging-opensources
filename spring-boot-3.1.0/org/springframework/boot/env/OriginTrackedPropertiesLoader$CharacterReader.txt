@@ -1,0 +1,411 @@
+Compiled from "OriginTrackedPropertiesLoader.java"
+class org.springframework.boot.env.OriginTrackedPropertiesLoader$CharacterReader implements java.io.Closeable {
+  private static final java.lang.String[] ESCAPES;
+
+  private final java.io.LineNumberReader reader;
+
+  private int columnNumber;
+
+  private boolean escaped;
+
+  private int character;
+
+  private int lastLineCommentPrefixCharacter;
+
+  org.springframework.boot.env.OriginTrackedPropertiesLoader$CharacterReader(org.springframework.core.io.Resource) throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iconst_m1
+       6: putfield      #7                  // Field columnNumber:I
+       9: aload_0
+      10: new           #13                 // class java/io/LineNumberReader
+      13: dup
+      14: new           #15                 // class java/io/InputStreamReader
+      17: dup
+      18: aload_1
+      19: invokeinterface #17,  1           // InterfaceMethod org/springframework/core/io/Resource.getInputStream:()Ljava/io/InputStream;
+      24: getstatic     #23                 // Field java/nio/charset/StandardCharsets.ISO_8859_1:Ljava/nio/charset/Charset;
+      27: invokespecial #29                 // Method java/io/InputStreamReader."<init>":(Ljava/io/InputStream;Ljava/nio/charset/Charset;)V
+      30: invokespecial #32                 // Method java/io/LineNumberReader."<init>":(Ljava/io/Reader;)V
+      33: putfield      #35                 // Field reader:Ljava/io/LineNumberReader;
+      36: return
+
+  public void close() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #35                 // Field reader:Ljava/io/LineNumberReader;
+       4: invokevirtual #39                 // Method java/io/LineNumberReader.close:()V
+       7: return
+
+  boolean read() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: iconst_0
+       2: putfield      #42                 // Field escaped:Z
+       5: aload_0
+       6: aload_0
+       7: getfield      #35                 // Field reader:Ljava/io/LineNumberReader;
+      10: invokevirtual #46                 // Method java/io/LineNumberReader.read:()I
+      13: putfield      #50                 // Field character:I
+      16: aload_0
+      17: dup
+      18: getfield      #7                  // Field columnNumber:I
+      21: iconst_1
+      22: iadd
+      23: putfield      #7                  // Field columnNumber:I
+      26: aload_0
+      27: getfield      #7                  // Field columnNumber:I
+      30: ifne          37
+      33: aload_0
+      34: invokevirtual #53                 // Method skipWhitespace:()V
+      37: aload_0
+      38: getfield      #50                 // Field character:I
+      41: bipush        92
+      43: if_icmpne     58
+      46: aload_0
+      47: iconst_1
+      48: putfield      #42                 // Field escaped:Z
+      51: aload_0
+      52: invokevirtual #56                 // Method readEscaped:()V
+      55: goto          72
+      58: aload_0
+      59: getfield      #50                 // Field character:I
+      62: bipush        10
+      64: if_icmpne     72
+      67: aload_0
+      68: iconst_m1
+      69: putfield      #7                  // Field columnNumber:I
+      72: aload_0
+      73: invokevirtual #59                 // Method isEndOfFile:()Z
+      76: ifne          83
+      79: iconst_1
+      80: goto          84
+      83: iconst_0
+      84: ireturn
+
+  private void skipWhitespace() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: invokevirtual #63                 // Method isWhiteSpace:()Z
+       4: ifeq          31
+       7: aload_0
+       8: aload_0
+       9: getfield      #35                 // Field reader:Ljava/io/LineNumberReader;
+      12: invokevirtual #46                 // Method java/io/LineNumberReader.read:()I
+      15: putfield      #50                 // Field character:I
+      18: aload_0
+      19: dup
+      20: getfield      #7                  // Field columnNumber:I
+      23: iconst_1
+      24: iadd
+      25: putfield      #7                  // Field columnNumber:I
+      28: goto          0
+      31: return
+
+  private void setLastLineCommentPrefixCharacter(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: putfield      #66                 // Field lastLineCommentPrefixCharacter:I
+       5: return
+
+  private void skipComment() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: getfield      #50                 // Field character:I
+       4: bipush        10
+       6: if_icmpeq     31
+       9: aload_0
+      10: getfield      #50                 // Field character:I
+      13: iconst_m1
+      14: if_icmpeq     31
+      17: aload_0
+      18: aload_0
+      19: getfield      #35                 // Field reader:Ljava/io/LineNumberReader;
+      22: invokevirtual #46                 // Method java/io/LineNumberReader.read:()I
+      25: putfield      #50                 // Field character:I
+      28: goto          0
+      31: aload_0
+      32: iconst_m1
+      33: putfield      #7                  // Field columnNumber:I
+      36: return
+
+  private void readEscaped() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #35                 // Field reader:Ljava/io/LineNumberReader;
+       5: invokevirtual #46                 // Method java/io/LineNumberReader.read:()I
+       8: putfield      #50                 // Field character:I
+      11: getstatic     #69                 // Field ESCAPES:[Ljava/lang/String;
+      14: iconst_0
+      15: aaload
+      16: aload_0
+      17: getfield      #50                 // Field character:I
+      20: invokevirtual #73                 // Method java/lang/String.indexOf:(I)I
+      23: istore_1
+      24: iload_1
+      25: iconst_m1
+      26: if_icmpeq     45
+      29: aload_0
+      30: getstatic     #69                 // Field ESCAPES:[Ljava/lang/String;
+      33: iconst_1
+      34: aaload
+      35: iload_1
+      36: invokevirtual #79                 // Method java/lang/String.charAt:(I)C
+      39: putfield      #50                 // Field character:I
+      42: goto          80
+      45: aload_0
+      46: getfield      #50                 // Field character:I
+      49: bipush        10
+      51: if_icmpne     67
+      54: aload_0
+      55: iconst_m1
+      56: putfield      #7                  // Field columnNumber:I
+      59: aload_0
+      60: invokevirtual #83                 // Method read:()Z
+      63: pop
+      64: goto          80
+      67: aload_0
+      68: getfield      #50                 // Field character:I
+      71: bipush        117
+      73: if_icmpne     80
+      76: aload_0
+      77: invokevirtual #85                 // Method readUnicode:()V
+      80: return
+
+  private void readUnicode() throws java.io.IOException;
+    Code:
+       0: aload_0
+       1: iconst_0
+       2: putfield      #50                 // Field character:I
+       5: iconst_0
+       6: istore_1
+       7: iload_1
+       8: iconst_4
+       9: if_icmpge     132
+      12: aload_0
+      13: getfield      #35                 // Field reader:Ljava/io/LineNumberReader;
+      16: invokevirtual #46                 // Method java/io/LineNumberReader.read:()I
+      19: istore_2
+      20: iload_2
+      21: bipush        48
+      23: if_icmplt     50
+      26: iload_2
+      27: bipush        57
+      29: if_icmpgt     50
+      32: aload_0
+      33: aload_0
+      34: getfield      #50                 // Field character:I
+      37: iconst_4
+      38: ishl
+      39: iload_2
+      40: iadd
+      41: bipush        48
+      43: isub
+      44: putfield      #50                 // Field character:I
+      47: goto          126
+      50: iload_2
+      51: bipush        97
+      53: if_icmplt     83
+      56: iload_2
+      57: bipush        102
+      59: if_icmpgt     83
+      62: aload_0
+      63: aload_0
+      64: getfield      #50                 // Field character:I
+      67: iconst_4
+      68: ishl
+      69: iload_2
+      70: iadd
+      71: bipush        97
+      73: isub
+      74: bipush        10
+      76: iadd
+      77: putfield      #50                 // Field character:I
+      80: goto          126
+      83: iload_2
+      84: bipush        65
+      86: if_icmplt     116
+      89: iload_2
+      90: bipush        70
+      92: if_icmpgt     116
+      95: aload_0
+      96: aload_0
+      97: getfield      #50                 // Field character:I
+     100: iconst_4
+     101: ishl
+     102: iload_2
+     103: iadd
+     104: bipush        65
+     106: isub
+     107: bipush        10
+     109: iadd
+     110: putfield      #50                 // Field character:I
+     113: goto          126
+     116: new           #88                 // class java/lang/IllegalStateException
+     119: dup
+     120: ldc           #90                 // String Malformed \\uxxxx encoding.
+     122: invokespecial #92                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     125: athrow
+     126: iinc          1, 1
+     129: goto          7
+     132: return
+
+  boolean isWhiteSpace();
+    Code:
+       0: aload_0
+       1: getfield      #42                 // Field escaped:Z
+       4: ifne          38
+       7: aload_0
+       8: getfield      #50                 // Field character:I
+      11: bipush        32
+      13: if_icmpeq     34
+      16: aload_0
+      17: getfield      #50                 // Field character:I
+      20: bipush        9
+      22: if_icmpeq     34
+      25: aload_0
+      26: getfield      #50                 // Field character:I
+      29: bipush        12
+      31: if_icmpne     38
+      34: iconst_1
+      35: goto          39
+      38: iconst_0
+      39: ireturn
+
+  boolean isEndOfFile();
+    Code:
+       0: aload_0
+       1: getfield      #50                 // Field character:I
+       4: iconst_m1
+       5: if_icmpne     12
+       8: iconst_1
+       9: goto          13
+      12: iconst_0
+      13: ireturn
+
+  boolean isEndOfLine();
+    Code:
+       0: aload_0
+       1: getfield      #50                 // Field character:I
+       4: iconst_m1
+       5: if_icmpeq     24
+       8: aload_0
+       9: getfield      #42                 // Field escaped:Z
+      12: ifne          28
+      15: aload_0
+      16: getfield      #50                 // Field character:I
+      19: bipush        10
+      21: if_icmpne     28
+      24: iconst_1
+      25: goto          29
+      28: iconst_0
+      29: ireturn
+
+  boolean isListDelimiter();
+    Code:
+       0: aload_0
+       1: getfield      #42                 // Field escaped:Z
+       4: ifne          20
+       7: aload_0
+       8: getfield      #50                 // Field character:I
+      11: bipush        44
+      13: if_icmpne     20
+      16: iconst_1
+      17: goto          21
+      20: iconst_0
+      21: ireturn
+
+  boolean isPropertyDelimiter();
+    Code:
+       0: aload_0
+       1: getfield      #42                 // Field escaped:Z
+       4: ifne          29
+       7: aload_0
+       8: getfield      #50                 // Field character:I
+      11: bipush        61
+      13: if_icmpeq     25
+      16: aload_0
+      17: getfield      #50                 // Field character:I
+      20: bipush        58
+      22: if_icmpne     29
+      25: iconst_1
+      26: goto          30
+      29: iconst_0
+      30: ireturn
+
+  char getCharacter();
+    Code:
+       0: aload_0
+       1: getfield      #50                 // Field character:I
+       4: i2c
+       5: ireturn
+
+  org.springframework.boot.origin.TextResourceOrigin$Location getLocation();
+    Code:
+       0: new           #95                 // class org/springframework/boot/origin/TextResourceOrigin$Location
+       3: dup
+       4: aload_0
+       5: getfield      #35                 // Field reader:Ljava/io/LineNumberReader;
+       8: invokevirtual #97                 // Method java/io/LineNumberReader.getLineNumber:()I
+      11: aload_0
+      12: getfield      #7                  // Field columnNumber:I
+      15: invokespecial #100                // Method org/springframework/boot/origin/TextResourceOrigin$Location."<init>":(II)V
+      18: areturn
+
+  boolean isSameLastLineCommentPrefix();
+    Code:
+       0: aload_0
+       1: getfield      #66                 // Field lastLineCommentPrefixCharacter:I
+       4: aload_0
+       5: getfield      #50                 // Field character:I
+       8: if_icmpne     15
+      11: iconst_1
+      12: goto          16
+      15: iconst_0
+      16: ireturn
+
+  boolean isCommentPrefixCharacter();
+    Code:
+       0: aload_0
+       1: getfield      #50                 // Field character:I
+       4: bipush        35
+       6: if_icmpeq     18
+       9: aload_0
+      10: getfield      #50                 // Field character:I
+      13: bipush        33
+      15: if_icmpne     22
+      18: iconst_1
+      19: goto          23
+      22: iconst_0
+      23: ireturn
+
+  boolean isHyphenCharacter();
+    Code:
+       0: aload_0
+       1: getfield      #50                 // Field character:I
+       4: bipush        45
+       6: if_icmpne     13
+       9: iconst_1
+      10: goto          14
+      13: iconst_0
+      14: ireturn
+
+  static {};
+    Code:
+       0: iconst_2
+       1: anewarray     #74                 // class java/lang/String
+       4: dup
+       5: iconst_0
+       6: ldc           #103                // String trnf
+       8: aastore
+       9: dup
+      10: iconst_1
+      11: ldc           #105                // String \t\r\n\f
+      13: aastore
+      14: putstatic     #69                 // Field ESCAPES:[Ljava/lang/String;
+      17: return
+}

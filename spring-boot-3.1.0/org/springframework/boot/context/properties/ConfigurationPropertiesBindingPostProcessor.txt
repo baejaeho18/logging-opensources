@@ -1,0 +1,146 @@
+Compiled from "ConfigurationPropertiesBindingPostProcessor.java"
+public class org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor implements org.springframework.beans.factory.config.BeanPostProcessor,org.springframework.core.PriorityOrdered,org.springframework.context.ApplicationContextAware,org.springframework.beans.factory.InitializingBean {
+  public static final java.lang.String BEAN_NAME;
+
+  private org.springframework.context.ApplicationContext applicationContext;
+
+  private org.springframework.beans.factory.support.BeanDefinitionRegistry registry;
+
+  private org.springframework.boot.context.properties.ConfigurationPropertiesBinder binder;
+
+  public org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public void setApplicationContext(org.springframework.context.ApplicationContext) throws org.springframework.beans.BeansException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #7                  // Field applicationContext:Lorg/springframework/context/ApplicationContext;
+       5: return
+
+  public void afterPropertiesSet() throws java.lang.Exception;
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #7                  // Field applicationContext:Lorg/springframework/context/ApplicationContext;
+       5: invokeinterface #13,  1           // InterfaceMethod org/springframework/context/ApplicationContext.getAutowireCapableBeanFactory:()Lorg/springframework/beans/factory/config/AutowireCapableBeanFactory;
+      10: checkcast     #19                 // class org/springframework/beans/factory/support/BeanDefinitionRegistry
+      13: putfield      #21                 // Field registry:Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;
+      16: aload_0
+      17: aload_0
+      18: getfield      #7                  // Field applicationContext:Lorg/springframework/context/ApplicationContext;
+      21: invokestatic  #25                 // Method org/springframework/boot/context/properties/ConfigurationPropertiesBinder.get:(Lorg/springframework/beans/factory/BeanFactory;)Lorg/springframework/boot/context/properties/ConfigurationPropertiesBinder;
+      24: putfield      #31                 // Field binder:Lorg/springframework/boot/context/properties/ConfigurationPropertiesBinder;
+      27: return
+
+  public int getOrder();
+    Code:
+       0: ldc           #37                 // int -2147483647
+       2: ireturn
+
+  public java.lang.Object postProcessBeforeInitialization(java.lang.Object, java.lang.String) throws org.springframework.beans.BeansException;
+    Code:
+       0: aload_0
+       1: aload_2
+       2: invokevirtual #38                 // Method hasBoundValueObject:(Ljava/lang/String;)Z
+       5: ifne          21
+       8: aload_0
+       9: aload_0
+      10: getfield      #7                  // Field applicationContext:Lorg/springframework/context/ApplicationContext;
+      13: aload_1
+      14: aload_2
+      15: invokestatic  #42                 // Method org/springframework/boot/context/properties/ConfigurationPropertiesBean.get:(Lorg/springframework/context/ApplicationContext;Ljava/lang/Object;Ljava/lang/String;)Lorg/springframework/boot/context/properties/ConfigurationPropertiesBean;
+      18: invokevirtual #47                 // Method bind:(Lorg/springframework/boot/context/properties/ConfigurationPropertiesBean;)V
+      21: aload_1
+      22: areturn
+
+  private boolean hasBoundValueObject(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #21                 // Field registry:Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;
+       4: aload_1
+       5: invokeinterface #51,  2           // InterfaceMethod org/springframework/beans/factory/support/BeanDefinitionRegistry.containsBeanDefinition:(Ljava/lang/String;)Z
+      10: ifeq          46
+      13: getstatic     #54                 // Field org/springframework/boot/context/properties/ConfigurationPropertiesBean$BindMethod.VALUE_OBJECT:Lorg/springframework/boot/context/properties/ConfigurationPropertiesBean$BindMethod;
+      16: aload_0
+      17: getfield      #21                 // Field registry:Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;
+      20: aload_1
+      21: invokeinterface #60,  2           // InterfaceMethod org/springframework/beans/factory/support/BeanDefinitionRegistry.getBeanDefinition:(Ljava/lang/String;)Lorg/springframework/beans/factory/config/BeanDefinition;
+      26: ldc           #55                 // class org/springframework/boot/context/properties/ConfigurationPropertiesBean$BindMethod
+      28: invokevirtual #64                 // Method java/lang/Class.getName:()Ljava/lang/String;
+      31: invokeinterface #70,  2           // InterfaceMethod org/springframework/beans/factory/config/BeanDefinition.getAttribute:(Ljava/lang/String;)Ljava/lang/Object;
+      36: invokevirtual #76                 // Method org/springframework/boot/context/properties/ConfigurationPropertiesBean$BindMethod.equals:(Ljava/lang/Object;)Z
+      39: ifeq          46
+      42: iconst_1
+      43: goto          47
+      46: iconst_0
+      47: ireturn
+
+  private void bind(org.springframework.boot.context.properties.ConfigurationPropertiesBean);
+    Code:
+       0: aload_1
+       1: ifnonnull     5
+       4: return
+       5: aload_1
+       6: invokevirtual #80                 // Method org/springframework/boot/context/properties/ConfigurationPropertiesBean.getBindMethod:()Lorg/springframework/boot/context/properties/ConfigurationPropertiesBean$BindMethod;
+       9: getstatic     #84                 // Field org/springframework/boot/context/properties/ConfigurationPropertiesBean$BindMethod.JAVA_BEAN:Lorg/springframework/boot/context/properties/ConfigurationPropertiesBean$BindMethod;
+      12: if_acmpne     19
+      15: iconst_1
+      16: goto          20
+      19: iconst_0
+      20: aload_1
+      21: invokevirtual #87                 // Method org/springframework/boot/context/properties/ConfigurationPropertiesBean.getName:()Ljava/lang/String;
+      24: invokedynamic #88,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      29: invokestatic  #92                 // Method org/springframework/util/Assert.state:(ZLjava/lang/String;)V
+      32: aload_0
+      33: getfield      #31                 // Field binder:Lorg/springframework/boot/context/properties/ConfigurationPropertiesBinder;
+      36: aload_1
+      37: invokevirtual #98                 // Method org/springframework/boot/context/properties/ConfigurationPropertiesBinder.bind:(Lorg/springframework/boot/context/properties/ConfigurationPropertiesBean;)Lorg/springframework/boot/context/properties/bind/BindResult;
+      40: pop
+      41: goto          55
+      44: astore_2
+      45: new           #103                // class org/springframework/boot/context/properties/ConfigurationPropertiesBindException
+      48: dup
+      49: aload_1
+      50: aload_2
+      51: invokespecial #105                // Method org/springframework/boot/context/properties/ConfigurationPropertiesBindException."<init>":(Lorg/springframework/boot/context/properties/ConfigurationPropertiesBean;Ljava/lang/Exception;)V
+      54: athrow
+      55: return
+    Exception table:
+       from    to  target type
+          32    41    44   Class java/lang/Exception
+
+  public static void register(org.springframework.beans.factory.support.BeanDefinitionRegistry);
+    Code:
+       0: aload_0
+       1: ldc           #108                // String Registry must not be null
+       3: invokestatic  #110                // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: aload_0
+       7: getstatic     #114                // Field BEAN_NAME:Ljava/lang/String;
+      10: invokeinterface #51,  2           // InterfaceMethod org/springframework/beans/factory/support/BeanDefinitionRegistry.containsBeanDefinition:(Ljava/lang/String;)Z
+      15: ifne          44
+      18: ldc           #8                  // class org/springframework/boot/context/properties/ConfigurationPropertiesBindingPostProcessor
+      20: invokestatic  #118                // Method org/springframework/beans/factory/support/BeanDefinitionBuilder.rootBeanDefinition:(Ljava/lang/Class;)Lorg/springframework/beans/factory/support/BeanDefinitionBuilder;
+      23: invokevirtual #124                // Method org/springframework/beans/factory/support/BeanDefinitionBuilder.getBeanDefinition:()Lorg/springframework/beans/factory/support/AbstractBeanDefinition;
+      26: astore_1
+      27: aload_1
+      28: iconst_2
+      29: invokeinterface #127,  2          // InterfaceMethod org/springframework/beans/factory/config/BeanDefinition.setRole:(I)V
+      34: aload_0
+      35: getstatic     #114                // Field BEAN_NAME:Ljava/lang/String;
+      38: aload_1
+      39: invokeinterface #131,  3          // InterfaceMethod org/springframework/beans/factory/support/BeanDefinitionRegistry.registerBeanDefinition:(Ljava/lang/String;Lorg/springframework/beans/factory/config/BeanDefinition;)V
+      44: aload_0
+      45: invokestatic  #135                // Method org/springframework/boot/context/properties/ConfigurationPropertiesBinder.register:(Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;)V
+      48: return
+
+  static {};
+    Code:
+       0: ldc           #8                  // class org/springframework/boot/context/properties/ConfigurationPropertiesBindingPostProcessor
+       2: invokevirtual #64                 // Method java/lang/Class.getName:()Ljava/lang/String;
+       5: putstatic     #114                // Field BEAN_NAME:Ljava/lang/String;
+       8: return
+}

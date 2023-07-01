@@ -1,0 +1,250 @@
+Compiled from "FailureAnalyzers.java"
+final class org.springframework.boot.diagnostics.FailureAnalyzers implements org.springframework.boot.SpringBootExceptionReporter {
+  private static final org.apache.commons.logging.Log logger;
+
+  private final org.springframework.core.io.support.SpringFactoriesLoader springFactoriesLoader;
+
+  private final java.util.List<org.springframework.boot.diagnostics.FailureAnalyzer> analyzers;
+
+  public org.springframework.boot.diagnostics.FailureAnalyzers(org.springframework.context.ConfigurableApplicationContext);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_1
+       3: ifnull        15
+       6: aload_1
+       7: invokeinterface #1,  1            // InterfaceMethod org/springframework/context/ConfigurableApplicationContext.getClassLoader:()Ljava/lang/ClassLoader;
+      12: goto          16
+      15: aconst_null
+      16: invokestatic  #7                  // Method org/springframework/core/io/support/SpringFactoriesLoader.forDefaultResourceLocation:(Ljava/lang/ClassLoader;)Lorg/springframework/core/io/support/SpringFactoriesLoader;
+      19: invokespecial #13                 // Method "<init>":(Lorg/springframework/context/ConfigurableApplicationContext;Lorg/springframework/core/io/support/SpringFactoriesLoader;)V
+      22: return
+
+  org.springframework.boot.diagnostics.FailureAnalyzers(org.springframework.context.ConfigurableApplicationContext, org.springframework.core.io.support.SpringFactoriesLoader);
+    Code:
+       0: aload_0
+       1: invokespecial #19                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_2
+       6: putfield      #24                 // Field springFactoriesLoader:Lorg/springframework/core/io/support/SpringFactoriesLoader;
+       9: aload_0
+      10: aload_1
+      11: aload_0
+      12: getfield      #24                 // Field springFactoriesLoader:Lorg/springframework/core/io/support/SpringFactoriesLoader;
+      15: invokestatic  #28                 // Method loadFailureAnalyzers:(Lorg/springframework/context/ConfigurableApplicationContext;Lorg/springframework/core/io/support/SpringFactoriesLoader;)Ljava/util/List;
+      18: putfield      #32                 // Field analyzers:Ljava/util/List;
+      21: return
+
+  private static java.util.List<org.springframework.boot.diagnostics.FailureAnalyzer> loadFailureAnalyzers(org.springframework.context.ConfigurableApplicationContext, org.springframework.core.io.support.SpringFactoriesLoader);
+    Code:
+       0: aload_1
+       1: ldc           #36                 // class org/springframework/boot/diagnostics/FailureAnalyzer
+       3: aload_0
+       4: invokestatic  #38                 // Method getArgumentResolver:(Lorg/springframework/context/ConfigurableApplicationContext;)Lorg/springframework/core/io/support/SpringFactoriesLoader$ArgumentResolver;
+       7: getstatic     #42                 // Field logger:Lorg/apache/commons/logging/Log;
+      10: invokestatic  #46                 // InterfaceMethod org/springframework/core/io/support/SpringFactoriesLoader$FailureHandler.logging:(Lorg/apache/commons/logging/Log;)Lorg/springframework/core/io/support/SpringFactoriesLoader$FailureHandler;
+      13: invokevirtual #52                 // Method org/springframework/core/io/support/SpringFactoriesLoader.load:(Ljava/lang/Class;Lorg/springframework/core/io/support/SpringFactoriesLoader$ArgumentResolver;Lorg/springframework/core/io/support/SpringFactoriesLoader$FailureHandler;)Ljava/util/List;
+      16: astore_2
+      17: aload_2
+      18: invokeinterface #56,  1           // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+      23: invokedynamic #62,  0             // InvokeDynamic #0:test:()Ljava/util/function/Predicate;
+      28: invokeinterface #66,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+      33: invokeinterface #72,  1           // InterfaceMethod java/util/stream/Stream.toList:()Ljava/util/List;
+      38: astore_3
+      39: aload_3
+      40: invokeinterface #76,  1           // InterfaceMethod java/util/List.isEmpty:()Z
+      45: ifne          143
+      48: aload_3
+      49: invokeinterface #56,  1           // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+      54: invokedynamic #80,  0             // InvokeDynamic #1:apply:()Ljava/util/function/Function;
+      59: invokeinterface #84,  2           // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+      64: invokeinterface #72,  1           // InterfaceMethod java/util/stream/Stream.toList:()Ljava/util/List;
+      69: invokestatic  #88                 // Method org/springframework/util/StringUtils.collectionToCommaDelimitedString:(Ljava/util/Collection;)Ljava/lang/String;
+      72: astore        4
+      74: getstatic     #42                 // Field logger:Lorg/apache/commons/logging/Log;
+      77: ldc           #94                 // String FailureAnalyzers [%s] implement BeanFactoryAware or EnvironmentAware. Support for these interfaces on FailureAnalyzers is deprecated, and will be removed in a future release. Instead provide a constructor that accepts BeanFactory or Environment parameters.
+      79: aload         4
+      81: invokestatic  #96                 // Method org/springframework/core/log/LogMessage.format:(Ljava/lang/String;Ljava/lang/Object;)Lorg/springframework/core/log/LogMessage;
+      84: invokeinterface #102,  2          // InterfaceMethod org/apache/commons/logging/Log.warn:(Ljava/lang/Object;)V
+      89: aload_0
+      90: ifnonnull     131
+      93: getstatic     #42                 // Field logger:Lorg/apache/commons/logging/Log;
+      96: ldc           #108                // String Skipping [%s] due to missing context
+      98: aload         4
+     100: invokestatic  #96                 // Method org/springframework/core/log/LogMessage.format:(Ljava/lang/String;Ljava/lang/Object;)Lorg/springframework/core/log/LogMessage;
+     103: invokeinterface #110,  2          // InterfaceMethod org/apache/commons/logging/Log.trace:(Ljava/lang/Object;)V
+     108: aload_2
+     109: invokeinterface #56,  1           // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+     114: aload_3
+     115: invokedynamic #113,  0            // InvokeDynamic #2:test:(Ljava/util/List;)Ljava/util/function/Predicate;
+     120: invokeinterface #66,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+     125: invokeinterface #72,  1           // InterfaceMethod java/util/stream/Stream.toList:()Ljava/util/List;
+     130: areturn
+     131: aload_3
+     132: aload_0
+     133: invokedynamic #116,  0            // InvokeDynamic #3:accept:(Lorg/springframework/context/ConfigurableApplicationContext;)Ljava/util/function/Consumer;
+     138: invokeinterface #120,  2          // InterfaceMethod java/util/List.forEach:(Ljava/util/function/Consumer;)V
+     143: aload_2
+     144: areturn
+
+  private static org.springframework.core.io.support.SpringFactoriesLoader$ArgumentResolver getArgumentResolver(org.springframework.context.ConfigurableApplicationContext);
+    Code:
+       0: aload_0
+       1: ifnonnull     6
+       4: aconst_null
+       5: areturn
+       6: ldc           #124                // class org/springframework/beans/factory/BeanFactory
+       8: aload_0
+       9: invokeinterface #126,  1          // InterfaceMethod org/springframework/context/ConfigurableApplicationContext.getBeanFactory:()Lorg/springframework/beans/factory/config/ConfigurableListableBeanFactory;
+      14: invokestatic  #130                // InterfaceMethod org/springframework/core/io/support/SpringFactoriesLoader$ArgumentResolver.of:(Ljava/lang/Class;Ljava/lang/Object;)Lorg/springframework/core/io/support/SpringFactoriesLoader$ArgumentResolver;
+      17: astore_1
+      18: aload_1
+      19: ldc           #136                // class org/springframework/core/env/Environment
+      21: aload_0
+      22: invokeinterface #138,  1          // InterfaceMethod org/springframework/context/ConfigurableApplicationContext.getEnvironment:()Lorg/springframework/core/env/ConfigurableEnvironment;
+      27: invokeinterface #142,  3          // InterfaceMethod org/springframework/core/io/support/SpringFactoriesLoader$ArgumentResolver.and:(Ljava/lang/Class;Ljava/lang/Object;)Lorg/springframework/core/io/support/SpringFactoriesLoader$ArgumentResolver;
+      32: astore_1
+      33: aload_1
+      34: areturn
+
+  public boolean reportException(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_0
+       3: getfield      #32                 // Field analyzers:Ljava/util/List;
+       6: invokevirtual #145                // Method analyze:(Ljava/lang/Throwable;Ljava/util/List;)Lorg/springframework/boot/diagnostics/FailureAnalysis;
+       9: astore_2
+      10: aload_0
+      11: aload_2
+      12: invokevirtual #149                // Method report:(Lorg/springframework/boot/diagnostics/FailureAnalysis;)Z
+      15: ireturn
+
+  private org.springframework.boot.diagnostics.FailureAnalysis analyze(java.lang.Throwable, java.util.List<org.springframework.boot.diagnostics.FailureAnalyzer>);
+    Code:
+       0: aload_2
+       1: invokeinterface #153,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       6: astore_3
+       7: aload_3
+       8: invokeinterface #157,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      13: ifeq          70
+      16: aload_3
+      17: invokeinterface #162,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      22: checkcast     #36                 // class org/springframework/boot/diagnostics/FailureAnalyzer
+      25: astore        4
+      27: aload         4
+      29: aload_1
+      30: invokeinterface #166,  2          // InterfaceMethod org/springframework/boot/diagnostics/FailureAnalyzer.analyze:(Ljava/lang/Throwable;)Lorg/springframework/boot/diagnostics/FailureAnalysis;
+      35: astore        5
+      37: aload         5
+      39: ifnull        45
+      42: aload         5
+      44: areturn
+      45: goto          67
+      48: astore        5
+      50: getstatic     #42                 // Field logger:Lorg/apache/commons/logging/Log;
+      53: ldc           #171                // String FailureAnalyzer %s failed
+      55: aload         4
+      57: invokestatic  #96                 // Method org/springframework/core/log/LogMessage.format:(Ljava/lang/String;Ljava/lang/Object;)Lorg/springframework/core/log/LogMessage;
+      60: aload         5
+      62: invokeinterface #173,  3          // InterfaceMethod org/apache/commons/logging/Log.trace:(Ljava/lang/Object;Ljava/lang/Throwable;)V
+      67: goto          7
+      70: aconst_null
+      71: areturn
+    Exception table:
+       from    to  target type
+          27    44    48   Class java/lang/Throwable
+
+  private boolean report(org.springframework.boot.diagnostics.FailureAnalysis);
+    Code:
+       0: aload_0
+       1: getfield      #24                 // Field springFactoriesLoader:Lorg/springframework/core/io/support/SpringFactoriesLoader;
+       4: ldc           #176                // class org/springframework/boot/diagnostics/FailureAnalysisReporter
+       6: invokevirtual #178                // Method org/springframework/core/io/support/SpringFactoriesLoader.load:(Ljava/lang/Class;)Ljava/util/List;
+       9: astore_2
+      10: aload_1
+      11: ifnull        23
+      14: aload_2
+      15: invokeinterface #76,  1           // InterfaceMethod java/util/List.isEmpty:()Z
+      20: ifeq          25
+      23: iconst_0
+      24: ireturn
+      25: aload_2
+      26: invokeinterface #153,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      31: astore_3
+      32: aload_3
+      33: invokeinterface #157,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      38: ifeq          63
+      41: aload_3
+      42: invokeinterface #162,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      47: checkcast     #176                // class org/springframework/boot/diagnostics/FailureAnalysisReporter
+      50: astore        4
+      52: aload         4
+      54: aload_1
+      55: invokeinterface #181,  2          // InterfaceMethod org/springframework/boot/diagnostics/FailureAnalysisReporter.report:(Lorg/springframework/boot/diagnostics/FailureAnalysis;)V
+      60: goto          32
+      63: iconst_1
+      64: ireturn
+
+  private static void lambda$loadFailureAnalyzers$3(org.springframework.context.ConfigurableApplicationContext, org.springframework.boot.diagnostics.FailureAnalyzer);
+    Code:
+       0: aload_1
+       1: instanceof    #184                // class org/springframework/beans/factory/BeanFactoryAware
+       4: ifeq          24
+       7: aload_1
+       8: checkcast     #184                // class org/springframework/beans/factory/BeanFactoryAware
+      11: astore_2
+      12: aload_2
+      13: aload_0
+      14: invokeinterface #126,  1          // InterfaceMethod org/springframework/context/ConfigurableApplicationContext.getBeanFactory:()Lorg/springframework/beans/factory/config/ConfigurableListableBeanFactory;
+      19: invokeinterface #186,  2          // InterfaceMethod org/springframework/beans/factory/BeanFactoryAware.setBeanFactory:(Lorg/springframework/beans/factory/BeanFactory;)V
+      24: aload_1
+      25: instanceof    #190                // class org/springframework/context/EnvironmentAware
+      28: ifeq          48
+      31: aload_1
+      32: checkcast     #190                // class org/springframework/context/EnvironmentAware
+      35: astore_2
+      36: aload_2
+      37: aload_0
+      38: invokeinterface #138,  1          // InterfaceMethod org/springframework/context/ConfigurableApplicationContext.getEnvironment:()Lorg/springframework/core/env/ConfigurableEnvironment;
+      43: invokeinterface #192,  2          // InterfaceMethod org/springframework/context/EnvironmentAware.setEnvironment:(Lorg/springframework/core/env/Environment;)V
+      48: return
+
+  private static boolean lambda$loadFailureAnalyzers$2(java.util.List, org.springframework.boot.diagnostics.FailureAnalyzer);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokeinterface #196,  2          // InterfaceMethod java/util/List.contains:(Ljava/lang/Object;)Z
+       7: ifne          14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: ireturn
+
+  private static java.lang.String lambda$loadFailureAnalyzers$1(org.springframework.boot.diagnostics.FailureAnalyzer);
+    Code:
+       0: aload_0
+       1: invokevirtual #200                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       4: invokevirtual #204                // Method java/lang/Class.getName:()Ljava/lang/String;
+       7: areturn
+
+  private static boolean lambda$loadFailureAnalyzers$0(org.springframework.boot.diagnostics.FailureAnalyzer);
+    Code:
+       0: aload_0
+       1: instanceof    #184                // class org/springframework/beans/factory/BeanFactoryAware
+       4: ifne          14
+       7: aload_0
+       8: instanceof    #190                // class org/springframework/context/EnvironmentAware
+      11: ifeq          18
+      14: iconst_1
+      15: goto          19
+      18: iconst_0
+      19: ireturn
+
+  static {};
+    Code:
+       0: ldc           #14                 // class org/springframework/boot/diagnostics/FailureAnalyzers
+       2: invokestatic  #210                // Method org/apache/commons/logging/LogFactory.getLog:(Ljava/lang/Class;)Lorg/apache/commons/logging/Log;
+       5: putstatic     #42                 // Field logger:Lorg/apache/commons/logging/Log;
+       8: return
+}

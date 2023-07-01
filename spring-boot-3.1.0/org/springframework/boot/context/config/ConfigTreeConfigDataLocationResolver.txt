@@ -1,0 +1,115 @@
+Compiled from "ConfigTreeConfigDataLocationResolver.java"
+public class org.springframework.boot.context.config.ConfigTreeConfigDataLocationResolver implements org.springframework.boot.context.config.ConfigDataLocationResolver<org.springframework.boot.context.config.ConfigTreeConfigDataResource> {
+  private static final java.lang.String PREFIX;
+
+  private final org.springframework.boot.context.config.LocationResourceLoader resourceLoader;
+
+  public org.springframework.boot.context.config.ConfigTreeConfigDataLocationResolver(org.springframework.core.io.ResourceLoader);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #7                  // class org/springframework/boot/context/config/LocationResourceLoader
+       8: dup
+       9: aload_1
+      10: invokespecial #9                  // Method org/springframework/boot/context/config/LocationResourceLoader."<init>":(Lorg/springframework/core/io/ResourceLoader;)V
+      13: putfield      #12                 // Field resourceLoader:Lorg/springframework/boot/context/config/LocationResourceLoader;
+      16: return
+
+  public boolean isResolvable(org.springframework.boot.context.config.ConfigDataLocationResolverContext, org.springframework.boot.context.config.ConfigDataLocation);
+    Code:
+       0: aload_2
+       1: ldc           #18                 // String configtree:
+       3: invokevirtual #20                 // Method org/springframework/boot/context/config/ConfigDataLocation.hasPrefix:(Ljava/lang/String;)Z
+       6: ireturn
+
+  public java.util.List<org.springframework.boot.context.config.ConfigTreeConfigDataResource> resolve(org.springframework.boot.context.config.ConfigDataLocationResolverContext, org.springframework.boot.context.config.ConfigDataLocation);
+    Code:
+       0: aload_0
+       1: aload_2
+       2: ldc           #18                 // String configtree:
+       4: invokevirtual #26                 // Method org/springframework/boot/context/config/ConfigDataLocation.getNonPrefixedValue:(Ljava/lang/String;)Ljava/lang/String;
+       7: invokevirtual #30                 // Method resolve:(Ljava/lang/String;)Ljava/util/List;
+      10: areturn
+      11: astore_3
+      12: new           #36                 // class org/springframework/boot/context/config/ConfigDataLocationNotFoundException
+      15: dup
+      16: aload_2
+      17: aload_3
+      18: invokespecial #38                 // Method org/springframework/boot/context/config/ConfigDataLocationNotFoundException."<init>":(Lorg/springframework/boot/context/config/ConfigDataLocation;Ljava/lang/Throwable;)V
+      21: athrow
+    Exception table:
+       from    to  target type
+           0    10    11   Class java/io/IOException
+
+  private java.util.List<org.springframework.boot.context.config.ConfigTreeConfigDataResource> resolve(java.lang.String) throws java.io.IOException;
+    Code:
+       0: aload_1
+       1: ldc           #41                 // String /
+       3: invokevirtual #43                 // Method java/lang/String.endsWith:(Ljava/lang/String;)Z
+       6: aload_1
+       7: invokedynamic #48,  0             // InvokeDynamic #0:get:(Ljava/lang/String;)Ljava/util/function/Supplier;
+      12: invokestatic  #52                 // Method org/springframework/util/Assert.isTrue:(ZLjava/util/function/Supplier;)V
+      15: aload_0
+      16: getfield      #12                 // Field resourceLoader:Lorg/springframework/boot/context/config/LocationResourceLoader;
+      19: aload_1
+      20: invokevirtual #58                 // Method org/springframework/boot/context/config/LocationResourceLoader.isPattern:(Ljava/lang/String;)Z
+      23: ifne          38
+      26: new           #61                 // class org/springframework/boot/context/config/ConfigTreeConfigDataResource
+      29: dup
+      30: aload_1
+      31: invokespecial #63                 // Method org/springframework/boot/context/config/ConfigTreeConfigDataResource."<init>":(Ljava/lang/String;)V
+      34: invokestatic  #66                 // Method java/util/Collections.singletonList:(Ljava/lang/Object;)Ljava/util/List;
+      37: areturn
+      38: aload_0
+      39: getfield      #12                 // Field resourceLoader:Lorg/springframework/boot/context/config/LocationResourceLoader;
+      42: aload_1
+      43: getstatic     #72                 // Field org/springframework/boot/context/config/LocationResourceLoader$ResourceType.DIRECTORY:Lorg/springframework/boot/context/config/LocationResourceLoader$ResourceType;
+      46: invokevirtual #78                 // Method org/springframework/boot/context/config/LocationResourceLoader.getResources:(Ljava/lang/String;Lorg/springframework/boot/context/config/LocationResourceLoader$ResourceType;)[Lorg/springframework/core/io/Resource;
+      49: astore_2
+      50: new           #82                 // class java/util/ArrayList
+      53: dup
+      54: aload_2
+      55: arraylength
+      56: invokespecial #84                 // Method java/util/ArrayList."<init>":(I)V
+      59: astore_3
+      60: aload_2
+      61: astore        4
+      63: aload         4
+      65: arraylength
+      66: istore        5
+      68: iconst_0
+      69: istore        6
+      71: iload         6
+      73: iload         5
+      75: if_icmpge     115
+      78: aload         4
+      80: iload         6
+      82: aaload
+      83: astore        7
+      85: aload_3
+      86: new           #61                 // class org/springframework/boot/context/config/ConfigTreeConfigDataResource
+      89: dup
+      90: aload         7
+      92: invokeinterface #87,  1           // InterfaceMethod org/springframework/core/io/Resource.getFile:()Ljava/io/File;
+      97: invokevirtual #93                 // Method java/io/File.toPath:()Ljava/nio/file/Path;
+     100: invokespecial #99                 // Method org/springframework/boot/context/config/ConfigTreeConfigDataResource."<init>":(Ljava/nio/file/Path;)V
+     103: invokeinterface #102,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     108: pop
+     109: iinc          6, 1
+     112: goto          71
+     115: aload_3
+     116: areturn
+
+  private static java.lang.String lambda$resolve$0(java.lang.String);
+    Code:
+       0: ldc           #108                // String Config tree location \'%s\' must end with \'/\'
+       2: iconst_1
+       3: anewarray     #2                  // class java/lang/Object
+       6: dup
+       7: iconst_0
+       8: aload_0
+       9: aastore
+      10: invokestatic  #110                // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      13: areturn
+}

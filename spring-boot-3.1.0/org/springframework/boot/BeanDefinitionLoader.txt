@@ -1,0 +1,547 @@
+Compiled from "BeanDefinitionLoader.java"
+class org.springframework.boot.BeanDefinitionLoader {
+  private static final java.util.regex.Pattern GROOVY_CLOSURE_PATTERN;
+
+  private final java.lang.Object[] sources;
+
+  private final org.springframework.context.annotation.AnnotatedBeanDefinitionReader annotatedReader;
+
+  private final org.springframework.beans.factory.support.AbstractBeanDefinitionReader xmlReader;
+
+  private final org.springframework.beans.factory.support.BeanDefinitionReader groovyReader;
+
+  private final org.springframework.context.annotation.ClassPathBeanDefinitionScanner scanner;
+
+  private org.springframework.core.io.ResourceLoader resourceLoader;
+
+  org.springframework.boot.BeanDefinitionLoader(org.springframework.beans.factory.support.BeanDefinitionRegistry, java.lang.Object...);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_1
+       5: ldc           #7                  // String Registry must not be null
+       7: invokestatic  #9                  // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      10: aload_2
+      11: ldc           #15                 // String Sources must not be empty
+      13: invokestatic  #17                 // Method org/springframework/util/Assert.notEmpty:([Ljava/lang/Object;Ljava/lang/String;)V
+      16: aload_0
+      17: aload_2
+      18: putfield      #21                 // Field sources:[Ljava/lang/Object;
+      21: aload_0
+      22: new           #27                 // class org/springframework/context/annotation/AnnotatedBeanDefinitionReader
+      25: dup
+      26: aload_1
+      27: invokespecial #29                 // Method org/springframework/context/annotation/AnnotatedBeanDefinitionReader."<init>":(Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;)V
+      30: putfield      #32                 // Field annotatedReader:Lorg/springframework/context/annotation/AnnotatedBeanDefinitionReader;
+      33: aload_0
+      34: new           #36                 // class org/springframework/beans/factory/xml/XmlBeanDefinitionReader
+      37: dup
+      38: aload_1
+      39: invokespecial #38                 // Method org/springframework/beans/factory/xml/XmlBeanDefinitionReader."<init>":(Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;)V
+      42: putfield      #39                 // Field xmlReader:Lorg/springframework/beans/factory/support/AbstractBeanDefinitionReader;
+      45: aload_0
+      46: aload_0
+      47: invokevirtual #43                 // Method isGroovyPresent:()Z
+      50: ifeq          64
+      53: new           #47                 // class org/springframework/beans/factory/groovy/GroovyBeanDefinitionReader
+      56: dup
+      57: aload_1
+      58: invokespecial #49                 // Method org/springframework/beans/factory/groovy/GroovyBeanDefinitionReader."<init>":(Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;)V
+      61: goto          65
+      64: aconst_null
+      65: putfield      #50                 // Field groovyReader:Lorg/springframework/beans/factory/support/BeanDefinitionReader;
+      68: aload_0
+      69: new           #54                 // class org/springframework/context/annotation/ClassPathBeanDefinitionScanner
+      72: dup
+      73: aload_1
+      74: invokespecial #56                 // Method org/springframework/context/annotation/ClassPathBeanDefinitionScanner."<init>":(Lorg/springframework/beans/factory/support/BeanDefinitionRegistry;)V
+      77: putfield      #57                 // Field scanner:Lorg/springframework/context/annotation/ClassPathBeanDefinitionScanner;
+      80: aload_0
+      81: getfield      #57                 // Field scanner:Lorg/springframework/context/annotation/ClassPathBeanDefinitionScanner;
+      84: new           #61                 // class org/springframework/boot/BeanDefinitionLoader$ClassExcludeFilter
+      87: dup
+      88: aload_2
+      89: invokespecial #63                 // Method org/springframework/boot/BeanDefinitionLoader$ClassExcludeFilter."<init>":([Ljava/lang/Object;)V
+      92: invokevirtual #66                 // Method org/springframework/context/annotation/ClassPathBeanDefinitionScanner.addExcludeFilter:(Lorg/springframework/core/type/filter/TypeFilter;)V
+      95: return
+
+  void setBeanNameGenerator(org.springframework.beans.factory.support.BeanNameGenerator);
+    Code:
+       0: aload_0
+       1: getfield      #32                 // Field annotatedReader:Lorg/springframework/context/annotation/AnnotatedBeanDefinitionReader;
+       4: aload_1
+       5: invokevirtual #70                 // Method org/springframework/context/annotation/AnnotatedBeanDefinitionReader.setBeanNameGenerator:(Lorg/springframework/beans/factory/support/BeanNameGenerator;)V
+       8: aload_0
+       9: getfield      #57                 // Field scanner:Lorg/springframework/context/annotation/ClassPathBeanDefinitionScanner;
+      12: aload_1
+      13: invokevirtual #74                 // Method org/springframework/context/annotation/ClassPathBeanDefinitionScanner.setBeanNameGenerator:(Lorg/springframework/beans/factory/support/BeanNameGenerator;)V
+      16: aload_0
+      17: getfield      #39                 // Field xmlReader:Lorg/springframework/beans/factory/support/AbstractBeanDefinitionReader;
+      20: aload_1
+      21: invokevirtual #75                 // Method org/springframework/beans/factory/support/AbstractBeanDefinitionReader.setBeanNameGenerator:(Lorg/springframework/beans/factory/support/BeanNameGenerator;)V
+      24: return
+
+  void setResourceLoader(org.springframework.core.io.ResourceLoader);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #78                 // Field resourceLoader:Lorg/springframework/core/io/ResourceLoader;
+       5: aload_0
+       6: getfield      #57                 // Field scanner:Lorg/springframework/context/annotation/ClassPathBeanDefinitionScanner;
+       9: aload_1
+      10: invokevirtual #82                 // Method org/springframework/context/annotation/ClassPathBeanDefinitionScanner.setResourceLoader:(Lorg/springframework/core/io/ResourceLoader;)V
+      13: aload_0
+      14: getfield      #39                 // Field xmlReader:Lorg/springframework/beans/factory/support/AbstractBeanDefinitionReader;
+      17: aload_1
+      18: invokevirtual #86                 // Method org/springframework/beans/factory/support/AbstractBeanDefinitionReader.setResourceLoader:(Lorg/springframework/core/io/ResourceLoader;)V
+      21: return
+
+  void setEnvironment(org.springframework.core.env.ConfigurableEnvironment);
+    Code:
+       0: aload_0
+       1: getfield      #32                 // Field annotatedReader:Lorg/springframework/context/annotation/AnnotatedBeanDefinitionReader;
+       4: aload_1
+       5: invokevirtual #87                 // Method org/springframework/context/annotation/AnnotatedBeanDefinitionReader.setEnvironment:(Lorg/springframework/core/env/Environment;)V
+       8: aload_0
+       9: getfield      #57                 // Field scanner:Lorg/springframework/context/annotation/ClassPathBeanDefinitionScanner;
+      12: aload_1
+      13: invokevirtual #91                 // Method org/springframework/context/annotation/ClassPathBeanDefinitionScanner.setEnvironment:(Lorg/springframework/core/env/Environment;)V
+      16: aload_0
+      17: getfield      #39                 // Field xmlReader:Lorg/springframework/beans/factory/support/AbstractBeanDefinitionReader;
+      20: aload_1
+      21: invokevirtual #92                 // Method org/springframework/beans/factory/support/AbstractBeanDefinitionReader.setEnvironment:(Lorg/springframework/core/env/Environment;)V
+      24: return
+
+  void load();
+    Code:
+       0: aload_0
+       1: getfield      #21                 // Field sources:[Ljava/lang/Object;
+       4: astore_1
+       5: aload_1
+       6: arraylength
+       7: istore_2
+       8: iconst_0
+       9: istore_3
+      10: iload_3
+      11: iload_2
+      12: if_icmpge     32
+      15: aload_1
+      16: iload_3
+      17: aaload
+      18: astore        4
+      20: aload_0
+      21: aload         4
+      23: invokevirtual #93                 // Method load:(Ljava/lang/Object;)V
+      26: iinc          3, 1
+      29: goto          10
+      32: return
+
+  private void load(java.lang.Object);
+    Code:
+       0: aload_1
+       1: ldc           #97                 // String Source must not be null
+       3: invokestatic  #9                  // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+       6: aload_1
+       7: instanceof    #99                 // class java/lang/Class
+      10: ifeq          24
+      13: aload_1
+      14: checkcast     #99                 // class java/lang/Class
+      17: astore_2
+      18: aload_0
+      19: aload_2
+      20: invokevirtual #101                // Method load:(Ljava/lang/Class;)V
+      23: return
+      24: aload_1
+      25: instanceof    #104                // class org/springframework/core/io/Resource
+      28: ifeq          42
+      31: aload_1
+      32: checkcast     #104                // class org/springframework/core/io/Resource
+      35: astore_2
+      36: aload_0
+      37: aload_2
+      38: invokevirtual #106                // Method load:(Lorg/springframework/core/io/Resource;)V
+      41: return
+      42: aload_1
+      43: instanceof    #109                // class java/lang/Package
+      46: ifeq          60
+      49: aload_1
+      50: checkcast     #109                // class java/lang/Package
+      53: astore_2
+      54: aload_0
+      55: aload_2
+      56: invokevirtual #111                // Method load:(Ljava/lang/Package;)V
+      59: return
+      60: aload_1
+      61: instanceof    #114                // class java/lang/CharSequence
+      64: ifeq          78
+      67: aload_1
+      68: checkcast     #114                // class java/lang/CharSequence
+      71: astore_2
+      72: aload_0
+      73: aload_2
+      74: invokevirtual #116                // Method load:(Ljava/lang/CharSequence;)V
+      77: return
+      78: new           #119                // class java/lang/IllegalArgumentException
+      81: dup
+      82: aload_1
+      83: invokevirtual #121                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      86: invokedynamic #125,  0            // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/Class;)Ljava/lang/String;
+      91: invokespecial #129                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      94: athrow
+
+  private void load(java.lang.Class<?>);
+    Code:
+       0: aload_0
+       1: invokevirtual #43                 // Method isGroovyPresent:()Z
+       4: ifeq          43
+       7: ldc           #132                // class org/springframework/boot/BeanDefinitionLoader$GroovyBeanDefinitionSource
+       9: aload_1
+      10: invokevirtual #134                // Method java/lang/Class.isAssignableFrom:(Ljava/lang/Class;)Z
+      13: ifeq          43
+      16: aload_1
+      17: ldc           #132                // class org/springframework/boot/BeanDefinitionLoader$GroovyBeanDefinitionSource
+      19: invokestatic  #138                // Method org/springframework/beans/BeanUtils.instantiateClass:(Ljava/lang/Class;Ljava/lang/Class;)Ljava/lang/Object;
+      22: checkcast     #132                // class org/springframework/boot/BeanDefinitionLoader$GroovyBeanDefinitionSource
+      25: astore_2
+      26: aload_0
+      27: getfield      #50                 // Field groovyReader:Lorg/springframework/beans/factory/support/BeanDefinitionReader;
+      30: checkcast     #47                 // class org/springframework/beans/factory/groovy/GroovyBeanDefinitionReader
+      33: aload_2
+      34: invokeinterface #144,  1          // InterfaceMethod org/springframework/boot/BeanDefinitionLoader$GroovyBeanDefinitionSource.getBeans:()Lgroovy/lang/Closure;
+      39: invokevirtual #148                // Method org/springframework/beans/factory/groovy/GroovyBeanDefinitionReader.beans:(Lgroovy/lang/Closure;)Lorg/springframework/beans/factory/groovy/GroovyBeanDefinitionReader;
+      42: pop
+      43: aload_0
+      44: aload_1
+      45: invokevirtual #152                // Method isEligible:(Ljava/lang/Class;)Z
+      48: ifeq          66
+      51: aload_0
+      52: getfield      #32                 // Field annotatedReader:Lorg/springframework/context/annotation/AnnotatedBeanDefinitionReader;
+      55: iconst_1
+      56: anewarray     #99                 // class java/lang/Class
+      59: dup
+      60: iconst_0
+      61: aload_1
+      62: aastore
+      63: invokevirtual #155                // Method org/springframework/context/annotation/AnnotatedBeanDefinitionReader.register:([Ljava/lang/Class;)V
+      66: return
+
+  private void load(org.springframework.core.io.Resource);
+    Code:
+       0: aload_1
+       1: invokeinterface #159,  1          // InterfaceMethod org/springframework/core/io/Resource.getFilename:()Ljava/lang/String;
+       6: ldc           #163                // String .groovy
+       8: invokevirtual #165                // Method java/lang/String.endsWith:(Ljava/lang/String;)Z
+      11: ifeq          45
+      14: aload_0
+      15: getfield      #50                 // Field groovyReader:Lorg/springframework/beans/factory/support/BeanDefinitionReader;
+      18: ifnonnull     31
+      21: new           #171                // class org/springframework/beans/factory/BeanDefinitionStoreException
+      24: dup
+      25: ldc           #173                // String Cannot load Groovy beans without Groovy on classpath
+      27: invokespecial #175                // Method org/springframework/beans/factory/BeanDefinitionStoreException."<init>":(Ljava/lang/String;)V
+      30: athrow
+      31: aload_0
+      32: getfield      #50                 // Field groovyReader:Lorg/springframework/beans/factory/support/BeanDefinitionReader;
+      35: aload_1
+      36: invokeinterface #176,  2          // InterfaceMethod org/springframework/beans/factory/support/BeanDefinitionReader.loadBeanDefinitions:(Lorg/springframework/core/io/Resource;)I
+      41: pop
+      42: goto          54
+      45: aload_0
+      46: getfield      #39                 // Field xmlReader:Lorg/springframework/beans/factory/support/AbstractBeanDefinitionReader;
+      49: aload_1
+      50: invokevirtual #182                // Method org/springframework/beans/factory/support/AbstractBeanDefinitionReader.loadBeanDefinitions:(Lorg/springframework/core/io/Resource;)I
+      53: pop
+      54: return
+
+  private void load(java.lang.Package);
+    Code:
+       0: aload_0
+       1: getfield      #57                 // Field scanner:Lorg/springframework/context/annotation/ClassPathBeanDefinitionScanner;
+       4: iconst_1
+       5: anewarray     #166                // class java/lang/String
+       8: dup
+       9: iconst_0
+      10: aload_1
+      11: invokevirtual #183                // Method java/lang/Package.getName:()Ljava/lang/String;
+      14: aastore
+      15: invokevirtual #186                // Method org/springframework/context/annotation/ClassPathBeanDefinitionScanner.scan:([Ljava/lang/String;)I
+      18: pop
+      19: return
+
+  private void load(java.lang.CharSequence);
+    Code:
+       0: aload_0
+       1: getfield      #57                 // Field scanner:Lorg/springframework/context/annotation/ClassPathBeanDefinitionScanner;
+       4: invokevirtual #190                // Method org/springframework/context/annotation/ClassPathBeanDefinitionScanner.getEnvironment:()Lorg/springframework/core/env/Environment;
+       7: aload_1
+       8: invokeinterface #194,  1          // InterfaceMethod java/lang/CharSequence.toString:()Ljava/lang/String;
+      13: invokeinterface #197,  2          // InterfaceMethod org/springframework/core/env/Environment.resolvePlaceholders:(Ljava/lang/String;)Ljava/lang/String;
+      18: astore_2
+      19: aload_0
+      20: aload_2
+      21: aconst_null
+      22: invokestatic  #203                // Method org/springframework/util/ClassUtils.forName:(Ljava/lang/String;Ljava/lang/ClassLoader;)Ljava/lang/Class;
+      25: invokevirtual #101                // Method load:(Ljava/lang/Class;)V
+      28: return
+      29: astore_3
+      30: aload_0
+      31: aload_2
+      32: invokevirtual #211                // Method loadAsResources:(Ljava/lang/String;)Z
+      35: ifeq          39
+      38: return
+      39: aload_0
+      40: aload_2
+      41: invokevirtual #214                // Method findPackage:(Ljava/lang/CharSequence;)Ljava/lang/Package;
+      44: astore_3
+      45: aload_3
+      46: ifnull        55
+      49: aload_0
+      50: aload_3
+      51: invokevirtual #111                // Method load:(Ljava/lang/Package;)V
+      54: return
+      55: new           #119                // class java/lang/IllegalArgumentException
+      58: dup
+      59: aload_2
+      60: invokedynamic #218,  0            // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      65: invokespecial #129                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      68: athrow
+    Exception table:
+       from    to  target type
+          19    28    29   Class java/lang/IllegalArgumentException
+          19    28    29   Class java/lang/ClassNotFoundException
+
+  private boolean loadAsResources(java.lang.String);
+    Code:
+       0: iconst_0
+       1: istore_2
+       2: aload_0
+       3: aload_1
+       4: invokevirtual #220                // Method findResources:(Ljava/lang/String;)[Lorg/springframework/core/io/Resource;
+       7: astore_3
+       8: aload_3
+       9: astore        4
+      11: aload         4
+      13: arraylength
+      14: istore        5
+      16: iconst_0
+      17: istore        6
+      19: iload         6
+      21: iload         5
+      23: if_icmpge     56
+      26: aload         4
+      28: iload         6
+      30: aaload
+      31: astore        7
+      33: aload_0
+      34: aload         7
+      36: invokevirtual #224                // Method isLoadCandidate:(Lorg/springframework/core/io/Resource;)Z
+      39: ifeq          50
+      42: iconst_1
+      43: istore_2
+      44: aload_0
+      45: aload         7
+      47: invokevirtual #106                // Method load:(Lorg/springframework/core/io/Resource;)V
+      50: iinc          6, 1
+      53: goto          19
+      56: iload_2
+      57: ireturn
+
+  private boolean isGroovyPresent();
+    Code:
+       0: ldc           #228                // String groovy.lang.MetaClass
+       2: aconst_null
+       3: invokestatic  #230                // Method org/springframework/util/ClassUtils.isPresent:(Ljava/lang/String;Ljava/lang/ClassLoader;)Z
+       6: ireturn
+
+  private org.springframework.core.io.Resource[] findResources(java.lang.String);
+    Code:
+       0: aload_0
+       1: getfield      #78                 // Field resourceLoader:Lorg/springframework/core/io/ResourceLoader;
+       4: ifnull        14
+       7: aload_0
+       8: getfield      #78                 // Field resourceLoader:Lorg/springframework/core/io/ResourceLoader;
+      11: goto          21
+      14: new           #234                // class org/springframework/core/io/support/PathMatchingResourcePatternResolver
+      17: dup
+      18: invokespecial #236                // Method org/springframework/core/io/support/PathMatchingResourcePatternResolver."<init>":()V
+      21: astore_2
+      22: aload_2
+      23: instanceof    #237                // class org/springframework/core/io/support/ResourcePatternResolver
+      26: ifeq          42
+      29: aload_2
+      30: checkcast     #237                // class org/springframework/core/io/support/ResourcePatternResolver
+      33: astore_3
+      34: aload_3
+      35: aload_1
+      36: invokeinterface #239,  2          // InterfaceMethod org/springframework/core/io/support/ResourcePatternResolver.getResources:(Ljava/lang/String;)[Lorg/springframework/core/io/Resource;
+      41: areturn
+      42: iconst_1
+      43: anewarray     #104                // class org/springframework/core/io/Resource
+      46: dup
+      47: iconst_0
+      48: aload_2
+      49: aload_1
+      50: invokeinterface #242,  2          // InterfaceMethod org/springframework/core/io/ResourceLoader.getResource:(Ljava/lang/String;)Lorg/springframework/core/io/Resource;
+      55: aastore
+      56: areturn
+      57: astore_3
+      58: new           #250                // class java/lang/IllegalStateException
+      61: dup
+      62: aload_1
+      63: invokedynamic #252,  0            // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      68: invokespecial #253                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      71: athrow
+    Exception table:
+       from    to  target type
+          22    41    57   Class java/io/IOException
+          42    56    57   Class java/io/IOException
+
+  private boolean isLoadCandidate(org.springframework.core.io.Resource);
+    Code:
+       0: aload_1
+       1: ifnull        13
+       4: aload_1
+       5: invokeinterface #254,  1          // InterfaceMethod org/springframework/core/io/Resource.exists:()Z
+      10: ifne          15
+      13: iconst_0
+      14: ireturn
+      15: aload_1
+      16: instanceof    #257                // class org/springframework/core/io/ClassPathResource
+      19: ifeq          64
+      22: aload_1
+      23: checkcast     #257                // class org/springframework/core/io/ClassPathResource
+      26: astore_2
+      27: aload_2
+      28: invokevirtual #259                // Method org/springframework/core/io/ClassPathResource.getPath:()Ljava/lang/String;
+      31: astore_3
+      32: aload_3
+      33: bipush        46
+      35: invokevirtual #262                // Method java/lang/String.indexOf:(I)I
+      38: iconst_m1
+      39: if_icmpne     64
+      42: aload_0
+      43: invokevirtual #121                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      46: invokevirtual #266                // Method java/lang/Class.getClassLoader:()Ljava/lang/ClassLoader;
+      49: aload_3
+      50: invokevirtual #270                // Method java/lang/ClassLoader.getDefinedPackage:(Ljava/lang/String;)Ljava/lang/Package;
+      53: ifnonnull     60
+      56: iconst_1
+      57: goto          61
+      60: iconst_0
+      61: ireturn
+      62: astore        4
+      64: iconst_1
+      65: ireturn
+    Exception table:
+       from    to  target type
+          42    61    62   Class java/lang/Exception
+
+  private java.lang.Package findPackage(java.lang.CharSequence);
+    Code:
+       0: aload_0
+       1: invokevirtual #121                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       4: invokevirtual #266                // Method java/lang/Class.getClassLoader:()Ljava/lang/ClassLoader;
+       7: aload_1
+       8: invokeinterface #194,  1          // InterfaceMethod java/lang/CharSequence.toString:()Ljava/lang/String;
+      13: invokevirtual #270                // Method java/lang/ClassLoader.getDefinedPackage:(Ljava/lang/String;)Ljava/lang/Package;
+      16: astore_2
+      17: aload_2
+      18: ifnull        23
+      21: aload_2
+      22: areturn
+      23: new           #234                // class org/springframework/core/io/support/PathMatchingResourcePatternResolver
+      26: dup
+      27: aload_0
+      28: invokevirtual #121                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+      31: invokevirtual #266                // Method java/lang/Class.getClassLoader:()Ljava/lang/ClassLoader;
+      34: invokespecial #278                // Method org/springframework/core/io/support/PathMatchingResourcePatternResolver."<init>":(Ljava/lang/ClassLoader;)V
+      37: astore_3
+      38: aload_3
+      39: aload_1
+      40: invokeinterface #194,  1          // InterfaceMethod java/lang/CharSequence.toString:()Ljava/lang/String;
+      45: invokestatic  #281                // Method org/springframework/util/ClassUtils.convertClassNameToResourcePath:(Ljava/lang/String;)Ljava/lang/String;
+      48: invokedynamic #284,  0            // InvokeDynamic #3:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      53: invokeinterface #239,  2          // InterfaceMethod org/springframework/core/io/support/ResourcePatternResolver.getResources:(Ljava/lang/String;)[Lorg/springframework/core/io/Resource;
+      58: astore        4
+      60: aload         4
+      62: astore        5
+      64: aload         5
+      66: arraylength
+      67: istore        6
+      69: iconst_0
+      70: istore        7
+      72: iload         7
+      74: iload         6
+      76: if_icmpge     121
+      79: aload         5
+      81: iload         7
+      83: aaload
+      84: astore        8
+      86: aload         8
+      88: invokeinterface #159,  1          // InterfaceMethod org/springframework/core/io/Resource.getFilename:()Ljava/lang/String;
+      93: invokestatic  #285                // Method org/springframework/util/StringUtils.stripFilenameExtension:(Ljava/lang/String;)Ljava/lang/String;
+      96: astore        9
+      98: aload_0
+      99: aload_1
+     100: invokeinterface #194,  1          // InterfaceMethod java/lang/CharSequence.toString:()Ljava/lang/String;
+     105: aload         9
+     107: invokedynamic #290,  0            // InvokeDynamic #4:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     112: invokestatic  #293                // Method java/lang/Class.forName:(Ljava/lang/String;)Ljava/lang/Class;
+     115: invokevirtual #101                // Method load:(Ljava/lang/Class;)V
+     118: goto          121
+     121: goto          125
+     124: astore_3
+     125: aload_0
+     126: invokevirtual #121                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+     129: invokevirtual #266                // Method java/lang/Class.getClassLoader:()Ljava/lang/ClassLoader;
+     132: aload_1
+     133: invokeinterface #194,  1          // InterfaceMethod java/lang/CharSequence.toString:()Ljava/lang/String;
+     138: invokevirtual #270                // Method java/lang/ClassLoader.getDefinedPackage:(Ljava/lang/String;)Ljava/lang/Package;
+     141: areturn
+    Exception table:
+       from    to  target type
+          23   121   124   Class java/lang/Exception
+
+  private boolean isEligible(java.lang.Class<?>);
+    Code:
+       0: aload_1
+       1: invokevirtual #296                // Method java/lang/Class.isAnonymousClass:()Z
+       4: ifne          27
+       7: aload_0
+       8: aload_1
+       9: invokevirtual #299                // Method isGroovyClosure:(Ljava/lang/Class;)Z
+      12: ifne          27
+      15: aload_0
+      16: aload_1
+      17: invokevirtual #302                // Method hasNoConstructors:(Ljava/lang/Class;)Z
+      20: ifne          27
+      23: iconst_1
+      24: goto          28
+      27: iconst_0
+      28: ireturn
+
+  private boolean isGroovyClosure(java.lang.Class<?>);
+    Code:
+       0: getstatic     #305                // Field GROOVY_CLOSURE_PATTERN:Ljava/util/regex/Pattern;
+       3: aload_1
+       4: invokevirtual #309                // Method java/lang/Class.getName:()Ljava/lang/String;
+       7: invokevirtual #310                // Method java/util/regex/Pattern.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;
+      10: invokevirtual #316                // Method java/util/regex/Matcher.matches:()Z
+      13: ireturn
+
+  private boolean hasNoConstructors(java.lang.Class<?>);
+    Code:
+       0: aload_1
+       1: invokevirtual #321                // Method java/lang/Class.getDeclaredConstructors:()[Ljava/lang/reflect/Constructor;
+       4: astore_2
+       5: aload_2
+       6: invokestatic  #325                // Method org/springframework/util/ObjectUtils.isEmpty:([Ljava/lang/Object;)Z
+       9: ireturn
+
+  static {};
+    Code:
+       0: ldc_w         #331                // String .*\\$_.*closure.*
+       3: invokestatic  #333                // Method java/util/regex/Pattern.compile:(Ljava/lang/String;)Ljava/util/regex/Pattern;
+       6: putstatic     #305                // Field GROOVY_CLOSURE_PATTERN:Ljava/util/regex/Pattern;
+       9: return
+}

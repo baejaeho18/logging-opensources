@@ -1,0 +1,317 @@
+Compiled from "BehaviorProcessor.java"
+final class io.reactivex.rxjava3.processors.BehaviorProcessor$BehaviorSubscription<T> extends java.util.concurrent.atomic.AtomicLong implements org.reactivestreams.Subscription, io.reactivex.rxjava3.internal.util.AppendOnlyLinkedArrayList$NonThrowingPredicate<java.lang.Object> {
+  private static final long serialVersionUID;
+
+  final org.reactivestreams.Subscriber<? super T> downstream;
+
+  final io.reactivex.rxjava3.processors.BehaviorProcessor<T> state;
+
+  boolean next;
+
+  boolean emitting;
+
+  io.reactivex.rxjava3.internal.util.AppendOnlyLinkedArrayList<java.lang.Object> queue;
+
+  boolean fastPath;
+
+  volatile boolean cancelled;
+
+  long index;
+
+  io.reactivex.rxjava3.processors.BehaviorProcessor$BehaviorSubscription(org.reactivestreams.Subscriber<? super T>, io.reactivex.rxjava3.processors.BehaviorProcessor<T>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicLong."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field state:Lio/reactivex/rxjava3/processors/BehaviorProcessor;
+      14: return
+
+  public void request(long);
+    Code:
+       0: lload_1
+       1: invokestatic  #4                  // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.validate:(J)Z
+       4: ifeq          13
+       7: aload_0
+       8: lload_1
+       9: invokestatic  #5                  // Method io/reactivex/rxjava3/internal/util/BackpressureHelper.add:(Ljava/util/concurrent/atomic/AtomicLong;J)J
+      12: pop2
+      13: return
+
+  public void cancel();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field cancelled:Z
+       4: ifne          20
+       7: aload_0
+       8: iconst_1
+       9: putfield      #6                  // Field cancelled:Z
+      12: aload_0
+      13: getfield      #3                  // Field state:Lio/reactivex/rxjava3/processors/BehaviorProcessor;
+      16: aload_0
+      17: invokevirtual #7                  // Method io/reactivex/rxjava3/processors/BehaviorProcessor.remove:(Lio/reactivex/rxjava3/processors/BehaviorProcessor$BehaviorSubscription;)V
+      20: return
+
+  void emitFirst();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field cancelled:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: dup
+      10: astore_2
+      11: monitorenter
+      12: aload_0
+      13: getfield      #6                  // Field cancelled:Z
+      16: ifeq          22
+      19: aload_2
+      20: monitorexit
+      21: return
+      22: aload_0
+      23: getfield      #8                  // Field next:Z
+      26: ifeq          32
+      29: aload_2
+      30: monitorexit
+      31: return
+      32: aload_0
+      33: getfield      #3                  // Field state:Lio/reactivex/rxjava3/processors/BehaviorProcessor;
+      36: astore_3
+      37: aload_3
+      38: getfield      #9                  // Field io/reactivex/rxjava3/processors/BehaviorProcessor.readLock:Ljava/util/concurrent/locks/Lock;
+      41: astore        4
+      43: aload         4
+      45: invokeinterface #10,  1           // InterfaceMethod java/util/concurrent/locks/Lock.lock:()V
+      50: aload_0
+      51: aload_3
+      52: getfield      #11                 // Field io/reactivex/rxjava3/processors/BehaviorProcessor.index:J
+      55: putfield      #12                 // Field index:J
+      58: aload_3
+      59: getfield      #13                 // Field io/reactivex/rxjava3/processors/BehaviorProcessor.value:Ljava/util/concurrent/atomic/AtomicReference;
+      62: invokevirtual #14                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+      65: astore_1
+      66: aload         4
+      68: invokeinterface #15,  1           // InterfaceMethod java/util/concurrent/locks/Lock.unlock:()V
+      73: aload_0
+      74: aload_1
+      75: ifnull        82
+      78: iconst_1
+      79: goto          83
+      82: iconst_0
+      83: putfield      #16                 // Field emitting:Z
+      86: aload_0
+      87: iconst_1
+      88: putfield      #8                  // Field next:Z
+      91: aload_2
+      92: monitorexit
+      93: goto          103
+      96: astore        5
+      98: aload_2
+      99: monitorexit
+     100: aload         5
+     102: athrow
+     103: aload_1
+     104: ifnull        120
+     107: aload_0
+     108: aload_1
+     109: invokevirtual #17                 // Method test:(Ljava/lang/Object;)Z
+     112: ifeq          116
+     115: return
+     116: aload_0
+     117: invokevirtual #18                 // Method emitLoop:()V
+     120: return
+    Exception table:
+       from    to  target type
+          12    21    96   any
+          22    31    96   any
+          32    93    96   any
+          96   100    96   any
+
+  void emitNext(java.lang.Object, long);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field cancelled:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: getfield      #19                 // Field fastPath:Z
+      12: ifne          112
+      15: aload_0
+      16: dup
+      17: astore        4
+      19: monitorenter
+      20: aload_0
+      21: getfield      #6                  // Field cancelled:Z
+      24: ifeq          31
+      27: aload         4
+      29: monitorexit
+      30: return
+      31: aload_0
+      32: getfield      #12                 // Field index:J
+      35: lload_2
+      36: lcmp
+      37: ifne          44
+      40: aload         4
+      42: monitorexit
+      43: return
+      44: aload_0
+      45: getfield      #16                 // Field emitting:Z
+      48: ifeq          88
+      51: aload_0
+      52: getfield      #20                 // Field queue:Lio/reactivex/rxjava3/internal/util/AppendOnlyLinkedArrayList;
+      55: astore        5
+      57: aload         5
+      59: ifnonnull     78
+      62: new           #21                 // class io/reactivex/rxjava3/internal/util/AppendOnlyLinkedArrayList
+      65: dup
+      66: iconst_4
+      67: invokespecial #22                 // Method io/reactivex/rxjava3/internal/util/AppendOnlyLinkedArrayList."<init>":(I)V
+      70: astore        5
+      72: aload_0
+      73: aload         5
+      75: putfield      #20                 // Field queue:Lio/reactivex/rxjava3/internal/util/AppendOnlyLinkedArrayList;
+      78: aload         5
+      80: aload_1
+      81: invokevirtual #23                 // Method io/reactivex/rxjava3/internal/util/AppendOnlyLinkedArrayList.add:(Ljava/lang/Object;)V
+      84: aload         4
+      86: monitorexit
+      87: return
+      88: aload_0
+      89: iconst_1
+      90: putfield      #8                  // Field next:Z
+      93: aload         4
+      95: monitorexit
+      96: goto          107
+      99: astore        6
+     101: aload         4
+     103: monitorexit
+     104: aload         6
+     106: athrow
+     107: aload_0
+     108: iconst_1
+     109: putfield      #19                 // Field fastPath:Z
+     112: aload_0
+     113: aload_1
+     114: invokevirtual #17                 // Method test:(Ljava/lang/Object;)Z
+     117: pop
+     118: return
+    Exception table:
+       from    to  target type
+          20    30    99   any
+          31    43    99   any
+          44    87    99   any
+          88    96    99   any
+          99   104    99   any
+
+  public boolean test(java.lang.Object);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field cancelled:Z
+       4: ifeq          9
+       7: iconst_1
+       8: ireturn
+       9: aload_1
+      10: invokestatic  #24                 // Method io/reactivex/rxjava3/internal/util/NotificationLite.isComplete:(Ljava/lang/Object;)Z
+      13: ifeq          27
+      16: aload_0
+      17: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      20: invokeinterface #25,  1           // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+      25: iconst_1
+      26: ireturn
+      27: aload_1
+      28: invokestatic  #26                 // Method io/reactivex/rxjava3/internal/util/NotificationLite.isError:(Ljava/lang/Object;)Z
+      31: ifeq          49
+      34: aload_0
+      35: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      38: aload_1
+      39: invokestatic  #27                 // Method io/reactivex/rxjava3/internal/util/NotificationLite.getError:(Ljava/lang/Object;)Ljava/lang/Throwable;
+      42: invokeinterface #28,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      47: iconst_1
+      48: ireturn
+      49: aload_0
+      50: invokevirtual #29                 // Method get:()J
+      53: lstore_2
+      54: lload_2
+      55: lconst_0
+      56: lcmp
+      57: ifeq          88
+      60: aload_0
+      61: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      64: aload_1
+      65: invokestatic  #30                 // Method io/reactivex/rxjava3/internal/util/NotificationLite.getValue:(Ljava/lang/Object;)Ljava/lang/Object;
+      68: invokeinterface #31,  2           // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+      73: lload_2
+      74: ldc2_w        #33                 // long 9223372036854775807l
+      77: lcmp
+      78: ifeq          86
+      81: aload_0
+      82: invokevirtual #35                 // Method decrementAndGet:()J
+      85: pop2
+      86: iconst_0
+      87: ireturn
+      88: aload_0
+      89: invokevirtual #36                 // Method cancel:()V
+      92: aload_0
+      93: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      96: invokestatic  #37                 // Method io/reactivex/rxjava3/exceptions/MissingBackpressureException.createDefault:()Lio/reactivex/rxjava3/exceptions/MissingBackpressureException;
+      99: invokeinterface #28,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+     104: iconst_1
+     105: ireturn
+
+  void emitLoop();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field cancelled:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: dup
+      10: astore_2
+      11: monitorenter
+      12: aload_0
+      13: getfield      #20                 // Field queue:Lio/reactivex/rxjava3/internal/util/AppendOnlyLinkedArrayList;
+      16: astore_1
+      17: aload_1
+      18: ifnonnull     29
+      21: aload_0
+      22: iconst_0
+      23: putfield      #16                 // Field emitting:Z
+      26: aload_2
+      27: monitorexit
+      28: return
+      29: aload_0
+      30: aconst_null
+      31: putfield      #20                 // Field queue:Lio/reactivex/rxjava3/internal/util/AppendOnlyLinkedArrayList;
+      34: aload_2
+      35: monitorexit
+      36: goto          44
+      39: astore_3
+      40: aload_2
+      41: monitorexit
+      42: aload_3
+      43: athrow
+      44: aload_1
+      45: aload_0
+      46: invokevirtual #38                 // Method io/reactivex/rxjava3/internal/util/AppendOnlyLinkedArrayList.forEachWhile:(Lio/reactivex/rxjava3/internal/util/AppendOnlyLinkedArrayList$NonThrowingPredicate;)V
+      49: goto          0
+    Exception table:
+       from    to  target type
+          12    28    39   any
+          29    36    39   any
+          39    42    39   any
+
+  public boolean isFull();
+    Code:
+       0: aload_0
+       1: invokevirtual #29                 // Method get:()J
+       4: lconst_0
+       5: lcmp
+       6: ifne          13
+       9: iconst_1
+      10: goto          14
+      13: iconst_0
+      14: ireturn
+}

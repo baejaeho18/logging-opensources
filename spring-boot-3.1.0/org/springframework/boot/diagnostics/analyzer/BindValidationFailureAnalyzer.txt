@@ -1,0 +1,186 @@
+Compiled from "BindValidationFailureAnalyzer.java"
+class org.springframework.boot.diagnostics.analyzer.BindValidationFailureAnalyzer extends org.springframework.boot.diagnostics.AbstractFailureAnalyzer<java.lang.Throwable> {
+  org.springframework.boot.diagnostics.analyzer.BindValidationFailureAnalyzer();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method org/springframework/boot/diagnostics/AbstractFailureAnalyzer."<init>":()V
+       4: return
+
+  protected org.springframework.boot.diagnostics.FailureAnalysis analyze(java.lang.Throwable, java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #7                  // Method getBindValidationExceptionDetails:(Ljava/lang/Throwable;)Lorg/springframework/boot/diagnostics/analyzer/BindValidationFailureAnalyzer$ExceptionDetails;
+       5: astore_3
+       6: aload_3
+       7: ifnonnull     12
+      10: aconst_null
+      11: areturn
+      12: aload_0
+      13: aload_3
+      14: invokevirtual #13                 // Method analyzeBindValidationException:(Lorg/springframework/boot/diagnostics/analyzer/BindValidationFailureAnalyzer$ExceptionDetails;)Lorg/springframework/boot/diagnostics/FailureAnalysis;
+      17: areturn
+
+  private org.springframework.boot.diagnostics.analyzer.BindValidationFailureAnalyzer$ExceptionDetails getBindValidationExceptionDetails(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: ldc           #17                 // class org/springframework/boot/context/properties/bind/validation/BindValidationException
+       4: invokevirtual #19                 // Method findCause:(Ljava/lang/Throwable;Ljava/lang/Class;)Ljava/lang/Throwable;
+       7: checkcast     #17                 // class org/springframework/boot/context/properties/bind/validation/BindValidationException
+      10: astore_2
+      11: aload_2
+      12: ifnull        47
+      15: aload_0
+      16: aload_1
+      17: ldc           #23                 // class org/springframework/boot/context/properties/bind/BindException
+      19: invokevirtual #19                 // Method findCause:(Ljava/lang/Throwable;Ljava/lang/Class;)Ljava/lang/Throwable;
+      22: checkcast     #23                 // class org/springframework/boot/context/properties/bind/BindException
+      25: astore_3
+      26: aload_2
+      27: invokevirtual #25                 // Method org/springframework/boot/context/properties/bind/validation/BindValidationException.getValidationErrors:()Lorg/springframework/boot/context/properties/bind/validation/ValidationErrors;
+      30: invokevirtual #29                 // Method org/springframework/boot/context/properties/bind/validation/ValidationErrors.getAllErrors:()Ljava/util/List;
+      33: astore        4
+      35: new           #35                 // class org/springframework/boot/diagnostics/analyzer/BindValidationFailureAnalyzer$ExceptionDetails
+      38: dup
+      39: aload         4
+      41: aload_3
+      42: aload_2
+      43: invokespecial #37                 // Method org/springframework/boot/diagnostics/analyzer/BindValidationFailureAnalyzer$ExceptionDetails."<init>":(Ljava/util/List;Ljava/lang/Object;Ljava/lang/Throwable;)V
+      46: areturn
+      47: aload_0
+      48: aload_1
+      49: ldc           #40                 // class org/springframework/validation/BindException
+      51: invokevirtual #19                 // Method findCause:(Ljava/lang/Throwable;Ljava/lang/Class;)Ljava/lang/Throwable;
+      54: checkcast     #40                 // class org/springframework/validation/BindException
+      57: astore_3
+      58: aload_3
+      59: ifnull        83
+      62: aload_3
+      63: invokevirtual #42                 // Method org/springframework/validation/BindException.getAllErrors:()Ljava/util/List;
+      66: astore        4
+      68: new           #35                 // class org/springframework/boot/diagnostics/analyzer/BindValidationFailureAnalyzer$ExceptionDetails
+      71: dup
+      72: aload         4
+      74: aload_3
+      75: invokevirtual #43                 // Method org/springframework/validation/BindException.getTarget:()Ljava/lang/Object;
+      78: aload_3
+      79: invokespecial #37                 // Method org/springframework/boot/diagnostics/analyzer/BindValidationFailureAnalyzer$ExceptionDetails."<init>":(Ljava/util/List;Ljava/lang/Object;Ljava/lang/Throwable;)V
+      82: areturn
+      83: aconst_null
+      84: areturn
+
+  private org.springframework.boot.diagnostics.FailureAnalysis analyzeBindValidationException(org.springframework.boot.diagnostics.analyzer.BindValidationFailureAnalyzer$ExceptionDetails);
+    Code:
+       0: new           #47                 // class java/lang/StringBuilder
+       3: dup
+       4: ldc           #49                 // String Binding to target %s failed:%n
+       6: iconst_1
+       7: anewarray     #51                 // class java/lang/Object
+      10: dup
+      11: iconst_0
+      12: aload_1
+      13: invokevirtual #53                 // Method org/springframework/boot/diagnostics/analyzer/BindValidationFailureAnalyzer$ExceptionDetails.getTarget:()Ljava/lang/Object;
+      16: aastore
+      17: invokestatic  #54                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      20: invokespecial #60                 // Method java/lang/StringBuilder."<init>":(Ljava/lang/String;)V
+      23: astore_2
+      24: aload_1
+      25: invokevirtual #63                 // Method org/springframework/boot/diagnostics/analyzer/BindValidationFailureAnalyzer$ExceptionDetails.getErrors:()Ljava/util/List;
+      28: invokeinterface #66,  1           // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      33: astore_3
+      34: aload_3
+      35: invokeinterface #72,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      40: ifeq          101
+      43: aload_3
+      44: invokeinterface #78,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      49: checkcast     #81                 // class org/springframework/validation/ObjectError
+      52: astore        4
+      54: aload         4
+      56: instanceof    #83                 // class org/springframework/validation/FieldError
+      59: ifeq          76
+      62: aload         4
+      64: checkcast     #83                 // class org/springframework/validation/FieldError
+      67: astore        5
+      69: aload_0
+      70: aload_2
+      71: aload         5
+      73: invokevirtual #85                 // Method appendFieldError:(Ljava/lang/StringBuilder;Lorg/springframework/validation/FieldError;)V
+      76: aload_2
+      77: ldc           #89                 // String %n    Reason: %s%n
+      79: iconst_1
+      80: anewarray     #51                 // class java/lang/Object
+      83: dup
+      84: iconst_0
+      85: aload         4
+      87: invokevirtual #91                 // Method org/springframework/validation/ObjectError.getDefaultMessage:()Ljava/lang/String;
+      90: aastore
+      91: invokestatic  #54                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      94: invokevirtual #95                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      97: pop
+      98: goto          34
+     101: aload_0
+     102: aload_2
+     103: aload_1
+     104: invokevirtual #99                 // Method org/springframework/boot/diagnostics/analyzer/BindValidationFailureAnalyzer$ExceptionDetails.getCause:()Ljava/lang/Throwable;
+     107: invokevirtual #103                // Method getFailureAnalysis:(Ljava/lang/Object;Ljava/lang/Throwable;)Lorg/springframework/boot/diagnostics/FailureAnalysis;
+     110: areturn
+
+  private void appendFieldError(java.lang.StringBuilder, org.springframework.validation.FieldError);
+    Code:
+       0: aload_2
+       1: invokestatic  #107                // InterfaceMethod org/springframework/boot/origin/Origin.from:(Ljava/lang/Object;)Lorg/springframework/boot/origin/Origin;
+       4: astore_3
+       5: aload_1
+       6: ldc           #113                // String %n    Property: %s
+       8: iconst_1
+       9: anewarray     #51                 // class java/lang/Object
+      12: dup
+      13: iconst_0
+      14: aload_2
+      15: invokevirtual #115                // Method org/springframework/validation/FieldError.getObjectName:()Ljava/lang/String;
+      18: aload_2
+      19: invokevirtual #118                // Method org/springframework/validation/FieldError.getField:()Ljava/lang/String;
+      22: invokedynamic #121,  0            // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      27: aastore
+      28: invokestatic  #54                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      31: invokevirtual #95                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      34: pop
+      35: aload_1
+      36: ldc           #125                // String %n    Value: \"%s\"
+      38: iconst_1
+      39: anewarray     #51                 // class java/lang/Object
+      42: dup
+      43: iconst_0
+      44: aload_2
+      45: invokevirtual #127                // Method org/springframework/validation/FieldError.getRejectedValue:()Ljava/lang/Object;
+      48: aastore
+      49: invokestatic  #54                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      52: invokevirtual #95                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      55: pop
+      56: aload_3
+      57: ifnull        78
+      60: aload_1
+      61: ldc           #130                // String %n    Origin: %s
+      63: iconst_1
+      64: anewarray     #51                 // class java/lang/Object
+      67: dup
+      68: iconst_0
+      69: aload_3
+      70: aastore
+      71: invokestatic  #54                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      74: invokevirtual #95                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      77: pop
+      78: return
+
+  private org.springframework.boot.diagnostics.FailureAnalysis getFailureAnalysis(java.lang.Object, java.lang.Throwable);
+    Code:
+       0: new           #132                // class org/springframework/boot/diagnostics/FailureAnalysis
+       3: dup
+       4: aload_1
+       5: invokevirtual #134                // Method java/lang/Object.toString:()Ljava/lang/String;
+       8: ldc           #137                // String Update your application\'s configuration
+      10: aload_2
+      11: invokespecial #139                // Method org/springframework/boot/diagnostics/FailureAnalysis."<init>":(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+      14: areturn
+}

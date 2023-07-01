@@ -1,0 +1,347 @@
+Compiled from "LocationResourceLoader.java"
+class org.springframework.boot.context.config.LocationResourceLoader {
+  private static final org.springframework.core.io.Resource[] EMPTY_RESOURCES;
+
+  private static final java.util.Comparator<java.io.File> FILE_PATH_COMPARATOR;
+
+  private static final java.util.Comparator<java.io.File> FILE_NAME_COMPARATOR;
+
+  private final org.springframework.core.io.ResourceLoader resourceLoader;
+
+  org.springframework.boot.context.config.LocationResourceLoader(org.springframework.core.io.ResourceLoader);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #7                  // Field resourceLoader:Lorg/springframework/core/io/ResourceLoader;
+       9: return
+
+  boolean isPattern(java.lang.String);
+    Code:
+       0: aload_1
+       1: invokestatic  #13                 // Method org/springframework/util/StringUtils.hasLength:(Ljava/lang/String;)Z
+       4: ifeq          20
+       7: aload_1
+       8: ldc           #19                 // String *
+      10: invokevirtual #21                 // Method java/lang/String.contains:(Ljava/lang/CharSequence;)Z
+      13: ifeq          20
+      16: iconst_1
+      17: goto          21
+      20: iconst_0
+      21: ireturn
+
+  org.springframework.core.io.Resource getResource(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #27                 // Method validateNonPattern:(Ljava/lang/String;)V
+       5: aload_1
+       6: invokestatic  #31                 // Method org/springframework/util/StringUtils.cleanPath:(Ljava/lang/String;)Ljava/lang/String;
+       9: astore_1
+      10: aload_1
+      11: invokestatic  #35                 // Method org/springframework/util/ResourceUtils.isUrl:(Ljava/lang/String;)Z
+      14: ifne          24
+      17: aload_1
+      18: invokedynamic #40,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      23: astore_1
+      24: aload_0
+      25: getfield      #7                  // Field resourceLoader:Lorg/springframework/core/io/ResourceLoader;
+      28: aload_1
+      29: invokeinterface #43,  2           // InterfaceMethod org/springframework/core/io/ResourceLoader.getResource:(Ljava/lang/String;)Lorg/springframework/core/io/Resource;
+      34: areturn
+
+  private void validateNonPattern(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #49                 // Method isPattern:(Ljava/lang/String;)Z
+       5: ifne          12
+       8: iconst_1
+       9: goto          13
+      12: iconst_0
+      13: aload_1
+      14: invokedynamic #52,  0             // InvokeDynamic #1:get:(Ljava/lang/String;)Ljava/util/function/Supplier;
+      19: invokestatic  #56                 // Method org/springframework/util/Assert.state:(ZLjava/util/function/Supplier;)V
+      22: return
+
+  org.springframework.core.io.Resource[] getResources(java.lang.String, org.springframework.boot.context.config.LocationResourceLoader$ResourceType);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: invokevirtual #62                 // Method validatePattern:(Ljava/lang/String;Lorg/springframework/boot/context/config/LocationResourceLoader$ResourceType;)V
+       6: aload_1
+       7: iconst_0
+       8: aload_1
+       9: ldc           #66                 // String */
+      11: invokevirtual #68                 // Method java/lang/String.indexOf:(Ljava/lang/String;)I
+      14: invokevirtual #72                 // Method java/lang/String.substring:(II)Ljava/lang/String;
+      17: astore_3
+      18: aload_1
+      19: aload_1
+      20: ldc           #76                 // String /
+      22: invokevirtual #78                 // Method java/lang/String.lastIndexOf:(Ljava/lang/String;)I
+      25: iconst_1
+      26: iadd
+      27: invokevirtual #81                 // Method java/lang/String.substring:(I)Ljava/lang/String;
+      30: astore        4
+      32: aload_0
+      33: aload_3
+      34: invokevirtual #84                 // Method getResource:(Ljava/lang/String;)Lorg/springframework/core/io/Resource;
+      37: astore        5
+      39: aload         5
+      41: invokeinterface #85,  1           // InterfaceMethod org/springframework/core/io/Resource.exists:()Z
+      46: ifne          53
+      49: getstatic     #91                 // Field EMPTY_RESOURCES:[Lorg/springframework/core/io/Resource;
+      52: areturn
+      53: aload_0
+      54: aload_1
+      55: aload         5
+      57: invokevirtual #95                 // Method getFile:(Ljava/lang/String;Lorg/springframework/core/io/Resource;)Ljava/io/File;
+      60: astore        6
+      62: aload         6
+      64: invokevirtual #99                 // Method java/io/File.isDirectory:()Z
+      67: ifne          74
+      70: getstatic     #91                 // Field EMPTY_RESOURCES:[Lorg/springframework/core/io/Resource;
+      73: areturn
+      74: aload         6
+      76: aload_0
+      77: invokedynamic #104,  0            // InvokeDynamic #2:accept:(Lorg/springframework/boot/context/config/LocationResourceLoader;)Ljava/io/FileFilter;
+      82: invokevirtual #108                // Method java/io/File.listFiles:(Ljava/io/FileFilter;)[Ljava/io/File;
+      85: astore        7
+      87: aload         7
+      89: ifnonnull     96
+      92: getstatic     #91                 // Field EMPTY_RESOURCES:[Lorg/springframework/core/io/Resource;
+      95: areturn
+      96: aload         7
+      98: getstatic     #112                // Field FILE_PATH_COMPARATOR:Ljava/util/Comparator;
+     101: invokestatic  #116                // Method java/util/Arrays.sort:([Ljava/lang/Object;Ljava/util/Comparator;)V
+     104: aload_2
+     105: getstatic     #122                // Field org/springframework/boot/context/config/LocationResourceLoader$ResourceType.DIRECTORY:Lorg/springframework/boot/context/config/LocationResourceLoader$ResourceType;
+     108: if_acmpne     140
+     111: aload         7
+     113: invokestatic  #128                // Method java/util/Arrays.stream:([Ljava/lang/Object;)Ljava/util/stream/Stream;
+     116: invokedynamic #132,  0            // InvokeDynamic #3:apply:()Ljava/util/function/Function;
+     121: invokeinterface #136,  2          // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+     126: invokedynamic #142,  0            // InvokeDynamic #4:apply:()Ljava/util/function/IntFunction;
+     131: invokeinterface #145,  2          // InterfaceMethod java/util/stream/Stream.toArray:(Ljava/util/function/IntFunction;)[Ljava/lang/Object;
+     136: checkcast     #149                // class "[Lorg/springframework/core/io/Resource;"
+     139: areturn
+     140: new           #150                // class java/util/ArrayList
+     143: dup
+     144: invokespecial #152                // Method java/util/ArrayList."<init>":()V
+     147: astore        8
+     149: aload         4
+     151: invokedynamic #153,  0            // InvokeDynamic #5:accept:(Ljava/lang/String;)Ljava/io/FilenameFilter;
+     156: astore        9
+     158: aload         7
+     160: astore        10
+     162: aload         10
+     164: arraylength
+     165: istore        11
+     167: iconst_0
+     168: istore        12
+     170: iload         12
+     172: iload         11
+     174: if_icmpge     244
+     177: aload         10
+     179: iload         12
+     181: aaload
+     182: astore        13
+     184: aload         13
+     186: aload         9
+     188: invokevirtual #156                // Method java/io/File.listFiles:(Ljava/io/FilenameFilter;)[Ljava/io/File;
+     191: astore        14
+     193: aload         14
+     195: ifnull        238
+     198: aload         14
+     200: getstatic     #159                // Field FILE_NAME_COMPARATOR:Ljava/util/Comparator;
+     203: invokestatic  #116                // Method java/util/Arrays.sort:([Ljava/lang/Object;Ljava/util/Comparator;)V
+     206: aload         14
+     208: invokestatic  #128                // Method java/util/Arrays.stream:([Ljava/lang/Object;)Ljava/util/stream/Stream;
+     211: invokedynamic #132,  0            // InvokeDynamic #3:apply:()Ljava/util/function/Function;
+     216: invokeinterface #136,  2          // InterfaceMethod java/util/stream/Stream.map:(Ljava/util/function/Function;)Ljava/util/stream/Stream;
+     221: aload         8
+     223: dup
+     224: invokestatic  #162                // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+     227: pop
+     228: invokedynamic #168,  0            // InvokeDynamic #6:accept:(Ljava/util/List;)Ljava/util/function/Consumer;
+     233: invokeinterface #171,  2          // InterfaceMethod java/util/stream/Stream.forEach:(Ljava/util/function/Consumer;)V
+     238: iinc          12, 1
+     241: goto          170
+     244: aload         8
+     246: getstatic     #91                 // Field EMPTY_RESOURCES:[Lorg/springframework/core/io/Resource;
+     249: invokeinterface #175,  2          // InterfaceMethod java/util/List.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;
+     254: checkcast     #149                // class "[Lorg/springframework/core/io/Resource;"
+     257: areturn
+
+  private void validatePattern(java.lang.String, org.springframework.boot.context.config.LocationResourceLoader$ResourceType);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #49                 // Method isPattern:(Ljava/lang/String;)Z
+       5: aload_1
+       6: invokedynamic #180,  0            // InvokeDynamic #7:get:(Ljava/lang/String;)Ljava/util/function/Supplier;
+      11: invokestatic  #56                 // Method org/springframework/util/Assert.state:(ZLjava/util/function/Supplier;)V
+      14: aload_1
+      15: ldc           #183                // String classpath*:
+      17: invokevirtual #185                // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+      20: ifne          27
+      23: iconst_1
+      24: goto          28
+      27: iconst_0
+      28: aload_1
+      29: invokedynamic #188,  0            // InvokeDynamic #8:get:(Ljava/lang/String;)Ljava/util/function/Supplier;
+      34: invokestatic  #56                 // Method org/springframework/util/Assert.state:(ZLjava/util/function/Supplier;)V
+      37: aload_1
+      38: ldc           #19                 // String *
+      40: invokestatic  #189                // Method org/springframework/util/StringUtils.countOccurrencesOf:(Ljava/lang/String;Ljava/lang/String;)I
+      43: iconst_1
+      44: if_icmpne     51
+      47: iconst_1
+      48: goto          52
+      51: iconst_0
+      52: aload_1
+      53: invokedynamic #193,  0            // InvokeDynamic #9:get:(Ljava/lang/String;)Ljava/util/function/Supplier;
+      58: invokestatic  #56                 // Method org/springframework/util/Assert.state:(ZLjava/util/function/Supplier;)V
+      61: aload_2
+      62: getstatic     #122                // Field org/springframework/boot/context/config/LocationResourceLoader$ResourceType.DIRECTORY:Lorg/springframework/boot/context/config/LocationResourceLoader$ResourceType;
+      65: if_acmpeq     84
+      68: aload_1
+      69: iconst_0
+      70: aload_1
+      71: ldc           #76                 // String /
+      73: invokevirtual #78                 // Method java/lang/String.lastIndexOf:(Ljava/lang/String;)I
+      76: iconst_1
+      77: iadd
+      78: invokevirtual #72                 // Method java/lang/String.substring:(II)Ljava/lang/String;
+      81: goto          85
+      84: aload_1
+      85: astore_3
+      86: aload_3
+      87: ldc           #66                 // String */
+      89: invokevirtual #194                // Method java/lang/String.endsWith:(Ljava/lang/String;)Z
+      92: aload_1
+      93: invokedynamic #197,  0            // InvokeDynamic #10:get:(Ljava/lang/String;)Ljava/util/function/Supplier;
+      98: invokestatic  #56                 // Method org/springframework/util/Assert.state:(ZLjava/util/function/Supplier;)V
+     101: return
+
+  private java.io.File getFile(java.lang.String, org.springframework.core.io.Resource);
+    Code:
+       0: aload_2
+       1: invokeinterface #198,  1          // InterfaceMethod org/springframework/core/io/Resource.getFile:()Ljava/io/File;
+       6: areturn
+       7: astore_3
+       8: new           #203                // class java/lang/IllegalStateException
+      11: dup
+      12: aload_1
+      13: invokedynamic #205,  0            // InvokeDynamic #11:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      18: aload_3
+      19: invokespecial #206                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      22: athrow
+    Exception table:
+       from    to  target type
+           0     6     7   Class java/lang/Exception
+
+  private boolean isVisibleDirectory(java.io.File);
+    Code:
+       0: aload_1
+       1: invokevirtual #99                 // Method java/io/File.isDirectory:()Z
+       4: ifeq          23
+       7: aload_1
+       8: invokevirtual #209                // Method java/io/File.getName:()Ljava/lang/String;
+      11: ldc           #213                // String ..
+      13: invokevirtual #185                // Method java/lang/String.startsWith:(Ljava/lang/String;)Z
+      16: ifne          23
+      19: iconst_1
+      20: goto          24
+      23: iconst_0
+      24: ireturn
+
+  private static java.lang.String lambda$validatePattern$6(java.lang.String);
+    Code:
+       0: ldc           #215                // String Location \'%s\' must end with \'*/\'
+       2: iconst_1
+       3: anewarray     #2                  // class java/lang/Object
+       6: dup
+       7: iconst_0
+       8: aload_0
+       9: aastore
+      10: invokestatic  #217                // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      13: areturn
+
+  private static java.lang.String lambda$validatePattern$5(java.lang.String);
+    Code:
+       0: ldc           #221                // String Location \'%s\' cannot contain multiple wildcards
+       2: iconst_1
+       3: anewarray     #2                  // class java/lang/Object
+       6: dup
+       7: iconst_0
+       8: aload_0
+       9: aastore
+      10: invokestatic  #217                // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      13: areturn
+
+  private static java.lang.String lambda$validatePattern$4(java.lang.String);
+    Code:
+       0: ldc           #223                // String Location \'%s\' cannot use classpath wildcards
+       2: iconst_1
+       3: anewarray     #2                  // class java/lang/Object
+       6: dup
+       7: iconst_0
+       8: aload_0
+       9: aastore
+      10: invokestatic  #217                // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      13: areturn
+
+  private static java.lang.String lambda$validatePattern$3(java.lang.String);
+    Code:
+       0: ldc           #225                // String Location \'%s\' must be a pattern
+       2: iconst_1
+       3: anewarray     #2                  // class java/lang/Object
+       6: dup
+       7: iconst_0
+       8: aload_0
+       9: aastore
+      10: invokestatic  #217                // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      13: areturn
+
+  private static boolean lambda$getResources$2(java.lang.String, java.io.File, java.lang.String);
+    Code:
+       0: aload_2
+       1: aload_0
+       2: invokevirtual #227                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       5: ireturn
+
+  private static org.springframework.core.io.Resource[] lambda$getResources$1(int);
+    Code:
+       0: iload_0
+       1: anewarray     #86                 // class org/springframework/core/io/Resource
+       4: areturn
+
+  private static java.lang.String lambda$validateNonPattern$0(java.lang.String);
+    Code:
+       0: ldc           #231                // String Location \'%s\' must not be a pattern
+       2: iconst_1
+       3: anewarray     #2                  // class java/lang/Object
+       6: dup
+       7: iconst_0
+       8: aload_0
+       9: aastore
+      10: invokestatic  #217                // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      13: areturn
+
+  static {};
+    Code:
+       0: iconst_0
+       1: anewarray     #86                 // class org/springframework/core/io/Resource
+       4: putstatic     #91                 // Field EMPTY_RESOURCES:[Lorg/springframework/core/io/Resource;
+       7: invokedynamic #233,  0            // InvokeDynamic #12:apply:()Ljava/util/function/Function;
+      12: invokestatic  #234                // InterfaceMethod java/util/Comparator.comparing:(Ljava/util/function/Function;)Ljava/util/Comparator;
+      15: putstatic     #112                // Field FILE_PATH_COMPARATOR:Ljava/util/Comparator;
+      18: invokedynamic #240,  0            // InvokeDynamic #13:apply:()Ljava/util/function/Function;
+      23: invokestatic  #234                // InterfaceMethod java/util/Comparator.comparing:(Ljava/util/function/Function;)Ljava/util/Comparator;
+      26: putstatic     #159                // Field FILE_NAME_COMPARATOR:Ljava/util/Comparator;
+      29: return
+}

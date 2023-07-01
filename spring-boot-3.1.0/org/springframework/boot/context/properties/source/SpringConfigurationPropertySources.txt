@@ -1,0 +1,85 @@
+Compiled from "SpringConfigurationPropertySources.java"
+class org.springframework.boot.context.properties.source.SpringConfigurationPropertySources implements java.lang.Iterable<org.springframework.boot.context.properties.source.ConfigurationPropertySource> {
+  private final java.lang.Iterable<org.springframework.core.env.PropertySource<?>> sources;
+
+  private final java.util.Map<org.springframework.core.env.PropertySource<?>, org.springframework.boot.context.properties.source.ConfigurationPropertySource> cache;
+
+  org.springframework.boot.context.properties.source.SpringConfigurationPropertySources(java.lang.Iterable<org.springframework.core.env.PropertySource<?>>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #7                  // class org/springframework/util/ConcurrentReferenceHashMap
+       8: dup
+       9: bipush        16
+      11: getstatic     #9                  // Field org/springframework/util/ConcurrentReferenceHashMap$ReferenceType.SOFT:Lorg/springframework/util/ConcurrentReferenceHashMap$ReferenceType;
+      14: invokespecial #15                 // Method org/springframework/util/ConcurrentReferenceHashMap."<init>":(ILorg/springframework/util/ConcurrentReferenceHashMap$ReferenceType;)V
+      17: putfield      #18                 // Field cache:Ljava/util/Map;
+      20: aload_1
+      21: ldc           #24                 // String Sources must not be null
+      23: invokestatic  #26                 // Method org/springframework/util/Assert.notNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      26: aload_0
+      27: aload_1
+      28: putfield      #32                 // Field sources:Ljava/lang/Iterable;
+      31: return
+
+  boolean isUsingSources(java.lang.Iterable<org.springframework.core.env.PropertySource<?>>);
+    Code:
+       0: aload_0
+       1: getfield      #32                 // Field sources:Ljava/lang/Iterable;
+       4: aload_1
+       5: if_acmpne     12
+       8: iconst_1
+       9: goto          13
+      12: iconst_0
+      13: ireturn
+
+  public java.util.Iterator<org.springframework.boot.context.properties.source.ConfigurationPropertySource> iterator();
+    Code:
+       0: new           #36                 // class org/springframework/boot/context/properties/source/SpringConfigurationPropertySources$SourcesIterator
+       3: dup
+       4: aload_0
+       5: getfield      #32                 // Field sources:Ljava/lang/Iterable;
+       8: invokeinterface #38,  1           // InterfaceMethod java/lang/Iterable.iterator:()Ljava/util/Iterator;
+      13: aload_0
+      14: invokedynamic #44,  0             // InvokeDynamic #0:apply:(Lorg/springframework/boot/context/properties/source/SpringConfigurationPropertySources;)Ljava/util/function/Function;
+      19: invokespecial #48                 // Method org/springframework/boot/context/properties/source/SpringConfigurationPropertySources$SourcesIterator."<init>":(Ljava/util/Iterator;Ljava/util/function/Function;)V
+      22: areturn
+
+  private org.springframework.boot.context.properties.source.ConfigurationPropertySource adapt(org.springframework.core.env.PropertySource<?>);
+    Code:
+       0: aload_0
+       1: getfield      #18                 // Field cache:Ljava/util/Map;
+       4: aload_1
+       5: invokeinterface #51,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+      10: checkcast     #57                 // class org/springframework/boot/context/properties/source/ConfigurationPropertySource
+      13: astore_2
+      14: aload_2
+      15: ifnull        30
+      18: aload_2
+      19: invokeinterface #59,  1           // InterfaceMethod org/springframework/boot/context/properties/source/ConfigurationPropertySource.getUnderlyingSource:()Ljava/lang/Object;
+      24: aload_1
+      25: if_acmpne     30
+      28: aload_2
+      29: areturn
+      30: aload_1
+      31: invokestatic  #63                 // Method org/springframework/boot/context/properties/source/SpringConfigurationPropertySource.from:(Lorg/springframework/core/env/PropertySource;)Lorg/springframework/boot/context/properties/source/SpringConfigurationPropertySource;
+      34: astore_2
+      35: aload_1
+      36: instanceof    #69                 // class org/springframework/boot/origin/OriginLookup
+      39: ifeq          58
+      42: aload_2
+      43: aload_1
+      44: checkcast     #69                 // class org/springframework/boot/origin/OriginLookup
+      47: invokeinterface #71,  1           // InterfaceMethod org/springframework/boot/origin/OriginLookup.getPrefix:()Ljava/lang/String;
+      52: invokeinterface #75,  2           // InterfaceMethod org/springframework/boot/context/properties/source/ConfigurationPropertySource.withPrefix:(Ljava/lang/String;)Lorg/springframework/boot/context/properties/source/ConfigurationPropertySource;
+      57: astore_2
+      58: aload_0
+      59: getfield      #18                 // Field cache:Ljava/util/Map;
+      62: aload_1
+      63: aload_2
+      64: invokeinterface #79,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      69: pop
+      70: aload_2
+      71: areturn
+}
