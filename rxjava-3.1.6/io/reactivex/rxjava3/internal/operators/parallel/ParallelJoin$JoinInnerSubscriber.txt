@@ -1,0 +1,147 @@
+Compiled from "ParallelJoin.java"
+final class io.reactivex.rxjava3.internal.operators.parallel.ParallelJoin$JoinInnerSubscriber<T> extends java.util.concurrent.atomic.AtomicReference<org.reactivestreams.Subscription> implements io.reactivex.rxjava3.core.FlowableSubscriber<T> {
+  private static final long serialVersionUID;
+
+  final io.reactivex.rxjava3.internal.operators.parallel.ParallelJoin$JoinSubscriptionBase<T> parent;
+
+  final int prefetch;
+
+  final int limit;
+
+  long produced;
+
+  volatile io.reactivex.rxjava3.operators.SimplePlainQueue<T> queue;
+
+  io.reactivex.rxjava3.internal.operators.parallel.ParallelJoin$JoinInnerSubscriber(io.reactivex.rxjava3.internal.operators.parallel.ParallelJoin$JoinSubscriptionBase<T>, int);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field parent:Lio/reactivex/rxjava3/internal/operators/parallel/ParallelJoin$JoinSubscriptionBase;
+       9: aload_0
+      10: iload_2
+      11: putfield      #3                  // Field prefetch:I
+      14: aload_0
+      15: iload_2
+      16: iload_2
+      17: iconst_2
+      18: ishr
+      19: isub
+      20: putfield      #4                  // Field limit:I
+      23: return
+
+  public void onSubscribe(org.reactivestreams.Subscription);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_0
+       3: getfield      #3                  // Field prefetch:I
+       6: i2l
+       7: invokestatic  #5                  // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.setOnce:(Ljava/util/concurrent/atomic/AtomicReference;Lorg/reactivestreams/Subscription;J)Z
+      10: pop
+      11: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field parent:Lio/reactivex/rxjava3/internal/operators/parallel/ParallelJoin$JoinSubscriptionBase;
+       4: aload_0
+       5: aload_1
+       6: invokevirtual #6                  // Method io/reactivex/rxjava3/internal/operators/parallel/ParallelJoin$JoinSubscriptionBase.onNext:(Lio/reactivex/rxjava3/internal/operators/parallel/ParallelJoin$JoinInnerSubscriber;Ljava/lang/Object;)V
+       9: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field parent:Lio/reactivex/rxjava3/internal/operators/parallel/ParallelJoin$JoinSubscriptionBase;
+       4: aload_1
+       5: invokevirtual #7                  // Method io/reactivex/rxjava3/internal/operators/parallel/ParallelJoin$JoinSubscriptionBase.onError:(Ljava/lang/Throwable;)V
+       8: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field parent:Lio/reactivex/rxjava3/internal/operators/parallel/ParallelJoin$JoinSubscriptionBase;
+       4: invokevirtual #8                  // Method io/reactivex/rxjava3/internal/operators/parallel/ParallelJoin$JoinSubscriptionBase.onComplete:()V
+       7: return
+
+  public void requestOne();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field produced:J
+       4: lconst_1
+       5: ladd
+       6: lstore_1
+       7: lload_1
+       8: aload_0
+       9: getfield      #4                  // Field limit:I
+      12: i2l
+      13: lcmp
+      14: ifne          38
+      17: aload_0
+      18: lconst_0
+      19: putfield      #9                  // Field produced:J
+      22: aload_0
+      23: invokevirtual #10                 // Method get:()Ljava/lang/Object;
+      26: checkcast     #11                 // class org/reactivestreams/Subscription
+      29: lload_1
+      30: invokeinterface #12,  3           // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+      35: goto          43
+      38: aload_0
+      39: lload_1
+      40: putfield      #9                  // Field produced:J
+      43: return
+
+  public void request(long);
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field produced:J
+       4: lload_1
+       5: ladd
+       6: lstore_3
+       7: lload_3
+       8: aload_0
+       9: getfield      #4                  // Field limit:I
+      12: i2l
+      13: lcmp
+      14: iflt          38
+      17: aload_0
+      18: lconst_0
+      19: putfield      #9                  // Field produced:J
+      22: aload_0
+      23: invokevirtual #10                 // Method get:()Ljava/lang/Object;
+      26: checkcast     #11                 // class org/reactivestreams/Subscription
+      29: lload_3
+      30: invokeinterface #12,  3           // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+      35: goto          43
+      38: aload_0
+      39: lload_3
+      40: putfield      #9                  // Field produced:J
+      43: return
+
+  public boolean cancel();
+    Code:
+       0: aload_0
+       1: invokestatic  #13                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.cancel:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+       4: ireturn
+
+  io.reactivex.rxjava3.operators.SimplePlainQueue<T> getQueue();
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field queue:Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+       4: astore_1
+       5: aload_1
+       6: ifnonnull     26
+       9: new           #15                 // class io/reactivex/rxjava3/operators/SpscArrayQueue
+      12: dup
+      13: aload_0
+      14: getfield      #3                  // Field prefetch:I
+      17: invokespecial #16                 // Method io/reactivex/rxjava3/operators/SpscArrayQueue."<init>":(I)V
+      20: astore_1
+      21: aload_0
+      22: aload_1
+      23: putfield      #14                 // Field queue:Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+      26: aload_1
+      27: areturn
+}

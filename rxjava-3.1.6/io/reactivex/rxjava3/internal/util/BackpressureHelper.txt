@@ -1,0 +1,196 @@
+Compiled from "BackpressureHelper.java"
+public final class io.reactivex.rxjava3.internal.util.BackpressureHelper {
+  private io.reactivex.rxjava3.internal.util.BackpressureHelper();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: new           #2                  // class java/lang/IllegalStateException
+       7: dup
+       8: ldc           #3                  // String No instances!
+      10: invokespecial #4                  // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      13: athrow
+
+  public static long addCap(long, long);
+    Code:
+       0: lload_0
+       1: lload_2
+       2: ladd
+       3: lstore        4
+       5: lload         4
+       7: lconst_0
+       8: lcmp
+       9: ifge          16
+      12: ldc2_w        #6                  // long 9223372036854775807l
+      15: lreturn
+      16: lload         4
+      18: lreturn
+
+  public static long multiplyCap(long, long);
+    Code:
+       0: lload_0
+       1: lload_2
+       2: lmul
+       3: lstore        4
+       5: lload_0
+       6: lload_2
+       7: lor
+       8: bipush        31
+      10: lushr
+      11: lconst_0
+      12: lcmp
+      13: ifeq          29
+      16: lload         4
+      18: lload_0
+      19: ldiv
+      20: lload_2
+      21: lcmp
+      22: ifeq          29
+      25: ldc2_w        #6                  // long 9223372036854775807l
+      28: lreturn
+      29: lload         4
+      31: lreturn
+
+  public static long add(java.util.concurrent.atomic.AtomicLong, long);
+    Code:
+       0: aload_0
+       1: invokevirtual #8                  // Method java/util/concurrent/atomic/AtomicLong.get:()J
+       4: lstore_3
+       5: lload_3
+       6: ldc2_w        #6                  // long 9223372036854775807l
+       9: lcmp
+      10: ifne          17
+      13: ldc2_w        #6                  // long 9223372036854775807l
+      16: lreturn
+      17: lload_3
+      18: lload_1
+      19: invokestatic  #9                  // Method addCap:(JJ)J
+      22: lstore        5
+      24: aload_0
+      25: lload_3
+      26: lload         5
+      28: invokevirtual #10                 // Method java/util/concurrent/atomic/AtomicLong.compareAndSet:(JJ)Z
+      31: ifeq          36
+      34: lload_3
+      35: lreturn
+      36: goto          0
+
+  public static long addCancel(java.util.concurrent.atomic.AtomicLong, long);
+    Code:
+       0: aload_0
+       1: invokevirtual #8                  // Method java/util/concurrent/atomic/AtomicLong.get:()J
+       4: lstore_3
+       5: lload_3
+       6: ldc2_w        #11                 // long -9223372036854775808l
+       9: lcmp
+      10: ifne          17
+      13: ldc2_w        #11                 // long -9223372036854775808l
+      16: lreturn
+      17: lload_3
+      18: ldc2_w        #6                  // long 9223372036854775807l
+      21: lcmp
+      22: ifne          29
+      25: ldc2_w        #6                  // long 9223372036854775807l
+      28: lreturn
+      29: lload_3
+      30: lload_1
+      31: invokestatic  #9                  // Method addCap:(JJ)J
+      34: lstore        5
+      36: aload_0
+      37: lload_3
+      38: lload         5
+      40: invokevirtual #10                 // Method java/util/concurrent/atomic/AtomicLong.compareAndSet:(JJ)Z
+      43: ifeq          48
+      46: lload_3
+      47: lreturn
+      48: goto          0
+
+  public static long produced(java.util.concurrent.atomic.AtomicLong, long);
+    Code:
+       0: aload_0
+       1: invokevirtual #8                  // Method java/util/concurrent/atomic/AtomicLong.get:()J
+       4: lstore_3
+       5: lload_3
+       6: ldc2_w        #6                  // long 9223372036854775807l
+       9: lcmp
+      10: ifne          17
+      13: ldc2_w        #6                  // long 9223372036854775807l
+      16: lreturn
+      17: lload_3
+      18: lload_1
+      19: lsub
+      20: lstore        5
+      22: lload         5
+      24: lconst_0
+      25: lcmp
+      26: ifge          62
+      29: new           #2                  // class java/lang/IllegalStateException
+      32: dup
+      33: new           #13                 // class java/lang/StringBuilder
+      36: dup
+      37: invokespecial #14                 // Method java/lang/StringBuilder."<init>":()V
+      40: ldc           #15                 // String More produced than requested:
+      42: invokevirtual #16                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      45: lload         5
+      47: invokevirtual #17                 // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+      50: invokevirtual #18                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      53: invokespecial #4                  // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      56: invokestatic  #19                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      59: lconst_0
+      60: lstore        5
+      62: aload_0
+      63: lload_3
+      64: lload         5
+      66: invokevirtual #10                 // Method java/util/concurrent/atomic/AtomicLong.compareAndSet:(JJ)Z
+      69: ifeq          75
+      72: lload         5
+      74: lreturn
+      75: goto          0
+
+  public static long producedCancel(java.util.concurrent.atomic.AtomicLong, long);
+    Code:
+       0: aload_0
+       1: invokevirtual #8                  // Method java/util/concurrent/atomic/AtomicLong.get:()J
+       4: lstore_3
+       5: lload_3
+       6: ldc2_w        #11                 // long -9223372036854775808l
+       9: lcmp
+      10: ifne          17
+      13: ldc2_w        #11                 // long -9223372036854775808l
+      16: lreturn
+      17: lload_3
+      18: ldc2_w        #6                  // long 9223372036854775807l
+      21: lcmp
+      22: ifne          29
+      25: ldc2_w        #6                  // long 9223372036854775807l
+      28: lreturn
+      29: lload_3
+      30: lload_1
+      31: lsub
+      32: lstore        5
+      34: lload         5
+      36: lconst_0
+      37: lcmp
+      38: ifge          74
+      41: new           #2                  // class java/lang/IllegalStateException
+      44: dup
+      45: new           #13                 // class java/lang/StringBuilder
+      48: dup
+      49: invokespecial #14                 // Method java/lang/StringBuilder."<init>":()V
+      52: ldc           #15                 // String More produced than requested:
+      54: invokevirtual #16                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      57: lload         5
+      59: invokevirtual #17                 // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+      62: invokevirtual #18                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      65: invokespecial #4                  // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      68: invokestatic  #19                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      71: lconst_0
+      72: lstore        5
+      74: aload_0
+      75: lload_3
+      76: lload         5
+      78: invokevirtual #10                 // Method java/util/concurrent/atomic/AtomicLong.compareAndSet:(JJ)Z
+      81: ifeq          87
+      84: lload         5
+      86: lreturn
+      87: goto          0
+}

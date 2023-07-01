@@ -1,0 +1,172 @@
+Compiled from "ExecutorScheduler.java"
+final class io.reactivex.rxjava3.internal.schedulers.ExecutorScheduler$ExecutorWorker$InterruptibleRunnable extends java.util.concurrent.atomic.AtomicInteger implements java.lang.Runnable,io.reactivex.rxjava3.disposables.Disposable {
+  private static final long serialVersionUID;
+
+  final java.lang.Runnable run;
+
+  final io.reactivex.rxjava3.disposables.DisposableContainer tasks;
+
+  volatile java.lang.Thread thread;
+
+  static final int READY;
+
+  static final int RUNNING;
+
+  static final int FINISHED;
+
+  static final int INTERRUPTING;
+
+  static final int INTERRUPTED;
+
+  io.reactivex.rxjava3.internal.schedulers.ExecutorScheduler$ExecutorWorker$InterruptibleRunnable(java.lang.Runnable, io.reactivex.rxjava3.disposables.DisposableContainer);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field run:Ljava/lang/Runnable;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field tasks:Lio/reactivex/rxjava3/disposables/DisposableContainer;
+      14: return
+
+  public void run();
+    Code:
+       0: aload_0
+       1: invokevirtual #4                  // Method get:()I
+       4: ifne          134
+       7: aload_0
+       8: invokestatic  #5                  // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+      11: putfield      #6                  // Field thread:Ljava/lang/Thread;
+      14: aload_0
+      15: iconst_0
+      16: iconst_1
+      17: invokevirtual #8                  // Method compareAndSet:(II)Z
+      20: ifeq          129
+      23: aload_0
+      24: getfield      #2                  // Field run:Ljava/lang/Runnable;
+      27: invokeinterface #9,  1            // InterfaceMethod java/lang/Runnable.run:()V
+      32: goto          42
+      35: astore_1
+      36: aload_1
+      37: invokestatic  #11                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      40: aload_1
+      41: athrow
+      42: aload_0
+      43: aconst_null
+      44: putfield      #6                  // Field thread:Ljava/lang/Thread;
+      47: aload_0
+      48: iconst_1
+      49: iconst_2
+      50: invokevirtual #8                  // Method compareAndSet:(II)Z
+      53: ifeq          63
+      56: aload_0
+      57: invokevirtual #12                 // Method cleanup:()V
+      60: goto          126
+      63: aload_0
+      64: invokevirtual #4                  // Method get:()I
+      67: iconst_3
+      68: if_icmpne     77
+      71: invokestatic  #13                 // Method java/lang/Thread.yield:()V
+      74: goto          63
+      77: invokestatic  #14                 // Method java/lang/Thread.interrupted:()Z
+      80: pop
+      81: goto          126
+      84: astore_2
+      85: aload_0
+      86: aconst_null
+      87: putfield      #6                  // Field thread:Ljava/lang/Thread;
+      90: aload_0
+      91: iconst_1
+      92: iconst_2
+      93: invokevirtual #8                  // Method compareAndSet:(II)Z
+      96: ifeq          106
+      99: aload_0
+     100: invokevirtual #12                 // Method cleanup:()V
+     103: goto          124
+     106: aload_0
+     107: invokevirtual #4                  // Method get:()I
+     110: iconst_3
+     111: if_icmpne     120
+     114: invokestatic  #13                 // Method java/lang/Thread.yield:()V
+     117: goto          106
+     120: invokestatic  #14                 // Method java/lang/Thread.interrupted:()Z
+     123: pop
+     124: aload_2
+     125: athrow
+     126: goto          134
+     129: aload_0
+     130: aconst_null
+     131: putfield      #6                  // Field thread:Ljava/lang/Thread;
+     134: return
+    Exception table:
+       from    to  target type
+          23    32    35   Class java/lang/Throwable
+          23    42    84   any
+
+  public void dispose();
+    Code:
+       0: aload_0
+       1: invokevirtual #4                  // Method get:()I
+       4: istore_1
+       5: iload_1
+       6: iconst_2
+       7: if_icmplt     13
+      10: goto          75
+      13: iload_1
+      14: ifne          33
+      17: aload_0
+      18: iconst_0
+      19: iconst_4
+      20: invokevirtual #8                  // Method compareAndSet:(II)Z
+      23: ifeq          72
+      26: aload_0
+      27: invokevirtual #12                 // Method cleanup:()V
+      30: goto          75
+      33: aload_0
+      34: iconst_1
+      35: iconst_3
+      36: invokevirtual #8                  // Method compareAndSet:(II)Z
+      39: ifeq          72
+      42: aload_0
+      43: getfield      #6                  // Field thread:Ljava/lang/Thread;
+      46: astore_2
+      47: aload_2
+      48: ifnull        60
+      51: aload_2
+      52: invokevirtual #15                 // Method java/lang/Thread.interrupt:()V
+      55: aload_0
+      56: aconst_null
+      57: putfield      #6                  // Field thread:Ljava/lang/Thread;
+      60: aload_0
+      61: iconst_4
+      62: invokevirtual #16                 // Method set:(I)V
+      65: aload_0
+      66: invokevirtual #12                 // Method cleanup:()V
+      69: goto          75
+      72: goto          0
+      75: return
+
+  void cleanup();
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field tasks:Lio/reactivex/rxjava3/disposables/DisposableContainer;
+       4: ifnull        18
+       7: aload_0
+       8: getfield      #3                  // Field tasks:Lio/reactivex/rxjava3/disposables/DisposableContainer;
+      11: aload_0
+      12: invokeinterface #17,  2           // InterfaceMethod io/reactivex/rxjava3/disposables/DisposableContainer.delete:(Lio/reactivex/rxjava3/disposables/Disposable;)Z
+      17: pop
+      18: return
+
+  public boolean isDisposed();
+    Code:
+       0: aload_0
+       1: invokevirtual #4                  // Method get:()I
+       4: iconst_2
+       5: if_icmplt     12
+       8: iconst_1
+       9: goto          13
+      12: iconst_0
+      13: ireturn
+}

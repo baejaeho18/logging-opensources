@@ -1,0 +1,363 @@
+Compiled from "ObservableWindowBoundary.java"
+final class io.reactivex.rxjava3.internal.operators.observable.ObservableWindowBoundary$WindowBoundaryMainObserver<T, B> extends java.util.concurrent.atomic.AtomicInteger implements io.reactivex.rxjava3.core.Observer<T>, io.reactivex.rxjava3.disposables.Disposable, java.lang.Runnable {
+  private static final long serialVersionUID;
+
+  final io.reactivex.rxjava3.core.Observer<? super io.reactivex.rxjava3.core.Observable<T>> downstream;
+
+  final int capacityHint;
+
+  final io.reactivex.rxjava3.internal.operators.observable.ObservableWindowBoundary$WindowBoundaryInnerObserver<T, B> boundaryObserver;
+
+  final java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.disposables.Disposable> upstream;
+
+  final java.util.concurrent.atomic.AtomicInteger windows;
+
+  final io.reactivex.rxjava3.internal.queue.MpscLinkedQueue<java.lang.Object> queue;
+
+  final io.reactivex.rxjava3.internal.util.AtomicThrowable errors;
+
+  final java.util.concurrent.atomic.AtomicBoolean stopWindows;
+
+  static final java.lang.Object NEXT_WINDOW;
+
+  volatile boolean done;
+
+  io.reactivex.rxjava3.subjects.UnicastSubject<T> window;
+
+  io.reactivex.rxjava3.internal.operators.observable.ObservableWindowBoundary$WindowBoundaryMainObserver(io.reactivex.rxjava3.core.Observer<? super io.reactivex.rxjava3.core.Observable<T>>, int);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+       9: aload_0
+      10: iload_2
+      11: putfield      #3                  // Field capacityHint:I
+      14: aload_0
+      15: new           #4                  // class io/reactivex/rxjava3/internal/operators/observable/ObservableWindowBoundary$WindowBoundaryInnerObserver
+      18: dup
+      19: aload_0
+      20: invokespecial #5                  // Method io/reactivex/rxjava3/internal/operators/observable/ObservableWindowBoundary$WindowBoundaryInnerObserver."<init>":(Lio/reactivex/rxjava3/internal/operators/observable/ObservableWindowBoundary$WindowBoundaryMainObserver;)V
+      23: putfield      #6                  // Field boundaryObserver:Lio/reactivex/rxjava3/internal/operators/observable/ObservableWindowBoundary$WindowBoundaryInnerObserver;
+      26: aload_0
+      27: new           #7                  // class java/util/concurrent/atomic/AtomicReference
+      30: dup
+      31: invokespecial #8                  // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+      34: putfield      #9                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      37: aload_0
+      38: new           #10                 // class java/util/concurrent/atomic/AtomicInteger
+      41: dup
+      42: iconst_1
+      43: invokespecial #11                 // Method java/util/concurrent/atomic/AtomicInteger."<init>":(I)V
+      46: putfield      #12                 // Field windows:Ljava/util/concurrent/atomic/AtomicInteger;
+      49: aload_0
+      50: new           #13                 // class io/reactivex/rxjava3/internal/queue/MpscLinkedQueue
+      53: dup
+      54: invokespecial #14                 // Method io/reactivex/rxjava3/internal/queue/MpscLinkedQueue."<init>":()V
+      57: putfield      #15                 // Field queue:Lio/reactivex/rxjava3/internal/queue/MpscLinkedQueue;
+      60: aload_0
+      61: new           #16                 // class io/reactivex/rxjava3/internal/util/AtomicThrowable
+      64: dup
+      65: invokespecial #17                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable."<init>":()V
+      68: putfield      #18                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      71: aload_0
+      72: new           #19                 // class java/util/concurrent/atomic/AtomicBoolean
+      75: dup
+      76: invokespecial #20                 // Method java/util/concurrent/atomic/AtomicBoolean."<init>":()V
+      79: putfield      #21                 // Field stopWindows:Ljava/util/concurrent/atomic/AtomicBoolean;
+      82: return
+
+  public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+       4: aload_1
+       5: invokestatic  #22                 // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.setOnce:(Ljava/util/concurrent/atomic/AtomicReference;Lio/reactivex/rxjava3/disposables/Disposable;)Z
+       8: ifeq          15
+      11: aload_0
+      12: invokevirtual #23                 // Method innerNext:()V
+      15: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #15                 // Field queue:Lio/reactivex/rxjava3/internal/queue/MpscLinkedQueue;
+       4: aload_1
+       5: invokevirtual #24                 // Method io/reactivex/rxjava3/internal/queue/MpscLinkedQueue.offer:(Ljava/lang/Object;)Z
+       8: pop
+       9: aload_0
+      10: invokevirtual #25                 // Method drain:()V
+      13: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field boundaryObserver:Lio/reactivex/rxjava3/internal/operators/observable/ObservableWindowBoundary$WindowBoundaryInnerObserver;
+       4: invokevirtual #26                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableWindowBoundary$WindowBoundaryInnerObserver.dispose:()V
+       7: aload_0
+       8: getfield      #18                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      11: aload_1
+      12: invokevirtual #27                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryAddThrowableOrReport:(Ljava/lang/Throwable;)Z
+      15: ifeq          27
+      18: aload_0
+      19: iconst_1
+      20: putfield      #28                 // Field done:Z
+      23: aload_0
+      24: invokevirtual #25                 // Method drain:()V
+      27: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field boundaryObserver:Lio/reactivex/rxjava3/internal/operators/observable/ObservableWindowBoundary$WindowBoundaryInnerObserver;
+       4: invokevirtual #26                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableWindowBoundary$WindowBoundaryInnerObserver.dispose:()V
+       7: aload_0
+       8: iconst_1
+       9: putfield      #28                 // Field done:Z
+      12: aload_0
+      13: invokevirtual #25                 // Method drain:()V
+      16: return
+
+  public void dispose();
+    Code:
+       0: aload_0
+       1: getfield      #21                 // Field stopWindows:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: iconst_0
+       5: iconst_1
+       6: invokevirtual #29                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+       9: ifeq          37
+      12: aload_0
+      13: getfield      #6                  // Field boundaryObserver:Lio/reactivex/rxjava3/internal/operators/observable/ObservableWindowBoundary$WindowBoundaryInnerObserver;
+      16: invokevirtual #26                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableWindowBoundary$WindowBoundaryInnerObserver.dispose:()V
+      19: aload_0
+      20: getfield      #12                 // Field windows:Ljava/util/concurrent/atomic/AtomicInteger;
+      23: invokevirtual #30                 // Method java/util/concurrent/atomic/AtomicInteger.decrementAndGet:()I
+      26: ifne          37
+      29: aload_0
+      30: getfield      #9                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      33: invokestatic  #31                 // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.dispose:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+      36: pop
+      37: return
+
+  public boolean isDisposed();
+    Code:
+       0: aload_0
+       1: getfield      #21                 // Field stopWindows:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: invokevirtual #32                 // Method java/util/concurrent/atomic/AtomicBoolean.get:()Z
+       7: ireturn
+
+  public void run();
+    Code:
+       0: aload_0
+       1: getfield      #12                 // Field windows:Ljava/util/concurrent/atomic/AtomicInteger;
+       4: invokevirtual #30                 // Method java/util/concurrent/atomic/AtomicInteger.decrementAndGet:()I
+       7: ifne          18
+      10: aload_0
+      11: getfield      #9                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      14: invokestatic  #31                 // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.dispose:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+      17: pop
+      18: return
+
+  void innerNext();
+    Code:
+       0: aload_0
+       1: getfield      #15                 // Field queue:Lio/reactivex/rxjava3/internal/queue/MpscLinkedQueue;
+       4: getstatic     #33                 // Field NEXT_WINDOW:Ljava/lang/Object;
+       7: invokevirtual #24                 // Method io/reactivex/rxjava3/internal/queue/MpscLinkedQueue.offer:(Ljava/lang/Object;)Z
+      10: pop
+      11: aload_0
+      12: invokevirtual #25                 // Method drain:()V
+      15: return
+
+  void innerError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokestatic  #31                 // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.dispose:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+       7: pop
+       8: aload_0
+       9: getfield      #18                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      12: aload_1
+      13: invokevirtual #27                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryAddThrowableOrReport:(Ljava/lang/Throwable;)Z
+      16: ifeq          28
+      19: aload_0
+      20: iconst_1
+      21: putfield      #28                 // Field done:Z
+      24: aload_0
+      25: invokevirtual #25                 // Method drain:()V
+      28: return
+
+  void innerComplete();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokestatic  #31                 // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.dispose:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+       7: pop
+       8: aload_0
+       9: iconst_1
+      10: putfield      #28                 // Field done:Z
+      13: aload_0
+      14: invokevirtual #25                 // Method drain:()V
+      17: return
+
+  void drain();
+    Code:
+       0: aload_0
+       1: invokevirtual #34                 // Method getAndIncrement:()I
+       4: ifeq          8
+       7: return
+       8: iconst_1
+       9: istore_1
+      10: aload_0
+      11: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      14: astore_2
+      15: aload_0
+      16: getfield      #15                 // Field queue:Lio/reactivex/rxjava3/internal/queue/MpscLinkedQueue;
+      19: astore_3
+      20: aload_0
+      21: getfield      #18                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      24: astore        4
+      26: aload_0
+      27: getfield      #12                 // Field windows:Ljava/util/concurrent/atomic/AtomicInteger;
+      30: invokevirtual #35                 // Method java/util/concurrent/atomic/AtomicInteger.get:()I
+      33: ifne          46
+      36: aload_3
+      37: invokevirtual #36                 // Method io/reactivex/rxjava3/internal/queue/MpscLinkedQueue.clear:()V
+      40: aload_0
+      41: aconst_null
+      42: putfield      #37                 // Field window:Lio/reactivex/rxjava3/subjects/UnicastSubject;
+      45: return
+      46: aload_0
+      47: getfield      #37                 // Field window:Lio/reactivex/rxjava3/subjects/UnicastSubject;
+      50: astore        5
+      52: aload_0
+      53: getfield      #28                 // Field done:Z
+      56: istore        6
+      58: iload         6
+      60: ifeq          108
+      63: aload         4
+      65: invokevirtual #38                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.get:()Ljava/lang/Object;
+      68: ifnull        108
+      71: aload_3
+      72: invokevirtual #36                 // Method io/reactivex/rxjava3/internal/queue/MpscLinkedQueue.clear:()V
+      75: aload         4
+      77: invokevirtual #39                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.terminate:()Ljava/lang/Throwable;
+      80: astore        7
+      82: aload         5
+      84: ifnull        99
+      87: aload_0
+      88: aconst_null
+      89: putfield      #37                 // Field window:Lio/reactivex/rxjava3/subjects/UnicastSubject;
+      92: aload         5
+      94: aload         7
+      96: invokevirtual #40                 // Method io/reactivex/rxjava3/subjects/UnicastSubject.onError:(Ljava/lang/Throwable;)V
+      99: aload_2
+     100: aload         7
+     102: invokeinterface #41,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+     107: return
+     108: aload_3
+     109: invokevirtual #42                 // Method io/reactivex/rxjava3/internal/queue/MpscLinkedQueue.poll:()Ljava/lang/Object;
+     112: astore        7
+     114: aload         7
+     116: ifnonnull     123
+     119: iconst_1
+     120: goto          124
+     123: iconst_0
+     124: istore        8
+     126: iload         6
+     128: ifeq          198
+     131: iload         8
+     133: ifeq          198
+     136: aload         4
+     138: invokevirtual #39                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.terminate:()Ljava/lang/Throwable;
+     141: astore        9
+     143: aload         9
+     145: ifnonnull     172
+     148: aload         5
+     150: ifnull        163
+     153: aload_0
+     154: aconst_null
+     155: putfield      #37                 // Field window:Lio/reactivex/rxjava3/subjects/UnicastSubject;
+     158: aload         5
+     160: invokevirtual #43                 // Method io/reactivex/rxjava3/subjects/UnicastSubject.onComplete:()V
+     163: aload_2
+     164: invokeinterface #44,  1           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onComplete:()V
+     169: goto          197
+     172: aload         5
+     174: ifnull        189
+     177: aload_0
+     178: aconst_null
+     179: putfield      #37                 // Field window:Lio/reactivex/rxjava3/subjects/UnicastSubject;
+     182: aload         5
+     184: aload         9
+     186: invokevirtual #40                 // Method io/reactivex/rxjava3/subjects/UnicastSubject.onError:(Ljava/lang/Throwable;)V
+     189: aload_2
+     190: aload         9
+     192: invokeinterface #41,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+     197: return
+     198: iload         8
+     200: ifeq          206
+     203: goto          308
+     206: aload         7
+     208: getstatic     #33                 // Field NEXT_WINDOW:Ljava/lang/Object;
+     211: if_acmpeq     224
+     214: aload         5
+     216: aload         7
+     218: invokevirtual #45                 // Method io/reactivex/rxjava3/subjects/UnicastSubject.onNext:(Ljava/lang/Object;)V
+     221: goto          26
+     224: aload         5
+     226: ifnull        239
+     229: aload_0
+     230: aconst_null
+     231: putfield      #37                 // Field window:Lio/reactivex/rxjava3/subjects/UnicastSubject;
+     234: aload         5
+     236: invokevirtual #43                 // Method io/reactivex/rxjava3/subjects/UnicastSubject.onComplete:()V
+     239: aload_0
+     240: getfield      #21                 // Field stopWindows:Ljava/util/concurrent/atomic/AtomicBoolean;
+     243: invokevirtual #32                 // Method java/util/concurrent/atomic/AtomicBoolean.get:()Z
+     246: ifne          305
+     249: aload_0
+     250: getfield      #3                  // Field capacityHint:I
+     253: aload_0
+     254: invokestatic  #46                 // Method io/reactivex/rxjava3/subjects/UnicastSubject.create:(ILjava/lang/Runnable;)Lio/reactivex/rxjava3/subjects/UnicastSubject;
+     257: astore        5
+     259: aload_0
+     260: aload         5
+     262: putfield      #37                 // Field window:Lio/reactivex/rxjava3/subjects/UnicastSubject;
+     265: aload_0
+     266: getfield      #12                 // Field windows:Ljava/util/concurrent/atomic/AtomicInteger;
+     269: invokevirtual #47                 // Method java/util/concurrent/atomic/AtomicInteger.getAndIncrement:()I
+     272: pop
+     273: new           #48                 // class io/reactivex/rxjava3/internal/operators/observable/ObservableWindowSubscribeIntercept
+     276: dup
+     277: aload         5
+     279: invokespecial #49                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableWindowSubscribeIntercept."<init>":(Lio/reactivex/rxjava3/subjects/Subject;)V
+     282: astore        9
+     284: aload_2
+     285: aload         9
+     287: invokeinterface #50,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onNext:(Ljava/lang/Object;)V
+     292: aload         9
+     294: invokevirtual #51                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableWindowSubscribeIntercept.tryAbandon:()Z
+     297: ifeq          305
+     300: aload         5
+     302: invokevirtual #43                 // Method io/reactivex/rxjava3/subjects/UnicastSubject.onComplete:()V
+     305: goto          26
+     308: aload_0
+     309: iload_1
+     310: ineg
+     311: invokevirtual #52                 // Method addAndGet:(I)I
+     314: istore_1
+     315: iload_1
+     316: ifne          26
+     319: goto          322
+     322: return
+
+  static {};
+    Code:
+       0: new           #53                 // class java/lang/Object
+       3: dup
+       4: invokespecial #54                 // Method java/lang/Object."<init>":()V
+       7: putstatic     #33                 // Field NEXT_WINDOW:Ljava/lang/Object;
+      10: return
+}

@@ -1,0 +1,166 @@
+Compiled from "IoScheduler.java"
+public final class io.reactivex.rxjava3.internal.schedulers.IoScheduler extends io.reactivex.rxjava3.core.Scheduler {
+  private static final java.lang.String WORKER_THREAD_NAME_PREFIX;
+
+  static final io.reactivex.rxjava3.internal.schedulers.RxThreadFactory WORKER_THREAD_FACTORY;
+
+  private static final java.lang.String EVICTOR_THREAD_NAME_PREFIX;
+
+  static final io.reactivex.rxjava3.internal.schedulers.RxThreadFactory EVICTOR_THREAD_FACTORY;
+
+  private static final java.lang.String KEY_KEEP_ALIVE_TIME;
+
+  public static final long KEEP_ALIVE_TIME_DEFAULT;
+
+  private static final long KEEP_ALIVE_TIME;
+
+  private static final java.util.concurrent.TimeUnit KEEP_ALIVE_UNIT;
+
+  static final io.reactivex.rxjava3.internal.schedulers.IoScheduler$ThreadWorker SHUTDOWN_THREAD_WORKER;
+
+  final java.util.concurrent.ThreadFactory threadFactory;
+
+  final java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.internal.schedulers.IoScheduler$CachedWorkerPool> pool;
+
+  private static final java.lang.String KEY_IO_PRIORITY;
+
+  private static final java.lang.String KEY_SCHEDULED_RELEASE;
+
+  static boolean USE_SCHEDULED_RELEASE;
+
+  static final io.reactivex.rxjava3.internal.schedulers.IoScheduler$CachedWorkerPool NONE;
+
+  public io.reactivex.rxjava3.internal.schedulers.IoScheduler();
+    Code:
+       0: aload_0
+       1: getstatic     #1                  // Field WORKER_THREAD_FACTORY:Lio/reactivex/rxjava3/internal/schedulers/RxThreadFactory;
+       4: invokespecial #2                  // Method "<init>":(Ljava/util/concurrent/ThreadFactory;)V
+       7: return
+
+  public io.reactivex.rxjava3.internal.schedulers.IoScheduler(java.util.concurrent.ThreadFactory);
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method io/reactivex/rxjava3/core/Scheduler."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #4                  // Field threadFactory:Ljava/util/concurrent/ThreadFactory;
+       9: aload_0
+      10: new           #5                  // class java/util/concurrent/atomic/AtomicReference
+      13: dup
+      14: getstatic     #6                  // Field NONE:Lio/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool;
+      17: invokespecial #7                  // Method java/util/concurrent/atomic/AtomicReference."<init>":(Ljava/lang/Object;)V
+      20: putfield      #8                  // Field pool:Ljava/util/concurrent/atomic/AtomicReference;
+      23: aload_0
+      24: invokevirtual #9                  // Method start:()V
+      27: return
+
+  public void start();
+    Code:
+       0: new           #10                 // class io/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool
+       3: dup
+       4: getstatic     #11                 // Field KEEP_ALIVE_TIME:J
+       7: getstatic     #12                 // Field KEEP_ALIVE_UNIT:Ljava/util/concurrent/TimeUnit;
+      10: aload_0
+      11: getfield      #4                  // Field threadFactory:Ljava/util/concurrent/ThreadFactory;
+      14: invokespecial #13                 // Method io/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool."<init>":(JLjava/util/concurrent/TimeUnit;Ljava/util/concurrent/ThreadFactory;)V
+      17: astore_1
+      18: aload_0
+      19: getfield      #8                  // Field pool:Ljava/util/concurrent/atomic/AtomicReference;
+      22: getstatic     #6                  // Field NONE:Lio/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool;
+      25: aload_1
+      26: invokevirtual #14                 // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      29: ifne          36
+      32: aload_1
+      33: invokevirtual #15                 // Method io/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool.shutdown:()V
+      36: return
+
+  public void shutdown();
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field pool:Ljava/util/concurrent/atomic/AtomicReference;
+       4: getstatic     #6                  // Field NONE:Lio/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool;
+       7: invokevirtual #16                 // Method java/util/concurrent/atomic/AtomicReference.getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;
+      10: checkcast     #10                 // class io/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool
+      13: astore_1
+      14: aload_1
+      15: getstatic     #6                  // Field NONE:Lio/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool;
+      18: if_acmpeq     25
+      21: aload_1
+      22: invokevirtual #15                 // Method io/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool.shutdown:()V
+      25: return
+
+  public io.reactivex.rxjava3.core.Scheduler$Worker createWorker();
+    Code:
+       0: new           #17                 // class io/reactivex/rxjava3/internal/schedulers/IoScheduler$EventLoopWorker
+       3: dup
+       4: aload_0
+       5: getfield      #8                  // Field pool:Ljava/util/concurrent/atomic/AtomicReference;
+       8: invokevirtual #18                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+      11: checkcast     #10                 // class io/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool
+      14: invokespecial #19                 // Method io/reactivex/rxjava3/internal/schedulers/IoScheduler$EventLoopWorker."<init>":(Lio/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool;)V
+      17: areturn
+
+  public int size();
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field pool:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokevirtual #18                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+       7: checkcast     #10                 // class io/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool
+      10: getfield      #20                 // Field io/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool.allWorkers:Lio/reactivex/rxjava3/disposables/CompositeDisposable;
+      13: invokevirtual #21                 // Method io/reactivex/rxjava3/disposables/CompositeDisposable.size:()I
+      16: ireturn
+
+  static {};
+    Code:
+       0: getstatic     #22                 // Field java/util/concurrent/TimeUnit.SECONDS:Ljava/util/concurrent/TimeUnit;
+       3: putstatic     #12                 // Field KEEP_ALIVE_UNIT:Ljava/util/concurrent/TimeUnit;
+       6: ldc           #24                 // String rx3.io-keep-alive-time
+       8: ldc2_w        #25                 // long 60l
+      11: invokestatic  #27                 // Method java/lang/Long.getLong:(Ljava/lang/String;J)Ljava/lang/Long;
+      14: invokevirtual #28                 // Method java/lang/Long.longValue:()J
+      17: putstatic     #11                 // Field KEEP_ALIVE_TIME:J
+      20: new           #29                 // class io/reactivex/rxjava3/internal/schedulers/IoScheduler$ThreadWorker
+      23: dup
+      24: new           #30                 // class io/reactivex/rxjava3/internal/schedulers/RxThreadFactory
+      27: dup
+      28: ldc           #31                 // String RxCachedThreadSchedulerShutdown
+      30: invokespecial #32                 // Method io/reactivex/rxjava3/internal/schedulers/RxThreadFactory."<init>":(Ljava/lang/String;)V
+      33: invokespecial #33                 // Method io/reactivex/rxjava3/internal/schedulers/IoScheduler$ThreadWorker."<init>":(Ljava/util/concurrent/ThreadFactory;)V
+      36: putstatic     #34                 // Field SHUTDOWN_THREAD_WORKER:Lio/reactivex/rxjava3/internal/schedulers/IoScheduler$ThreadWorker;
+      39: getstatic     #34                 // Field SHUTDOWN_THREAD_WORKER:Lio/reactivex/rxjava3/internal/schedulers/IoScheduler$ThreadWorker;
+      42: invokevirtual #35                 // Method io/reactivex/rxjava3/internal/schedulers/IoScheduler$ThreadWorker.dispose:()V
+      45: iconst_1
+      46: bipush        10
+      48: ldc           #37                 // String rx3.io-priority
+      50: iconst_5
+      51: invokestatic  #38                 // Method java/lang/Integer.getInteger:(Ljava/lang/String;I)Ljava/lang/Integer;
+      54: invokevirtual #39                 // Method java/lang/Integer.intValue:()I
+      57: invokestatic  #40                 // Method java/lang/Math.min:(II)I
+      60: invokestatic  #41                 // Method java/lang/Math.max:(II)I
+      63: istore_0
+      64: new           #30                 // class io/reactivex/rxjava3/internal/schedulers/RxThreadFactory
+      67: dup
+      68: ldc           #42                 // String RxCachedThreadScheduler
+      70: iload_0
+      71: invokespecial #43                 // Method io/reactivex/rxjava3/internal/schedulers/RxThreadFactory."<init>":(Ljava/lang/String;I)V
+      74: putstatic     #1                  // Field WORKER_THREAD_FACTORY:Lio/reactivex/rxjava3/internal/schedulers/RxThreadFactory;
+      77: new           #30                 // class io/reactivex/rxjava3/internal/schedulers/RxThreadFactory
+      80: dup
+      81: ldc           #44                 // String RxCachedWorkerPoolEvictor
+      83: iload_0
+      84: invokespecial #43                 // Method io/reactivex/rxjava3/internal/schedulers/RxThreadFactory."<init>":(Ljava/lang/String;I)V
+      87: putstatic     #45                 // Field EVICTOR_THREAD_FACTORY:Lio/reactivex/rxjava3/internal/schedulers/RxThreadFactory;
+      90: ldc           #46                 // String rx3.io-scheduled-release
+      92: invokestatic  #47                 // Method java/lang/Boolean.getBoolean:(Ljava/lang/String;)Z
+      95: putstatic     #48                 // Field USE_SCHEDULED_RELEASE:Z
+      98: new           #10                 // class io/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool
+     101: dup
+     102: lconst_0
+     103: aconst_null
+     104: getstatic     #1                  // Field WORKER_THREAD_FACTORY:Lio/reactivex/rxjava3/internal/schedulers/RxThreadFactory;
+     107: invokespecial #13                 // Method io/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool."<init>":(JLjava/util/concurrent/TimeUnit;Ljava/util/concurrent/ThreadFactory;)V
+     110: putstatic     #6                  // Field NONE:Lio/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool;
+     113: getstatic     #6                  // Field NONE:Lio/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool;
+     116: invokevirtual #15                 // Method io/reactivex/rxjava3/internal/schedulers/IoScheduler$CachedWorkerPool.shutdown:()V
+     119: return
+}

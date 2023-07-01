@@ -1,0 +1,128 @@
+Compiled from "ObservableSwitchMap.java"
+final class io.reactivex.rxjava3.internal.operators.observable.ObservableSwitchMap$SwitchMapInnerObserver<T, R> extends java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.disposables.Disposable> implements io.reactivex.rxjava3.core.Observer<R> {
+  private static final long serialVersionUID;
+
+  final io.reactivex.rxjava3.internal.operators.observable.ObservableSwitchMap$SwitchMapObserver<T, R> parent;
+
+  final long index;
+
+  final int bufferSize;
+
+  volatile io.reactivex.rxjava3.operators.SimpleQueue<R> queue;
+
+  volatile boolean done;
+
+  io.reactivex.rxjava3.internal.operators.observable.ObservableSwitchMap$SwitchMapInnerObserver(io.reactivex.rxjava3.internal.operators.observable.ObservableSwitchMap$SwitchMapObserver<T, R>, long, int);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field parent:Lio/reactivex/rxjava3/internal/operators/observable/ObservableSwitchMap$SwitchMapObserver;
+       9: aload_0
+      10: lload_2
+      11: putfield      #3                  // Field index:J
+      14: aload_0
+      15: iload         4
+      17: putfield      #4                  // Field bufferSize:I
+      20: return
+
+  public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #5                  // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.setOnce:(Ljava/util/concurrent/atomic/AtomicReference;Lio/reactivex/rxjava3/disposables/Disposable;)Z
+       5: ifeq          78
+       8: aload_1
+       9: instanceof    #6                  // class io/reactivex/rxjava3/operators/QueueDisposable
+      12: ifeq          63
+      15: aload_1
+      16: checkcast     #6                  // class io/reactivex/rxjava3/operators/QueueDisposable
+      19: astore_2
+      20: aload_2
+      21: bipush        7
+      23: invokeinterface #7,  2            // InterfaceMethod io/reactivex/rxjava3/operators/QueueDisposable.requestFusion:(I)I
+      28: istore_3
+      29: iload_3
+      30: iconst_1
+      31: if_icmpne     52
+      34: aload_0
+      35: aload_2
+      36: putfield      #8                  // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      39: aload_0
+      40: iconst_1
+      41: putfield      #9                  // Field done:Z
+      44: aload_0
+      45: getfield      #2                  // Field parent:Lio/reactivex/rxjava3/internal/operators/observable/ObservableSwitchMap$SwitchMapObserver;
+      48: invokevirtual #10                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableSwitchMap$SwitchMapObserver.drain:()V
+      51: return
+      52: iload_3
+      53: iconst_2
+      54: if_icmpne     63
+      57: aload_0
+      58: aload_2
+      59: putfield      #8                  // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      62: return
+      63: aload_0
+      64: new           #11                 // class io/reactivex/rxjava3/operators/SpscLinkedArrayQueue
+      67: dup
+      68: aload_0
+      69: getfield      #4                  // Field bufferSize:I
+      72: invokespecial #12                 // Method io/reactivex/rxjava3/operators/SpscLinkedArrayQueue."<init>":(I)V
+      75: putfield      #8                  // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      78: return
+
+  public void onNext(R);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field index:J
+       4: aload_0
+       5: getfield      #2                  // Field parent:Lio/reactivex/rxjava3/internal/operators/observable/ObservableSwitchMap$SwitchMapObserver;
+       8: getfield      #13                 // Field io/reactivex/rxjava3/internal/operators/observable/ObservableSwitchMap$SwitchMapObserver.unique:J
+      11: lcmp
+      12: ifne          37
+      15: aload_1
+      16: ifnull        30
+      19: aload_0
+      20: getfield      #8                  // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      23: aload_1
+      24: invokeinterface #14,  2           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.offer:(Ljava/lang/Object;)Z
+      29: pop
+      30: aload_0
+      31: getfield      #2                  // Field parent:Lio/reactivex/rxjava3/internal/operators/observable/ObservableSwitchMap$SwitchMapObserver;
+      34: invokevirtual #10                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableSwitchMap$SwitchMapObserver.drain:()V
+      37: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field parent:Lio/reactivex/rxjava3/internal/operators/observable/ObservableSwitchMap$SwitchMapObserver;
+       4: aload_0
+       5: aload_1
+       6: invokevirtual #15                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableSwitchMap$SwitchMapObserver.innerError:(Lio/reactivex/rxjava3/internal/operators/observable/ObservableSwitchMap$SwitchMapInnerObserver;Ljava/lang/Throwable;)V
+       9: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field index:J
+       4: aload_0
+       5: getfield      #2                  // Field parent:Lio/reactivex/rxjava3/internal/operators/observable/ObservableSwitchMap$SwitchMapObserver;
+       8: getfield      #13                 // Field io/reactivex/rxjava3/internal/operators/observable/ObservableSwitchMap$SwitchMapObserver.unique:J
+      11: lcmp
+      12: ifne          27
+      15: aload_0
+      16: iconst_1
+      17: putfield      #9                  // Field done:Z
+      20: aload_0
+      21: getfield      #2                  // Field parent:Lio/reactivex/rxjava3/internal/operators/observable/ObservableSwitchMap$SwitchMapObserver;
+      24: invokevirtual #10                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableSwitchMap$SwitchMapObserver.drain:()V
+      27: return
+
+  public void cancel();
+    Code:
+       0: aload_0
+       1: invokestatic  #16                 // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.dispose:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+       4: pop
+       5: return
+}

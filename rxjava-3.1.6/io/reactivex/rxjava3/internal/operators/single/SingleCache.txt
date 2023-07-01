@@ -1,0 +1,275 @@
+Compiled from "SingleCache.java"
+public final class io.reactivex.rxjava3.internal.operators.single.SingleCache<T> extends io.reactivex.rxjava3.core.Single<T> implements io.reactivex.rxjava3.core.SingleObserver<T> {
+  static final io.reactivex.rxjava3.internal.operators.single.SingleCache$CacheDisposable[] EMPTY;
+
+  static final io.reactivex.rxjava3.internal.operators.single.SingleCache$CacheDisposable[] TERMINATED;
+
+  final io.reactivex.rxjava3.core.SingleSource<? extends T> source;
+
+  final java.util.concurrent.atomic.AtomicInteger wip;
+
+  final java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.internal.operators.single.SingleCache$CacheDisposable<T>[]> observers;
+
+  T value;
+
+  java.lang.Throwable error;
+
+  public io.reactivex.rxjava3.internal.operators.single.SingleCache(io.reactivex.rxjava3.core.SingleSource<? extends T>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method io/reactivex/rxjava3/core/Single."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field source:Lio/reactivex/rxjava3/core/SingleSource;
+       9: aload_0
+      10: new           #3                  // class java/util/concurrent/atomic/AtomicInteger
+      13: dup
+      14: invokespecial #4                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+      17: putfield      #5                  // Field wip:Ljava/util/concurrent/atomic/AtomicInteger;
+      20: aload_0
+      21: new           #6                  // class java/util/concurrent/atomic/AtomicReference
+      24: dup
+      25: getstatic     #7                  // Field EMPTY:[Lio/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable;
+      28: invokespecial #8                  // Method java/util/concurrent/atomic/AtomicReference."<init>":(Ljava/lang/Object;)V
+      31: putfield      #9                  // Field observers:Ljava/util/concurrent/atomic/AtomicReference;
+      34: return
+
+  protected void subscribeActual(io.reactivex.rxjava3.core.SingleObserver<? super T>);
+    Code:
+       0: new           #10                 // class io/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable
+       3: dup
+       4: aload_1
+       5: aload_0
+       6: invokespecial #11                 // Method io/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable."<init>":(Lio/reactivex/rxjava3/core/SingleObserver;Lio/reactivex/rxjava3/internal/operators/single/SingleCache;)V
+       9: astore_2
+      10: aload_1
+      11: aload_2
+      12: invokeinterface #12,  2           // InterfaceMethod io/reactivex/rxjava3/core/SingleObserver.onSubscribe:(Lio/reactivex/rxjava3/disposables/Disposable;)V
+      17: aload_0
+      18: aload_2
+      19: invokevirtual #13                 // Method add:(Lio/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable;)Z
+      22: ifeq          40
+      25: aload_2
+      26: invokevirtual #14                 // Method io/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable.isDisposed:()Z
+      29: ifeq          70
+      32: aload_0
+      33: aload_2
+      34: invokevirtual #15                 // Method remove:(Lio/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable;)V
+      37: goto          70
+      40: aload_0
+      41: getfield      #16                 // Field error:Ljava/lang/Throwable;
+      44: astore_3
+      45: aload_3
+      46: ifnull        59
+      49: aload_1
+      50: aload_3
+      51: invokeinterface #17,  2           // InterfaceMethod io/reactivex/rxjava3/core/SingleObserver.onError:(Ljava/lang/Throwable;)V
+      56: goto          69
+      59: aload_1
+      60: aload_0
+      61: getfield      #18                 // Field value:Ljava/lang/Object;
+      64: invokeinterface #19,  2           // InterfaceMethod io/reactivex/rxjava3/core/SingleObserver.onSuccess:(Ljava/lang/Object;)V
+      69: return
+      70: aload_0
+      71: getfield      #5                  // Field wip:Ljava/util/concurrent/atomic/AtomicInteger;
+      74: invokevirtual #20                 // Method java/util/concurrent/atomic/AtomicInteger.getAndIncrement:()I
+      77: ifne          90
+      80: aload_0
+      81: getfield      #2                  // Field source:Lio/reactivex/rxjava3/core/SingleSource;
+      84: aload_0
+      85: invokeinterface #21,  2           // InterfaceMethod io/reactivex/rxjava3/core/SingleSource.subscribe:(Lio/reactivex/rxjava3/core/SingleObserver;)V
+      90: return
+
+  boolean add(io.reactivex.rxjava3.internal.operators.single.SingleCache$CacheDisposable<T>);
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field observers:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokevirtual #22                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+       7: checkcast     #23                 // class "[Lio/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable;"
+      10: astore_2
+      11: aload_2
+      12: getstatic     #24                 // Field TERMINATED:[Lio/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable;
+      15: if_acmpne     20
+      18: iconst_0
+      19: ireturn
+      20: aload_2
+      21: arraylength
+      22: istore_3
+      23: iload_3
+      24: iconst_1
+      25: iadd
+      26: anewarray     #10                 // class io/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable
+      29: astore        4
+      31: aload_2
+      32: iconst_0
+      33: aload         4
+      35: iconst_0
+      36: iload_3
+      37: invokestatic  #25                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+      40: aload         4
+      42: iload_3
+      43: aload_1
+      44: aastore
+      45: aload_0
+      46: getfield      #9                  // Field observers:Ljava/util/concurrent/atomic/AtomicReference;
+      49: aload_2
+      50: aload         4
+      52: invokevirtual #26                 // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      55: ifeq          60
+      58: iconst_1
+      59: ireturn
+      60: goto          0
+
+  void remove(io.reactivex.rxjava3.internal.operators.single.SingleCache$CacheDisposable<T>);
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field observers:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokevirtual #22                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+       7: checkcast     #23                 // class "[Lio/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable;"
+      10: astore_2
+      11: aload_2
+      12: arraylength
+      13: istore_3
+      14: iload_3
+      15: ifne          19
+      18: return
+      19: iconst_m1
+      20: istore        4
+      22: iconst_0
+      23: istore        5
+      25: iload         5
+      27: iload_3
+      28: if_icmpge     52
+      31: aload_2
+      32: iload         5
+      34: aaload
+      35: aload_1
+      36: if_acmpne     46
+      39: iload         5
+      41: istore        4
+      43: goto          52
+      46: iinc          5, 1
+      49: goto          25
+      52: iload         4
+      54: ifge          58
+      57: return
+      58: iload_3
+      59: iconst_1
+      60: if_icmpne     71
+      63: getstatic     #7                  // Field EMPTY:[Lio/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable;
+      66: astore        5
+      68: goto          107
+      71: iload_3
+      72: iconst_1
+      73: isub
+      74: anewarray     #10                 // class io/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable
+      77: astore        5
+      79: aload_2
+      80: iconst_0
+      81: aload         5
+      83: iconst_0
+      84: iload         4
+      86: invokestatic  #25                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+      89: aload_2
+      90: iload         4
+      92: iconst_1
+      93: iadd
+      94: aload         5
+      96: iload         4
+      98: iload_3
+      99: iload         4
+     101: isub
+     102: iconst_1
+     103: isub
+     104: invokestatic  #25                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+     107: aload_0
+     108: getfield      #9                  // Field observers:Ljava/util/concurrent/atomic/AtomicReference;
+     111: aload_2
+     112: aload         5
+     114: invokevirtual #26                 // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+     117: ifeq          121
+     120: return
+     121: goto          0
+
+  public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: return
+
+  public void onSuccess(T);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #18                 // Field value:Ljava/lang/Object;
+       5: aload_0
+       6: getfield      #9                  // Field observers:Ljava/util/concurrent/atomic/AtomicReference;
+       9: getstatic     #24                 // Field TERMINATED:[Lio/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable;
+      12: invokevirtual #27                 // Method java/util/concurrent/atomic/AtomicReference.getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;
+      15: checkcast     #23                 // class "[Lio/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable;"
+      18: astore_2
+      19: aload_2
+      20: arraylength
+      21: istore_3
+      22: iconst_0
+      23: istore        4
+      25: iload         4
+      27: iload_3
+      28: if_icmpge     62
+      31: aload_2
+      32: iload         4
+      34: aaload
+      35: astore        5
+      37: aload         5
+      39: invokevirtual #14                 // Method io/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable.isDisposed:()Z
+      42: ifne          56
+      45: aload         5
+      47: getfield      #28                 // Field io/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable.downstream:Lio/reactivex/rxjava3/core/SingleObserver;
+      50: aload_1
+      51: invokeinterface #19,  2           // InterfaceMethod io/reactivex/rxjava3/core/SingleObserver.onSuccess:(Ljava/lang/Object;)V
+      56: iinc          4, 1
+      59: goto          25
+      62: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #16                 // Field error:Ljava/lang/Throwable;
+       5: aload_0
+       6: getfield      #9                  // Field observers:Ljava/util/concurrent/atomic/AtomicReference;
+       9: getstatic     #24                 // Field TERMINATED:[Lio/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable;
+      12: invokevirtual #27                 // Method java/util/concurrent/atomic/AtomicReference.getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;
+      15: checkcast     #23                 // class "[Lio/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable;"
+      18: astore_2
+      19: aload_2
+      20: arraylength
+      21: istore_3
+      22: iconst_0
+      23: istore        4
+      25: iload         4
+      27: iload_3
+      28: if_icmpge     62
+      31: aload_2
+      32: iload         4
+      34: aaload
+      35: astore        5
+      37: aload         5
+      39: invokevirtual #14                 // Method io/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable.isDisposed:()Z
+      42: ifne          56
+      45: aload         5
+      47: getfield      #28                 // Field io/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable.downstream:Lio/reactivex/rxjava3/core/SingleObserver;
+      50: aload_1
+      51: invokeinterface #17,  2           // InterfaceMethod io/reactivex/rxjava3/core/SingleObserver.onError:(Ljava/lang/Throwable;)V
+      56: iinc          4, 1
+      59: goto          25
+      62: return
+
+  static {};
+    Code:
+       0: iconst_0
+       1: anewarray     #10                 // class io/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable
+       4: putstatic     #7                  // Field EMPTY:[Lio/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable;
+       7: iconst_0
+       8: anewarray     #10                 // class io/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable
+      11: putstatic     #24                 // Field TERMINATED:[Lio/reactivex/rxjava3/internal/operators/single/SingleCache$CacheDisposable;
+      14: return
+}

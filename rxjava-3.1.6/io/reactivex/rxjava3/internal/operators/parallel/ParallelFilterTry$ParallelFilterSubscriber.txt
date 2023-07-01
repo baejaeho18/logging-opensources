@@ -1,0 +1,157 @@
+Compiled from "ParallelFilterTry.java"
+final class io.reactivex.rxjava3.internal.operators.parallel.ParallelFilterTry$ParallelFilterSubscriber<T> extends io.reactivex.rxjava3.internal.operators.parallel.ParallelFilterTry$BaseFilterSubscriber<T> {
+  final org.reactivestreams.Subscriber<? super T> downstream;
+
+  io.reactivex.rxjava3.internal.operators.parallel.ParallelFilterTry$ParallelFilterSubscriber(org.reactivestreams.Subscriber<? super T>, io.reactivex.rxjava3.functions.Predicate<? super T>, io.reactivex.rxjava3.functions.BiFunction<? super java.lang.Long, ? super java.lang.Throwable, io.reactivex.rxjava3.parallel.ParallelFailureHandling>);
+    Code:
+       0: aload_0
+       1: aload_2
+       2: aload_3
+       3: invokespecial #1                  // Method io/reactivex/rxjava3/internal/operators/parallel/ParallelFilterTry$BaseFilterSubscriber."<init>":(Lio/reactivex/rxjava3/functions/Predicate;Lio/reactivex/rxjava3/functions/BiFunction;)V
+       6: aload_0
+       7: aload_1
+       8: putfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      11: return
+
+  public void onSubscribe(org.reactivestreams.Subscription);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field upstream:Lorg/reactivestreams/Subscription;
+       4: aload_1
+       5: invokestatic  #4                  // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.validate:(Lorg/reactivestreams/Subscription;Lorg/reactivestreams/Subscription;)Z
+       8: ifeq          26
+      11: aload_0
+      12: aload_1
+      13: putfield      #3                  // Field upstream:Lorg/reactivestreams/Subscription;
+      16: aload_0
+      17: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      20: aload_0
+      21: invokeinterface #5,  2            // InterfaceMethod org/reactivestreams/Subscriber.onSubscribe:(Lorg/reactivestreams/Subscription;)V
+      26: return
+
+  public boolean tryOnNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field done:Z
+       4: ifne          182
+       7: lconst_0
+       8: lstore_2
+       9: aload_0
+      10: getfield      #7                  // Field predicate:Lio/reactivex/rxjava3/functions/Predicate;
+      13: aload_1
+      14: invokeinterface #8,  2            // InterfaceMethod io/reactivex/rxjava3/functions/Predicate.test:(Ljava/lang/Object;)Z
+      19: istore        4
+      21: goto          163
+      24: astore        5
+      26: aload         5
+      28: invokestatic  #10                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      31: aload_0
+      32: getfield      #11                 // Field errorHandler:Lio/reactivex/rxjava3/functions/BiFunction;
+      35: lload_2
+      36: lconst_1
+      37: ladd
+      38: dup2
+      39: lstore_2
+      40: invokestatic  #12                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+      43: aload         5
+      45: invokeinterface #13,  3           // InterfaceMethod io/reactivex/rxjava3/functions/BiFunction.apply:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      50: ldc           #14                 // String The errorHandler returned a null ParallelFailureHandling
+      52: invokestatic  #15                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+      55: checkcast     #16                 // class io/reactivex/rxjava3/parallel/ParallelFailureHandling
+      58: astore        6
+      60: goto          101
+      63: astore        7
+      65: aload         7
+      67: invokestatic  #10                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      70: aload_0
+      71: invokevirtual #17                 // Method cancel:()V
+      74: aload_0
+      75: new           #18                 // class io/reactivex/rxjava3/exceptions/CompositeException
+      78: dup
+      79: iconst_2
+      80: anewarray     #19                 // class java/lang/Throwable
+      83: dup
+      84: iconst_0
+      85: aload         5
+      87: aastore
+      88: dup
+      89: iconst_1
+      90: aload         7
+      92: aastore
+      93: invokespecial #20                 // Method io/reactivex/rxjava3/exceptions/CompositeException."<init>":([Ljava/lang/Throwable;)V
+      96: invokevirtual #21                 // Method onError:(Ljava/lang/Throwable;)V
+      99: iconst_0
+     100: ireturn
+     101: getstatic     #22                 // Field io/reactivex/rxjava3/internal/operators/parallel/ParallelFilterTry$1.$SwitchMap$io$reactivex$rxjava3$parallel$ParallelFailureHandling:[I
+     104: aload         6
+     106: invokevirtual #23                 // Method io/reactivex/rxjava3/parallel/ParallelFailureHandling.ordinal:()I
+     109: iaload
+     110: tableswitch   { // 1 to 3
+                     1: 136
+                     2: 139
+                     3: 141
+               default: 151
+          }
+     136: goto          9
+     139: iconst_0
+     140: ireturn
+     141: aload_0
+     142: invokevirtual #17                 // Method cancel:()V
+     145: aload_0
+     146: invokevirtual #24                 // Method onComplete:()V
+     149: iconst_0
+     150: ireturn
+     151: aload_0
+     152: invokevirtual #17                 // Method cancel:()V
+     155: aload_0
+     156: aload         5
+     158: invokevirtual #21                 // Method onError:(Ljava/lang/Throwable;)V
+     161: iconst_0
+     162: ireturn
+     163: iload         4
+     165: ifeq          180
+     168: aload_0
+     169: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+     172: aload_1
+     173: invokeinterface #25,  2           // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+     178: iconst_1
+     179: ireturn
+     180: iconst_0
+     181: ireturn
+     182: iconst_0
+     183: ireturn
+    Exception table:
+       from    to  target type
+           9    21    24   Class java/lang/Throwable
+          31    60    63   Class java/lang/Throwable
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field done:Z
+       4: ifeq          12
+       7: aload_1
+       8: invokestatic  #26                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      11: return
+      12: aload_0
+      13: iconst_1
+      14: putfield      #6                  // Field done:Z
+      17: aload_0
+      18: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      21: aload_1
+      22: invokeinterface #27,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      27: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field done:Z
+       4: ifne          21
+       7: aload_0
+       8: iconst_1
+       9: putfield      #6                  // Field done:Z
+      12: aload_0
+      13: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      16: invokeinterface #28,  1           // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+      21: return
+}

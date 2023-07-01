@@ -1,0 +1,253 @@
+Compiled from "FutureSubscriber.java"
+public final class io.reactivex.rxjava3.internal.subscribers.FutureSubscriber<T> extends java.util.concurrent.CountDownLatch implements io.reactivex.rxjava3.core.FlowableSubscriber<T>, java.util.concurrent.Future<T>, org.reactivestreams.Subscription {
+  T value;
+
+  java.lang.Throwable error;
+
+  final java.util.concurrent.atomic.AtomicReference<org.reactivestreams.Subscription> upstream;
+
+  public io.reactivex.rxjava3.internal.subscribers.FutureSubscriber();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: invokespecial #1                  // Method java/util/concurrent/CountDownLatch."<init>":(I)V
+       5: aload_0
+       6: new           #2                  // class java/util/concurrent/atomic/AtomicReference
+       9: dup
+      10: invokespecial #3                  // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+      13: putfield      #4                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      16: return
+
+  public boolean cancel(boolean);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokevirtual #5                  // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+       7: checkcast     #6                  // class org/reactivestreams/Subscription
+      10: astore_2
+      11: aload_2
+      12: aload_0
+      13: if_acmpeq     23
+      16: aload_2
+      17: getstatic     #7                  // Field io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.CANCELLED:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper;
+      20: if_acmpne     25
+      23: iconst_0
+      24: ireturn
+      25: aload_0
+      26: getfield      #4                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      29: aload_2
+      30: getstatic     #7                  // Field io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.CANCELLED:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper;
+      33: invokevirtual #8                  // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      36: ifeq          55
+      39: aload_2
+      40: ifnull        49
+      43: aload_2
+      44: invokeinterface #9,  1            // InterfaceMethod org/reactivestreams/Subscription.cancel:()V
+      49: aload_0
+      50: invokevirtual #10                 // Method countDown:()V
+      53: iconst_1
+      54: ireturn
+      55: goto          0
+
+  public boolean isCancelled();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokevirtual #5                  // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+       7: getstatic     #7                  // Field io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.CANCELLED:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper;
+      10: if_acmpne     17
+      13: iconst_1
+      14: goto          18
+      17: iconst_0
+      18: ireturn
+
+  public boolean isDone();
+    Code:
+       0: aload_0
+       1: invokevirtual #11                 // Method getCount:()J
+       4: lconst_0
+       5: lcmp
+       6: ifne          13
+       9: iconst_1
+      10: goto          14
+      13: iconst_0
+      14: ireturn
+
+  public T get() throws java.lang.InterruptedException, java.util.concurrent.ExecutionException;
+    Code:
+       0: aload_0
+       1: invokevirtual #11                 // Method getCount:()J
+       4: lconst_0
+       5: lcmp
+       6: ifeq          16
+       9: invokestatic  #12                 // Method io/reactivex/rxjava3/internal/util/BlockingHelper.verifyNonBlocking:()V
+      12: aload_0
+      13: invokevirtual #13                 // Method await:()V
+      16: aload_0
+      17: invokevirtual #14                 // Method isCancelled:()Z
+      20: ifeq          31
+      23: new           #15                 // class java/util/concurrent/CancellationException
+      26: dup
+      27: invokespecial #16                 // Method java/util/concurrent/CancellationException."<init>":()V
+      30: athrow
+      31: aload_0
+      32: getfield      #17                 // Field error:Ljava/lang/Throwable;
+      35: astore_1
+      36: aload_1
+      37: ifnull        49
+      40: new           #18                 // class java/util/concurrent/ExecutionException
+      43: dup
+      44: aload_1
+      45: invokespecial #19                 // Method java/util/concurrent/ExecutionException."<init>":(Ljava/lang/Throwable;)V
+      48: athrow
+      49: aload_0
+      50: getfield      #20                 // Field value:Ljava/lang/Object;
+      53: areturn
+
+  public T get(long, java.util.concurrent.TimeUnit) throws java.lang.InterruptedException, java.util.concurrent.ExecutionException, java.util.concurrent.TimeoutException;
+    Code:
+       0: aload_0
+       1: invokevirtual #11                 // Method getCount:()J
+       4: lconst_0
+       5: lcmp
+       6: ifeq          34
+       9: invokestatic  #12                 // Method io/reactivex/rxjava3/internal/util/BlockingHelper.verifyNonBlocking:()V
+      12: aload_0
+      13: lload_1
+      14: aload_3
+      15: invokevirtual #21                 // Method await:(JLjava/util/concurrent/TimeUnit;)Z
+      18: ifne          34
+      21: new           #22                 // class java/util/concurrent/TimeoutException
+      24: dup
+      25: lload_1
+      26: aload_3
+      27: invokestatic  #23                 // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.timeoutMessage:(JLjava/util/concurrent/TimeUnit;)Ljava/lang/String;
+      30: invokespecial #24                 // Method java/util/concurrent/TimeoutException."<init>":(Ljava/lang/String;)V
+      33: athrow
+      34: aload_0
+      35: invokevirtual #14                 // Method isCancelled:()Z
+      38: ifeq          49
+      41: new           #15                 // class java/util/concurrent/CancellationException
+      44: dup
+      45: invokespecial #16                 // Method java/util/concurrent/CancellationException."<init>":()V
+      48: athrow
+      49: aload_0
+      50: getfield      #17                 // Field error:Ljava/lang/Throwable;
+      53: astore        4
+      55: aload         4
+      57: ifnull        70
+      60: new           #18                 // class java/util/concurrent/ExecutionException
+      63: dup
+      64: aload         4
+      66: invokespecial #19                 // Method java/util/concurrent/ExecutionException."<init>":(Ljava/lang/Throwable;)V
+      69: athrow
+      70: aload_0
+      71: getfield      #20                 // Field value:Ljava/lang/Object;
+      74: areturn
+
+  public void onSubscribe(org.reactivestreams.Subscription);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+       4: aload_1
+       5: ldc2_w        #26                 // long 9223372036854775807l
+       8: invokestatic  #28                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.setOnce:(Ljava/util/concurrent/atomic/AtomicReference;Lorg/reactivestreams/Subscription;J)Z
+      11: pop
+      12: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #20                 // Field value:Ljava/lang/Object;
+       4: ifnull        36
+       7: aload_0
+       8: getfield      #4                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      11: invokevirtual #5                  // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+      14: checkcast     #6                  // class org/reactivestreams/Subscription
+      17: invokeinterface #9,  1            // InterfaceMethod org/reactivestreams/Subscription.cancel:()V
+      22: aload_0
+      23: new           #29                 // class java/lang/IndexOutOfBoundsException
+      26: dup
+      27: ldc           #30                 // String More than one element received
+      29: invokespecial #31                 // Method java/lang/IndexOutOfBoundsException."<init>":(Ljava/lang/String;)V
+      32: invokevirtual #32                 // Method onError:(Ljava/lang/Throwable;)V
+      35: return
+      36: aload_0
+      37: aload_1
+      38: putfield      #20                 // Field value:Ljava/lang/Object;
+      41: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field error:Ljava/lang/Throwable;
+       4: ifnonnull     52
+       7: aload_0
+       8: getfield      #4                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      11: invokevirtual #5                  // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+      14: checkcast     #6                  // class org/reactivestreams/Subscription
+      17: astore_2
+      18: aload_2
+      19: aload_0
+      20: if_acmpeq     52
+      23: aload_2
+      24: getstatic     #7                  // Field io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.CANCELLED:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper;
+      27: if_acmpeq     52
+      30: aload_0
+      31: getfield      #4                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      34: aload_2
+      35: aload_0
+      36: invokevirtual #8                  // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      39: ifeq          52
+      42: aload_0
+      43: aload_1
+      44: putfield      #17                 // Field error:Ljava/lang/Throwable;
+      47: aload_0
+      48: invokevirtual #10                 // Method countDown:()V
+      51: return
+      52: aload_1
+      53: invokestatic  #33                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      56: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #20                 // Field value:Ljava/lang/Object;
+       4: ifnonnull     21
+       7: aload_0
+       8: new           #34                 // class java/util/NoSuchElementException
+      11: dup
+      12: ldc           #35                 // String The source is empty
+      14: invokespecial #36                 // Method java/util/NoSuchElementException."<init>":(Ljava/lang/String;)V
+      17: invokevirtual #32                 // Method onError:(Ljava/lang/Throwable;)V
+      20: return
+      21: aload_0
+      22: getfield      #4                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      25: invokevirtual #5                  // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+      28: checkcast     #6                  // class org/reactivestreams/Subscription
+      31: astore_1
+      32: aload_1
+      33: aload_0
+      34: if_acmpeq     44
+      37: aload_1
+      38: getstatic     #7                  // Field io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.CANCELLED:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper;
+      41: if_acmpne     45
+      44: return
+      45: aload_0
+      46: getfield      #4                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      49: aload_1
+      50: aload_0
+      51: invokevirtual #8                  // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      54: ifeq          61
+      57: aload_0
+      58: invokevirtual #10                 // Method countDown:()V
+      61: return
+
+  public void cancel();
+    Code:
+       0: return
+
+  public void request(long);
+    Code:
+       0: return
+}

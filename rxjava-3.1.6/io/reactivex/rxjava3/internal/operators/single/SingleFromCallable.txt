@@ -1,0 +1,55 @@
+Compiled from "SingleFromCallable.java"
+public final class io.reactivex.rxjava3.internal.operators.single.SingleFromCallable<T> extends io.reactivex.rxjava3.core.Single<T> {
+  final java.util.concurrent.Callable<? extends T> callable;
+
+  public io.reactivex.rxjava3.internal.operators.single.SingleFromCallable(java.util.concurrent.Callable<? extends T>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method io/reactivex/rxjava3/core/Single."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field callable:Ljava/util/concurrent/Callable;
+       9: return
+
+  protected void subscribeActual(io.reactivex.rxjava3.core.SingleObserver<? super T>);
+    Code:
+       0: invokestatic  #3                  // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.empty:()Lio/reactivex/rxjava3/disposables/Disposable;
+       3: astore_2
+       4: aload_1
+       5: aload_2
+       6: invokeinterface #4,  2            // InterfaceMethod io/reactivex/rxjava3/core/SingleObserver.onSubscribe:(Lio/reactivex/rxjava3/disposables/Disposable;)V
+      11: aload_2
+      12: invokeinterface #5,  1            // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.isDisposed:()Z
+      17: ifeq          21
+      20: return
+      21: aload_0
+      22: getfield      #2                  // Field callable:Ljava/util/concurrent/Callable;
+      25: invokeinterface #6,  1            // InterfaceMethod java/util/concurrent/Callable.call:()Ljava/lang/Object;
+      30: ldc           #7                  // String The callable returned a null value
+      32: invokestatic  #8                  // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+      35: astore_3
+      36: goto          72
+      39: astore        4
+      41: aload         4
+      43: invokestatic  #10                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      46: aload_2
+      47: invokeinterface #5,  1            // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.isDisposed:()Z
+      52: ifne          66
+      55: aload_1
+      56: aload         4
+      58: invokeinterface #11,  2           // InterfaceMethod io/reactivex/rxjava3/core/SingleObserver.onError:(Ljava/lang/Throwable;)V
+      63: goto          71
+      66: aload         4
+      68: invokestatic  #12                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      71: return
+      72: aload_2
+      73: invokeinterface #5,  1            // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.isDisposed:()Z
+      78: ifne          88
+      81: aload_1
+      82: aload_3
+      83: invokeinterface #13,  2           // InterfaceMethod io/reactivex/rxjava3/core/SingleObserver.onSuccess:(Ljava/lang/Object;)V
+      88: return
+    Exception table:
+       from    to  target type
+          21    36    39   Class java/lang/Throwable
+}

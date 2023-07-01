@@ -1,0 +1,132 @@
+Compiled from "SingleZipIterable.java"
+public final class io.reactivex.rxjava3.internal.operators.single.SingleZipIterable<T, R> extends io.reactivex.rxjava3.core.Single<R> {
+  final java.lang.Iterable<? extends io.reactivex.rxjava3.core.SingleSource<? extends T>> sources;
+
+  final io.reactivex.rxjava3.functions.Function<? super java.lang.Object[], ? extends R> zipper;
+
+  public io.reactivex.rxjava3.internal.operators.single.SingleZipIterable(java.lang.Iterable<? extends io.reactivex.rxjava3.core.SingleSource<? extends T>>, io.reactivex.rxjava3.functions.Function<? super java.lang.Object[], ? extends R>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method io/reactivex/rxjava3/core/Single."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field sources:Ljava/lang/Iterable;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field zipper:Lio/reactivex/rxjava3/functions/Function;
+      14: return
+
+  protected void subscribeActual(io.reactivex.rxjava3.core.SingleObserver<? super R>);
+    Code:
+       0: bipush        8
+       2: anewarray     #4                  // class io/reactivex/rxjava3/core/SingleSource
+       5: astore_2
+       6: iconst_0
+       7: istore_3
+       8: aload_0
+       9: getfield      #2                  // Field sources:Ljava/lang/Iterable;
+      12: invokeinterface #5,  1            // InterfaceMethod java/lang/Iterable.iterator:()Ljava/util/Iterator;
+      17: astore        4
+      19: aload         4
+      21: invokeinterface #6,  1            // InterfaceMethod java/util/Iterator.hasNext:()Z
+      26: ifeq          90
+      29: aload         4
+      31: invokeinterface #7,  1            // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      36: checkcast     #4                  // class io/reactivex/rxjava3/core/SingleSource
+      39: astore        5
+      41: aload         5
+      43: ifnonnull     60
+      46: new           #8                  // class java/lang/NullPointerException
+      49: dup
+      50: ldc           #9                  // String One of the sources is null
+      52: invokespecial #10                 // Method java/lang/NullPointerException."<init>":(Ljava/lang/String;)V
+      55: aload_1
+      56: invokestatic  #11                 // Method io/reactivex/rxjava3/internal/disposables/EmptyDisposable.error:(Ljava/lang/Throwable;Lio/reactivex/rxjava3/core/SingleObserver;)V
+      59: return
+      60: iload_3
+      61: aload_2
+      62: arraylength
+      63: if_icmpne     79
+      66: aload_2
+      67: iload_3
+      68: iload_3
+      69: iconst_2
+      70: ishr
+      71: iadd
+      72: invokestatic  #12                 // Method java/util/Arrays.copyOf:([Ljava/lang/Object;I)[Ljava/lang/Object;
+      75: checkcast     #13                 // class "[Lio/reactivex/rxjava3/core/SingleSource;"
+      78: astore_2
+      79: aload_2
+      80: iload_3
+      81: iinc          3, 1
+      84: aload         5
+      86: aastore
+      87: goto          19
+      90: goto          107
+      93: astore        4
+      95: aload         4
+      97: invokestatic  #15                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+     100: aload         4
+     102: aload_1
+     103: invokestatic  #11                 // Method io/reactivex/rxjava3/internal/disposables/EmptyDisposable.error:(Ljava/lang/Throwable;Lio/reactivex/rxjava3/core/SingleObserver;)V
+     106: return
+     107: iload_3
+     108: ifne          123
+     111: new           #16                 // class java/util/NoSuchElementException
+     114: dup
+     115: invokespecial #17                 // Method java/util/NoSuchElementException."<init>":()V
+     118: aload_1
+     119: invokestatic  #11                 // Method io/reactivex/rxjava3/internal/disposables/EmptyDisposable.error:(Ljava/lang/Throwable;Lio/reactivex/rxjava3/core/SingleObserver;)V
+     122: return
+     123: iload_3
+     124: iconst_1
+     125: if_icmpne     153
+     128: aload_2
+     129: iconst_0
+     130: aaload
+     131: new           #18                 // class io/reactivex/rxjava3/internal/operators/single/SingleMap$MapSingleObserver
+     134: dup
+     135: aload_1
+     136: new           #19                 // class io/reactivex/rxjava3/internal/operators/single/SingleZipIterable$SingletonArrayFunc
+     139: dup
+     140: aload_0
+     141: invokespecial #20                 // Method io/reactivex/rxjava3/internal/operators/single/SingleZipIterable$SingletonArrayFunc."<init>":(Lio/reactivex/rxjava3/internal/operators/single/SingleZipIterable;)V
+     144: invokespecial #21                 // Method io/reactivex/rxjava3/internal/operators/single/SingleMap$MapSingleObserver."<init>":(Lio/reactivex/rxjava3/core/SingleObserver;Lio/reactivex/rxjava3/functions/Function;)V
+     147: invokeinterface #22,  2           // InterfaceMethod io/reactivex/rxjava3/core/SingleSource.subscribe:(Lio/reactivex/rxjava3/core/SingleObserver;)V
+     152: return
+     153: new           #23                 // class io/reactivex/rxjava3/internal/operators/single/SingleZipArray$ZipCoordinator
+     156: dup
+     157: aload_1
+     158: iload_3
+     159: aload_0
+     160: getfield      #3                  // Field zipper:Lio/reactivex/rxjava3/functions/Function;
+     163: invokespecial #24                 // Method io/reactivex/rxjava3/internal/operators/single/SingleZipArray$ZipCoordinator."<init>":(Lio/reactivex/rxjava3/core/SingleObserver;ILio/reactivex/rxjava3/functions/Function;)V
+     166: astore        4
+     168: aload_1
+     169: aload         4
+     171: invokeinterface #25,  2           // InterfaceMethod io/reactivex/rxjava3/core/SingleObserver.onSubscribe:(Lio/reactivex/rxjava3/disposables/Disposable;)V
+     176: iconst_0
+     177: istore        5
+     179: iload         5
+     181: iload_3
+     182: if_icmpge     217
+     185: aload         4
+     187: invokevirtual #26                 // Method io/reactivex/rxjava3/internal/operators/single/SingleZipArray$ZipCoordinator.isDisposed:()Z
+     190: ifeq          194
+     193: return
+     194: aload_2
+     195: iload         5
+     197: aaload
+     198: aload         4
+     200: getfield      #27                 // Field io/reactivex/rxjava3/internal/operators/single/SingleZipArray$ZipCoordinator.observers:[Lio/reactivex/rxjava3/internal/operators/single/SingleZipArray$ZipSingleObserver;
+     203: iload         5
+     205: aaload
+     206: invokeinterface #22,  2           // InterfaceMethod io/reactivex/rxjava3/core/SingleSource.subscribe:(Lio/reactivex/rxjava3/core/SingleObserver;)V
+     211: iinc          5, 1
+     214: goto          179
+     217: return
+    Exception table:
+       from    to  target type
+           8    59    93   Class java/lang/Throwable
+          60    90    93   Class java/lang/Throwable
+}

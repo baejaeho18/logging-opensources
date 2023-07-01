@@ -1,0 +1,113 @@
+Compiled from "ParallelCollect.java"
+public final class io.reactivex.rxjava3.internal.operators.parallel.ParallelCollect<T, C> extends io.reactivex.rxjava3.parallel.ParallelFlowable<C> {
+  final io.reactivex.rxjava3.parallel.ParallelFlowable<? extends T> source;
+
+  final io.reactivex.rxjava3.functions.Supplier<? extends C> initialCollection;
+
+  final io.reactivex.rxjava3.functions.BiConsumer<? super C, ? super T> collector;
+
+  public io.reactivex.rxjava3.internal.operators.parallel.ParallelCollect(io.reactivex.rxjava3.parallel.ParallelFlowable<? extends T>, io.reactivex.rxjava3.functions.Supplier<? extends C>, io.reactivex.rxjava3.functions.BiConsumer<? super C, ? super T>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method io/reactivex/rxjava3/parallel/ParallelFlowable."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field source:Lio/reactivex/rxjava3/parallel/ParallelFlowable;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field initialCollection:Lio/reactivex/rxjava3/functions/Supplier;
+      14: aload_0
+      15: aload_3
+      16: putfield      #4                  // Field collector:Lio/reactivex/rxjava3/functions/BiConsumer;
+      19: return
+
+  public void subscribe(org.reactivestreams.Subscriber<? super C>[]);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #5                  // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onSubscribe:(Lio/reactivex/rxjava3/parallel/ParallelFlowable;[Lorg/reactivestreams/Subscriber;)[Lorg/reactivestreams/Subscriber;
+       5: astore_1
+       6: aload_0
+       7: aload_1
+       8: invokevirtual #6                  // Method validate:([Lorg/reactivestreams/Subscriber;)Z
+      11: ifne          15
+      14: return
+      15: aload_1
+      16: arraylength
+      17: istore_2
+      18: iload_2
+      19: anewarray     #7                  // class org/reactivestreams/Subscriber
+      22: astore_3
+      23: iconst_0
+      24: istore        4
+      26: iload         4
+      28: iload_2
+      29: if_icmpge     93
+      32: aload_0
+      33: getfield      #3                  // Field initialCollection:Lio/reactivex/rxjava3/functions/Supplier;
+      36: invokeinterface #8,  1            // InterfaceMethod io/reactivex/rxjava3/functions/Supplier.get:()Ljava/lang/Object;
+      41: ldc           #9                  // String The initialSupplier returned a null value
+      43: invokestatic  #10                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+      46: astore        5
+      48: goto          66
+      51: astore        6
+      53: aload         6
+      55: invokestatic  #12                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      58: aload_0
+      59: aload_1
+      60: aload         6
+      62: invokevirtual #13                 // Method reportError:([Lorg/reactivestreams/Subscriber;Ljava/lang/Throwable;)V
+      65: return
+      66: aload_3
+      67: iload         4
+      69: new           #14                 // class io/reactivex/rxjava3/internal/operators/parallel/ParallelCollect$ParallelCollectSubscriber
+      72: dup
+      73: aload_1
+      74: iload         4
+      76: aaload
+      77: aload         5
+      79: aload_0
+      80: getfield      #4                  // Field collector:Lio/reactivex/rxjava3/functions/BiConsumer;
+      83: invokespecial #15                 // Method io/reactivex/rxjava3/internal/operators/parallel/ParallelCollect$ParallelCollectSubscriber."<init>":(Lorg/reactivestreams/Subscriber;Ljava/lang/Object;Lio/reactivex/rxjava3/functions/BiConsumer;)V
+      86: aastore
+      87: iinc          4, 1
+      90: goto          26
+      93: aload_0
+      94: getfield      #2                  // Field source:Lio/reactivex/rxjava3/parallel/ParallelFlowable;
+      97: aload_3
+      98: invokevirtual #16                 // Method io/reactivex/rxjava3/parallel/ParallelFlowable.subscribe:([Lorg/reactivestreams/Subscriber;)V
+     101: return
+    Exception table:
+       from    to  target type
+          32    48    51   Class java/lang/Throwable
+
+  void reportError(org.reactivestreams.Subscriber<?>[], java.lang.Throwable);
+    Code:
+       0: aload_1
+       1: astore_3
+       2: aload_3
+       3: arraylength
+       4: istore        4
+       6: iconst_0
+       7: istore        5
+       9: iload         5
+      11: iload         4
+      13: if_icmpge     34
+      16: aload_3
+      17: iload         5
+      19: aaload
+      20: astore        6
+      22: aload_2
+      23: aload         6
+      25: invokestatic  #17                 // Method io/reactivex/rxjava3/internal/subscriptions/EmptySubscription.error:(Ljava/lang/Throwable;Lorg/reactivestreams/Subscriber;)V
+      28: iinc          5, 1
+      31: goto          9
+      34: return
+
+  public int parallelism();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field source:Lio/reactivex/rxjava3/parallel/ParallelFlowable;
+       4: invokevirtual #18                 // Method io/reactivex/rxjava3/parallel/ParallelFlowable.parallelism:()I
+       7: ireturn
+}

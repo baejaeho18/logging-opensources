@@ -1,0 +1,223 @@
+Compiled from "ParallelReduceFull.java"
+final class io.reactivex.rxjava3.internal.operators.parallel.ParallelReduceFull$ParallelReduceFullMainSubscriber<T> extends io.reactivex.rxjava3.internal.subscriptions.DeferredScalarSubscription<T> {
+  private static final long serialVersionUID;
+
+  final io.reactivex.rxjava3.internal.operators.parallel.ParallelReduceFull$ParallelReduceFullInnerSubscriber<T>[] subscribers;
+
+  final io.reactivex.rxjava3.functions.BiFunction<T, T, T> reducer;
+
+  final java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.internal.operators.parallel.ParallelReduceFull$SlotPair<T>> current;
+
+  final java.util.concurrent.atomic.AtomicInteger remaining;
+
+  final io.reactivex.rxjava3.internal.util.AtomicThrowable error;
+
+  io.reactivex.rxjava3.internal.operators.parallel.ParallelReduceFull$ParallelReduceFullMainSubscriber(org.reactivestreams.Subscriber<? super T>, int, io.reactivex.rxjava3.functions.BiFunction<T, T, T>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #1                  // Method io/reactivex/rxjava3/internal/subscriptions/DeferredScalarSubscription."<init>":(Lorg/reactivestreams/Subscriber;)V
+       5: aload_0
+       6: new           #2                  // class java/util/concurrent/atomic/AtomicReference
+       9: dup
+      10: invokespecial #3                  // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+      13: putfield      #4                  // Field current:Ljava/util/concurrent/atomic/AtomicReference;
+      16: aload_0
+      17: new           #5                  // class java/util/concurrent/atomic/AtomicInteger
+      20: dup
+      21: invokespecial #6                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+      24: putfield      #7                  // Field remaining:Ljava/util/concurrent/atomic/AtomicInteger;
+      27: aload_0
+      28: new           #8                  // class io/reactivex/rxjava3/internal/util/AtomicThrowable
+      31: dup
+      32: invokespecial #9                  // Method io/reactivex/rxjava3/internal/util/AtomicThrowable."<init>":()V
+      35: putfield      #10                 // Field error:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      38: iload_2
+      39: anewarray     #11                 // class io/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$ParallelReduceFullInnerSubscriber
+      42: astore        4
+      44: iconst_0
+      45: istore        5
+      47: iload         5
+      49: iload_2
+      50: if_icmpge     73
+      53: aload         4
+      55: iload         5
+      57: new           #11                 // class io/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$ParallelReduceFullInnerSubscriber
+      60: dup
+      61: aload_0
+      62: aload_3
+      63: invokespecial #12                 // Method io/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$ParallelReduceFullInnerSubscriber."<init>":(Lio/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$ParallelReduceFullMainSubscriber;Lio/reactivex/rxjava3/functions/BiFunction;)V
+      66: aastore
+      67: iinc          5, 1
+      70: goto          47
+      73: aload_0
+      74: aload         4
+      76: putfield      #13                 // Field subscribers:[Lio/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$ParallelReduceFullInnerSubscriber;
+      79: aload_0
+      80: aload_3
+      81: putfield      #14                 // Field reducer:Lio/reactivex/rxjava3/functions/BiFunction;
+      84: aload_0
+      85: getfield      #7                  // Field remaining:Ljava/util/concurrent/atomic/AtomicInteger;
+      88: iload_2
+      89: invokevirtual #15                 // Method java/util/concurrent/atomic/AtomicInteger.lazySet:(I)V
+      92: return
+
+  io.reactivex.rxjava3.internal.operators.parallel.ParallelReduceFull$SlotPair<T> addValue(T);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field current:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokevirtual #16                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+       7: checkcast     #17                 // class io/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$SlotPair
+      10: astore_2
+      11: aload_2
+      12: ifnonnull     38
+      15: new           #17                 // class io/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$SlotPair
+      18: dup
+      19: invokespecial #18                 // Method io/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$SlotPair."<init>":()V
+      22: astore_2
+      23: aload_0
+      24: getfield      #4                  // Field current:Ljava/util/concurrent/atomic/AtomicReference;
+      27: aconst_null
+      28: aload_2
+      29: invokevirtual #19                 // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      32: ifne          38
+      35: goto          0
+      38: aload_2
+      39: invokevirtual #20                 // Method io/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$SlotPair.tryAcquireSlot:()I
+      42: istore_3
+      43: iload_3
+      44: ifge          60
+      47: aload_0
+      48: getfield      #4                  // Field current:Ljava/util/concurrent/atomic/AtomicReference;
+      51: aload_2
+      52: aconst_null
+      53: invokevirtual #19                 // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      56: pop
+      57: goto          0
+      60: iload_3
+      61: ifne          72
+      64: aload_2
+      65: aload_1
+      66: putfield      #21                 // Field io/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$SlotPair.first:Ljava/lang/Object;
+      69: goto          77
+      72: aload_2
+      73: aload_1
+      74: putfield      #22                 // Field io/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$SlotPair.second:Ljava/lang/Object;
+      77: aload_2
+      78: invokevirtual #23                 // Method io/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$SlotPair.releaseSlot:()Z
+      81: ifeq          96
+      84: aload_0
+      85: getfield      #4                  // Field current:Ljava/util/concurrent/atomic/AtomicReference;
+      88: aload_2
+      89: aconst_null
+      90: invokevirtual #19                 // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      93: pop
+      94: aload_2
+      95: areturn
+      96: aconst_null
+      97: areturn
+
+  public void cancel();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field subscribers:[Lio/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$ParallelReduceFullInnerSubscriber;
+       4: astore_1
+       5: aload_1
+       6: arraylength
+       7: istore_2
+       8: iconst_0
+       9: istore_3
+      10: iload_3
+      11: iload_2
+      12: if_icmpge     31
+      15: aload_1
+      16: iload_3
+      17: aaload
+      18: astore        4
+      20: aload         4
+      22: invokevirtual #24                 // Method io/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$ParallelReduceFullInnerSubscriber.cancel:()V
+      25: iinc          3, 1
+      28: goto          10
+      31: return
+
+  void innerError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field error:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+       4: aconst_null
+       5: aload_1
+       6: invokevirtual #25                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+       9: ifeq          29
+      12: aload_0
+      13: invokevirtual #26                 // Method cancel:()V
+      16: aload_0
+      17: getfield      #27                 // Field downstream:Lorg/reactivestreams/Subscriber;
+      20: aload_1
+      21: invokeinterface #28,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      26: goto          44
+      29: aload_1
+      30: aload_0
+      31: getfield      #10                 // Field error:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      34: invokevirtual #29                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.get:()Ljava/lang/Object;
+      37: if_acmpeq     44
+      40: aload_1
+      41: invokestatic  #30                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      44: return
+
+  void innerComplete(T);
+    Code:
+       0: aload_1
+       1: ifnull        54
+       4: aload_0
+       5: aload_1
+       6: invokevirtual #31                 // Method addValue:(Ljava/lang/Object;)Lio/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$SlotPair;
+       9: astore_2
+      10: aload_2
+      11: ifnull        54
+      14: aload_0
+      15: getfield      #14                 // Field reducer:Lio/reactivex/rxjava3/functions/BiFunction;
+      18: aload_2
+      19: getfield      #21                 // Field io/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$SlotPair.first:Ljava/lang/Object;
+      22: aload_2
+      23: getfield      #22                 // Field io/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$SlotPair.second:Ljava/lang/Object;
+      26: invokeinterface #32,  3           // InterfaceMethod io/reactivex/rxjava3/functions/BiFunction.apply:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      31: ldc           #33                 // String The reducer returned a null value
+      33: invokestatic  #34                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+      36: astore_1
+      37: goto          51
+      40: astore_3
+      41: aload_3
+      42: invokestatic  #36                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      45: aload_0
+      46: aload_3
+      47: invokevirtual #37                 // Method innerError:(Ljava/lang/Throwable;)V
+      50: return
+      51: goto          4
+      54: aload_0
+      55: getfield      #7                  // Field remaining:Ljava/util/concurrent/atomic/AtomicInteger;
+      58: invokevirtual #38                 // Method java/util/concurrent/atomic/AtomicInteger.decrementAndGet:()I
+      61: ifne          107
+      64: aload_0
+      65: getfield      #4                  // Field current:Ljava/util/concurrent/atomic/AtomicReference;
+      68: invokevirtual #16                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+      71: checkcast     #17                 // class io/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$SlotPair
+      74: astore_2
+      75: aload_0
+      76: getfield      #4                  // Field current:Ljava/util/concurrent/atomic/AtomicReference;
+      79: aconst_null
+      80: invokevirtual #39                 // Method java/util/concurrent/atomic/AtomicReference.lazySet:(Ljava/lang/Object;)V
+      83: aload_2
+      84: ifnull        98
+      87: aload_0
+      88: aload_2
+      89: getfield      #21                 // Field io/reactivex/rxjava3/internal/operators/parallel/ParallelReduceFull$SlotPair.first:Ljava/lang/Object;
+      92: invokevirtual #40                 // Method complete:(Ljava/lang/Object;)V
+      95: goto          107
+      98: aload_0
+      99: getfield      #27                 // Field downstream:Lorg/reactivestreams/Subscriber;
+     102: invokeinterface #41,  1           // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+     107: return
+    Exception table:
+       from    to  target type
+          14    37    40   Class java/lang/Throwable
+}

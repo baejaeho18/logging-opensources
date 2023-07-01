@@ -1,0 +1,89 @@
+Compiled from "BlockingBaseSubscriber.java"
+public abstract class io.reactivex.rxjava3.internal.subscribers.BlockingBaseSubscriber<T> extends java.util.concurrent.CountDownLatch implements io.reactivex.rxjava3.core.FlowableSubscriber<T> {
+  T value;
+
+  java.lang.Throwable error;
+
+  org.reactivestreams.Subscription upstream;
+
+  volatile boolean cancelled;
+
+  public io.reactivex.rxjava3.internal.subscribers.BlockingBaseSubscriber();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: invokespecial #1                  // Method java/util/concurrent/CountDownLatch."<init>":(I)V
+       5: return
+
+  public final void onSubscribe(org.reactivestreams.Subscription);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field upstream:Lorg/reactivestreams/Subscription;
+       4: aload_1
+       5: invokestatic  #3                  // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.validate:(Lorg/reactivestreams/Subscription;Lorg/reactivestreams/Subscription;)Z
+       8: ifeq          52
+      11: aload_0
+      12: aload_1
+      13: putfield      #2                  // Field upstream:Lorg/reactivestreams/Subscription;
+      16: aload_0
+      17: getfield      #4                  // Field cancelled:Z
+      20: ifne          52
+      23: aload_1
+      24: ldc2_w        #6                  // long 9223372036854775807l
+      27: invokeinterface #8,  3            // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+      32: aload_0
+      33: getfield      #4                  // Field cancelled:Z
+      36: ifeq          52
+      39: aload_0
+      40: getstatic     #9                  // Field io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.CANCELLED:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper;
+      43: putfield      #2                  // Field upstream:Lorg/reactivestreams/Subscription;
+      46: aload_1
+      47: invokeinterface #10,  1           // InterfaceMethod org/reactivestreams/Subscription.cancel:()V
+      52: return
+
+  public final void onComplete();
+    Code:
+       0: aload_0
+       1: invokevirtual #11                 // Method countDown:()V
+       4: return
+
+  public final T blockingGet();
+    Code:
+       0: aload_0
+       1: invokevirtual #12                 // Method getCount:()J
+       4: lconst_0
+       5: lcmp
+       6: ifeq          47
+       9: invokestatic  #13                 // Method io/reactivex/rxjava3/internal/util/BlockingHelper.verifyNonBlocking:()V
+      12: aload_0
+      13: invokevirtual #14                 // Method await:()V
+      16: goto          47
+      19: astore_1
+      20: aload_0
+      21: getfield      #2                  // Field upstream:Lorg/reactivestreams/Subscription;
+      24: astore_2
+      25: aload_0
+      26: getstatic     #9                  // Field io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.CANCELLED:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper;
+      29: putfield      #2                  // Field upstream:Lorg/reactivestreams/Subscription;
+      32: aload_2
+      33: ifnull        42
+      36: aload_2
+      37: invokeinterface #10,  1           // InterfaceMethod org/reactivestreams/Subscription.cancel:()V
+      42: aload_1
+      43: invokestatic  #16                 // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;
+      46: athrow
+      47: aload_0
+      48: getfield      #17                 // Field error:Ljava/lang/Throwable;
+      51: astore_1
+      52: aload_1
+      53: ifnull        61
+      56: aload_1
+      57: invokestatic  #16                 // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;
+      60: athrow
+      61: aload_0
+      62: getfield      #18                 // Field value:Ljava/lang/Object;
+      65: areturn
+    Exception table:
+       from    to  target type
+           9    16    19   Class java/lang/InterruptedException
+}

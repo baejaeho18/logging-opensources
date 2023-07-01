@@ -1,0 +1,205 @@
+Compiled from "ParallelRunOn.java"
+final class io.reactivex.rxjava3.internal.operators.parallel.ParallelRunOn$RunOnSubscriber<T> extends io.reactivex.rxjava3.internal.operators.parallel.ParallelRunOn$BaseRunOnSubscriber<T> {
+  private static final long serialVersionUID;
+
+  final org.reactivestreams.Subscriber<? super T> downstream;
+
+  io.reactivex.rxjava3.internal.operators.parallel.ParallelRunOn$RunOnSubscriber(org.reactivestreams.Subscriber<? super T>, int, io.reactivex.rxjava3.operators.SpscArrayQueue<T>, io.reactivex.rxjava3.core.Scheduler$Worker);
+    Code:
+       0: aload_0
+       1: iload_2
+       2: aload_3
+       3: aload         4
+       5: invokespecial #1                  // Method io/reactivex/rxjava3/internal/operators/parallel/ParallelRunOn$BaseRunOnSubscriber."<init>":(ILio/reactivex/rxjava3/operators/SpscArrayQueue;Lio/reactivex/rxjava3/core/Scheduler$Worker;)V
+       8: aload_0
+       9: aload_1
+      10: putfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      13: return
+
+  public void onSubscribe(org.reactivestreams.Subscription);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field upstream:Lorg/reactivestreams/Subscription;
+       4: aload_1
+       5: invokestatic  #4                  // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.validate:(Lorg/reactivestreams/Subscription;Lorg/reactivestreams/Subscription;)Z
+       8: ifeq          37
+      11: aload_0
+      12: aload_1
+      13: putfield      #3                  // Field upstream:Lorg/reactivestreams/Subscription;
+      16: aload_0
+      17: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      20: aload_0
+      21: invokeinterface #5,  2            // InterfaceMethod org/reactivestreams/Subscriber.onSubscribe:(Lorg/reactivestreams/Subscription;)V
+      26: aload_1
+      27: aload_0
+      28: getfield      #6                  // Field prefetch:I
+      31: i2l
+      32: invokeinterface #7,  3            // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+      37: return
+
+  public void run();
+    Code:
+       0: iconst_1
+       1: istore_1
+       2: aload_0
+       3: getfield      #8                  // Field consumed:I
+       6: istore_2
+       7: aload_0
+       8: getfield      #9                  // Field queue:Lio/reactivex/rxjava3/operators/SpscArrayQueue;
+      11: astore_3
+      12: aload_0
+      13: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      16: astore        4
+      18: aload_0
+      19: getfield      #10                 // Field limit:I
+      22: istore        5
+      24: aload_0
+      25: getfield      #11                 // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+      28: invokevirtual #12                 // Method java/util/concurrent/atomic/AtomicLong.get:()J
+      31: lstore        6
+      33: lconst_0
+      34: lstore        8
+      36: lload         8
+      38: lload         6
+      40: lcmp
+      41: ifeq          195
+      44: aload_0
+      45: getfield      #13                 // Field cancelled:Z
+      48: ifeq          56
+      51: aload_3
+      52: invokevirtual #14                 // Method io/reactivex/rxjava3/operators/SpscArrayQueue.clear:()V
+      55: return
+      56: aload_0
+      57: getfield      #15                 // Field done:Z
+      60: istore        10
+      62: iload         10
+      64: ifeq          99
+      67: aload_0
+      68: getfield      #16                 // Field error:Ljava/lang/Throwable;
+      71: astore        11
+      73: aload         11
+      75: ifnull        99
+      78: aload_3
+      79: invokevirtual #14                 // Method io/reactivex/rxjava3/operators/SpscArrayQueue.clear:()V
+      82: aload         4
+      84: aload         11
+      86: invokeinterface #17,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      91: aload_0
+      92: getfield      #18                 // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      95: invokevirtual #19                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+      98: return
+      99: aload_3
+     100: invokevirtual #20                 // Method io/reactivex/rxjava3/operators/SpscArrayQueue.poll:()Ljava/lang/Object;
+     103: astore        11
+     105: aload         11
+     107: ifnonnull     114
+     110: iconst_1
+     111: goto          115
+     114: iconst_0
+     115: istore        12
+     117: iload         10
+     119: ifeq          142
+     122: iload         12
+     124: ifeq          142
+     127: aload         4
+     129: invokeinterface #21,  1           // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+     134: aload_0
+     135: getfield      #18                 // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+     138: invokevirtual #19                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+     141: return
+     142: iload         12
+     144: ifeq          150
+     147: goto          195
+     150: aload         4
+     152: aload         11
+     154: invokeinterface #22,  2           // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+     159: lload         8
+     161: lconst_1
+     162: ladd
+     163: lstore        8
+     165: iinc          2, 1
+     168: iload_2
+     169: istore        13
+     171: iload         13
+     173: iload         5
+     175: if_icmpne     192
+     178: iconst_0
+     179: istore_2
+     180: aload_0
+     181: getfield      #3                  // Field upstream:Lorg/reactivestreams/Subscription;
+     184: iload         13
+     186: i2l
+     187: invokeinterface #7,  3            // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+     192: goto          36
+     195: lload         8
+     197: lload         6
+     199: lcmp
+     200: ifne          276
+     203: aload_0
+     204: getfield      #13                 // Field cancelled:Z
+     207: ifeq          215
+     210: aload_3
+     211: invokevirtual #14                 // Method io/reactivex/rxjava3/operators/SpscArrayQueue.clear:()V
+     214: return
+     215: aload_0
+     216: getfield      #15                 // Field done:Z
+     219: ifeq          276
+     222: aload_0
+     223: getfield      #16                 // Field error:Ljava/lang/Throwable;
+     226: astore        10
+     228: aload         10
+     230: ifnull        254
+     233: aload_3
+     234: invokevirtual #14                 // Method io/reactivex/rxjava3/operators/SpscArrayQueue.clear:()V
+     237: aload         4
+     239: aload         10
+     241: invokeinterface #17,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+     246: aload_0
+     247: getfield      #18                 // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+     250: invokevirtual #19                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+     253: return
+     254: aload_3
+     255: invokevirtual #23                 // Method io/reactivex/rxjava3/operators/SpscArrayQueue.isEmpty:()Z
+     258: ifeq          276
+     261: aload         4
+     263: invokeinterface #21,  1           // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+     268: aload_0
+     269: getfield      #18                 // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+     272: invokevirtual #19                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+     275: return
+     276: lload         8
+     278: lconst_0
+     279: lcmp
+     280: ifeq          303
+     283: lload         6
+     285: ldc2_w        #25                 // long 9223372036854775807l
+     288: lcmp
+     289: ifeq          303
+     292: aload_0
+     293: getfield      #11                 // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+     296: lload         8
+     298: lneg
+     299: invokevirtual #27                 // Method java/util/concurrent/atomic/AtomicLong.addAndGet:(J)J
+     302: pop2
+     303: aload_0
+     304: invokevirtual #28                 // Method get:()I
+     307: istore        10
+     309: iload         10
+     311: iload_1
+     312: if_icmpne     334
+     315: aload_0
+     316: iload_2
+     317: putfield      #8                  // Field consumed:I
+     320: aload_0
+     321: iload_1
+     322: ineg
+     323: invokevirtual #29                 // Method addAndGet:(I)I
+     326: istore_1
+     327: iload_1
+     328: ifne          337
+     331: goto          340
+     334: iload         10
+     336: istore_1
+     337: goto          24
+     340: return
+}

@@ -1,0 +1,185 @@
+Compiled from "LambdaSubscriber.java"
+public final class io.reactivex.rxjava3.internal.subscribers.LambdaSubscriber<T> extends java.util.concurrent.atomic.AtomicReference<org.reactivestreams.Subscription> implements io.reactivex.rxjava3.core.FlowableSubscriber<T>, org.reactivestreams.Subscription, io.reactivex.rxjava3.disposables.Disposable, io.reactivex.rxjava3.observers.LambdaConsumerIntrospection {
+  private static final long serialVersionUID;
+
+  final io.reactivex.rxjava3.functions.Consumer<? super T> onNext;
+
+  final io.reactivex.rxjava3.functions.Consumer<? super java.lang.Throwable> onError;
+
+  final io.reactivex.rxjava3.functions.Action onComplete;
+
+  final io.reactivex.rxjava3.functions.Consumer<? super org.reactivestreams.Subscription> onSubscribe;
+
+  public io.reactivex.rxjava3.internal.subscribers.LambdaSubscriber(io.reactivex.rxjava3.functions.Consumer<? super T>, io.reactivex.rxjava3.functions.Consumer<? super java.lang.Throwable>, io.reactivex.rxjava3.functions.Action, io.reactivex.rxjava3.functions.Consumer<? super org.reactivestreams.Subscription>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field onNext:Lio/reactivex/rxjava3/functions/Consumer;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field onError:Lio/reactivex/rxjava3/functions/Consumer;
+      14: aload_0
+      15: aload_3
+      16: putfield      #4                  // Field onComplete:Lio/reactivex/rxjava3/functions/Action;
+      19: aload_0
+      20: aload         4
+      22: putfield      #5                  // Field onSubscribe:Lio/reactivex/rxjava3/functions/Consumer;
+      25: return
+
+  public void onSubscribe(org.reactivestreams.Subscription);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #6                  // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.setOnce:(Ljava/util/concurrent/atomic/AtomicReference;Lorg/reactivestreams/Subscription;)Z
+       5: ifeq          37
+       8: aload_0
+       9: getfield      #5                  // Field onSubscribe:Lio/reactivex/rxjava3/functions/Consumer;
+      12: aload_0
+      13: invokeinterface #7,  2            // InterfaceMethod io/reactivex/rxjava3/functions/Consumer.accept:(Ljava/lang/Object;)V
+      18: goto          37
+      21: astore_2
+      22: aload_2
+      23: invokestatic  #9                  // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      26: aload_1
+      27: invokeinterface #10,  1           // InterfaceMethod org/reactivestreams/Subscription.cancel:()V
+      32: aload_0
+      33: aload_2
+      34: invokevirtual #11                 // Method onError:(Ljava/lang/Throwable;)V
+      37: return
+    Exception table:
+       from    to  target type
+           8    18    21   Class java/lang/Throwable
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: invokevirtual #12                 // Method isDisposed:()Z
+       4: ifne          42
+       7: aload_0
+       8: getfield      #2                  // Field onNext:Lio/reactivex/rxjava3/functions/Consumer;
+      11: aload_1
+      12: invokeinterface #7,  2            // InterfaceMethod io/reactivex/rxjava3/functions/Consumer.accept:(Ljava/lang/Object;)V
+      17: goto          42
+      20: astore_2
+      21: aload_2
+      22: invokestatic  #9                  // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      25: aload_0
+      26: invokevirtual #13                 // Method get:()Ljava/lang/Object;
+      29: checkcast     #14                 // class org/reactivestreams/Subscription
+      32: invokeinterface #10,  1           // InterfaceMethod org/reactivestreams/Subscription.cancel:()V
+      37: aload_0
+      38: aload_2
+      39: invokevirtual #11                 // Method onError:(Ljava/lang/Throwable;)V
+      42: return
+    Exception table:
+       from    to  target type
+           7    17    20   Class java/lang/Throwable
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: invokevirtual #13                 // Method get:()Ljava/lang/Object;
+       4: getstatic     #15                 // Field io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.CANCELLED:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper;
+       7: if_acmpeq     60
+      10: aload_0
+      11: getstatic     #15                 // Field io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.CANCELLED:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper;
+      14: invokevirtual #16                 // Method lazySet:(Ljava/lang/Object;)V
+      17: aload_0
+      18: getfield      #3                  // Field onError:Lio/reactivex/rxjava3/functions/Consumer;
+      21: aload_1
+      22: invokeinterface #7,  2            // InterfaceMethod io/reactivex/rxjava3/functions/Consumer.accept:(Ljava/lang/Object;)V
+      27: goto          64
+      30: astore_2
+      31: aload_2
+      32: invokestatic  #9                  // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      35: new           #17                 // class io/reactivex/rxjava3/exceptions/CompositeException
+      38: dup
+      39: iconst_2
+      40: anewarray     #18                 // class java/lang/Throwable
+      43: dup
+      44: iconst_0
+      45: aload_1
+      46: aastore
+      47: dup
+      48: iconst_1
+      49: aload_2
+      50: aastore
+      51: invokespecial #19                 // Method io/reactivex/rxjava3/exceptions/CompositeException."<init>":([Ljava/lang/Throwable;)V
+      54: invokestatic  #20                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      57: goto          64
+      60: aload_1
+      61: invokestatic  #20                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      64: return
+    Exception table:
+       from    to  target type
+          17    27    30   Class java/lang/Throwable
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: invokevirtual #13                 // Method get:()Ljava/lang/Object;
+       4: getstatic     #15                 // Field io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.CANCELLED:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper;
+       7: if_acmpeq     38
+      10: aload_0
+      11: getstatic     #15                 // Field io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.CANCELLED:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper;
+      14: invokevirtual #16                 // Method lazySet:(Ljava/lang/Object;)V
+      17: aload_0
+      18: getfield      #4                  // Field onComplete:Lio/reactivex/rxjava3/functions/Action;
+      21: invokeinterface #21,  1           // InterfaceMethod io/reactivex/rxjava3/functions/Action.run:()V
+      26: goto          38
+      29: astore_1
+      30: aload_1
+      31: invokestatic  #9                  // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      34: aload_1
+      35: invokestatic  #20                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      38: return
+    Exception table:
+       from    to  target type
+          17    26    29   Class java/lang/Throwable
+
+  public void dispose();
+    Code:
+       0: aload_0
+       1: invokevirtual #22                 // Method cancel:()V
+       4: return
+
+  public boolean isDisposed();
+    Code:
+       0: aload_0
+       1: invokevirtual #13                 // Method get:()Ljava/lang/Object;
+       4: getstatic     #15                 // Field io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.CANCELLED:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper;
+       7: if_acmpne     14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: ireturn
+
+  public void request(long);
+    Code:
+       0: aload_0
+       1: invokevirtual #13                 // Method get:()Ljava/lang/Object;
+       4: checkcast     #14                 // class org/reactivestreams/Subscription
+       7: lload_1
+       8: invokeinterface #23,  3           // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+      13: return
+
+  public void cancel();
+    Code:
+       0: aload_0
+       1: invokestatic  #24                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.cancel:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+       4: pop
+       5: return
+
+  public boolean hasCustomOnError();
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field onError:Lio/reactivex/rxjava3/functions/Consumer;
+       4: getstatic     #25                 // Field io/reactivex/rxjava3/internal/functions/Functions.ON_ERROR_MISSING:Lio/reactivex/rxjava3/functions/Consumer;
+       7: if_acmpeq     14
+      10: iconst_1
+      11: goto          15
+      14: iconst_0
+      15: ireturn
+}

@@ -1,0 +1,124 @@
+Compiled from "ScalarSubscription.java"
+public final class io.reactivex.rxjava3.internal.subscriptions.ScalarSubscription<T> extends java.util.concurrent.atomic.AtomicInteger implements io.reactivex.rxjava3.operators.QueueSubscription<T> {
+  private static final long serialVersionUID;
+
+  final T value;
+
+  final org.reactivestreams.Subscriber<? super T> subscriber;
+
+  static final int NO_REQUEST;
+
+  static final int REQUESTED;
+
+  static final int CANCELLED;
+
+  public io.reactivex.rxjava3.internal.subscriptions.ScalarSubscription(org.reactivestreams.Subscriber<? super T>, T);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field subscriber:Lorg/reactivestreams/Subscriber;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field value:Ljava/lang/Object;
+      14: return
+
+  public void request(long);
+    Code:
+       0: lload_1
+       1: invokestatic  #4                  // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.validate:(J)Z
+       4: ifne          8
+       7: return
+       8: aload_0
+       9: iconst_0
+      10: iconst_1
+      11: invokevirtual #6                  // Method compareAndSet:(II)Z
+      14: ifeq          46
+      17: aload_0
+      18: getfield      #2                  // Field subscriber:Lorg/reactivestreams/Subscriber;
+      21: astore_3
+      22: aload_3
+      23: aload_0
+      24: getfield      #3                  // Field value:Ljava/lang/Object;
+      27: invokeinterface #7,  2            // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+      32: aload_0
+      33: invokevirtual #8                  // Method get:()I
+      36: iconst_2
+      37: if_icmpeq     46
+      40: aload_3
+      41: invokeinterface #9,  1            // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+      46: return
+
+  public void cancel();
+    Code:
+       0: aload_0
+       1: iconst_2
+       2: invokevirtual #10                 // Method lazySet:(I)V
+       5: return
+
+  public boolean isCancelled();
+    Code:
+       0: aload_0
+       1: invokevirtual #8                  // Method get:()I
+       4: iconst_2
+       5: if_icmpne     12
+       8: iconst_1
+       9: goto          13
+      12: iconst_0
+      13: ireturn
+
+  public boolean offer(T);
+    Code:
+       0: new           #11                 // class java/lang/UnsupportedOperationException
+       3: dup
+       4: ldc           #12                 // String Should not be called!
+       6: invokespecial #13                 // Method java/lang/UnsupportedOperationException."<init>":(Ljava/lang/String;)V
+       9: athrow
+
+  public boolean offer(T, T);
+    Code:
+       0: new           #11                 // class java/lang/UnsupportedOperationException
+       3: dup
+       4: ldc           #12                 // String Should not be called!
+       6: invokespecial #13                 // Method java/lang/UnsupportedOperationException."<init>":(Ljava/lang/String;)V
+       9: athrow
+
+  public T poll();
+    Code:
+       0: aload_0
+       1: invokevirtual #8                  // Method get:()I
+       4: ifne          17
+       7: aload_0
+       8: iconst_1
+       9: invokevirtual #10                 // Method lazySet:(I)V
+      12: aload_0
+      13: getfield      #3                  // Field value:Ljava/lang/Object;
+      16: areturn
+      17: aconst_null
+      18: areturn
+
+  public boolean isEmpty();
+    Code:
+       0: aload_0
+       1: invokevirtual #8                  // Method get:()I
+       4: ifeq          11
+       7: iconst_1
+       8: goto          12
+      11: iconst_0
+      12: ireturn
+
+  public void clear();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: invokevirtual #10                 // Method lazySet:(I)V
+       5: return
+
+  public int requestFusion(int);
+    Code:
+       0: iload_1
+       1: iconst_1
+       2: iand
+       3: ireturn
+}

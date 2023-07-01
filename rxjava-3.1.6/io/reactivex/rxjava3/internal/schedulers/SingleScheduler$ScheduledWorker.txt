@@ -1,0 +1,97 @@
+Compiled from "SingleScheduler.java"
+final class io.reactivex.rxjava3.internal.schedulers.SingleScheduler$ScheduledWorker extends io.reactivex.rxjava3.core.Scheduler$Worker {
+  final java.util.concurrent.ScheduledExecutorService executor;
+
+  final io.reactivex.rxjava3.disposables.CompositeDisposable tasks;
+
+  volatile boolean disposed;
+
+  io.reactivex.rxjava3.internal.schedulers.SingleScheduler$ScheduledWorker(java.util.concurrent.ScheduledExecutorService);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method io/reactivex/rxjava3/core/Scheduler$Worker."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field executor:Ljava/util/concurrent/ScheduledExecutorService;
+       9: aload_0
+      10: new           #3                  // class io/reactivex/rxjava3/disposables/CompositeDisposable
+      13: dup
+      14: invokespecial #4                  // Method io/reactivex/rxjava3/disposables/CompositeDisposable."<init>":()V
+      17: putfield      #5                  // Field tasks:Lio/reactivex/rxjava3/disposables/CompositeDisposable;
+      20: return
+
+  public io.reactivex.rxjava3.disposables.Disposable schedule(java.lang.Runnable, long, java.util.concurrent.TimeUnit);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field disposed:Z
+       4: ifeq          11
+       7: getstatic     #7                  // Field io/reactivex/rxjava3/internal/disposables/EmptyDisposable.INSTANCE:Lio/reactivex/rxjava3/internal/disposables/EmptyDisposable;
+      10: areturn
+      11: aload_1
+      12: invokestatic  #8                  // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onSchedule:(Ljava/lang/Runnable;)Ljava/lang/Runnable;
+      15: astore        5
+      17: new           #9                  // class io/reactivex/rxjava3/internal/schedulers/ScheduledRunnable
+      20: dup
+      21: aload         5
+      23: aload_0
+      24: getfield      #5                  // Field tasks:Lio/reactivex/rxjava3/disposables/CompositeDisposable;
+      27: invokespecial #10                 // Method io/reactivex/rxjava3/internal/schedulers/ScheduledRunnable."<init>":(Ljava/lang/Runnable;Lio/reactivex/rxjava3/disposables/DisposableContainer;)V
+      30: astore        6
+      32: aload_0
+      33: getfield      #5                  // Field tasks:Lio/reactivex/rxjava3/disposables/CompositeDisposable;
+      36: aload         6
+      38: invokevirtual #11                 // Method io/reactivex/rxjava3/disposables/CompositeDisposable.add:(Lio/reactivex/rxjava3/disposables/Disposable;)Z
+      41: pop
+      42: lload_2
+      43: lconst_0
+      44: lcmp
+      45: ifgt          64
+      48: aload_0
+      49: getfield      #2                  // Field executor:Ljava/util/concurrent/ScheduledExecutorService;
+      52: aload         6
+      54: invokeinterface #12,  2           // InterfaceMethod java/util/concurrent/ScheduledExecutorService.submit:(Ljava/util/concurrent/Callable;)Ljava/util/concurrent/Future;
+      59: astore        7
+      61: goto          80
+      64: aload_0
+      65: getfield      #2                  // Field executor:Ljava/util/concurrent/ScheduledExecutorService;
+      68: aload         6
+      70: lload_2
+      71: aload         4
+      73: invokeinterface #13,  5           // InterfaceMethod java/util/concurrent/ScheduledExecutorService.schedule:(Ljava/util/concurrent/Callable;JLjava/util/concurrent/TimeUnit;)Ljava/util/concurrent/ScheduledFuture;
+      78: astore        7
+      80: aload         6
+      82: aload         7
+      84: invokevirtual #14                 // Method io/reactivex/rxjava3/internal/schedulers/ScheduledRunnable.setFuture:(Ljava/util/concurrent/Future;)V
+      87: goto          105
+      90: astore        7
+      92: aload_0
+      93: invokevirtual #16                 // Method dispose:()V
+      96: aload         7
+      98: invokestatic  #17                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+     101: getstatic     #7                  // Field io/reactivex/rxjava3/internal/disposables/EmptyDisposable.INSTANCE:Lio/reactivex/rxjava3/internal/disposables/EmptyDisposable;
+     104: areturn
+     105: aload         6
+     107: areturn
+    Exception table:
+       from    to  target type
+          42    87    90   Class java/util/concurrent/RejectedExecutionException
+
+  public void dispose();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field disposed:Z
+       4: ifne          19
+       7: aload_0
+       8: iconst_1
+       9: putfield      #6                  // Field disposed:Z
+      12: aload_0
+      13: getfield      #5                  // Field tasks:Lio/reactivex/rxjava3/disposables/CompositeDisposable;
+      16: invokevirtual #18                 // Method io/reactivex/rxjava3/disposables/CompositeDisposable.dispose:()V
+      19: return
+
+  public boolean isDisposed();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field disposed:Z
+       4: ireturn
+}

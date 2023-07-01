@@ -1,0 +1,365 @@
+Compiled from "ObservableZip.java"
+final class io.reactivex.rxjava3.internal.operators.observable.ObservableZip$ZipCoordinator<T, R> extends java.util.concurrent.atomic.AtomicInteger implements io.reactivex.rxjava3.disposables.Disposable {
+  private static final long serialVersionUID;
+
+  final io.reactivex.rxjava3.core.Observer<? super R> downstream;
+
+  final io.reactivex.rxjava3.functions.Function<? super java.lang.Object[], ? extends R> zipper;
+
+  final io.reactivex.rxjava3.internal.operators.observable.ObservableZip$ZipObserver<T, R>[] observers;
+
+  final T[] row;
+
+  final boolean delayError;
+
+  volatile boolean cancelled;
+
+  io.reactivex.rxjava3.internal.operators.observable.ObservableZip$ZipCoordinator(io.reactivex.rxjava3.core.Observer<? super R>, io.reactivex.rxjava3.functions.Function<? super java.lang.Object[], ? extends R>, int, boolean);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field zipper:Lio/reactivex/rxjava3/functions/Function;
+      14: aload_0
+      15: iload_3
+      16: anewarray     #4                  // class io/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipObserver
+      19: putfield      #5                  // Field observers:[Lio/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipObserver;
+      22: aload_0
+      23: iload_3
+      24: anewarray     #6                  // class java/lang/Object
+      27: checkcast     #7                  // class "[Ljava/lang/Object;"
+      30: putfield      #8                  // Field row:[Ljava/lang/Object;
+      33: aload_0
+      34: iload         4
+      36: putfield      #9                  // Field delayError:Z
+      39: return
+
+  public void subscribe(io.reactivex.rxjava3.core.ObservableSource<? extends T>[], int);
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field observers:[Lio/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipObserver;
+       4: astore_3
+       5: aload_3
+       6: arraylength
+       7: istore        4
+       9: iconst_0
+      10: istore        5
+      12: iload         5
+      14: iload         4
+      16: if_icmpge     38
+      19: aload_3
+      20: iload         5
+      22: new           #4                  // class io/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipObserver
+      25: dup
+      26: aload_0
+      27: iload_2
+      28: invokespecial #10                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipObserver."<init>":(Lio/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipCoordinator;I)V
+      31: aastore
+      32: iinc          5, 1
+      35: goto          12
+      38: aload_0
+      39: iconst_0
+      40: invokevirtual #11                 // Method lazySet:(I)V
+      43: aload_0
+      44: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      47: aload_0
+      48: invokeinterface #12,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onSubscribe:(Lio/reactivex/rxjava3/disposables/Disposable;)V
+      53: iconst_0
+      54: istore        5
+      56: iload         5
+      58: iload         4
+      60: if_icmpge     90
+      63: aload_0
+      64: getfield      #13                 // Field cancelled:Z
+      67: ifeq          71
+      70: return
+      71: aload_1
+      72: iload         5
+      74: aaload
+      75: aload_3
+      76: iload         5
+      78: aaload
+      79: invokeinterface #14,  2           // InterfaceMethod io/reactivex/rxjava3/core/ObservableSource.subscribe:(Lio/reactivex/rxjava3/core/Observer;)V
+      84: iinc          5, 1
+      87: goto          56
+      90: return
+
+  public void dispose();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field cancelled:Z
+       4: ifne          27
+       7: aload_0
+       8: iconst_1
+       9: putfield      #13                 // Field cancelled:Z
+      12: aload_0
+      13: invokevirtual #15                 // Method cancelSources:()V
+      16: aload_0
+      17: invokevirtual #16                 // Method getAndIncrement:()I
+      20: ifne          27
+      23: aload_0
+      24: invokevirtual #17                 // Method clear:()V
+      27: return
+
+  public boolean isDisposed();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field cancelled:Z
+       4: ireturn
+
+  void cancel();
+    Code:
+       0: aload_0
+       1: invokevirtual #17                 // Method clear:()V
+       4: aload_0
+       5: invokevirtual #15                 // Method cancelSources:()V
+       8: return
+
+  void cancelSources();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field observers:[Lio/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipObserver;
+       4: astore_1
+       5: aload_1
+       6: arraylength
+       7: istore_2
+       8: iconst_0
+       9: istore_3
+      10: iload_3
+      11: iload_2
+      12: if_icmpge     31
+      15: aload_1
+      16: iload_3
+      17: aaload
+      18: astore        4
+      20: aload         4
+      22: invokevirtual #18                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipObserver.dispose:()V
+      25: iinc          3, 1
+      28: goto          10
+      31: return
+
+  void clear();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field observers:[Lio/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipObserver;
+       4: astore_1
+       5: aload_1
+       6: arraylength
+       7: istore_2
+       8: iconst_0
+       9: istore_3
+      10: iload_3
+      11: iload_2
+      12: if_icmpge     34
+      15: aload_1
+      16: iload_3
+      17: aaload
+      18: astore        4
+      20: aload         4
+      22: getfield      #19                 // Field io/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipObserver.queue:Lio/reactivex/rxjava3/operators/SpscLinkedArrayQueue;
+      25: invokevirtual #20                 // Method io/reactivex/rxjava3/operators/SpscLinkedArrayQueue.clear:()V
+      28: iinc          3, 1
+      31: goto          10
+      34: return
+
+  public void drain();
+    Code:
+       0: aload_0
+       1: invokevirtual #16                 // Method getAndIncrement:()I
+       4: ifeq          8
+       7: return
+       8: iconst_1
+       9: istore_1
+      10: aload_0
+      11: getfield      #5                  // Field observers:[Lio/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipObserver;
+      14: astore_2
+      15: aload_0
+      16: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      19: astore_3
+      20: aload_0
+      21: getfield      #8                  // Field row:[Ljava/lang/Object;
+      24: astore        4
+      26: aload_0
+      27: getfield      #9                  // Field delayError:Z
+      30: istore        5
+      32: iconst_0
+      33: istore        6
+      35: iconst_0
+      36: istore        7
+      38: aload_2
+      39: astore        8
+      41: aload         8
+      43: arraylength
+      44: istore        9
+      46: iconst_0
+      47: istore        10
+      49: iload         10
+      51: iload         9
+      53: if_icmpge     190
+      56: aload         8
+      58: iload         10
+      60: aaload
+      61: astore        11
+      63: aload         4
+      65: iload         6
+      67: aaload
+      68: ifnonnull     138
+      71: aload         11
+      73: getfield      #21                 // Field io/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipObserver.done:Z
+      76: istore        12
+      78: aload         11
+      80: getfield      #19                 // Field io/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipObserver.queue:Lio/reactivex/rxjava3/operators/SpscLinkedArrayQueue;
+      83: invokevirtual #22                 // Method io/reactivex/rxjava3/operators/SpscLinkedArrayQueue.poll:()Ljava/lang/Object;
+      86: astore        13
+      88: aload         13
+      90: ifnonnull     97
+      93: iconst_1
+      94: goto          98
+      97: iconst_0
+      98: istore        14
+     100: aload_0
+     101: iload         12
+     103: iload         14
+     105: aload_3
+     106: iload         5
+     108: aload         11
+     110: invokevirtual #23                 // Method checkTerminated:(ZZLio/reactivex/rxjava3/core/Observer;ZLio/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipObserver;)Z
+     113: ifeq          117
+     116: return
+     117: iload         14
+     119: ifne          132
+     122: aload         4
+     124: iload         6
+     126: aload         13
+     128: aastore
+     129: goto          135
+     132: iinc          7, 1
+     135: goto          181
+     138: aload         11
+     140: getfield      #21                 // Field io/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipObserver.done:Z
+     143: ifeq          181
+     146: iload         5
+     148: ifne          181
+     151: aload         11
+     153: getfield      #24                 // Field io/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipObserver.error:Ljava/lang/Throwable;
+     156: astore        12
+     158: aload         12
+     160: ifnull        181
+     163: aload_0
+     164: iconst_1
+     165: putfield      #13                 // Field cancelled:Z
+     168: aload_0
+     169: invokevirtual #25                 // Method cancel:()V
+     172: aload_3
+     173: aload         12
+     175: invokeinterface #26,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+     180: return
+     181: iinc          6, 1
+     184: iinc          10, 1
+     187: goto          49
+     190: iload         7
+     192: ifeq          198
+     195: goto          259
+     198: aload_0
+     199: getfield      #3                  // Field zipper:Lio/reactivex/rxjava3/functions/Function;
+     202: aload         4
+     204: invokevirtual #27                 // Method "[Ljava/lang/Object;".clone:()Ljava/lang/Object;
+     207: invokeinterface #28,  2           // InterfaceMethod io/reactivex/rxjava3/functions/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+     212: ldc           #29                 // String The zipper returned a null value
+     214: invokestatic  #30                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+     217: astore        8
+     219: goto          242
+     222: astore        9
+     224: aload         9
+     226: invokestatic  #32                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+     229: aload_0
+     230: invokevirtual #25                 // Method cancel:()V
+     233: aload_3
+     234: aload         9
+     236: invokeinterface #26,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+     241: return
+     242: aload_3
+     243: aload         8
+     245: invokeinterface #33,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onNext:(Ljava/lang/Object;)V
+     250: aload         4
+     252: aconst_null
+     253: invokestatic  #34                 // Method java/util/Arrays.fill:([Ljava/lang/Object;Ljava/lang/Object;)V
+     256: goto          32
+     259: aload_0
+     260: iload_1
+     261: ineg
+     262: invokevirtual #35                 // Method addAndGet:(I)I
+     265: istore_1
+     266: iload_1
+     267: ifne          32
+     270: return
+    Exception table:
+       from    to  target type
+         198   219   222   Class java/lang/Throwable
+
+  boolean checkTerminated(boolean, boolean, io.reactivex.rxjava3.core.Observer<? super R>, boolean, io.reactivex.rxjava3.internal.operators.observable.ObservableZip$ZipObserver<?, ?>);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field cancelled:Z
+       4: ifeq          13
+       7: aload_0
+       8: invokevirtual #25                 // Method cancel:()V
+      11: iconst_1
+      12: ireturn
+      13: iload_1
+      14: ifeq          118
+      17: iload         4
+      19: ifeq          66
+      22: iload_2
+      23: ifeq          118
+      26: aload         5
+      28: getfield      #24                 // Field io/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipObserver.error:Ljava/lang/Throwable;
+      31: astore        6
+      33: aload_0
+      34: iconst_1
+      35: putfield      #13                 // Field cancelled:Z
+      38: aload_0
+      39: invokevirtual #25                 // Method cancel:()V
+      42: aload         6
+      44: ifnull        58
+      47: aload_3
+      48: aload         6
+      50: invokeinterface #26,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      55: goto          64
+      58: aload_3
+      59: invokeinterface #36,  1           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onComplete:()V
+      64: iconst_1
+      65: ireturn
+      66: aload         5
+      68: getfield      #24                 // Field io/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipObserver.error:Ljava/lang/Throwable;
+      71: astore        6
+      73: aload         6
+      75: ifnull        97
+      78: aload_0
+      79: iconst_1
+      80: putfield      #13                 // Field cancelled:Z
+      83: aload_0
+      84: invokevirtual #25                 // Method cancel:()V
+      87: aload_3
+      88: aload         6
+      90: invokeinterface #26,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      95: iconst_1
+      96: ireturn
+      97: iload_2
+      98: ifeq          118
+     101: aload_0
+     102: iconst_1
+     103: putfield      #13                 // Field cancelled:Z
+     106: aload_0
+     107: invokevirtual #25                 // Method cancel:()V
+     110: aload_3
+     111: invokeinterface #36,  1           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onComplete:()V
+     116: iconst_1
+     117: ireturn
+     118: iconst_0
+     119: ireturn
+}

@@ -1,0 +1,127 @@
+Compiled from "ParallelRunOn.java"
+public final class io.reactivex.rxjava3.internal.operators.parallel.ParallelRunOn<T> extends io.reactivex.rxjava3.parallel.ParallelFlowable<T> {
+  final io.reactivex.rxjava3.parallel.ParallelFlowable<? extends T> source;
+
+  final io.reactivex.rxjava3.core.Scheduler scheduler;
+
+  final int prefetch;
+
+  public io.reactivex.rxjava3.internal.operators.parallel.ParallelRunOn(io.reactivex.rxjava3.parallel.ParallelFlowable<? extends T>, io.reactivex.rxjava3.core.Scheduler, int);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method io/reactivex/rxjava3/parallel/ParallelFlowable."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field source:Lio/reactivex/rxjava3/parallel/ParallelFlowable;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field scheduler:Lio/reactivex/rxjava3/core/Scheduler;
+      14: aload_0
+      15: iload_3
+      16: putfield      #4                  // Field prefetch:I
+      19: return
+
+  public void subscribe(org.reactivestreams.Subscriber<? super T>[]);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #5                  // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onSubscribe:(Lio/reactivex/rxjava3/parallel/ParallelFlowable;[Lorg/reactivestreams/Subscriber;)[Lorg/reactivestreams/Subscriber;
+       5: astore_1
+       6: aload_0
+       7: aload_1
+       8: invokevirtual #6                  // Method validate:([Lorg/reactivestreams/Subscriber;)Z
+      11: ifne          15
+      14: return
+      15: aload_1
+      16: arraylength
+      17: istore_2
+      18: iload_2
+      19: anewarray     #7                  // class org/reactivestreams/Subscriber
+      22: astore_3
+      23: aload_0
+      24: getfield      #3                  // Field scheduler:Lio/reactivex/rxjava3/core/Scheduler;
+      27: instanceof    #8                  // class io/reactivex/rxjava3/internal/schedulers/SchedulerMultiWorkerSupport
+      30: ifeq          63
+      33: aload_0
+      34: getfield      #3                  // Field scheduler:Lio/reactivex/rxjava3/core/Scheduler;
+      37: checkcast     #8                  // class io/reactivex/rxjava3/internal/schedulers/SchedulerMultiWorkerSupport
+      40: astore        4
+      42: aload         4
+      44: iload_2
+      45: new           #9                  // class io/reactivex/rxjava3/internal/operators/parallel/ParallelRunOn$MultiWorkerCallback
+      48: dup
+      49: aload_0
+      50: aload_1
+      51: aload_3
+      52: invokespecial #10                 // Method io/reactivex/rxjava3/internal/operators/parallel/ParallelRunOn$MultiWorkerCallback."<init>":(Lio/reactivex/rxjava3/internal/operators/parallel/ParallelRunOn;[Lorg/reactivestreams/Subscriber;[Lorg/reactivestreams/Subscriber;)V
+      55: invokeinterface #11,  3           // InterfaceMethod io/reactivex/rxjava3/internal/schedulers/SchedulerMultiWorkerSupport.createWorkers:(ILio/reactivex/rxjava3/internal/schedulers/SchedulerMultiWorkerSupport$WorkerCallback;)V
+      60: goto          93
+      63: iconst_0
+      64: istore        4
+      66: iload         4
+      68: iload_2
+      69: if_icmpge     93
+      72: aload_0
+      73: iload         4
+      75: aload_1
+      76: aload_3
+      77: aload_0
+      78: getfield      #3                  // Field scheduler:Lio/reactivex/rxjava3/core/Scheduler;
+      81: invokevirtual #12                 // Method io/reactivex/rxjava3/core/Scheduler.createWorker:()Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      84: invokevirtual #13                 // Method createSubscriber:(I[Lorg/reactivestreams/Subscriber;[Lorg/reactivestreams/Subscriber;Lio/reactivex/rxjava3/core/Scheduler$Worker;)V
+      87: iinc          4, 1
+      90: goto          66
+      93: aload_0
+      94: getfield      #2                  // Field source:Lio/reactivex/rxjava3/parallel/ParallelFlowable;
+      97: aload_3
+      98: invokevirtual #14                 // Method io/reactivex/rxjava3/parallel/ParallelFlowable.subscribe:([Lorg/reactivestreams/Subscriber;)V
+     101: return
+
+  void createSubscriber(int, org.reactivestreams.Subscriber<? super T>[], org.reactivestreams.Subscriber<T>[], io.reactivex.rxjava3.core.Scheduler$Worker);
+    Code:
+       0: aload_2
+       1: iload_1
+       2: aaload
+       3: astore        5
+       5: new           #15                 // class io/reactivex/rxjava3/operators/SpscArrayQueue
+       8: dup
+       9: aload_0
+      10: getfield      #4                  // Field prefetch:I
+      13: invokespecial #16                 // Method io/reactivex/rxjava3/operators/SpscArrayQueue."<init>":(I)V
+      16: astore        6
+      18: aload         5
+      20: instanceof    #17                 // class io/reactivex/rxjava3/operators/ConditionalSubscriber
+      23: ifeq          52
+      26: aload_3
+      27: iload_1
+      28: new           #18                 // class io/reactivex/rxjava3/internal/operators/parallel/ParallelRunOn$RunOnConditionalSubscriber
+      31: dup
+      32: aload         5
+      34: checkcast     #17                 // class io/reactivex/rxjava3/operators/ConditionalSubscriber
+      37: aload_0
+      38: getfield      #4                  // Field prefetch:I
+      41: aload         6
+      43: aload         4
+      45: invokespecial #19                 // Method io/reactivex/rxjava3/internal/operators/parallel/ParallelRunOn$RunOnConditionalSubscriber."<init>":(Lio/reactivex/rxjava3/operators/ConditionalSubscriber;ILio/reactivex/rxjava3/operators/SpscArrayQueue;Lio/reactivex/rxjava3/core/Scheduler$Worker;)V
+      48: aastore
+      49: goto          72
+      52: aload_3
+      53: iload_1
+      54: new           #20                 // class io/reactivex/rxjava3/internal/operators/parallel/ParallelRunOn$RunOnSubscriber
+      57: dup
+      58: aload         5
+      60: aload_0
+      61: getfield      #4                  // Field prefetch:I
+      64: aload         6
+      66: aload         4
+      68: invokespecial #21                 // Method io/reactivex/rxjava3/internal/operators/parallel/ParallelRunOn$RunOnSubscriber."<init>":(Lorg/reactivestreams/Subscriber;ILio/reactivex/rxjava3/operators/SpscArrayQueue;Lio/reactivex/rxjava3/core/Scheduler$Worker;)V
+      71: aastore
+      72: return
+
+  public int parallelism();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field source:Lio/reactivex/rxjava3/parallel/ParallelFlowable;
+       4: invokevirtual #22                 // Method io/reactivex/rxjava3/parallel/ParallelFlowable.parallelism:()I
+       7: ireturn
+}

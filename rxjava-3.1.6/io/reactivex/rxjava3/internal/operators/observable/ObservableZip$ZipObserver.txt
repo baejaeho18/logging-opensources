@@ -1,0 +1,84 @@
+Compiled from "ObservableZip.java"
+final class io.reactivex.rxjava3.internal.operators.observable.ObservableZip$ZipObserver<T, R> implements io.reactivex.rxjava3.core.Observer<T> {
+  final io.reactivex.rxjava3.internal.operators.observable.ObservableZip$ZipCoordinator<T, R> parent;
+
+  final io.reactivex.rxjava3.operators.SpscLinkedArrayQueue<T> queue;
+
+  volatile boolean done;
+
+  java.lang.Throwable error;
+
+  final java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.disposables.Disposable> upstream;
+
+  io.reactivex.rxjava3.internal.operators.observable.ObservableZip$ZipObserver(io.reactivex.rxjava3.internal.operators.observable.ObservableZip$ZipCoordinator<T, R>, int);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: new           #2                  // class java/util/concurrent/atomic/AtomicReference
+       8: dup
+       9: invokespecial #3                  // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+      12: putfield      #4                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      15: aload_0
+      16: aload_1
+      17: putfield      #5                  // Field parent:Lio/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipCoordinator;
+      20: aload_0
+      21: new           #6                  // class io/reactivex/rxjava3/operators/SpscLinkedArrayQueue
+      24: dup
+      25: iload_2
+      26: invokespecial #7                  // Method io/reactivex/rxjava3/operators/SpscLinkedArrayQueue."<init>":(I)V
+      29: putfield      #8                  // Field queue:Lio/reactivex/rxjava3/operators/SpscLinkedArrayQueue;
+      32: return
+
+  public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+       4: aload_1
+       5: invokestatic  #9                  // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.setOnce:(Ljava/util/concurrent/atomic/AtomicReference;Lio/reactivex/rxjava3/disposables/Disposable;)Z
+       8: pop
+       9: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field queue:Lio/reactivex/rxjava3/operators/SpscLinkedArrayQueue;
+       4: aload_1
+       5: invokevirtual #10                 // Method io/reactivex/rxjava3/operators/SpscLinkedArrayQueue.offer:(Ljava/lang/Object;)Z
+       8: pop
+       9: aload_0
+      10: getfield      #5                  // Field parent:Lio/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipCoordinator;
+      13: invokevirtual #11                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipCoordinator.drain:()V
+      16: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #12                 // Field error:Ljava/lang/Throwable;
+       5: aload_0
+       6: iconst_1
+       7: putfield      #13                 // Field done:Z
+      10: aload_0
+      11: getfield      #5                  // Field parent:Lio/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipCoordinator;
+      14: invokevirtual #11                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipCoordinator.drain:()V
+      17: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: putfield      #13                 // Field done:Z
+       5: aload_0
+       6: getfield      #5                  // Field parent:Lio/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipCoordinator;
+       9: invokevirtual #11                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableZip$ZipCoordinator.drain:()V
+      12: return
+
+  public void dispose();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokestatic  #14                 // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.dispose:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+       7: pop
+       8: return
+}

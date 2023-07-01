@@ -1,0 +1,66 @@
+Compiled from "BlockingHelper.java"
+public final class io.reactivex.rxjava3.internal.util.BlockingHelper {
+  private io.reactivex.rxjava3.internal.util.BlockingHelper();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: new           #2                  // class java/lang/IllegalStateException
+       7: dup
+       8: ldc           #3                  // String No instances!
+      10: invokespecial #4                  // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      13: athrow
+
+  public static void awaitForComplete(java.util.concurrent.CountDownLatch, io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: aload_0
+       1: invokevirtual #5                  // Method java/util/concurrent/CountDownLatch.getCount:()J
+       4: lconst_0
+       5: lcmp
+       6: ifne          10
+       9: return
+      10: invokestatic  #6                  // Method verifyNonBlocking:()V
+      13: aload_0
+      14: invokevirtual #7                  // Method java/util/concurrent/CountDownLatch.await:()V
+      17: goto          44
+      20: astore_2
+      21: aload_1
+      22: invokeinterface #9,  1            // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.dispose:()V
+      27: invokestatic  #10                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+      30: invokevirtual #11                 // Method java/lang/Thread.interrupt:()V
+      33: new           #2                  // class java/lang/IllegalStateException
+      36: dup
+      37: ldc           #12                 // String Interrupted while waiting for subscription to complete.
+      39: aload_2
+      40: invokespecial #13                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+      43: athrow
+      44: return
+    Exception table:
+       from    to  target type
+          10    17    20   Class java/lang/InterruptedException
+
+  public static void verifyNonBlocking();
+    Code:
+       0: invokestatic  #14                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.isFailOnNonBlockingScheduler:()Z
+       3: ifeq          58
+       6: invokestatic  #10                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+       9: instanceof    #15                 // class io/reactivex/rxjava3/internal/schedulers/NonBlockingThread
+      12: ifne          21
+      15: invokestatic  #16                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onBeforeBlocking:()Z
+      18: ifeq          58
+      21: new           #2                  // class java/lang/IllegalStateException
+      24: dup
+      25: new           #17                 // class java/lang/StringBuilder
+      28: dup
+      29: invokespecial #18                 // Method java/lang/StringBuilder."<init>":()V
+      32: ldc           #19                 // String Attempt to block on a Scheduler
+      34: invokevirtual #20                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      37: invokestatic  #10                 // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+      40: invokevirtual #21                 // Method java/lang/Thread.getName:()Ljava/lang/String;
+      43: invokevirtual #20                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      46: ldc           #22                 // String  that doesn\'t support blocking operators as they may lead to deadlock
+      48: invokevirtual #20                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      51: invokevirtual #23                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      54: invokespecial #4                  // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      57: athrow
+      58: return
+}
