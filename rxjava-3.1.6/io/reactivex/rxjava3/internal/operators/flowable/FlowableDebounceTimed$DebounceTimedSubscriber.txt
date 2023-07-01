@@ -1,0 +1,244 @@
+Compiled from "FlowableDebounceTimed.java"
+final class io.reactivex.rxjava3.internal.operators.flowable.FlowableDebounceTimed$DebounceTimedSubscriber<T> extends java.util.concurrent.atomic.AtomicLong implements io.reactivex.rxjava3.core.FlowableSubscriber<T>, org.reactivestreams.Subscription {
+  private static final long serialVersionUID;
+
+  final org.reactivestreams.Subscriber<? super T> downstream;
+
+  final long timeout;
+
+  final java.util.concurrent.TimeUnit unit;
+
+  final io.reactivex.rxjava3.core.Scheduler$Worker worker;
+
+  final io.reactivex.rxjava3.functions.Consumer<? super T> onDropped;
+
+  org.reactivestreams.Subscription upstream;
+
+  io.reactivex.rxjava3.internal.operators.flowable.FlowableDebounceTimed$DebounceEmitter<T> timer;
+
+  volatile long index;
+
+  boolean done;
+
+  io.reactivex.rxjava3.internal.operators.flowable.FlowableDebounceTimed$DebounceTimedSubscriber(org.reactivestreams.Subscriber<? super T>, long, java.util.concurrent.TimeUnit, io.reactivex.rxjava3.core.Scheduler$Worker, io.reactivex.rxjava3.functions.Consumer<? super T>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicLong."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       9: aload_0
+      10: lload_2
+      11: putfield      #3                  // Field timeout:J
+      14: aload_0
+      15: aload         4
+      17: putfield      #4                  // Field unit:Ljava/util/concurrent/TimeUnit;
+      20: aload_0
+      21: aload         5
+      23: putfield      #5                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      26: aload_0
+      27: aload         6
+      29: putfield      #6                  // Field onDropped:Lio/reactivex/rxjava3/functions/Consumer;
+      32: return
+
+  public void onSubscribe(org.reactivestreams.Subscription);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field upstream:Lorg/reactivestreams/Subscription;
+       4: aload_1
+       5: invokestatic  #8                  // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.validate:(Lorg/reactivestreams/Subscription;Lorg/reactivestreams/Subscription;)Z
+       8: ifeq          35
+      11: aload_0
+      12: aload_1
+      13: putfield      #7                  // Field upstream:Lorg/reactivestreams/Subscription;
+      16: aload_0
+      17: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      20: aload_0
+      21: invokeinterface #9,  2            // InterfaceMethod org/reactivestreams/Subscriber.onSubscribe:(Lorg/reactivestreams/Subscription;)V
+      26: aload_1
+      27: ldc2_w        #11                 // long 9223372036854775807l
+      30: invokeinterface #13,  3           // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+      35: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field done:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: getfield      #15                 // Field index:J
+      12: lconst_1
+      13: ladd
+      14: lstore_2
+      15: aload_0
+      16: lload_2
+      17: putfield      #15                 // Field index:J
+      20: aload_0
+      21: getfield      #16                 // Field timer:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableDebounceTimed$DebounceEmitter;
+      24: astore        4
+      26: aload         4
+      28: ifnull        36
+      31: aload         4
+      33: invokevirtual #17                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableDebounceTimed$DebounceEmitter.dispose:()V
+      36: aload_0
+      37: getfield      #6                  // Field onDropped:Lio/reactivex/rxjava3/functions/Consumer;
+      40: ifnull        104
+      43: aload         4
+      45: ifnull        104
+      48: aload_0
+      49: getfield      #6                  // Field onDropped:Lio/reactivex/rxjava3/functions/Consumer;
+      52: aload         4
+      54: getfield      #18                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableDebounceTimed$DebounceEmitter.value:Ljava/lang/Object;
+      57: invokeinterface #19,  2           // InterfaceMethod io/reactivex/rxjava3/functions/Consumer.accept:(Ljava/lang/Object;)V
+      62: goto          104
+      65: astore        5
+      67: aload         5
+      69: invokestatic  #21                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      72: aload_0
+      73: getfield      #7                  // Field upstream:Lorg/reactivestreams/Subscription;
+      76: invokeinterface #22,  1           // InterfaceMethod org/reactivestreams/Subscription.cancel:()V
+      81: aload_0
+      82: iconst_1
+      83: putfield      #14                 // Field done:Z
+      86: aload_0
+      87: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      90: aload         5
+      92: invokeinterface #23,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      97: aload_0
+      98: getfield      #5                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+     101: invokevirtual #24                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+     104: new           #25                 // class io/reactivex/rxjava3/internal/operators/flowable/FlowableDebounceTimed$DebounceEmitter
+     107: dup
+     108: aload_1
+     109: lload_2
+     110: aload_0
+     111: invokespecial #26                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableDebounceTimed$DebounceEmitter."<init>":(Ljava/lang/Object;JLio/reactivex/rxjava3/internal/operators/flowable/FlowableDebounceTimed$DebounceTimedSubscriber;)V
+     114: astore        5
+     116: aload_0
+     117: aload         5
+     119: putfield      #16                 // Field timer:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableDebounceTimed$DebounceEmitter;
+     122: aload         5
+     124: aload_0
+     125: getfield      #5                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+     128: aload         5
+     130: aload_0
+     131: getfield      #3                  // Field timeout:J
+     134: aload_0
+     135: getfield      #4                  // Field unit:Ljava/util/concurrent/TimeUnit;
+     138: invokevirtual #27                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.schedule:(Ljava/lang/Runnable;JLjava/util/concurrent/TimeUnit;)Lio/reactivex/rxjava3/disposables/Disposable;
+     141: invokevirtual #28                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableDebounceTimed$DebounceEmitter.setResource:(Lio/reactivex/rxjava3/disposables/Disposable;)V
+     144: return
+    Exception table:
+       from    to  target type
+          48    62    65   Class java/lang/Throwable
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field done:Z
+       4: ifeq          12
+       7: aload_1
+       8: invokestatic  #29                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      11: return
+      12: aload_0
+      13: iconst_1
+      14: putfield      #14                 // Field done:Z
+      17: aload_0
+      18: getfield      #16                 // Field timer:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableDebounceTimed$DebounceEmitter;
+      21: astore_2
+      22: aload_2
+      23: ifnull        32
+      26: aload_2
+      27: invokeinterface #30,  1           // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.dispose:()V
+      32: aload_0
+      33: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      36: aload_1
+      37: invokeinterface #23,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      42: aload_0
+      43: getfield      #5                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      46: invokevirtual #24                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+      49: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field done:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: iconst_1
+      10: putfield      #14                 // Field done:Z
+      13: aload_0
+      14: getfield      #16                 // Field timer:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableDebounceTimed$DebounceEmitter;
+      17: astore_1
+      18: aload_1
+      19: ifnull        26
+      22: aload_1
+      23: invokevirtual #17                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableDebounceTimed$DebounceEmitter.dispose:()V
+      26: aload_1
+      27: ifnull        34
+      30: aload_1
+      31: invokevirtual #31                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableDebounceTimed$DebounceEmitter.emit:()V
+      34: aload_0
+      35: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      38: invokeinterface #32,  1           // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+      43: aload_0
+      44: getfield      #5                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      47: invokevirtual #24                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+      50: return
+
+  public void request(long);
+    Code:
+       0: lload_1
+       1: invokestatic  #33                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.validate:(J)Z
+       4: ifeq          13
+       7: aload_0
+       8: lload_1
+       9: invokestatic  #34                 // Method io/reactivex/rxjava3/internal/util/BackpressureHelper.add:(Ljava/util/concurrent/atomic/AtomicLong;J)J
+      12: pop2
+      13: return
+
+  public void cancel();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field upstream:Lorg/reactivestreams/Subscription;
+       4: invokeinterface #22,  1           // InterfaceMethod org/reactivestreams/Subscription.cancel:()V
+       9: aload_0
+      10: getfield      #5                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      13: invokevirtual #24                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+      16: return
+
+  void emit(long, T, io.reactivex.rxjava3.internal.operators.flowable.FlowableDebounceTimed$DebounceEmitter<T>);
+    Code:
+       0: lload_1
+       1: aload_0
+       2: getfield      #15                 // Field index:J
+       5: lcmp
+       6: ifne          62
+       9: aload_0
+      10: invokevirtual #35                 // Method get:()J
+      13: lstore        5
+      15: lload         5
+      17: lconst_0
+      18: lcmp
+      19: ifeq          46
+      22: aload_0
+      23: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      26: aload_3
+      27: invokeinterface #36,  2           // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+      32: aload_0
+      33: lconst_1
+      34: invokestatic  #37                 // Method io/reactivex/rxjava3/internal/util/BackpressureHelper.produced:(Ljava/util/concurrent/atomic/AtomicLong;J)J
+      37: pop2
+      38: aload         4
+      40: invokevirtual #17                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableDebounceTimed$DebounceEmitter.dispose:()V
+      43: goto          62
+      46: aload_0
+      47: invokevirtual #38                 // Method cancel:()V
+      50: aload_0
+      51: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      54: invokestatic  #39                 // Method io/reactivex/rxjava3/exceptions/MissingBackpressureException.createDefault:()Lio/reactivex/rxjava3/exceptions/MissingBackpressureException;
+      57: invokeinterface #23,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      62: return
+}

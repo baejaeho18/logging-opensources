@@ -1,0 +1,154 @@
+Compiled from "FlowableRetryBiPredicate.java"
+final class io.reactivex.rxjava3.internal.operators.flowable.FlowableRetryBiPredicate$RetryBiSubscriber<T> extends java.util.concurrent.atomic.AtomicInteger implements io.reactivex.rxjava3.core.FlowableSubscriber<T> {
+  private static final long serialVersionUID;
+
+  final org.reactivestreams.Subscriber<? super T> downstream;
+
+  final io.reactivex.rxjava3.internal.subscriptions.SubscriptionArbiter sa;
+
+  final org.reactivestreams.Publisher<? extends T> source;
+
+  final io.reactivex.rxjava3.functions.BiPredicate<? super java.lang.Integer, ? super java.lang.Throwable> predicate;
+
+  int retries;
+
+  long produced;
+
+  io.reactivex.rxjava3.internal.operators.flowable.FlowableRetryBiPredicate$RetryBiSubscriber(org.reactivestreams.Subscriber<? super T>, io.reactivex.rxjava3.functions.BiPredicate<? super java.lang.Integer, ? super java.lang.Throwable>, io.reactivex.rxjava3.internal.subscriptions.SubscriptionArbiter, org.reactivestreams.Publisher<? extends T>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       9: aload_0
+      10: aload_3
+      11: putfield      #3                  // Field sa:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionArbiter;
+      14: aload_0
+      15: aload         4
+      17: putfield      #4                  // Field source:Lorg/reactivestreams/Publisher;
+      20: aload_0
+      21: aload_2
+      22: putfield      #5                  // Field predicate:Lio/reactivex/rxjava3/functions/BiPredicate;
+      25: return
+
+  public void onSubscribe(org.reactivestreams.Subscription);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field sa:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionArbiter;
+       4: aload_1
+       5: invokevirtual #6                  // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionArbiter.setSubscription:(Lorg/reactivestreams/Subscription;)V
+       8: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: dup
+       2: getfield      #7                  // Field produced:J
+       5: lconst_1
+       6: ladd
+       7: putfield      #7                  // Field produced:J
+      10: aload_0
+      11: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      14: aload_1
+      15: invokeinterface #8,  2            // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+      20: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field predicate:Lio/reactivex/rxjava3/functions/BiPredicate;
+       4: aload_0
+       5: dup
+       6: getfield      #9                  // Field retries:I
+       9: iconst_1
+      10: iadd
+      11: dup_x1
+      12: putfield      #9                  // Field retries:I
+      15: invokestatic  #10                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      18: aload_1
+      19: invokeinterface #11,  3           // InterfaceMethod io/reactivex/rxjava3/functions/BiPredicate.test:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      24: istore_2
+      25: goto          62
+      28: astore_3
+      29: aload_3
+      30: invokestatic  #13                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      33: aload_0
+      34: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      37: new           #14                 // class io/reactivex/rxjava3/exceptions/CompositeException
+      40: dup
+      41: iconst_2
+      42: anewarray     #15                 // class java/lang/Throwable
+      45: dup
+      46: iconst_0
+      47: aload_1
+      48: aastore
+      49: dup
+      50: iconst_1
+      51: aload_3
+      52: aastore
+      53: invokespecial #16                 // Method io/reactivex/rxjava3/exceptions/CompositeException."<init>":([Ljava/lang/Throwable;)V
+      56: invokeinterface #17,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      61: return
+      62: iload_2
+      63: ifne          77
+      66: aload_0
+      67: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      70: aload_1
+      71: invokeinterface #17,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      76: return
+      77: aload_0
+      78: invokevirtual #18                 // Method subscribeNext:()V
+      81: return
+    Exception table:
+       from    to  target type
+           0    25    28   Class java/lang/Throwable
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       4: invokeinterface #19,  1           // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+       9: return
+
+  void subscribeNext();
+    Code:
+       0: aload_0
+       1: invokevirtual #20                 // Method getAndIncrement:()I
+       4: ifne          71
+       7: iconst_1
+       8: istore_1
+       9: aload_0
+      10: getfield      #3                  // Field sa:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionArbiter;
+      13: invokevirtual #21                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionArbiter.isCancelled:()Z
+      16: ifeq          20
+      19: return
+      20: aload_0
+      21: getfield      #7                  // Field produced:J
+      24: lstore_2
+      25: lload_2
+      26: lconst_0
+      27: lcmp
+      28: ifeq          44
+      31: aload_0
+      32: lconst_0
+      33: putfield      #7                  // Field produced:J
+      36: aload_0
+      37: getfield      #3                  // Field sa:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionArbiter;
+      40: lload_2
+      41: invokevirtual #22                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionArbiter.produced:(J)V
+      44: aload_0
+      45: getfield      #4                  // Field source:Lorg/reactivestreams/Publisher;
+      48: aload_0
+      49: invokeinterface #23,  2           // InterfaceMethod org/reactivestreams/Publisher.subscribe:(Lorg/reactivestreams/Subscriber;)V
+      54: aload_0
+      55: iload_1
+      56: ineg
+      57: invokevirtual #24                 // Method addAndGet:(I)I
+      60: istore_1
+      61: iload_1
+      62: ifne          68
+      65: goto          71
+      68: goto          9
+      71: return
+}

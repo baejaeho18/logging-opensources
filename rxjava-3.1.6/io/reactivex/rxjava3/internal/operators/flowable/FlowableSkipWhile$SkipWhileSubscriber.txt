@@ -1,0 +1,114 @@
+Compiled from "FlowableSkipWhile.java"
+final class io.reactivex.rxjava3.internal.operators.flowable.FlowableSkipWhile$SkipWhileSubscriber<T> implements io.reactivex.rxjava3.core.FlowableSubscriber<T>, org.reactivestreams.Subscription {
+  final org.reactivestreams.Subscriber<? super T> downstream;
+
+  final io.reactivex.rxjava3.functions.Predicate<? super T> predicate;
+
+  org.reactivestreams.Subscription upstream;
+
+  boolean notSkipping;
+
+  io.reactivex.rxjava3.internal.operators.flowable.FlowableSkipWhile$SkipWhileSubscriber(org.reactivestreams.Subscriber<? super T>, io.reactivex.rxjava3.functions.Predicate<? super T>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field predicate:Lio/reactivex/rxjava3/functions/Predicate;
+      14: return
+
+  public void onSubscribe(org.reactivestreams.Subscription);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field upstream:Lorg/reactivestreams/Subscription;
+       4: aload_1
+       5: invokestatic  #5                  // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.validate:(Lorg/reactivestreams/Subscription;Lorg/reactivestreams/Subscription;)Z
+       8: ifeq          26
+      11: aload_0
+      12: aload_1
+      13: putfield      #4                  // Field upstream:Lorg/reactivestreams/Subscription;
+      16: aload_0
+      17: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      20: aload_0
+      21: invokeinterface #6,  2            // InterfaceMethod org/reactivestreams/Subscriber.onSubscribe:(Lorg/reactivestreams/Subscription;)V
+      26: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field notSkipping:Z
+       4: ifeq          20
+       7: aload_0
+       8: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      11: aload_1
+      12: invokeinterface #8,  2            // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+      17: goto          91
+      20: aload_0
+      21: getfield      #3                  // Field predicate:Lio/reactivex/rxjava3/functions/Predicate;
+      24: aload_1
+      25: invokeinterface #9,  2            // InterfaceMethod io/reactivex/rxjava3/functions/Predicate.test:(Ljava/lang/Object;)Z
+      30: istore_2
+      31: goto          59
+      34: astore_3
+      35: aload_3
+      36: invokestatic  #11                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      39: aload_0
+      40: getfield      #4                  // Field upstream:Lorg/reactivestreams/Subscription;
+      43: invokeinterface #12,  1           // InterfaceMethod org/reactivestreams/Subscription.cancel:()V
+      48: aload_0
+      49: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      52: aload_3
+      53: invokeinterface #13,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      58: return
+      59: iload_2
+      60: ifeq          76
+      63: aload_0
+      64: getfield      #4                  // Field upstream:Lorg/reactivestreams/Subscription;
+      67: lconst_1
+      68: invokeinterface #14,  3           // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+      73: goto          91
+      76: aload_0
+      77: iconst_1
+      78: putfield      #7                  // Field notSkipping:Z
+      81: aload_0
+      82: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      85: aload_1
+      86: invokeinterface #8,  2            // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+      91: return
+    Exception table:
+       from    to  target type
+          20    31    34   Class java/lang/Throwable
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       4: aload_1
+       5: invokeinterface #13,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      10: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       4: invokeinterface #15,  1           // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+       9: return
+
+  public void request(long);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field upstream:Lorg/reactivestreams/Subscription;
+       4: lload_1
+       5: invokeinterface #14,  3           // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+      10: return
+
+  public void cancel();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field upstream:Lorg/reactivestreams/Subscription;
+       4: invokeinterface #12,  1           // InterfaceMethod org/reactivestreams/Subscription.cancel:()V
+       9: return
+}

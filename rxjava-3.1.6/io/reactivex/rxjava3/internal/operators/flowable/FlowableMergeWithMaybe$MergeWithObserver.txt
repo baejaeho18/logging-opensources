@@ -1,0 +1,553 @@
+Compiled from "FlowableMergeWithMaybe.java"
+final class io.reactivex.rxjava3.internal.operators.flowable.FlowableMergeWithMaybe$MergeWithObserver<T> extends java.util.concurrent.atomic.AtomicInteger implements io.reactivex.rxjava3.core.FlowableSubscriber<T>, org.reactivestreams.Subscription {
+  private static final long serialVersionUID;
+
+  final org.reactivestreams.Subscriber<? super T> downstream;
+
+  final java.util.concurrent.atomic.AtomicReference<org.reactivestreams.Subscription> mainSubscription;
+
+  final io.reactivex.rxjava3.internal.operators.flowable.FlowableMergeWithMaybe$MergeWithObserver$OtherObserver<T> otherObserver;
+
+  final io.reactivex.rxjava3.internal.util.AtomicThrowable errors;
+
+  final java.util.concurrent.atomic.AtomicLong requested;
+
+  final int prefetch;
+
+  final int limit;
+
+  volatile io.reactivex.rxjava3.operators.SimplePlainQueue<T> queue;
+
+  T singleItem;
+
+  volatile boolean cancelled;
+
+  volatile boolean mainDone;
+
+  volatile int otherState;
+
+  long emitted;
+
+  int consumed;
+
+  static final int OTHER_STATE_HAS_VALUE;
+
+  static final int OTHER_STATE_CONSUMED_OR_EMPTY;
+
+  io.reactivex.rxjava3.internal.operators.flowable.FlowableMergeWithMaybe$MergeWithObserver(org.reactivestreams.Subscriber<? super T>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       9: aload_0
+      10: new           #3                  // class java/util/concurrent/atomic/AtomicReference
+      13: dup
+      14: invokespecial #4                  // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+      17: putfield      #5                  // Field mainSubscription:Ljava/util/concurrent/atomic/AtomicReference;
+      20: aload_0
+      21: new           #6                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableMergeWithMaybe$MergeWithObserver$OtherObserver
+      24: dup
+      25: aload_0
+      26: invokespecial #7                  // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableMergeWithMaybe$MergeWithObserver$OtherObserver."<init>":(Lio/reactivex/rxjava3/internal/operators/flowable/FlowableMergeWithMaybe$MergeWithObserver;)V
+      29: putfield      #8                  // Field otherObserver:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableMergeWithMaybe$MergeWithObserver$OtherObserver;
+      32: aload_0
+      33: new           #9                  // class io/reactivex/rxjava3/internal/util/AtomicThrowable
+      36: dup
+      37: invokespecial #10                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable."<init>":()V
+      40: putfield      #11                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      43: aload_0
+      44: new           #12                 // class java/util/concurrent/atomic/AtomicLong
+      47: dup
+      48: invokespecial #13                 // Method java/util/concurrent/atomic/AtomicLong."<init>":()V
+      51: putfield      #14                 // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+      54: aload_0
+      55: invokestatic  #15                 // Method io/reactivex/rxjava3/core/Flowable.bufferSize:()I
+      58: putfield      #16                 // Field prefetch:I
+      61: aload_0
+      62: aload_0
+      63: getfield      #16                 // Field prefetch:I
+      66: aload_0
+      67: getfield      #16                 // Field prefetch:I
+      70: iconst_2
+      71: ishr
+      72: isub
+      73: putfield      #17                 // Field limit:I
+      76: return
+
+  public void onSubscribe(org.reactivestreams.Subscription);
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field mainSubscription:Ljava/util/concurrent/atomic/AtomicReference;
+       4: aload_1
+       5: aload_0
+       6: getfield      #16                 // Field prefetch:I
+       9: i2l
+      10: invokestatic  #18                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.setOnce:(Ljava/util/concurrent/atomic/AtomicReference;Lorg/reactivestreams/Subscription;J)Z
+      13: pop
+      14: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: iconst_0
+       2: iconst_1
+       3: invokevirtual #19                 // Method compareAndSet:(II)Z
+       6: ifeq          154
+       9: aload_0
+      10: getfield      #20                 // Field emitted:J
+      13: lstore_2
+      14: aload_0
+      15: getfield      #14                 // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+      18: invokevirtual #21                 // Method java/util/concurrent/atomic/AtomicLong.get:()J
+      21: lload_2
+      22: lcmp
+      23: ifeq          128
+      26: aload_0
+      27: getfield      #22                 // Field queue:Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+      30: astore        4
+      32: aload         4
+      34: ifnull        47
+      37: aload         4
+      39: invokeinterface #23,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimplePlainQueue.isEmpty:()Z
+      44: ifeq          116
+      47: aload_0
+      48: lload_2
+      49: lconst_1
+      50: ladd
+      51: putfield      #20                 // Field emitted:J
+      54: aload_0
+      55: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      58: aload_1
+      59: invokeinterface #24,  2           // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+      64: aload_0
+      65: getfield      #25                 // Field consumed:I
+      68: iconst_1
+      69: iadd
+      70: istore        5
+      72: iload         5
+      74: aload_0
+      75: getfield      #17                 // Field limit:I
+      78: if_icmpne     107
+      81: aload_0
+      82: iconst_0
+      83: putfield      #25                 // Field consumed:I
+      86: aload_0
+      87: getfield      #5                  // Field mainSubscription:Ljava/util/concurrent/atomic/AtomicReference;
+      90: invokevirtual #26                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+      93: checkcast     #27                 // class org/reactivestreams/Subscription
+      96: iload         5
+      98: i2l
+      99: invokeinterface #28,  3           // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+     104: goto          113
+     107: aload_0
+     108: iload         5
+     110: putfield      #25                 // Field consumed:I
+     113: goto          125
+     116: aload         4
+     118: aload_1
+     119: invokeinterface #29,  2           // InterfaceMethod io/reactivex/rxjava3/operators/SimplePlainQueue.offer:(Ljava/lang/Object;)Z
+     124: pop
+     125: goto          143
+     128: aload_0
+     129: invokevirtual #30                 // Method getOrCreateQueue:()Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+     132: astore        4
+     134: aload         4
+     136: aload_1
+     137: invokeinterface #29,  2           // InterfaceMethod io/reactivex/rxjava3/operators/SimplePlainQueue.offer:(Ljava/lang/Object;)Z
+     142: pop
+     143: aload_0
+     144: invokevirtual #31                 // Method decrementAndGet:()I
+     147: ifne          151
+     150: return
+     151: goto          175
+     154: aload_0
+     155: invokevirtual #30                 // Method getOrCreateQueue:()Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+     158: astore_2
+     159: aload_2
+     160: aload_1
+     161: invokeinterface #29,  2           // InterfaceMethod io/reactivex/rxjava3/operators/SimplePlainQueue.offer:(Ljava/lang/Object;)Z
+     166: pop
+     167: aload_0
+     168: invokevirtual #32                 // Method getAndIncrement:()I
+     171: ifeq          175
+     174: return
+     175: aload_0
+     176: invokevirtual #33                 // Method drainLoop:()V
+     179: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+       4: aload_1
+       5: invokevirtual #34                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryAddThrowableOrReport:(Ljava/lang/Throwable;)Z
+       8: ifeq          23
+      11: aload_0
+      12: getfield      #8                  // Field otherObserver:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableMergeWithMaybe$MergeWithObserver$OtherObserver;
+      15: invokestatic  #35                 // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.dispose:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+      18: pop
+      19: aload_0
+      20: invokevirtual #36                 // Method drain:()V
+      23: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: putfield      #37                 // Field mainDone:Z
+       5: aload_0
+       6: invokevirtual #36                 // Method drain:()V
+       9: return
+
+  public void request(long);
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+       4: lload_1
+       5: invokestatic  #38                 // Method io/reactivex/rxjava3/internal/util/BackpressureHelper.add:(Ljava/util/concurrent/atomic/AtomicLong;J)J
+       8: pop2
+       9: aload_0
+      10: invokevirtual #36                 // Method drain:()V
+      13: return
+
+  public void cancel();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: putfield      #39                 // Field cancelled:Z
+       5: aload_0
+       6: getfield      #5                  // Field mainSubscription:Ljava/util/concurrent/atomic/AtomicReference;
+       9: invokestatic  #40                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.cancel:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+      12: pop
+      13: aload_0
+      14: getfield      #8                  // Field otherObserver:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableMergeWithMaybe$MergeWithObserver$OtherObserver;
+      17: invokestatic  #35                 // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.dispose:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+      20: pop
+      21: aload_0
+      22: getfield      #11                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      25: invokevirtual #41                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryTerminateAndReport:()V
+      28: aload_0
+      29: invokevirtual #32                 // Method getAndIncrement:()I
+      32: ifne          45
+      35: aload_0
+      36: aconst_null
+      37: putfield      #22                 // Field queue:Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+      40: aload_0
+      41: aconst_null
+      42: putfield      #42                 // Field singleItem:Ljava/lang/Object;
+      45: return
+
+  void otherSuccess(T);
+    Code:
+       0: aload_0
+       1: iconst_0
+       2: iconst_1
+       3: invokevirtual #19                 // Method compareAndSet:(II)Z
+       6: ifeq          72
+       9: aload_0
+      10: getfield      #20                 // Field emitted:J
+      13: lstore_2
+      14: aload_0
+      15: getfield      #14                 // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+      18: invokevirtual #21                 // Method java/util/concurrent/atomic/AtomicLong.get:()J
+      21: lload_2
+      22: lcmp
+      23: ifeq          51
+      26: aload_0
+      27: lload_2
+      28: lconst_1
+      29: ladd
+      30: putfield      #20                 // Field emitted:J
+      33: aload_0
+      34: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      37: aload_1
+      38: invokeinterface #24,  2           // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+      43: aload_0
+      44: iconst_2
+      45: putfield      #44                 // Field otherState:I
+      48: goto          69
+      51: aload_0
+      52: aload_1
+      53: putfield      #42                 // Field singleItem:Ljava/lang/Object;
+      56: aload_0
+      57: iconst_1
+      58: putfield      #44                 // Field otherState:I
+      61: aload_0
+      62: invokevirtual #31                 // Method decrementAndGet:()I
+      65: ifne          69
+      68: return
+      69: goto          90
+      72: aload_0
+      73: aload_1
+      74: putfield      #42                 // Field singleItem:Ljava/lang/Object;
+      77: aload_0
+      78: iconst_1
+      79: putfield      #44                 // Field otherState:I
+      82: aload_0
+      83: invokevirtual #32                 // Method getAndIncrement:()I
+      86: ifeq          90
+      89: return
+      90: aload_0
+      91: invokevirtual #33                 // Method drainLoop:()V
+      94: return
+
+  void otherError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+       4: aload_1
+       5: invokevirtual #34                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryAddThrowableOrReport:(Ljava/lang/Throwable;)Z
+       8: ifeq          23
+      11: aload_0
+      12: getfield      #5                  // Field mainSubscription:Ljava/util/concurrent/atomic/AtomicReference;
+      15: invokestatic  #40                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.cancel:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+      18: pop
+      19: aload_0
+      20: invokevirtual #36                 // Method drain:()V
+      23: return
+
+  void otherComplete();
+    Code:
+       0: aload_0
+       1: iconst_2
+       2: putfield      #44                 // Field otherState:I
+       5: aload_0
+       6: invokevirtual #36                 // Method drain:()V
+       9: return
+
+  io.reactivex.rxjava3.operators.SimplePlainQueue<T> getOrCreateQueue();
+    Code:
+       0: aload_0
+       1: getfield      #22                 // Field queue:Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+       4: astore_1
+       5: aload_1
+       6: ifnonnull     25
+       9: new           #45                 // class io/reactivex/rxjava3/operators/SpscArrayQueue
+      12: dup
+      13: invokestatic  #15                 // Method io/reactivex/rxjava3/core/Flowable.bufferSize:()I
+      16: invokespecial #46                 // Method io/reactivex/rxjava3/operators/SpscArrayQueue."<init>":(I)V
+      19: astore_1
+      20: aload_0
+      21: aload_1
+      22: putfield      #22                 // Field queue:Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+      25: aload_1
+      26: areturn
+
+  void drain();
+    Code:
+       0: aload_0
+       1: invokevirtual #32                 // Method getAndIncrement:()I
+       4: ifne          11
+       7: aload_0
+       8: invokevirtual #33                 // Method drainLoop:()V
+      11: return
+
+  void drainLoop();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       4: astore_1
+       5: iconst_1
+       6: istore_2
+       7: aload_0
+       8: getfield      #20                 // Field emitted:J
+      11: lstore_3
+      12: aload_0
+      13: getfield      #25                 // Field consumed:I
+      16: istore        5
+      18: aload_0
+      19: getfield      #17                 // Field limit:I
+      22: istore        6
+      24: aload_0
+      25: getfield      #14                 // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+      28: invokevirtual #21                 // Method java/util/concurrent/atomic/AtomicLong.get:()J
+      31: lstore        7
+      33: lload_3
+      34: lload         7
+      36: lcmp
+      37: ifeq          260
+      40: aload_0
+      41: getfield      #39                 // Field cancelled:Z
+      44: ifeq          58
+      47: aload_0
+      48: aconst_null
+      49: putfield      #42                 // Field singleItem:Ljava/lang/Object;
+      52: aload_0
+      53: aconst_null
+      54: putfield      #22                 // Field queue:Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+      57: return
+      58: aload_0
+      59: getfield      #11                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      62: invokevirtual #47                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.get:()Ljava/lang/Object;
+      65: ifnull        90
+      68: aload_0
+      69: aconst_null
+      70: putfield      #42                 // Field singleItem:Ljava/lang/Object;
+      73: aload_0
+      74: aconst_null
+      75: putfield      #22                 // Field queue:Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+      78: aload_0
+      79: getfield      #11                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      82: aload_0
+      83: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      86: invokevirtual #48                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryTerminateConsumer:(Lorg/reactivestreams/Subscriber;)V
+      89: return
+      90: aload_0
+      91: getfield      #44                 // Field otherState:I
+      94: istore        9
+      96: iload         9
+      98: iconst_1
+      99: if_icmpne     136
+     102: aload_0
+     103: getfield      #42                 // Field singleItem:Ljava/lang/Object;
+     106: astore        10
+     108: aload_0
+     109: aconst_null
+     110: putfield      #42                 // Field singleItem:Ljava/lang/Object;
+     113: aload_0
+     114: iconst_2
+     115: putfield      #44                 // Field otherState:I
+     118: iconst_2
+     119: istore        9
+     121: aload_1
+     122: aload         10
+     124: invokeinterface #24,  2           // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+     129: lload_3
+     130: lconst_1
+     131: ladd
+     132: lstore_3
+     133: goto          33
+     136: aload_0
+     137: getfield      #37                 // Field mainDone:Z
+     140: istore        10
+     142: aload_0
+     143: getfield      #22                 // Field queue:Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+     146: astore        11
+     148: aload         11
+     150: ifnull        163
+     153: aload         11
+     155: invokeinterface #49,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimplePlainQueue.poll:()Ljava/lang/Object;
+     160: goto          164
+     163: aconst_null
+     164: astore        12
+     166: aload         12
+     168: ifnonnull     175
+     171: iconst_1
+     172: goto          176
+     175: iconst_0
+     176: istore        13
+     178: iload         10
+     180: ifeq          206
+     183: iload         13
+     185: ifeq          206
+     188: iload         9
+     190: iconst_2
+     191: if_icmpne     206
+     194: aload_0
+     195: aconst_null
+     196: putfield      #22                 // Field queue:Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+     199: aload_1
+     200: invokeinterface #50,  1           // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+     205: return
+     206: iload         13
+     208: ifeq          214
+     211: goto          260
+     214: aload_1
+     215: aload         12
+     217: invokeinterface #24,  2           // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+     222: lload_3
+     223: lconst_1
+     224: ladd
+     225: lstore_3
+     226: iinc          5, 1
+     229: iload         5
+     231: iload         6
+     233: if_icmpne     257
+     236: iconst_0
+     237: istore        5
+     239: aload_0
+     240: getfield      #5                  // Field mainSubscription:Ljava/util/concurrent/atomic/AtomicReference;
+     243: invokevirtual #26                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+     246: checkcast     #27                 // class org/reactivestreams/Subscription
+     249: iload         6
+     251: i2l
+     252: invokeinterface #28,  3           // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+     257: goto          33
+     260: lload_3
+     261: lload         7
+     263: lcmp
+     264: ifne          381
+     267: aload_0
+     268: getfield      #39                 // Field cancelled:Z
+     271: ifeq          285
+     274: aload_0
+     275: aconst_null
+     276: putfield      #42                 // Field singleItem:Ljava/lang/Object;
+     279: aload_0
+     280: aconst_null
+     281: putfield      #22                 // Field queue:Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+     284: return
+     285: aload_0
+     286: getfield      #11                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+     289: invokevirtual #47                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.get:()Ljava/lang/Object;
+     292: ifnull        317
+     295: aload_0
+     296: aconst_null
+     297: putfield      #42                 // Field singleItem:Ljava/lang/Object;
+     300: aload_0
+     301: aconst_null
+     302: putfield      #22                 // Field queue:Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+     305: aload_0
+     306: getfield      #11                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+     309: aload_0
+     310: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+     313: invokevirtual #48                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryTerminateConsumer:(Lorg/reactivestreams/Subscriber;)V
+     316: return
+     317: aload_0
+     318: getfield      #37                 // Field mainDone:Z
+     321: istore        9
+     323: aload_0
+     324: getfield      #22                 // Field queue:Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+     327: astore        10
+     329: aload         10
+     331: ifnull        344
+     334: aload         10
+     336: invokeinterface #23,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimplePlainQueue.isEmpty:()Z
+     341: ifeq          348
+     344: iconst_1
+     345: goto          349
+     348: iconst_0
+     349: istore        11
+     351: iload         9
+     353: ifeq          381
+     356: iload         11
+     358: ifeq          381
+     361: aload_0
+     362: getfield      #44                 // Field otherState:I
+     365: iconst_2
+     366: if_icmpne     381
+     369: aload_0
+     370: aconst_null
+     371: putfield      #22                 // Field queue:Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+     374: aload_1
+     375: invokeinterface #50,  1           // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+     380: return
+     381: aload_0
+     382: lload_3
+     383: putfield      #20                 // Field emitted:J
+     386: aload_0
+     387: iload         5
+     389: putfield      #25                 // Field consumed:I
+     392: aload_0
+     393: iload_2
+     394: ineg
+     395: invokevirtual #51                 // Method addAndGet:(I)I
+     398: istore_2
+     399: iload_2
+     400: ifne          406
+     403: goto          409
+     406: goto          24
+     409: return
+}

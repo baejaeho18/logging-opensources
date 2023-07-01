@@ -1,0 +1,171 @@
+Compiled from "FlowableZip.java"
+final class io.reactivex.rxjava3.internal.operators.flowable.FlowableZip$ZipSubscriber<T, R> extends java.util.concurrent.atomic.AtomicReference<org.reactivestreams.Subscription> implements io.reactivex.rxjava3.core.FlowableSubscriber<T>, org.reactivestreams.Subscription {
+  private static final long serialVersionUID;
+
+  final io.reactivex.rxjava3.internal.operators.flowable.FlowableZip$ZipCoordinator<T, R> parent;
+
+  final int prefetch;
+
+  final int limit;
+
+  io.reactivex.rxjava3.operators.SimpleQueue<T> queue;
+
+  long produced;
+
+  volatile boolean done;
+
+  int sourceMode;
+
+  io.reactivex.rxjava3.internal.operators.flowable.FlowableZip$ZipSubscriber(io.reactivex.rxjava3.internal.operators.flowable.FlowableZip$ZipCoordinator<T, R>, int);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field parent:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipCoordinator;
+       9: aload_0
+      10: iload_2
+      11: putfield      #3                  // Field prefetch:I
+      14: aload_0
+      15: iload_2
+      16: iload_2
+      17: iconst_2
+      18: ishr
+      19: isub
+      20: putfield      #4                  // Field limit:I
+      23: return
+
+  public void onSubscribe(org.reactivestreams.Subscription);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #5                  // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.setOnce:(Ljava/util/concurrent/atomic/AtomicReference;Lorg/reactivestreams/Subscription;)Z
+       5: ifeq          110
+       8: aload_1
+       9: instanceof    #6                  // class io/reactivex/rxjava3/operators/QueueSubscription
+      12: ifeq          84
+      15: aload_1
+      16: checkcast     #6                  // class io/reactivex/rxjava3/operators/QueueSubscription
+      19: astore_2
+      20: aload_2
+      21: bipush        7
+      23: invokeinterface #7,  2            // InterfaceMethod io/reactivex/rxjava3/operators/QueueSubscription.requestFusion:(I)I
+      28: istore_3
+      29: iload_3
+      30: iconst_1
+      31: if_icmpne     57
+      34: aload_0
+      35: iload_3
+      36: putfield      #8                  // Field sourceMode:I
+      39: aload_0
+      40: aload_2
+      41: putfield      #9                  // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      44: aload_0
+      45: iconst_1
+      46: putfield      #10                 // Field done:Z
+      49: aload_0
+      50: getfield      #2                  // Field parent:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipCoordinator;
+      53: invokevirtual #11                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipCoordinator.drain:()V
+      56: return
+      57: iload_3
+      58: iconst_2
+      59: if_icmpne     84
+      62: aload_0
+      63: iload_3
+      64: putfield      #8                  // Field sourceMode:I
+      67: aload_0
+      68: aload_2
+      69: putfield      #9                  // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      72: aload_1
+      73: aload_0
+      74: getfield      #3                  // Field prefetch:I
+      77: i2l
+      78: invokeinterface #12,  3           // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+      83: return
+      84: aload_0
+      85: new           #13                 // class io/reactivex/rxjava3/operators/SpscArrayQueue
+      88: dup
+      89: aload_0
+      90: getfield      #3                  // Field prefetch:I
+      93: invokespecial #14                 // Method io/reactivex/rxjava3/operators/SpscArrayQueue."<init>":(I)V
+      96: putfield      #9                  // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      99: aload_1
+     100: aload_0
+     101: getfield      #3                  // Field prefetch:I
+     104: i2l
+     105: invokeinterface #12,  3           // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+     110: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field sourceMode:I
+       4: iconst_2
+       5: if_icmpeq     19
+       8: aload_0
+       9: getfield      #9                  // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      12: aload_1
+      13: invokeinterface #15,  2           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.offer:(Ljava/lang/Object;)Z
+      18: pop
+      19: aload_0
+      20: getfield      #2                  // Field parent:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipCoordinator;
+      23: invokevirtual #11                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipCoordinator.drain:()V
+      26: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field parent:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipCoordinator;
+       4: aload_0
+       5: aload_1
+       6: invokevirtual #16                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipCoordinator.error:(Lio/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipSubscriber;Ljava/lang/Throwable;)V
+       9: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: putfield      #10                 // Field done:Z
+       5: aload_0
+       6: getfield      #2                  // Field parent:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipCoordinator;
+       9: invokevirtual #11                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipCoordinator.drain:()V
+      12: return
+
+  public void cancel();
+    Code:
+       0: aload_0
+       1: invokestatic  #17                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.cancel:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+       4: pop
+       5: return
+
+  public void request(long);
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field sourceMode:I
+       4: iconst_1
+       5: if_icmpeq     51
+       8: aload_0
+       9: getfield      #18                 // Field produced:J
+      12: lload_1
+      13: ladd
+      14: lstore_3
+      15: lload_3
+      16: aload_0
+      17: getfield      #4                  // Field limit:I
+      20: i2l
+      21: lcmp
+      22: iflt          46
+      25: aload_0
+      26: lconst_0
+      27: putfield      #18                 // Field produced:J
+      30: aload_0
+      31: invokevirtual #19                 // Method get:()Ljava/lang/Object;
+      34: checkcast     #20                 // class org/reactivestreams/Subscription
+      37: lload_3
+      38: invokeinterface #12,  3           // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+      43: goto          51
+      46: aload_0
+      47: lload_3
+      48: putfield      #18                 // Field produced:J
+      51: return
+}

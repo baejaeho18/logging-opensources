@@ -1,0 +1,727 @@
+Compiled from "FlowablePublishMulticast.java"
+final class io.reactivex.rxjava3.internal.operators.flowable.FlowablePublishMulticast$MulticastProcessor<T> extends io.reactivex.rxjava3.core.Flowable<T> implements io.reactivex.rxjava3.core.FlowableSubscriber<T> {
+  static final io.reactivex.rxjava3.internal.operators.flowable.FlowablePublishMulticast$MulticastSubscription[] EMPTY;
+
+  static final io.reactivex.rxjava3.internal.operators.flowable.FlowablePublishMulticast$MulticastSubscription[] TERMINATED;
+
+  final java.util.concurrent.atomic.AtomicInteger wip;
+
+  final java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.internal.operators.flowable.FlowablePublishMulticast$MulticastSubscription<T>[]> subscribers;
+
+  final int prefetch;
+
+  final int limit;
+
+  final boolean delayError;
+
+  final java.util.concurrent.atomic.AtomicReference<org.reactivestreams.Subscription> upstream;
+
+  volatile io.reactivex.rxjava3.operators.SimpleQueue<T> queue;
+
+  int sourceMode;
+
+  volatile boolean done;
+
+  java.lang.Throwable error;
+
+  int consumed;
+
+  io.reactivex.rxjava3.internal.operators.flowable.FlowablePublishMulticast$MulticastProcessor(int, boolean);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method io/reactivex/rxjava3/core/Flowable."<init>":()V
+       4: aload_0
+       5: iload_1
+       6: putfield      #2                  // Field prefetch:I
+       9: aload_0
+      10: iload_1
+      11: iload_1
+      12: iconst_2
+      13: ishr
+      14: isub
+      15: putfield      #3                  // Field limit:I
+      18: aload_0
+      19: iload_2
+      20: putfield      #4                  // Field delayError:Z
+      23: aload_0
+      24: new           #5                  // class java/util/concurrent/atomic/AtomicInteger
+      27: dup
+      28: invokespecial #6                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+      31: putfield      #7                  // Field wip:Ljava/util/concurrent/atomic/AtomicInteger;
+      34: aload_0
+      35: new           #8                  // class java/util/concurrent/atomic/AtomicReference
+      38: dup
+      39: invokespecial #9                  // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+      42: putfield      #10                 // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      45: aload_0
+      46: new           #8                  // class java/util/concurrent/atomic/AtomicReference
+      49: dup
+      50: getstatic     #11                 // Field EMPTY:[Lio/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription;
+      53: invokespecial #12                 // Method java/util/concurrent/atomic/AtomicReference."<init>":(Ljava/lang/Object;)V
+      56: putfield      #13                 // Field subscribers:Ljava/util/concurrent/atomic/AtomicReference;
+      59: return
+
+  public void onSubscribe(org.reactivestreams.Subscription);
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+       4: aload_1
+       5: invokestatic  #14                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.setOnce:(Ljava/util/concurrent/atomic/AtomicReference;Lorg/reactivestreams/Subscription;)Z
+       8: ifeq          99
+      11: aload_1
+      12: instanceof    #15                 // class io/reactivex/rxjava3/operators/QueueSubscription
+      15: ifeq          80
+      18: aload_1
+      19: checkcast     #15                 // class io/reactivex/rxjava3/operators/QueueSubscription
+      22: astore_2
+      23: aload_2
+      24: iconst_3
+      25: invokeinterface #16,  2           // InterfaceMethod io/reactivex/rxjava3/operators/QueueSubscription.requestFusion:(I)I
+      30: istore_3
+      31: iload_3
+      32: iconst_1
+      33: if_icmpne     56
+      36: aload_0
+      37: iload_3
+      38: putfield      #17                 // Field sourceMode:I
+      41: aload_0
+      42: aload_2
+      43: putfield      #18                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      46: aload_0
+      47: iconst_1
+      48: putfield      #19                 // Field done:Z
+      51: aload_0
+      52: invokevirtual #20                 // Method drain:()V
+      55: return
+      56: iload_3
+      57: iconst_2
+      58: if_icmpne     80
+      61: aload_0
+      62: iload_3
+      63: putfield      #17                 // Field sourceMode:I
+      66: aload_0
+      67: aload_2
+      68: putfield      #18                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      71: aload_1
+      72: aload_0
+      73: getfield      #2                  // Field prefetch:I
+      76: invokestatic  #21                 // Method io/reactivex/rxjava3/internal/util/QueueDrainHelper.request:(Lorg/reactivestreams/Subscription;I)V
+      79: return
+      80: aload_0
+      81: aload_0
+      82: getfield      #2                  // Field prefetch:I
+      85: invokestatic  #22                 // Method io/reactivex/rxjava3/internal/util/QueueDrainHelper.createQueue:(I)Lio/reactivex/rxjava3/operators/SimpleQueue;
+      88: putfield      #18                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      91: aload_1
+      92: aload_0
+      93: getfield      #2                  // Field prefetch:I
+      96: invokestatic  #21                 // Method io/reactivex/rxjava3/internal/util/QueueDrainHelper.request:(Lorg/reactivestreams/Subscription;I)V
+      99: return
+
+  void dispose();
+    Code:
+       0: aload_0
+       1: getfield      #19                 // Field done:Z
+       4: ifne          40
+       7: aload_0
+       8: getfield      #10                 // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      11: invokestatic  #23                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.cancel:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+      14: pop
+      15: aload_0
+      16: getfield      #7                  // Field wip:Ljava/util/concurrent/atomic/AtomicInteger;
+      19: invokevirtual #24                 // Method java/util/concurrent/atomic/AtomicInteger.getAndIncrement:()I
+      22: ifne          40
+      25: aload_0
+      26: getfield      #18                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      29: astore_1
+      30: aload_1
+      31: ifnull        40
+      34: aload_1
+      35: invokeinterface #25,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.clear:()V
+      40: return
+
+  boolean isDisposed();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokevirtual #26                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+       7: getstatic     #27                 // Field io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.CANCELLED:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper;
+      10: if_acmpne     17
+      13: iconst_1
+      14: goto          18
+      17: iconst_0
+      18: ireturn
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #19                 // Field done:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: getfield      #17                 // Field sourceMode:I
+      12: ifne          51
+      15: aload_0
+      16: getfield      #18                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      19: aload_1
+      20: invokeinterface #28,  2           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.offer:(Ljava/lang/Object;)Z
+      25: ifne          51
+      28: aload_0
+      29: getfield      #10                 // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+      32: invokevirtual #26                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+      35: checkcast     #29                 // class org/reactivestreams/Subscription
+      38: invokeinterface #30,  1           // InterfaceMethod org/reactivestreams/Subscription.cancel:()V
+      43: aload_0
+      44: invokestatic  #31                 // Method io/reactivex/rxjava3/exceptions/MissingBackpressureException.createDefault:()Lio/reactivex/rxjava3/exceptions/MissingBackpressureException;
+      47: invokevirtual #32                 // Method onError:(Ljava/lang/Throwable;)V
+      50: return
+      51: aload_0
+      52: invokevirtual #20                 // Method drain:()V
+      55: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #19                 // Field done:Z
+       4: ifeq          12
+       7: aload_1
+       8: invokestatic  #33                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      11: return
+      12: aload_0
+      13: aload_1
+      14: putfield      #34                 // Field error:Ljava/lang/Throwable;
+      17: aload_0
+      18: iconst_1
+      19: putfield      #19                 // Field done:Z
+      22: aload_0
+      23: invokevirtual #20                 // Method drain:()V
+      26: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #19                 // Field done:Z
+       4: ifne          16
+       7: aload_0
+       8: iconst_1
+       9: putfield      #19                 // Field done:Z
+      12: aload_0
+      13: invokevirtual #20                 // Method drain:()V
+      16: return
+
+  boolean add(io.reactivex.rxjava3.internal.operators.flowable.FlowablePublishMulticast$MulticastSubscription<T>);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field subscribers:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokevirtual #26                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+       7: checkcast     #35                 // class "[Lio/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription;"
+      10: astore_2
+      11: aload_2
+      12: getstatic     #36                 // Field TERMINATED:[Lio/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription;
+      15: if_acmpne     20
+      18: iconst_0
+      19: ireturn
+      20: aload_2
+      21: arraylength
+      22: istore_3
+      23: iload_3
+      24: iconst_1
+      25: iadd
+      26: anewarray     #37                 // class io/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription
+      29: astore        4
+      31: aload_2
+      32: iconst_0
+      33: aload         4
+      35: iconst_0
+      36: iload_3
+      37: invokestatic  #38                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+      40: aload         4
+      42: iload_3
+      43: aload_1
+      44: aastore
+      45: aload_0
+      46: getfield      #13                 // Field subscribers:Ljava/util/concurrent/atomic/AtomicReference;
+      49: aload_2
+      50: aload         4
+      52: invokevirtual #39                 // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      55: ifeq          60
+      58: iconst_1
+      59: ireturn
+      60: goto          0
+
+  void remove(io.reactivex.rxjava3.internal.operators.flowable.FlowablePublishMulticast$MulticastSubscription<T>);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field subscribers:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokevirtual #26                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+       7: checkcast     #35                 // class "[Lio/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription;"
+      10: astore_2
+      11: aload_2
+      12: arraylength
+      13: istore_3
+      14: iload_3
+      15: ifne          19
+      18: return
+      19: iconst_m1
+      20: istore        4
+      22: iconst_0
+      23: istore        5
+      25: iload         5
+      27: iload_3
+      28: if_icmpge     52
+      31: aload_2
+      32: iload         5
+      34: aaload
+      35: aload_1
+      36: if_acmpne     46
+      39: iload         5
+      41: istore        4
+      43: goto          52
+      46: iinc          5, 1
+      49: goto          25
+      52: iload         4
+      54: ifge          58
+      57: return
+      58: iload_3
+      59: iconst_1
+      60: if_icmpne     71
+      63: getstatic     #11                 // Field EMPTY:[Lio/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription;
+      66: astore        5
+      68: goto          107
+      71: iload_3
+      72: iconst_1
+      73: isub
+      74: anewarray     #37                 // class io/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription
+      77: astore        5
+      79: aload_2
+      80: iconst_0
+      81: aload         5
+      83: iconst_0
+      84: iload         4
+      86: invokestatic  #38                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+      89: aload_2
+      90: iload         4
+      92: iconst_1
+      93: iadd
+      94: aload         5
+      96: iload         4
+      98: iload_3
+      99: iload         4
+     101: isub
+     102: iconst_1
+     103: isub
+     104: invokestatic  #38                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+     107: aload_0
+     108: getfield      #13                 // Field subscribers:Ljava/util/concurrent/atomic/AtomicReference;
+     111: aload_2
+     112: aload         5
+     114: invokevirtual #39                 // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+     117: ifeq          121
+     120: return
+     121: goto          0
+
+  protected void subscribeActual(org.reactivestreams.Subscriber<? super T>);
+    Code:
+       0: new           #37                 // class io/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription
+       3: dup
+       4: aload_1
+       5: aload_0
+       6: invokespecial #40                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription."<init>":(Lorg/reactivestreams/Subscriber;Lio/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastProcessor;)V
+       9: astore_2
+      10: aload_1
+      11: aload_2
+      12: invokeinterface #41,  2           // InterfaceMethod org/reactivestreams/Subscriber.onSubscribe:(Lorg/reactivestreams/Subscription;)V
+      17: aload_0
+      18: aload_2
+      19: invokevirtual #42                 // Method add:(Lio/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription;)Z
+      22: ifeq          45
+      25: aload_2
+      26: invokevirtual #43                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription.isCancelled:()Z
+      29: ifeq          38
+      32: aload_0
+      33: aload_2
+      34: invokevirtual #44                 // Method remove:(Lio/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription;)V
+      37: return
+      38: aload_0
+      39: invokevirtual #20                 // Method drain:()V
+      42: goto          70
+      45: aload_0
+      46: getfield      #34                 // Field error:Ljava/lang/Throwable;
+      49: astore_3
+      50: aload_3
+      51: ifnull        64
+      54: aload_1
+      55: aload_3
+      56: invokeinterface #45,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      61: goto          70
+      64: aload_1
+      65: invokeinterface #46,  1           // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+      70: return
+
+  void drain();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field wip:Ljava/util/concurrent/atomic/AtomicInteger;
+       4: invokevirtual #24                 // Method java/util/concurrent/atomic/AtomicInteger.getAndIncrement:()I
+       7: ifeq          11
+      10: return
+      11: iconst_1
+      12: istore_1
+      13: aload_0
+      14: getfield      #18                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+      17: astore_2
+      18: aload_0
+      19: getfield      #47                 // Field consumed:I
+      22: istore_3
+      23: aload_0
+      24: getfield      #3                  // Field limit:I
+      27: istore        4
+      29: aload_0
+      30: getfield      #17                 // Field sourceMode:I
+      33: iconst_1
+      34: if_icmpeq     41
+      37: iconst_1
+      38: goto          42
+      41: iconst_0
+      42: istore        5
+      44: aload_0
+      45: getfield      #13                 // Field subscribers:Ljava/util/concurrent/atomic/AtomicReference;
+      48: astore        6
+      50: aload         6
+      52: invokevirtual #26                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+      55: checkcast     #35                 // class "[Lio/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription;"
+      58: astore        7
+      60: aload         7
+      62: arraylength
+      63: istore        8
+      65: aload_2
+      66: ifnull        561
+      69: iload         8
+      71: ifeq          561
+      74: ldc2_w        #49                 // long 9223372036854775807l
+      77: lstore        9
+      79: aload         7
+      81: astore        11
+      83: aload         11
+      85: arraylength
+      86: istore        12
+      88: iconst_0
+      89: istore        13
+      91: iload         13
+      93: iload         12
+      95: if_icmpge     151
+      98: aload         11
+     100: iload         13
+     102: aaload
+     103: astore        14
+     105: aload         14
+     107: invokevirtual #51                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription.get:()J
+     110: aload         14
+     112: getfield      #52                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription.emitted:J
+     115: lsub
+     116: lstore        15
+     118: lload         15
+     120: ldc2_w        #53                 // long -9223372036854775808l
+     123: lcmp
+     124: ifeq          142
+     127: lload         9
+     129: lload         15
+     131: lcmp
+     132: ifle          145
+     135: lload         15
+     137: lstore        9
+     139: goto          145
+     142: iinc          8, -1
+     145: iinc          13, 1
+     148: goto          91
+     151: iload         8
+     153: ifne          159
+     156: lconst_0
+     157: lstore        9
+     159: lload         9
+     161: lconst_0
+     162: lcmp
+     163: ifeq          465
+     166: aload_0
+     167: invokevirtual #55                 // Method isDisposed:()Z
+     170: ifeq          180
+     173: aload_2
+     174: invokeinterface #25,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.clear:()V
+     179: return
+     180: aload_0
+     181: getfield      #19                 // Field done:Z
+     184: istore        11
+     186: iload         11
+     188: ifeq          216
+     191: aload_0
+     192: getfield      #4                  // Field delayError:Z
+     195: ifne          216
+     198: aload_0
+     199: getfield      #34                 // Field error:Ljava/lang/Throwable;
+     202: astore        12
+     204: aload         12
+     206: ifnull        216
+     209: aload_0
+     210: aload         12
+     212: invokevirtual #56                 // Method errorAll:(Ljava/lang/Throwable;)V
+     215: return
+     216: aload_2
+     217: invokeinterface #57,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.poll:()Ljava/lang/Object;
+     222: astore        12
+     224: goto          249
+     227: astore        13
+     229: aload         13
+     231: invokestatic  #59                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+     234: aload_0
+     235: getfield      #10                 // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+     238: invokestatic  #23                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.cancel:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+     241: pop
+     242: aload_0
+     243: aload         13
+     245: invokevirtual #56                 // Method errorAll:(Ljava/lang/Throwable;)V
+     248: return
+     249: aload         12
+     251: ifnonnull     258
+     254: iconst_1
+     255: goto          259
+     258: iconst_0
+     259: istore        13
+     261: iload         11
+     263: ifeq          296
+     266: iload         13
+     268: ifeq          296
+     271: aload_0
+     272: getfield      #34                 // Field error:Ljava/lang/Throwable;
+     275: astore        14
+     277: aload         14
+     279: ifnull        291
+     282: aload_0
+     283: aload         14
+     285: invokevirtual #56                 // Method errorAll:(Ljava/lang/Throwable;)V
+     288: goto          295
+     291: aload_0
+     292: invokevirtual #60                 // Method completeAll:()V
+     295: return
+     296: iload         13
+     298: ifeq          304
+     301: goto          465
+     304: iconst_0
+     305: istore        14
+     307: aload         7
+     309: astore        15
+     311: aload         15
+     313: arraylength
+     314: istore        16
+     316: iconst_0
+     317: istore        17
+     319: iload         17
+     321: iload         16
+     323: if_icmpge     393
+     326: aload         15
+     328: iload         17
+     330: aaload
+     331: astore        18
+     333: aload         18
+     335: invokevirtual #51                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription.get:()J
+     338: lstore        19
+     340: lload         19
+     342: ldc2_w        #53                 // long -9223372036854775808l
+     345: lcmp
+     346: ifeq          384
+     349: lload         19
+     351: ldc2_w        #49                 // long 9223372036854775807l
+     354: lcmp
+     355: ifeq          369
+     358: aload         18
+     360: dup
+     361: getfield      #52                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription.emitted:J
+     364: lconst_1
+     365: ladd
+     366: putfield      #52                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription.emitted:J
+     369: aload         18
+     371: getfield      #61                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription.downstream:Lorg/reactivestreams/Subscriber;
+     374: aload         12
+     376: invokeinterface #62,  2           // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+     381: goto          387
+     384: iconst_1
+     385: istore        14
+     387: iinc          17, 1
+     390: goto          319
+     393: lload         9
+     395: lconst_1
+     396: lsub
+     397: lstore        9
+     399: iload         5
+     401: ifeq          433
+     404: iinc          3, 1
+     407: iload_3
+     408: iload         4
+     410: if_icmpne     433
+     413: iconst_0
+     414: istore_3
+     415: aload_0
+     416: getfield      #10                 // Field upstream:Ljava/util/concurrent/atomic/AtomicReference;
+     419: invokevirtual #26                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+     422: checkcast     #29                 // class org/reactivestreams/Subscription
+     425: iload         4
+     427: i2l
+     428: invokeinterface #63,  3           // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+     433: aload         6
+     435: invokevirtual #26                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+     438: checkcast     #35                 // class "[Lio/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription;"
+     441: astore        15
+     443: iload         14
+     445: ifne          455
+     448: aload         15
+     450: aload         7
+     452: if_acmpeq     462
+     455: aload         15
+     457: astore        7
+     459: goto          60
+     462: goto          159
+     465: lload         9
+     467: lconst_0
+     468: lcmp
+     469: ifne          561
+     472: aload_0
+     473: invokevirtual #55                 // Method isDisposed:()Z
+     476: ifeq          486
+     479: aload_2
+     480: invokeinterface #25,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.clear:()V
+     485: return
+     486: aload_0
+     487: getfield      #19                 // Field done:Z
+     490: istore        11
+     492: iload         11
+     494: ifeq          522
+     497: aload_0
+     498: getfield      #4                  // Field delayError:Z
+     501: ifne          522
+     504: aload_0
+     505: getfield      #34                 // Field error:Ljava/lang/Throwable;
+     508: astore        12
+     510: aload         12
+     512: ifnull        522
+     515: aload_0
+     516: aload         12
+     518: invokevirtual #56                 // Method errorAll:(Ljava/lang/Throwable;)V
+     521: return
+     522: iload         11
+     524: ifeq          561
+     527: aload_2
+     528: invokeinterface #64,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.isEmpty:()Z
+     533: ifeq          561
+     536: aload_0
+     537: getfield      #34                 // Field error:Ljava/lang/Throwable;
+     540: astore        12
+     542: aload         12
+     544: ifnull        556
+     547: aload_0
+     548: aload         12
+     550: invokevirtual #56                 // Method errorAll:(Ljava/lang/Throwable;)V
+     553: goto          560
+     556: aload_0
+     557: invokevirtual #60                 // Method completeAll:()V
+     560: return
+     561: aload_0
+     562: iload_3
+     563: putfield      #47                 // Field consumed:I
+     566: aload_0
+     567: getfield      #7                  // Field wip:Ljava/util/concurrent/atomic/AtomicInteger;
+     570: iload_1
+     571: ineg
+     572: invokevirtual #65                 // Method java/util/concurrent/atomic/AtomicInteger.addAndGet:(I)I
+     575: istore_1
+     576: iload_1
+     577: ifne          583
+     580: goto          605
+     583: aload_2
+     584: ifnonnull     592
+     587: aload_0
+     588: getfield      #18                 // Field queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+     591: astore_2
+     592: aload         6
+     594: invokevirtual #26                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+     597: checkcast     #35                 // class "[Lio/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription;"
+     600: astore        7
+     602: goto          60
+     605: return
+    Exception table:
+       from    to  target type
+         216   224   227   Class java/lang/Throwable
+
+  void errorAll(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field subscribers:Ljava/util/concurrent/atomic/AtomicReference;
+       4: getstatic     #36                 // Field TERMINATED:[Lio/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription;
+       7: invokevirtual #66                 // Method java/util/concurrent/atomic/AtomicReference.getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;
+      10: checkcast     #35                 // class "[Lio/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription;"
+      13: astore_2
+      14: aload_2
+      15: arraylength
+      16: istore_3
+      17: iconst_0
+      18: istore        4
+      20: iload         4
+      22: iload_3
+      23: if_icmpge     61
+      26: aload_2
+      27: iload         4
+      29: aaload
+      30: astore        5
+      32: aload         5
+      34: invokevirtual #51                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription.get:()J
+      37: ldc2_w        #53                 // long -9223372036854775808l
+      40: lcmp
+      41: ifeq          55
+      44: aload         5
+      46: getfield      #61                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription.downstream:Lorg/reactivestreams/Subscriber;
+      49: aload_1
+      50: invokeinterface #45,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      55: iinc          4, 1
+      58: goto          20
+      61: return
+
+  void completeAll();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field subscribers:Ljava/util/concurrent/atomic/AtomicReference;
+       4: getstatic     #36                 // Field TERMINATED:[Lio/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription;
+       7: invokevirtual #66                 // Method java/util/concurrent/atomic/AtomicReference.getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;
+      10: checkcast     #35                 // class "[Lio/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription;"
+      13: astore_1
+      14: aload_1
+      15: arraylength
+      16: istore_2
+      17: iconst_0
+      18: istore_3
+      19: iload_3
+      20: iload_2
+      21: if_icmpge     57
+      24: aload_1
+      25: iload_3
+      26: aaload
+      27: astore        4
+      29: aload         4
+      31: invokevirtual #51                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription.get:()J
+      34: ldc2_w        #53                 // long -9223372036854775808l
+      37: lcmp
+      38: ifeq          51
+      41: aload         4
+      43: getfield      #61                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription.downstream:Lorg/reactivestreams/Subscriber;
+      46: invokeinterface #46,  1           // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+      51: iinc          3, 1
+      54: goto          19
+      57: return
+
+  static {};
+    Code:
+       0: iconst_0
+       1: anewarray     #37                 // class io/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription
+       4: putstatic     #11                 // Field EMPTY:[Lio/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription;
+       7: iconst_0
+       8: anewarray     #37                 // class io/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription
+      11: putstatic     #36                 // Field TERMINATED:[Lio/reactivex/rxjava3/internal/operators/flowable/FlowablePublishMulticast$MulticastSubscription;
+      14: return
+}

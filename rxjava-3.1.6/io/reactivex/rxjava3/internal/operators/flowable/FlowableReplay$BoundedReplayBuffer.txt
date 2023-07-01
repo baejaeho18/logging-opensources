@@ -1,0 +1,517 @@
+Compiled from "FlowableReplay.java"
+abstract class io.reactivex.rxjava3.internal.operators.flowable.FlowableReplay$BoundedReplayBuffer<T> extends java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.internal.operators.flowable.FlowableReplay$Node> implements io.reactivex.rxjava3.internal.operators.flowable.FlowableReplay$ReplayBuffer<T> {
+  private static final long serialVersionUID;
+
+  final boolean eagerTruncate;
+
+  io.reactivex.rxjava3.internal.operators.flowable.FlowableReplay$Node tail;
+
+  int size;
+
+  long index;
+
+  io.reactivex.rxjava3.internal.operators.flowable.FlowableReplay$BoundedReplayBuffer(boolean);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+       4: aload_0
+       5: iload_1
+       6: putfield      #2                  // Field eagerTruncate:Z
+       9: new           #3                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node
+      12: dup
+      13: aconst_null
+      14: lconst_0
+      15: invokespecial #4                  // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node."<init>":(Ljava/lang/Object;J)V
+      18: astore_2
+      19: aload_0
+      20: aload_2
+      21: putfield      #5                  // Field tail:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node;
+      24: aload_0
+      25: aload_2
+      26: invokevirtual #6                  // Method set:(Ljava/lang/Object;)V
+      29: return
+
+  final void addLast(io.reactivex.rxjava3.internal.operators.flowable.FlowableReplay$Node);
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field tail:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node;
+       4: aload_1
+       5: invokevirtual #7                  // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.set:(Ljava/lang/Object;)V
+       8: aload_0
+       9: aload_1
+      10: putfield      #5                  // Field tail:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node;
+      13: aload_0
+      14: dup
+      15: getfield      #8                  // Field size:I
+      18: iconst_1
+      19: iadd
+      20: putfield      #8                  // Field size:I
+      23: return
+
+  final void removeFirst();
+    Code:
+       0: aload_0
+       1: invokevirtual #9                  // Method get:()Ljava/lang/Object;
+       4: checkcast     #3                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node
+       7: astore_1
+       8: aload_1
+       9: invokevirtual #10                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.get:()Ljava/lang/Object;
+      12: checkcast     #3                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node
+      15: astore_2
+      16: aload_2
+      17: ifnonnull     30
+      20: new           #11                 // class java/lang/IllegalStateException
+      23: dup
+      24: ldc           #12                 // String Empty list!
+      26: invokespecial #13                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      29: athrow
+      30: aload_0
+      31: dup
+      32: getfield      #8                  // Field size:I
+      35: iconst_1
+      36: isub
+      37: putfield      #8                  // Field size:I
+      40: aload_0
+      41: aload_2
+      42: invokevirtual #14                 // Method setFirst:(Lio/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node;)V
+      45: return
+
+  final void removeSome(int);
+    Code:
+       0: aload_0
+       1: invokevirtual #9                  // Method get:()Ljava/lang/Object;
+       4: checkcast     #3                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node
+       7: astore_2
+       8: iload_1
+       9: ifle          36
+      12: aload_2
+      13: invokevirtual #10                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.get:()Ljava/lang/Object;
+      16: checkcast     #3                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node
+      19: astore_2
+      20: iinc          1, -1
+      23: aload_0
+      24: dup
+      25: getfield      #8                  // Field size:I
+      28: iconst_1
+      29: isub
+      30: putfield      #8                  // Field size:I
+      33: goto          8
+      36: aload_0
+      37: aload_2
+      38: invokevirtual #14                 // Method setFirst:(Lio/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node;)V
+      41: aload_0
+      42: invokevirtual #9                  // Method get:()Ljava/lang/Object;
+      45: checkcast     #3                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node
+      48: astore_2
+      49: aload_2
+      50: invokevirtual #10                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.get:()Ljava/lang/Object;
+      53: ifnonnull     61
+      56: aload_0
+      57: aload_2
+      58: putfield      #5                  // Field tail:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node;
+      61: return
+
+  final void setFirst(io.reactivex.rxjava3.internal.operators.flowable.FlowableReplay$Node);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field eagerTruncate:Z
+       4: ifeq          30
+       7: new           #3                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node
+      10: dup
+      11: aconst_null
+      12: aload_1
+      13: getfield      #15                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.index:J
+      16: invokespecial #4                  // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node."<init>":(Ljava/lang/Object;J)V
+      19: astore_2
+      20: aload_2
+      21: aload_1
+      22: invokevirtual #10                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.get:()Ljava/lang/Object;
+      25: invokevirtual #16                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.lazySet:(Ljava/lang/Object;)V
+      28: aload_2
+      29: astore_1
+      30: aload_0
+      31: aload_1
+      32: invokevirtual #6                  // Method set:(Ljava/lang/Object;)V
+      35: return
+
+  public final void next(T);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #17                 // Method io/reactivex/rxjava3/internal/util/NotificationLite.next:(Ljava/lang/Object;)Ljava/lang/Object;
+       5: iconst_0
+       6: invokevirtual #18                 // Method enterTransform:(Ljava/lang/Object;Z)Ljava/lang/Object;
+       9: astore_2
+      10: new           #3                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node
+      13: dup
+      14: aload_2
+      15: aload_0
+      16: dup
+      17: getfield      #19                 // Field index:J
+      20: lconst_1
+      21: ladd
+      22: dup2_x1
+      23: putfield      #19                 // Field index:J
+      26: invokespecial #4                  // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node."<init>":(Ljava/lang/Object;J)V
+      29: astore_3
+      30: aload_0
+      31: aload_3
+      32: invokevirtual #20                 // Method addLast:(Lio/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node;)V
+      35: aload_0
+      36: invokevirtual #21                 // Method truncate:()V
+      39: return
+
+  public final void error(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokestatic  #22                 // Method io/reactivex/rxjava3/internal/util/NotificationLite.error:(Ljava/lang/Throwable;)Ljava/lang/Object;
+       5: iconst_1
+       6: invokevirtual #18                 // Method enterTransform:(Ljava/lang/Object;Z)Ljava/lang/Object;
+       9: astore_2
+      10: new           #3                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node
+      13: dup
+      14: aload_2
+      15: aload_0
+      16: dup
+      17: getfield      #19                 // Field index:J
+      20: lconst_1
+      21: ladd
+      22: dup2_x1
+      23: putfield      #19                 // Field index:J
+      26: invokespecial #4                  // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node."<init>":(Ljava/lang/Object;J)V
+      29: astore_3
+      30: aload_0
+      31: aload_3
+      32: invokevirtual #20                 // Method addLast:(Lio/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node;)V
+      35: aload_0
+      36: invokevirtual #23                 // Method truncateFinal:()V
+      39: return
+
+  public final void complete();
+    Code:
+       0: aload_0
+       1: invokestatic  #24                 // Method io/reactivex/rxjava3/internal/util/NotificationLite.complete:()Ljava/lang/Object;
+       4: iconst_1
+       5: invokevirtual #18                 // Method enterTransform:(Ljava/lang/Object;Z)Ljava/lang/Object;
+       8: astore_1
+       9: new           #3                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node
+      12: dup
+      13: aload_1
+      14: aload_0
+      15: dup
+      16: getfield      #19                 // Field index:J
+      19: lconst_1
+      20: ladd
+      21: dup2_x1
+      22: putfield      #19                 // Field index:J
+      25: invokespecial #4                  // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node."<init>":(Ljava/lang/Object;J)V
+      28: astore_2
+      29: aload_0
+      30: aload_2
+      31: invokevirtual #20                 // Method addLast:(Lio/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node;)V
+      34: aload_0
+      35: invokevirtual #23                 // Method truncateFinal:()V
+      38: return
+
+  final void trimHead();
+    Code:
+       0: aload_0
+       1: invokevirtual #9                  // Method get:()Ljava/lang/Object;
+       4: checkcast     #3                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node
+       7: astore_1
+       8: aload_1
+       9: getfield      #25                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.value:Ljava/lang/Object;
+      12: ifnull        38
+      15: new           #3                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node
+      18: dup
+      19: aconst_null
+      20: lconst_0
+      21: invokespecial #4                  // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node."<init>":(Ljava/lang/Object;J)V
+      24: astore_2
+      25: aload_2
+      26: aload_1
+      27: invokevirtual #10                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.get:()Ljava/lang/Object;
+      30: invokevirtual #16                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.lazySet:(Ljava/lang/Object;)V
+      33: aload_0
+      34: aload_2
+      35: invokevirtual #6                  // Method set:(Ljava/lang/Object;)V
+      38: return
+
+  public final void replay(io.reactivex.rxjava3.internal.operators.flowable.FlowableReplay$InnerSubscription<T>);
+    Code:
+       0: aload_1
+       1: dup
+       2: astore_2
+       3: monitorenter
+       4: aload_1
+       5: getfield      #26                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.emitting:Z
+       8: ifeq          19
+      11: aload_1
+      12: iconst_1
+      13: putfield      #27                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.missed:Z
+      16: aload_2
+      17: monitorexit
+      18: return
+      19: aload_1
+      20: iconst_1
+      21: putfield      #26                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.emitting:Z
+      24: aload_2
+      25: monitorexit
+      26: goto          34
+      29: astore_3
+      30: aload_2
+      31: monitorexit
+      32: aload_3
+      33: athrow
+      34: aload_1
+      35: invokevirtual #28                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.get:()J
+      38: lstore_2
+      39: lload_2
+      40: ldc2_w        #30                 // long 9223372036854775807l
+      43: lcmp
+      44: ifne          51
+      47: iconst_1
+      48: goto          52
+      51: iconst_0
+      52: istore        4
+      54: lconst_0
+      55: lstore        5
+      57: aload_1
+      58: invokevirtual #32                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.index:()Ljava/lang/Object;
+      61: checkcast     #3                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node
+      64: astore        7
+      66: aload         7
+      68: ifnonnull     96
+      71: aload_0
+      72: invokevirtual #33                 // Method getHead:()Lio/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node;
+      75: astore        7
+      77: aload_1
+      78: aload         7
+      80: putfield      #34                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.index:Ljava/lang/Object;
+      83: aload_1
+      84: getfield      #35                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.totalRequested:Ljava/util/concurrent/atomic/AtomicLong;
+      87: aload         7
+      89: getfield      #15                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.index:J
+      92: invokestatic  #36                 // Method io/reactivex/rxjava3/internal/util/BackpressureHelper.add:(Ljava/util/concurrent/atomic/AtomicLong;J)J
+      95: pop2
+      96: lload_2
+      97: lconst_0
+      98: lcmp
+      99: ifeq          231
+     102: aload_1
+     103: invokevirtual #37                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.isDisposed:()Z
+     106: ifeq          115
+     109: aload_1
+     110: aconst_null
+     111: putfield      #34                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.index:Ljava/lang/Object;
+     114: return
+     115: aload         7
+     117: invokevirtual #10                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.get:()Ljava/lang/Object;
+     120: checkcast     #3                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node
+     123: astore        8
+     125: aload         8
+     127: ifnull        231
+     130: aload_0
+     131: aload         8
+     133: getfield      #25                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.value:Ljava/lang/Object;
+     136: invokevirtual #38                 // Method leaveTransform:(Ljava/lang/Object;)Ljava/lang/Object;
+     139: astore        9
+     141: aload         9
+     143: aload_1
+     144: getfield      #39                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.child:Lorg/reactivestreams/Subscriber;
+     147: invokestatic  #40                 // Method io/reactivex/rxjava3/internal/util/NotificationLite.accept:(Ljava/lang/Object;Lorg/reactivestreams/Subscriber;)Z
+     150: ifeq          159
+     153: aload_1
+     154: aconst_null
+     155: putfield      #34                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.index:Ljava/lang/Object;
+     158: return
+     159: goto          214
+     162: astore        10
+     164: aload         10
+     166: invokestatic  #42                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+     169: aload_1
+     170: aconst_null
+     171: putfield      #34                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.index:Ljava/lang/Object;
+     174: aload_1
+     175: invokevirtual #43                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.dispose:()V
+     178: aload         9
+     180: invokestatic  #44                 // Method io/reactivex/rxjava3/internal/util/NotificationLite.isError:(Ljava/lang/Object;)Z
+     183: ifne          208
+     186: aload         9
+     188: invokestatic  #45                 // Method io/reactivex/rxjava3/internal/util/NotificationLite.isComplete:(Ljava/lang/Object;)Z
+     191: ifne          208
+     194: aload_1
+     195: getfield      #39                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.child:Lorg/reactivestreams/Subscriber;
+     198: aload         10
+     200: invokeinterface #46,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+     205: goto          213
+     208: aload         10
+     210: invokestatic  #47                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+     213: return
+     214: lload         5
+     216: lconst_1
+     217: ladd
+     218: lstore        5
+     220: lload_2
+     221: lconst_1
+     222: lsub
+     223: lstore_2
+     224: aload         8
+     226: astore        7
+     228: goto          96
+     231: lload_2
+     232: lconst_0
+     233: lcmp
+     234: ifne          250
+     237: aload_1
+     238: invokevirtual #37                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.isDisposed:()Z
+     241: ifeq          250
+     244: aload_1
+     245: aconst_null
+     246: putfield      #34                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.index:Ljava/lang/Object;
+     249: return
+     250: lload         5
+     252: lconst_0
+     253: lcmp
+     254: ifeq          275
+     257: aload_1
+     258: aload         7
+     260: putfield      #34                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.index:Ljava/lang/Object;
+     263: iload         4
+     265: ifne          275
+     268: aload_1
+     269: lload         5
+     271: invokevirtual #48                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.produced:(J)J
+     274: pop2
+     275: aload_1
+     276: dup
+     277: astore        8
+     279: monitorenter
+     280: aload_1
+     281: getfield      #27                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.missed:Z
+     284: ifne          296
+     287: aload_1
+     288: iconst_0
+     289: putfield      #26                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.emitting:Z
+     292: aload         8
+     294: monitorexit
+     295: return
+     296: aload_1
+     297: iconst_0
+     298: putfield      #27                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$InnerSubscription.missed:Z
+     301: aload         8
+     303: monitorexit
+     304: goto          315
+     307: astore        11
+     309: aload         8
+     311: monitorexit
+     312: aload         11
+     314: athrow
+     315: goto          34
+    Exception table:
+       from    to  target type
+           4    18    29   any
+          19    26    29   any
+          29    32    29   any
+         141   158   162   Class java/lang/Throwable
+         280   295   307   any
+         296   304   307   any
+         307   312   307   any
+
+  java.lang.Object enterTransform(java.lang.Object, boolean);
+    Code:
+       0: aload_1
+       1: areturn
+
+  java.lang.Object leaveTransform(java.lang.Object);
+    Code:
+       0: aload_1
+       1: areturn
+
+  abstract void truncate();
+
+  void truncateFinal();
+    Code:
+       0: aload_0
+       1: invokevirtual #49                 // Method trimHead:()V
+       4: return
+
+  final void collect(java.util.Collection<? super T>);
+    Code:
+       0: aload_0
+       1: invokevirtual #33                 // Method getHead:()Lio/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node;
+       4: astore_2
+       5: aload_2
+       6: invokevirtual #10                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.get:()Ljava/lang/Object;
+       9: checkcast     #3                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node
+      12: astore_3
+      13: aload_3
+      14: ifnull        67
+      17: aload_3
+      18: getfield      #25                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.value:Ljava/lang/Object;
+      21: astore        4
+      23: aload_0
+      24: aload         4
+      26: invokevirtual #38                 // Method leaveTransform:(Ljava/lang/Object;)Ljava/lang/Object;
+      29: astore        5
+      31: aload         5
+      33: invokestatic  #45                 // Method io/reactivex/rxjava3/internal/util/NotificationLite.isComplete:(Ljava/lang/Object;)Z
+      36: ifne          67
+      39: aload         5
+      41: invokestatic  #44                 // Method io/reactivex/rxjava3/internal/util/NotificationLite.isError:(Ljava/lang/Object;)Z
+      44: ifeq          50
+      47: goto          67
+      50: aload_1
+      51: aload         5
+      53: invokestatic  #50                 // Method io/reactivex/rxjava3/internal/util/NotificationLite.getValue:(Ljava/lang/Object;)Ljava/lang/Object;
+      56: invokeinterface #51,  2           // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+      61: pop
+      62: aload_3
+      63: astore_2
+      64: goto          5
+      67: return
+
+  boolean hasError();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field tail:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node;
+       4: getfield      #25                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.value:Ljava/lang/Object;
+       7: ifnull        31
+      10: aload_0
+      11: aload_0
+      12: getfield      #5                  // Field tail:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node;
+      15: getfield      #25                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.value:Ljava/lang/Object;
+      18: invokevirtual #38                 // Method leaveTransform:(Ljava/lang/Object;)Ljava/lang/Object;
+      21: invokestatic  #44                 // Method io/reactivex/rxjava3/internal/util/NotificationLite.isError:(Ljava/lang/Object;)Z
+      24: ifeq          31
+      27: iconst_1
+      28: goto          32
+      31: iconst_0
+      32: ireturn
+
+  boolean hasCompleted();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field tail:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node;
+       4: getfield      #25                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.value:Ljava/lang/Object;
+       7: ifnull        31
+      10: aload_0
+      11: aload_0
+      12: getfield      #5                  // Field tail:Lio/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node;
+      15: getfield      #25                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node.value:Ljava/lang/Object;
+      18: invokevirtual #38                 // Method leaveTransform:(Ljava/lang/Object;)Ljava/lang/Object;
+      21: invokestatic  #45                 // Method io/reactivex/rxjava3/internal/util/NotificationLite.isComplete:(Ljava/lang/Object;)Z
+      24: ifeq          31
+      27: iconst_1
+      28: goto          32
+      31: iconst_0
+      32: ireturn
+
+  io.reactivex.rxjava3.internal.operators.flowable.FlowableReplay$Node getHead();
+    Code:
+       0: aload_0
+       1: invokevirtual #9                  // Method get:()Ljava/lang/Object;
+       4: checkcast     #3                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableReplay$Node
+       7: areturn
+}

@@ -1,0 +1,412 @@
+Compiled from "FlowableWindowTimed.java"
+final class io.reactivex.rxjava3.internal.operators.flowable.FlowableWindowTimed$WindowExactBoundedSubscriber<T> extends io.reactivex.rxjava3.internal.operators.flowable.FlowableWindowTimed$AbstractWindowSubscriber<T> implements java.lang.Runnable {
+  private static final long serialVersionUID;
+
+  final io.reactivex.rxjava3.core.Scheduler scheduler;
+
+  final boolean restartTimerOnMaxSize;
+
+  final long maxSize;
+
+  final io.reactivex.rxjava3.core.Scheduler$Worker worker;
+
+  long count;
+
+  io.reactivex.rxjava3.processors.UnicastProcessor<T> window;
+
+  final io.reactivex.rxjava3.internal.disposables.SequentialDisposable timer;
+
+  io.reactivex.rxjava3.internal.operators.flowable.FlowableWindowTimed$WindowExactBoundedSubscriber(org.reactivestreams.Subscriber<? super io.reactivex.rxjava3.core.Flowable<T>>, long, java.util.concurrent.TimeUnit, io.reactivex.rxjava3.core.Scheduler, int, long, boolean);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: lload_2
+       3: aload         4
+       5: iload         6
+       7: invokespecial #1                  // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableWindowTimed$AbstractWindowSubscriber."<init>":(Lorg/reactivestreams/Subscriber;JLjava/util/concurrent/TimeUnit;I)V
+      10: aload_0
+      11: aload         5
+      13: putfield      #2                  // Field scheduler:Lio/reactivex/rxjava3/core/Scheduler;
+      16: aload_0
+      17: lload         7
+      19: putfield      #3                  // Field maxSize:J
+      22: aload_0
+      23: iload         9
+      25: putfield      #4                  // Field restartTimerOnMaxSize:Z
+      28: iload         9
+      30: ifeq          45
+      33: aload_0
+      34: aload         5
+      36: invokevirtual #5                  // Method io/reactivex/rxjava3/core/Scheduler.createWorker:()Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      39: putfield      #6                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      42: goto          50
+      45: aload_0
+      46: aconst_null
+      47: putfield      #6                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      50: aload_0
+      51: new           #7                  // class io/reactivex/rxjava3/internal/disposables/SequentialDisposable
+      54: dup
+      55: invokespecial #8                  // Method io/reactivex/rxjava3/internal/disposables/SequentialDisposable."<init>":()V
+      58: putfield      #9                  // Field timer:Lio/reactivex/rxjava3/internal/disposables/SequentialDisposable;
+      61: return
+
+  void createFirstWindow();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field downstreamCancelled:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: invokevirtual #11                 // Method java/util/concurrent/atomic/AtomicBoolean.get:()Z
+       7: ifne          208
+      10: aload_0
+      11: getfield      #12                 // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+      14: invokevirtual #13                 // Method java/util/concurrent/atomic/AtomicLong.get:()J
+      17: lconst_0
+      18: lcmp
+      19: ifeq          174
+      22: aload_0
+      23: lconst_1
+      24: putfield      #14                 // Field emitted:J
+      27: aload_0
+      28: getfield      #15                 // Field windowCount:Ljava/util/concurrent/atomic/AtomicInteger;
+      31: invokevirtual #16                 // Method java/util/concurrent/atomic/AtomicInteger.getAndIncrement:()I
+      34: pop
+      35: aload_0
+      36: aload_0
+      37: getfield      #17                 // Field bufferSize:I
+      40: aload_0
+      41: invokestatic  #18                 // Method io/reactivex/rxjava3/processors/UnicastProcessor.create:(ILjava/lang/Runnable;)Lio/reactivex/rxjava3/processors/UnicastProcessor;
+      44: putfield      #19                 // Field window:Lio/reactivex/rxjava3/processors/UnicastProcessor;
+      47: new           #20                 // class io/reactivex/rxjava3/internal/operators/flowable/FlowableWindowSubscribeIntercept
+      50: dup
+      51: aload_0
+      52: getfield      #19                 // Field window:Lio/reactivex/rxjava3/processors/UnicastProcessor;
+      55: invokespecial #21                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableWindowSubscribeIntercept."<init>":(Lio/reactivex/rxjava3/processors/FlowableProcessor;)V
+      58: astore_1
+      59: aload_0
+      60: getfield      #22                 // Field downstream:Lorg/reactivestreams/Subscriber;
+      63: aload_1
+      64: invokeinterface #23,  2           // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+      69: new           #24                 // class io/reactivex/rxjava3/internal/operators/flowable/FlowableWindowTimed$WindowExactBoundedSubscriber$WindowBoundaryRunnable
+      72: dup
+      73: aload_0
+      74: lconst_1
+      75: invokespecial #25                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableWindowTimed$WindowExactBoundedSubscriber$WindowBoundaryRunnable."<init>":(Lio/reactivex/rxjava3/internal/operators/flowable/FlowableWindowTimed$WindowExactBoundedSubscriber;J)V
+      78: astore_2
+      79: aload_0
+      80: getfield      #4                  // Field restartTimerOnMaxSize:Z
+      83: ifeq          117
+      86: aload_0
+      87: getfield      #9                  // Field timer:Lio/reactivex/rxjava3/internal/disposables/SequentialDisposable;
+      90: aload_0
+      91: getfield      #6                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      94: aload_2
+      95: aload_0
+      96: getfield      #26                 // Field timespan:J
+      99: aload_0
+     100: getfield      #26                 // Field timespan:J
+     103: aload_0
+     104: getfield      #27                 // Field unit:Ljava/util/concurrent/TimeUnit;
+     107: invokevirtual #28                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.schedulePeriodically:(Ljava/lang/Runnable;JJLjava/util/concurrent/TimeUnit;)Lio/reactivex/rxjava3/disposables/Disposable;
+     110: invokevirtual #29                 // Method io/reactivex/rxjava3/internal/disposables/SequentialDisposable.replace:(Lio/reactivex/rxjava3/disposables/Disposable;)Z
+     113: pop
+     114: goto          145
+     117: aload_0
+     118: getfield      #9                  // Field timer:Lio/reactivex/rxjava3/internal/disposables/SequentialDisposable;
+     121: aload_0
+     122: getfield      #2                  // Field scheduler:Lio/reactivex/rxjava3/core/Scheduler;
+     125: aload_2
+     126: aload_0
+     127: getfield      #26                 // Field timespan:J
+     130: aload_0
+     131: getfield      #26                 // Field timespan:J
+     134: aload_0
+     135: getfield      #27                 // Field unit:Ljava/util/concurrent/TimeUnit;
+     138: invokevirtual #30                 // Method io/reactivex/rxjava3/core/Scheduler.schedulePeriodicallyDirect:(Ljava/lang/Runnable;JJLjava/util/concurrent/TimeUnit;)Lio/reactivex/rxjava3/disposables/Disposable;
+     141: invokevirtual #29                 // Method io/reactivex/rxjava3/internal/disposables/SequentialDisposable.replace:(Lio/reactivex/rxjava3/disposables/Disposable;)Z
+     144: pop
+     145: aload_1
+     146: invokevirtual #31                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableWindowSubscribeIntercept.tryAbandon:()Z
+     149: ifeq          159
+     152: aload_0
+     153: getfield      #19                 // Field window:Lio/reactivex/rxjava3/processors/UnicastProcessor;
+     156: invokevirtual #32                 // Method io/reactivex/rxjava3/processors/UnicastProcessor.onComplete:()V
+     159: aload_0
+     160: getfield      #33                 // Field upstream:Lorg/reactivestreams/Subscription;
+     163: ldc2_w        #35                 // long 9223372036854775807l
+     166: invokeinterface #37,  3           // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+     171: goto          208
+     174: aload_0
+     175: getfield      #33                 // Field upstream:Lorg/reactivestreams/Subscription;
+     178: invokeinterface #38,  1           // InterfaceMethod org/reactivestreams/Subscription.cancel:()V
+     183: aload_0
+     184: getfield      #22                 // Field downstream:Lorg/reactivestreams/Subscriber;
+     187: aload_0
+     188: getfield      #14                 // Field emitted:J
+     191: invokestatic  #39                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableWindowTimed.missingBackpressureMessage:(J)Lio/reactivex/rxjava3/exceptions/MissingBackpressureException;
+     194: invokeinterface #40,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+     199: aload_0
+     200: invokevirtual #41                 // Method cleanupResources:()V
+     203: aload_0
+     204: iconst_1
+     205: putfield      #42                 // Field upstreamCancelled:Z
+     208: return
+
+  public void run();
+    Code:
+       0: aload_0
+       1: invokevirtual #43                 // Method windowDone:()V
+       4: return
+
+  void cleanupResources();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field timer:Lio/reactivex/rxjava3/internal/disposables/SequentialDisposable;
+       4: invokevirtual #44                 // Method io/reactivex/rxjava3/internal/disposables/SequentialDisposable.dispose:()V
+       7: aload_0
+       8: getfield      #6                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      11: astore_1
+      12: aload_1
+      13: ifnull        20
+      16: aload_1
+      17: invokevirtual #45                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+      20: return
+
+  void boundary(io.reactivex.rxjava3.internal.operators.flowable.FlowableWindowTimed$WindowExactBoundedSubscriber$WindowBoundaryRunnable);
+    Code:
+       0: aload_0
+       1: getfield      #46                 // Field queue:Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+       4: aload_1
+       5: invokeinterface #47,  2           // InterfaceMethod io/reactivex/rxjava3/operators/SimplePlainQueue.offer:(Ljava/lang/Object;)Z
+      10: pop
+      11: aload_0
+      12: invokevirtual #48                 // Method drain:()V
+      15: return
+
+  void drain();
+    Code:
+       0: aload_0
+       1: invokevirtual #49                 // Method getAndIncrement:()I
+       4: ifeq          8
+       7: return
+       8: iconst_1
+       9: istore_1
+      10: aload_0
+      11: getfield      #46                 // Field queue:Lio/reactivex/rxjava3/operators/SimplePlainQueue;
+      14: astore_2
+      15: aload_0
+      16: getfield      #22                 // Field downstream:Lorg/reactivestreams/Subscriber;
+      19: astore_3
+      20: aload_0
+      21: getfield      #19                 // Field window:Lio/reactivex/rxjava3/processors/UnicastProcessor;
+      24: astore        4
+      26: aload_0
+      27: getfield      #42                 // Field upstreamCancelled:Z
+      30: ifeq          50
+      33: aload_2
+      34: invokeinterface #50,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimplePlainQueue.clear:()V
+      39: aconst_null
+      40: astore        4
+      42: aload_0
+      43: aconst_null
+      44: putfield      #19                 // Field window:Lio/reactivex/rxjava3/processors/UnicastProcessor;
+      47: goto          263
+      50: aload_0
+      51: getfield      #51                 // Field done:Z
+      54: istore        5
+      56: aload_2
+      57: invokeinterface #52,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimplePlainQueue.poll:()Ljava/lang/Object;
+      62: astore        6
+      64: aload         6
+      66: ifnonnull     73
+      69: iconst_1
+      70: goto          74
+      73: iconst_0
+      74: istore        7
+      76: iload         5
+      78: ifeq          148
+      81: iload         7
+      83: ifeq          148
+      86: aload_0
+      87: getfield      #53                 // Field error:Ljava/lang/Throwable;
+      90: astore        8
+      92: aload         8
+      94: ifnull        120
+      97: aload         4
+      99: ifnull        109
+     102: aload         4
+     104: aload         8
+     106: invokevirtual #54                 // Method io/reactivex/rxjava3/processors/UnicastProcessor.onError:(Ljava/lang/Throwable;)V
+     109: aload_3
+     110: aload         8
+     112: invokeinterface #40,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+     117: goto          136
+     120: aload         4
+     122: ifnull        130
+     125: aload         4
+     127: invokevirtual #32                 // Method io/reactivex/rxjava3/processors/UnicastProcessor.onComplete:()V
+     130: aload_3
+     131: invokeinterface #55,  1           // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+     136: aload_0
+     137: invokevirtual #41                 // Method cleanupResources:()V
+     140: aload_0
+     141: iconst_1
+     142: putfield      #42                 // Field upstreamCancelled:Z
+     145: goto          26
+     148: iload         7
+     150: ifne          263
+     153: aload         6
+     155: instanceof    #24                 // class io/reactivex/rxjava3/internal/operators/flowable/FlowableWindowTimed$WindowExactBoundedSubscriber$WindowBoundaryRunnable
+     158: ifeq          204
+     161: aload         6
+     163: checkcast     #24                 // class io/reactivex/rxjava3/internal/operators/flowable/FlowableWindowTimed$WindowExactBoundedSubscriber$WindowBoundaryRunnable
+     166: astore        8
+     168: aload         8
+     170: getfield      #56                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableWindowTimed$WindowExactBoundedSubscriber$WindowBoundaryRunnable.index:J
+     173: aload_0
+     174: getfield      #14                 // Field emitted:J
+     177: lcmp
+     178: ifeq          188
+     181: aload_0
+     182: getfield      #4                  // Field restartTimerOnMaxSize:Z
+     185: ifne          201
+     188: aload_0
+     189: lconst_0
+     190: putfield      #57                 // Field count:J
+     193: aload_0
+     194: aload         4
+     196: invokevirtual #58                 // Method createNewWindow:(Lio/reactivex/rxjava3/processors/UnicastProcessor;)Lio/reactivex/rxjava3/processors/UnicastProcessor;
+     199: astore        4
+     201: goto          26
+     204: aload         4
+     206: ifnull        26
+     209: aload         6
+     211: astore        8
+     213: aload         4
+     215: aload         8
+     217: invokevirtual #59                 // Method io/reactivex/rxjava3/processors/UnicastProcessor.onNext:(Ljava/lang/Object;)V
+     220: aload_0
+     221: getfield      #57                 // Field count:J
+     224: lconst_1
+     225: ladd
+     226: lstore        9
+     228: lload         9
+     230: aload_0
+     231: getfield      #3                  // Field maxSize:J
+     234: lcmp
+     235: ifne          254
+     238: aload_0
+     239: lconst_0
+     240: putfield      #57                 // Field count:J
+     243: aload_0
+     244: aload         4
+     246: invokevirtual #58                 // Method createNewWindow:(Lio/reactivex/rxjava3/processors/UnicastProcessor;)Lio/reactivex/rxjava3/processors/UnicastProcessor;
+     249: astore        4
+     251: goto          260
+     254: aload_0
+     255: lload         9
+     257: putfield      #57                 // Field count:J
+     260: goto          26
+     263: aload_0
+     264: iload_1
+     265: ineg
+     266: invokevirtual #60                 // Method addAndGet:(I)I
+     269: istore_1
+     270: iload_1
+     271: ifne          26
+     274: goto          277
+     277: return
+
+  io.reactivex.rxjava3.processors.UnicastProcessor<T> createNewWindow(io.reactivex.rxjava3.processors.UnicastProcessor<T>);
+    Code:
+       0: aload_1
+       1: ifnull        10
+       4: aload_1
+       5: invokevirtual #32                 // Method io/reactivex/rxjava3/processors/UnicastProcessor.onComplete:()V
+       8: aconst_null
+       9: astore_1
+      10: aload_0
+      11: getfield      #10                 // Field downstreamCancelled:Ljava/util/concurrent/atomic/AtomicBoolean;
+      14: invokevirtual #11                 // Method java/util/concurrent/atomic/AtomicBoolean.get:()Z
+      17: ifeq          27
+      20: aload_0
+      21: invokevirtual #41                 // Method cleanupResources:()V
+      24: goto          185
+      27: aload_0
+      28: getfield      #14                 // Field emitted:J
+      31: lstore_2
+      32: aload_0
+      33: getfield      #12                 // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+      36: invokevirtual #13                 // Method java/util/concurrent/atomic/AtomicLong.get:()J
+      39: lload_2
+      40: lcmp
+      41: ifne          78
+      44: aload_0
+      45: getfield      #33                 // Field upstream:Lorg/reactivestreams/Subscription;
+      48: invokeinterface #38,  1           // InterfaceMethod org/reactivestreams/Subscription.cancel:()V
+      53: aload_0
+      54: invokevirtual #41                 // Method cleanupResources:()V
+      57: aload_0
+      58: iconst_1
+      59: putfield      #42                 // Field upstreamCancelled:Z
+      62: aload_0
+      63: getfield      #22                 // Field downstream:Lorg/reactivestreams/Subscriber;
+      66: lload_2
+      67: invokestatic  #39                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableWindowTimed.missingBackpressureMessage:(J)Lio/reactivex/rxjava3/exceptions/MissingBackpressureException;
+      70: invokeinterface #40,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      75: goto          185
+      78: aload_0
+      79: lload_2
+      80: lconst_1
+      81: ladd
+      82: dup2
+      83: lstore_2
+      84: putfield      #14                 // Field emitted:J
+      87: aload_0
+      88: getfield      #15                 // Field windowCount:Ljava/util/concurrent/atomic/AtomicInteger;
+      91: invokevirtual #16                 // Method java/util/concurrent/atomic/AtomicInteger.getAndIncrement:()I
+      94: pop
+      95: aload_0
+      96: getfield      #17                 // Field bufferSize:I
+      99: aload_0
+     100: invokestatic  #61                 // Method io/reactivex/rxjava3/processors/UnicastProcessor.create:(ILjava/lang/Runnable;)Lio/reactivex/rxjava3/processors/UnicastProcessor;
+     103: astore_1
+     104: aload_0
+     105: aload_1
+     106: putfield      #19                 // Field window:Lio/reactivex/rxjava3/processors/UnicastProcessor;
+     109: new           #20                 // class io/reactivex/rxjava3/internal/operators/flowable/FlowableWindowSubscribeIntercept
+     112: dup
+     113: aload_1
+     114: invokespecial #21                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableWindowSubscribeIntercept."<init>":(Lio/reactivex/rxjava3/processors/FlowableProcessor;)V
+     117: astore        4
+     119: aload_0
+     120: getfield      #22                 // Field downstream:Lorg/reactivestreams/Subscriber;
+     123: aload         4
+     125: invokeinterface #23,  2           // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+     130: aload_0
+     131: getfield      #4                  // Field restartTimerOnMaxSize:Z
+     134: ifeq          173
+     137: aload_0
+     138: getfield      #9                  // Field timer:Lio/reactivex/rxjava3/internal/disposables/SequentialDisposable;
+     141: aload_0
+     142: getfield      #6                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+     145: new           #24                 // class io/reactivex/rxjava3/internal/operators/flowable/FlowableWindowTimed$WindowExactBoundedSubscriber$WindowBoundaryRunnable
+     148: dup
+     149: aload_0
+     150: lload_2
+     151: invokespecial #25                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableWindowTimed$WindowExactBoundedSubscriber$WindowBoundaryRunnable."<init>":(Lio/reactivex/rxjava3/internal/operators/flowable/FlowableWindowTimed$WindowExactBoundedSubscriber;J)V
+     154: aload_0
+     155: getfield      #26                 // Field timespan:J
+     158: aload_0
+     159: getfield      #26                 // Field timespan:J
+     162: aload_0
+     163: getfield      #27                 // Field unit:Ljava/util/concurrent/TimeUnit;
+     166: invokevirtual #28                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.schedulePeriodically:(Ljava/lang/Runnable;JJLjava/util/concurrent/TimeUnit;)Lio/reactivex/rxjava3/disposables/Disposable;
+     169: invokevirtual #62                 // Method io/reactivex/rxjava3/internal/disposables/SequentialDisposable.update:(Lio/reactivex/rxjava3/disposables/Disposable;)Z
+     172: pop
+     173: aload         4
+     175: invokevirtual #31                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableWindowSubscribeIntercept.tryAbandon:()Z
+     178: ifeq          185
+     181: aload_1
+     182: invokevirtual #32                 // Method io/reactivex/rxjava3/processors/UnicastProcessor.onComplete:()V
+     185: aload_1
+     186: areturn
+}

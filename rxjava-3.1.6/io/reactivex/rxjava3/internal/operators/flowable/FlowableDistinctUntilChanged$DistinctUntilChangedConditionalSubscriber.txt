@@ -1,0 +1,155 @@
+Compiled from "FlowableDistinctUntilChanged.java"
+final class io.reactivex.rxjava3.internal.operators.flowable.FlowableDistinctUntilChanged$DistinctUntilChangedConditionalSubscriber<T, K> extends io.reactivex.rxjava3.internal.subscribers.BasicFuseableConditionalSubscriber<T, T> {
+  final io.reactivex.rxjava3.functions.Function<? super T, K> keySelector;
+
+  final io.reactivex.rxjava3.functions.BiPredicate<? super K, ? super K> comparer;
+
+  K last;
+
+  boolean hasValue;
+
+  io.reactivex.rxjava3.internal.operators.flowable.FlowableDistinctUntilChanged$DistinctUntilChangedConditionalSubscriber(io.reactivex.rxjava3.operators.ConditionalSubscriber<? super T>, io.reactivex.rxjava3.functions.Function<? super T, K>, io.reactivex.rxjava3.functions.BiPredicate<? super K, ? super K>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #1                  // Method io/reactivex/rxjava3/internal/subscribers/BasicFuseableConditionalSubscriber."<init>":(Lio/reactivex/rxjava3/operators/ConditionalSubscriber;)V
+       5: aload_0
+       6: aload_2
+       7: putfield      #2                  // Field keySelector:Lio/reactivex/rxjava3/functions/Function;
+      10: aload_0
+      11: aload_3
+      12: putfield      #3                  // Field comparer:Lio/reactivex/rxjava3/functions/BiPredicate;
+      15: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokevirtual #4                  // Method tryOnNext:(Ljava/lang/Object;)Z
+       5: ifne          18
+       8: aload_0
+       9: getfield      #5                  // Field upstream:Lorg/reactivestreams/Subscription;
+      12: lconst_1
+      13: invokeinterface #6,  3            // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+      18: return
+
+  public boolean tryOnNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field done:Z
+       4: ifeq          9
+       7: iconst_0
+       8: ireturn
+       9: aload_0
+      10: getfield      #8                  // Field sourceMode:I
+      13: ifeq          27
+      16: aload_0
+      17: getfield      #9                  // Field downstream:Lio/reactivex/rxjava3/operators/ConditionalSubscriber;
+      20: aload_1
+      21: invokeinterface #10,  2           // InterfaceMethod io/reactivex/rxjava3/operators/ConditionalSubscriber.tryOnNext:(Ljava/lang/Object;)Z
+      26: ireturn
+      27: aload_0
+      28: getfield      #2                  // Field keySelector:Lio/reactivex/rxjava3/functions/Function;
+      31: aload_1
+      32: invokeinterface #11,  2           // InterfaceMethod io/reactivex/rxjava3/functions/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+      37: astore_2
+      38: aload_0
+      39: getfield      #12                 // Field hasValue:Z
+      42: ifeq          74
+      45: aload_0
+      46: getfield      #3                  // Field comparer:Lio/reactivex/rxjava3/functions/BiPredicate;
+      49: aload_0
+      50: getfield      #13                 // Field last:Ljava/lang/Object;
+      53: aload_2
+      54: invokeinterface #14,  3           // InterfaceMethod io/reactivex/rxjava3/functions/BiPredicate.test:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      59: istore_3
+      60: aload_0
+      61: aload_2
+      62: putfield      #13                 // Field last:Ljava/lang/Object;
+      65: iload_3
+      66: ifeq          71
+      69: iconst_0
+      70: ireturn
+      71: goto          84
+      74: aload_0
+      75: iconst_1
+      76: putfield      #12                 // Field hasValue:Z
+      79: aload_0
+      80: aload_2
+      81: putfield      #13                 // Field last:Ljava/lang/Object;
+      84: goto          95
+      87: astore_3
+      88: aload_0
+      89: aload_3
+      90: invokevirtual #16                 // Method fail:(Ljava/lang/Throwable;)V
+      93: iconst_1
+      94: ireturn
+      95: aload_0
+      96: getfield      #9                  // Field downstream:Lio/reactivex/rxjava3/operators/ConditionalSubscriber;
+      99: aload_1
+     100: invokeinterface #17,  2           // InterfaceMethod io/reactivex/rxjava3/operators/ConditionalSubscriber.onNext:(Ljava/lang/Object;)V
+     105: iconst_1
+     106: ireturn
+    Exception table:
+       from    to  target type
+          27    70    87   Class java/lang/Throwable
+          71    84    87   Class java/lang/Throwable
+
+  public int requestFusion(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: invokevirtual #18                 // Method transitiveBoundaryFusion:(I)I
+       5: ireturn
+
+  public T poll() throws java.lang.Throwable;
+    Code:
+       0: aload_0
+       1: getfield      #19                 // Field qs:Lio/reactivex/rxjava3/operators/QueueSubscription;
+       4: invokeinterface #20,  1           // InterfaceMethod io/reactivex/rxjava3/operators/QueueSubscription.poll:()Ljava/lang/Object;
+       9: astore_1
+      10: aload_1
+      11: ifnonnull     16
+      14: aconst_null
+      15: areturn
+      16: aload_0
+      17: getfield      #2                  // Field keySelector:Lio/reactivex/rxjava3/functions/Function;
+      20: aload_1
+      21: invokeinterface #11,  2           // InterfaceMethod io/reactivex/rxjava3/functions/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+      26: astore_2
+      27: aload_0
+      28: getfield      #12                 // Field hasValue:Z
+      31: ifne          46
+      34: aload_0
+      35: iconst_1
+      36: putfield      #12                 // Field hasValue:Z
+      39: aload_0
+      40: aload_2
+      41: putfield      #13                 // Field last:Ljava/lang/Object;
+      44: aload_1
+      45: areturn
+      46: aload_0
+      47: getfield      #3                  // Field comparer:Lio/reactivex/rxjava3/functions/BiPredicate;
+      50: aload_0
+      51: getfield      #13                 // Field last:Ljava/lang/Object;
+      54: aload_2
+      55: invokeinterface #14,  3           // InterfaceMethod io/reactivex/rxjava3/functions/BiPredicate.test:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      60: ifne          70
+      63: aload_0
+      64: aload_2
+      65: putfield      #13                 // Field last:Ljava/lang/Object;
+      68: aload_1
+      69: areturn
+      70: aload_0
+      71: aload_2
+      72: putfield      #13                 // Field last:Ljava/lang/Object;
+      75: aload_0
+      76: getfield      #8                  // Field sourceMode:I
+      79: iconst_1
+      80: if_icmpeq     93
+      83: aload_0
+      84: getfield      #5                  // Field upstream:Lorg/reactivestreams/Subscription;
+      87: lconst_1
+      88: invokeinterface #6,  3            // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+      93: goto          0
+}

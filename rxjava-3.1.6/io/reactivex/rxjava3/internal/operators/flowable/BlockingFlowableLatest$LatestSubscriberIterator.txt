@@ -1,0 +1,155 @@
+Compiled from "BlockingFlowableLatest.java"
+final class io.reactivex.rxjava3.internal.operators.flowable.BlockingFlowableLatest$LatestSubscriberIterator<T> extends io.reactivex.rxjava3.subscribers.DisposableSubscriber<io.reactivex.rxjava3.core.Notification<T>> implements java.util.Iterator<T> {
+  final java.util.concurrent.Semaphore notify;
+
+  final java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.core.Notification<T>> value;
+
+  io.reactivex.rxjava3.core.Notification<T> iteratorNotification;
+
+  io.reactivex.rxjava3.internal.operators.flowable.BlockingFlowableLatest$LatestSubscriberIterator();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method io/reactivex/rxjava3/subscribers/DisposableSubscriber."<init>":()V
+       4: aload_0
+       5: new           #2                  // class java/util/concurrent/Semaphore
+       8: dup
+       9: iconst_0
+      10: invokespecial #3                  // Method java/util/concurrent/Semaphore."<init>":(I)V
+      13: putfield      #4                  // Field notify:Ljava/util/concurrent/Semaphore;
+      16: aload_0
+      17: new           #5                  // class java/util/concurrent/atomic/AtomicReference
+      20: dup
+      21: invokespecial #6                  // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+      24: putfield      #7                  // Field value:Ljava/util/concurrent/atomic/AtomicReference;
+      27: return
+
+  public void onNext(io.reactivex.rxjava3.core.Notification<T>);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field value:Ljava/util/concurrent/atomic/AtomicReference;
+       4: aload_1
+       5: invokevirtual #8                  // Method java/util/concurrent/atomic/AtomicReference.getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;
+       8: ifnonnull     15
+      11: iconst_1
+      12: goto          16
+      15: iconst_0
+      16: istore_2
+      17: iload_2
+      18: ifeq          28
+      21: aload_0
+      22: getfield      #4                  // Field notify:Ljava/util/concurrent/Semaphore;
+      25: invokevirtual #9                  // Method java/util/concurrent/Semaphore.release:()V
+      28: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_1
+       1: invokestatic  #10                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+       4: return
+
+  public void onComplete();
+    Code:
+       0: return
+
+  public boolean hasNext();
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field iteratorNotification:Lio/reactivex/rxjava3/core/Notification;
+       4: ifnull        28
+       7: aload_0
+       8: getfield      #11                 // Field iteratorNotification:Lio/reactivex/rxjava3/core/Notification;
+      11: invokevirtual #12                 // Method io/reactivex/rxjava3/core/Notification.isOnError:()Z
+      14: ifeq          28
+      17: aload_0
+      18: getfield      #11                 // Field iteratorNotification:Lio/reactivex/rxjava3/core/Notification;
+      21: invokevirtual #13                 // Method io/reactivex/rxjava3/core/Notification.getError:()Ljava/lang/Throwable;
+      24: invokestatic  #14                 // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;
+      27: athrow
+      28: aload_0
+      29: getfield      #11                 // Field iteratorNotification:Lio/reactivex/rxjava3/core/Notification;
+      32: ifnull        45
+      35: aload_0
+      36: getfield      #11                 // Field iteratorNotification:Lio/reactivex/rxjava3/core/Notification;
+      39: invokevirtual #15                 // Method io/reactivex/rxjava3/core/Notification.isOnNext:()Z
+      42: ifeq          115
+      45: aload_0
+      46: getfield      #11                 // Field iteratorNotification:Lio/reactivex/rxjava3/core/Notification;
+      49: ifnonnull     115
+      52: invokestatic  #16                 // Method io/reactivex/rxjava3/internal/util/BlockingHelper.verifyNonBlocking:()V
+      55: aload_0
+      56: getfield      #4                  // Field notify:Ljava/util/concurrent/Semaphore;
+      59: invokevirtual #17                 // Method java/util/concurrent/Semaphore.acquire:()V
+      62: goto          83
+      65: astore_1
+      66: aload_0
+      67: invokevirtual #19                 // Method dispose:()V
+      70: aload_0
+      71: aload_1
+      72: invokestatic  #20                 // Method io/reactivex/rxjava3/core/Notification.createOnError:(Ljava/lang/Throwable;)Lio/reactivex/rxjava3/core/Notification;
+      75: putfield      #11                 // Field iteratorNotification:Lio/reactivex/rxjava3/core/Notification;
+      78: aload_1
+      79: invokestatic  #14                 // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;
+      82: athrow
+      83: aload_0
+      84: getfield      #7                  // Field value:Ljava/util/concurrent/atomic/AtomicReference;
+      87: aconst_null
+      88: invokevirtual #8                  // Method java/util/concurrent/atomic/AtomicReference.getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;
+      91: checkcast     #21                 // class io/reactivex/rxjava3/core/Notification
+      94: astore_1
+      95: aload_0
+      96: aload_1
+      97: putfield      #11                 // Field iteratorNotification:Lio/reactivex/rxjava3/core/Notification;
+     100: aload_1
+     101: invokevirtual #12                 // Method io/reactivex/rxjava3/core/Notification.isOnError:()Z
+     104: ifeq          115
+     107: aload_1
+     108: invokevirtual #13                 // Method io/reactivex/rxjava3/core/Notification.getError:()Ljava/lang/Throwable;
+     111: invokestatic  #14                 // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;
+     114: athrow
+     115: aload_0
+     116: getfield      #11                 // Field iteratorNotification:Lio/reactivex/rxjava3/core/Notification;
+     119: invokevirtual #15                 // Method io/reactivex/rxjava3/core/Notification.isOnNext:()Z
+     122: ireturn
+    Exception table:
+       from    to  target type
+          52    62    65   Class java/lang/InterruptedException
+
+  public T next();
+    Code:
+       0: aload_0
+       1: invokevirtual #22                 // Method hasNext:()Z
+       4: ifeq          32
+       7: aload_0
+       8: getfield      #11                 // Field iteratorNotification:Lio/reactivex/rxjava3/core/Notification;
+      11: invokevirtual #15                 // Method io/reactivex/rxjava3/core/Notification.isOnNext:()Z
+      14: ifeq          32
+      17: aload_0
+      18: getfield      #11                 // Field iteratorNotification:Lio/reactivex/rxjava3/core/Notification;
+      21: invokevirtual #23                 // Method io/reactivex/rxjava3/core/Notification.getValue:()Ljava/lang/Object;
+      24: astore_1
+      25: aload_0
+      26: aconst_null
+      27: putfield      #11                 // Field iteratorNotification:Lio/reactivex/rxjava3/core/Notification;
+      30: aload_1
+      31: areturn
+      32: new           #24                 // class java/util/NoSuchElementException
+      35: dup
+      36: invokespecial #25                 // Method java/util/NoSuchElementException."<init>":()V
+      39: athrow
+
+  public void remove();
+    Code:
+       0: new           #26                 // class java/lang/UnsupportedOperationException
+       3: dup
+       4: ldc           #27                 // String Read-only iterator.
+       6: invokespecial #28                 // Method java/lang/UnsupportedOperationException."<init>":(Ljava/lang/String;)V
+       9: athrow
+
+  public void onNext(java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: checkcast     #21                 // class io/reactivex/rxjava3/core/Notification
+       5: invokevirtual #29                 // Method onNext:(Lio/reactivex/rxjava3/core/Notification;)V
+       8: return
+}

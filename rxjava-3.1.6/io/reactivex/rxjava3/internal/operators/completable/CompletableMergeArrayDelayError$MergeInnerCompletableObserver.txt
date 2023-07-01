@@ -1,0 +1,67 @@
+Compiled from "CompletableMergeArrayDelayError.java"
+final class io.reactivex.rxjava3.internal.operators.completable.CompletableMergeArrayDelayError$MergeInnerCompletableObserver implements io.reactivex.rxjava3.core.CompletableObserver {
+  final io.reactivex.rxjava3.core.CompletableObserver downstream;
+
+  final io.reactivex.rxjava3.disposables.CompositeDisposable set;
+
+  final io.reactivex.rxjava3.internal.util.AtomicThrowable errors;
+
+  final java.util.concurrent.atomic.AtomicInteger wip;
+
+  io.reactivex.rxjava3.internal.operators.completable.CompletableMergeArrayDelayError$MergeInnerCompletableObserver(io.reactivex.rxjava3.core.CompletableObserver, io.reactivex.rxjava3.disposables.CompositeDisposable, io.reactivex.rxjava3.internal.util.AtomicThrowable, java.util.concurrent.atomic.AtomicInteger);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/CompletableObserver;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field set:Lio/reactivex/rxjava3/disposables/CompositeDisposable;
+      14: aload_0
+      15: aload_3
+      16: putfield      #4                  // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      19: aload_0
+      20: aload         4
+      22: putfield      #5                  // Field wip:Ljava/util/concurrent/atomic/AtomicInteger;
+      25: return
+
+  public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field set:Lio/reactivex/rxjava3/disposables/CompositeDisposable;
+       4: aload_1
+       5: invokevirtual #6                  // Method io/reactivex/rxjava3/disposables/CompositeDisposable.add:(Lio/reactivex/rxjava3/disposables/Disposable;)Z
+       8: pop
+       9: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+       4: aload_1
+       5: invokevirtual #7                  // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryAddThrowableOrReport:(Ljava/lang/Throwable;)Z
+       8: ifeq          15
+      11: aload_0
+      12: invokevirtual #8                  // Method tryTerminate:()V
+      15: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: invokevirtual #8                  // Method tryTerminate:()V
+       4: return
+
+  void tryTerminate();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field wip:Ljava/util/concurrent/atomic/AtomicInteger;
+       4: invokevirtual #9                  // Method java/util/concurrent/atomic/AtomicInteger.decrementAndGet:()I
+       7: ifne          21
+      10: aload_0
+      11: getfield      #4                  // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      14: aload_0
+      15: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/CompletableObserver;
+      18: invokevirtual #10                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryTerminateConsumer:(Lio/reactivex/rxjava3/core/CompletableObserver;)V
+      21: return
+}

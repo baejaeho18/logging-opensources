@@ -1,0 +1,475 @@
+Compiled from "FlowableZip.java"
+final class io.reactivex.rxjava3.internal.operators.flowable.FlowableZip$ZipCoordinator<T, R> extends java.util.concurrent.atomic.AtomicInteger implements org.reactivestreams.Subscription {
+  private static final long serialVersionUID;
+
+  final org.reactivestreams.Subscriber<? super R> downstream;
+
+  final io.reactivex.rxjava3.internal.operators.flowable.FlowableZip$ZipSubscriber<T, R>[] subscribers;
+
+  final io.reactivex.rxjava3.functions.Function<? super java.lang.Object[], ? extends R> zipper;
+
+  final java.util.concurrent.atomic.AtomicLong requested;
+
+  final io.reactivex.rxjava3.internal.util.AtomicThrowable errors;
+
+  final boolean delayErrors;
+
+  volatile boolean cancelled;
+
+  final java.lang.Object[] current;
+
+  io.reactivex.rxjava3.internal.operators.flowable.FlowableZip$ZipCoordinator(org.reactivestreams.Subscriber<? super R>, io.reactivex.rxjava3.functions.Function<? super java.lang.Object[], ? extends R>, int, int, boolean);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field zipper:Lio/reactivex/rxjava3/functions/Function;
+      14: aload_0
+      15: iload         5
+      17: putfield      #4                  // Field delayErrors:Z
+      20: iload_3
+      21: anewarray     #5                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipSubscriber
+      24: astore        6
+      26: iconst_0
+      27: istore        7
+      29: iload         7
+      31: iload_3
+      32: if_icmpge     56
+      35: aload         6
+      37: iload         7
+      39: new           #5                  // class io/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipSubscriber
+      42: dup
+      43: aload_0
+      44: iload         4
+      46: invokespecial #6                  // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipSubscriber."<init>":(Lio/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipCoordinator;I)V
+      49: aastore
+      50: iinc          7, 1
+      53: goto          29
+      56: aload_0
+      57: iload_3
+      58: anewarray     #7                  // class java/lang/Object
+      61: putfield      #8                  // Field current:[Ljava/lang/Object;
+      64: aload_0
+      65: aload         6
+      67: putfield      #9                  // Field subscribers:[Lio/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipSubscriber;
+      70: aload_0
+      71: new           #10                 // class java/util/concurrent/atomic/AtomicLong
+      74: dup
+      75: invokespecial #11                 // Method java/util/concurrent/atomic/AtomicLong."<init>":()V
+      78: putfield      #12                 // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+      81: aload_0
+      82: new           #13                 // class io/reactivex/rxjava3/internal/util/AtomicThrowable
+      85: dup
+      86: invokespecial #14                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable."<init>":()V
+      89: putfield      #15                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      92: return
+
+  void subscribe(org.reactivestreams.Publisher<? extends T>[], int);
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field subscribers:[Lio/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipSubscriber;
+       4: astore_3
+       5: iconst_0
+       6: istore        4
+       8: iload         4
+      10: iload_2
+      11: if_icmpge     58
+      14: aload_0
+      15: getfield      #16                 // Field cancelled:Z
+      18: ifne          38
+      21: aload_0
+      22: getfield      #4                  // Field delayErrors:Z
+      25: ifne          39
+      28: aload_0
+      29: getfield      #15                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      32: invokevirtual #17                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.get:()Ljava/lang/Object;
+      35: ifnull        39
+      38: return
+      39: aload_1
+      40: iload         4
+      42: aaload
+      43: aload_3
+      44: iload         4
+      46: aaload
+      47: invokeinterface #18,  2           // InterfaceMethod org/reactivestreams/Publisher.subscribe:(Lorg/reactivestreams/Subscriber;)V
+      52: iinc          4, 1
+      55: goto          8
+      58: return
+
+  public void request(long);
+    Code:
+       0: lload_1
+       1: invokestatic  #19                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.validate:(J)Z
+       4: ifeq          20
+       7: aload_0
+       8: getfield      #12                 // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+      11: lload_1
+      12: invokestatic  #20                 // Method io/reactivex/rxjava3/internal/util/BackpressureHelper.add:(Ljava/util/concurrent/atomic/AtomicLong;J)J
+      15: pop2
+      16: aload_0
+      17: invokevirtual #21                 // Method drain:()V
+      20: return
+
+  public void cancel();
+    Code:
+       0: aload_0
+       1: getfield      #16                 // Field cancelled:Z
+       4: ifne          16
+       7: aload_0
+       8: iconst_1
+       9: putfield      #16                 // Field cancelled:Z
+      12: aload_0
+      13: invokevirtual #22                 // Method cancelAll:()V
+      16: return
+
+  void error(io.reactivex.rxjava3.internal.operators.flowable.FlowableZip$ZipSubscriber<T, R>, java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #15                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+       4: aload_2
+       5: invokevirtual #23                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryAddThrowableOrReport:(Ljava/lang/Throwable;)Z
+       8: ifeq          20
+      11: aload_1
+      12: iconst_1
+      13: putfield      #24                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipSubscriber.done:Z
+      16: aload_0
+      17: invokevirtual #21                 // Method drain:()V
+      20: return
+
+  void cancelAll();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field subscribers:[Lio/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipSubscriber;
+       4: astore_1
+       5: aload_1
+       6: arraylength
+       7: istore_2
+       8: iconst_0
+       9: istore_3
+      10: iload_3
+      11: iload_2
+      12: if_icmpge     31
+      15: aload_1
+      16: iload_3
+      17: aaload
+      18: astore        4
+      20: aload         4
+      22: invokevirtual #25                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipSubscriber.cancel:()V
+      25: iinc          3, 1
+      28: goto          10
+      31: return
+
+  void drain();
+    Code:
+       0: aload_0
+       1: invokevirtual #26                 // Method getAndIncrement:()I
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      12: astore_1
+      13: aload_0
+      14: getfield      #9                  // Field subscribers:[Lio/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipSubscriber;
+      17: astore_2
+      18: aload_2
+      19: arraylength
+      20: istore_3
+      21: aload_0
+      22: getfield      #8                  // Field current:[Ljava/lang/Object;
+      25: astore        4
+      27: iconst_1
+      28: istore        5
+      30: aload_0
+      31: getfield      #12                 // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+      34: invokevirtual #27                 // Method java/util/concurrent/atomic/AtomicLong.get:()J
+      37: lstore        6
+      39: lconst_0
+      40: lstore        8
+      42: lload         6
+      44: lload         8
+      46: lcmp
+      47: ifeq          336
+      50: aload_0
+      51: getfield      #16                 // Field cancelled:Z
+      54: ifeq          58
+      57: return
+      58: aload_0
+      59: getfield      #4                  // Field delayErrors:Z
+      62: ifne          88
+      65: aload_0
+      66: getfield      #15                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      69: invokevirtual #17                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.get:()Ljava/lang/Object;
+      72: ifnull        88
+      75: aload_0
+      76: invokevirtual #22                 // Method cancelAll:()V
+      79: aload_0
+      80: getfield      #15                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      83: aload_1
+      84: invokevirtual #28                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryTerminateConsumer:(Lorg/reactivestreams/Subscriber;)V
+      87: return
+      88: iconst_0
+      89: istore        10
+      91: iconst_0
+      92: istore        11
+      94: iload         11
+      96: iload_3
+      97: if_icmpge     251
+     100: aload_2
+     101: iload         11
+     103: aaload
+     104: astore        12
+     106: aload         4
+     108: iload         11
+     110: aaload
+     111: ifnonnull     245
+     114: aload         12
+     116: getfield      #24                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipSubscriber.done:Z
+     119: istore        13
+     121: aload         12
+     123: getfield      #29                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipSubscriber.queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+     126: astore        14
+     128: aconst_null
+     129: astore        15
+     131: aload         14
+     133: ifnull        146
+     136: aload         14
+     138: invokeinterface #30,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.poll:()Ljava/lang/Object;
+     143: goto          147
+     146: aconst_null
+     147: astore        15
+     149: goto          192
+     152: astore        16
+     154: aload         16
+     156: invokestatic  #32                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+     159: aload_0
+     160: getfield      #15                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+     163: aload         16
+     165: invokevirtual #23                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryAddThrowableOrReport:(Ljava/lang/Throwable;)Z
+     168: pop
+     169: aload_0
+     170: getfield      #4                  // Field delayErrors:Z
+     173: ifne          189
+     176: aload_0
+     177: invokevirtual #22                 // Method cancelAll:()V
+     180: aload_0
+     181: getfield      #15                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+     184: aload_1
+     185: invokevirtual #28                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryTerminateConsumer:(Lorg/reactivestreams/Subscriber;)V
+     188: return
+     189: iconst_1
+     190: istore        13
+     192: aload         15
+     194: ifnonnull     201
+     197: iconst_1
+     198: goto          202
+     201: iconst_0
+     202: istore        16
+     204: iload         13
+     206: ifeq          227
+     209: iload         16
+     211: ifeq          227
+     214: aload_0
+     215: invokevirtual #22                 // Method cancelAll:()V
+     218: aload_0
+     219: getfield      #15                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+     222: aload_1
+     223: invokevirtual #28                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryTerminateConsumer:(Lorg/reactivestreams/Subscriber;)V
+     226: return
+     227: iload         16
+     229: ifne          242
+     232: aload         4
+     234: iload         11
+     236: aload         15
+     238: aastore
+     239: goto          245
+     242: iconst_1
+     243: istore        10
+     245: iinc          11, 1
+     248: goto          94
+     251: iload         10
+     253: ifeq          259
+     256: goto          336
+     259: aload_0
+     260: getfield      #3                  // Field zipper:Lio/reactivex/rxjava3/functions/Function;
+     263: aload         4
+     265: invokevirtual #33                 // Method "[Ljava/lang/Object;".clone:()Ljava/lang/Object;
+     268: invokeinterface #34,  2           // InterfaceMethod io/reactivex/rxjava3/functions/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+     273: ldc           #35                 // String The zipper returned a null value
+     275: invokestatic  #36                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+     278: astore        11
+     280: goto          313
+     283: astore        12
+     285: aload         12
+     287: invokestatic  #32                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+     290: aload_0
+     291: invokevirtual #22                 // Method cancelAll:()V
+     294: aload_0
+     295: getfield      #15                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+     298: aload         12
+     300: invokevirtual #23                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryAddThrowableOrReport:(Ljava/lang/Throwable;)Z
+     303: pop
+     304: aload_0
+     305: getfield      #15                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+     308: aload_1
+     309: invokevirtual #28                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryTerminateConsumer:(Lorg/reactivestreams/Subscriber;)V
+     312: return
+     313: aload_1
+     314: aload         11
+     316: invokeinterface #37,  2           // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+     321: lload         8
+     323: lconst_1
+     324: ladd
+     325: lstore        8
+     327: aload         4
+     329: aconst_null
+     330: invokestatic  #38                 // Method java/util/Arrays.fill:([Ljava/lang/Object;Ljava/lang/Object;)V
+     333: goto          42
+     336: lload         6
+     338: lload         8
+     340: lcmp
+     341: ifne          536
+     344: aload_0
+     345: getfield      #16                 // Field cancelled:Z
+     348: ifeq          352
+     351: return
+     352: aload_0
+     353: getfield      #4                  // Field delayErrors:Z
+     356: ifne          382
+     359: aload_0
+     360: getfield      #15                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+     363: invokevirtual #17                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.get:()Ljava/lang/Object;
+     366: ifnull        382
+     369: aload_0
+     370: invokevirtual #22                 // Method cancelAll:()V
+     373: aload_0
+     374: getfield      #15                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+     377: aload_1
+     378: invokevirtual #28                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryTerminateConsumer:(Lorg/reactivestreams/Subscriber;)V
+     381: return
+     382: iconst_0
+     383: istore        10
+     385: iload         10
+     387: iload_3
+     388: if_icmpge     536
+     391: aload_2
+     392: iload         10
+     394: aaload
+     395: astore        11
+     397: aload         4
+     399: iload         10
+     401: aaload
+     402: ifnonnull     530
+     405: aload         11
+     407: getfield      #24                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipSubscriber.done:Z
+     410: istore        12
+     412: aload         11
+     414: getfield      #29                 // Field io/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipSubscriber.queue:Lio/reactivex/rxjava3/operators/SimpleQueue;
+     417: astore        13
+     419: aconst_null
+     420: astore        14
+     422: aload         13
+     424: ifnull        437
+     427: aload         13
+     429: invokeinterface #30,  1           // InterfaceMethod io/reactivex/rxjava3/operators/SimpleQueue.poll:()Ljava/lang/Object;
+     434: goto          438
+     437: aconst_null
+     438: astore        14
+     440: goto          483
+     443: astore        15
+     445: aload         15
+     447: invokestatic  #32                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+     450: aload_0
+     451: getfield      #15                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+     454: aload         15
+     456: invokevirtual #23                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryAddThrowableOrReport:(Ljava/lang/Throwable;)Z
+     459: pop
+     460: aload_0
+     461: getfield      #4                  // Field delayErrors:Z
+     464: ifne          480
+     467: aload_0
+     468: invokevirtual #22                 // Method cancelAll:()V
+     471: aload_0
+     472: getfield      #15                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+     475: aload_1
+     476: invokevirtual #28                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryTerminateConsumer:(Lorg/reactivestreams/Subscriber;)V
+     479: return
+     480: iconst_1
+     481: istore        12
+     483: aload         14
+     485: ifnonnull     492
+     488: iconst_1
+     489: goto          493
+     492: iconst_0
+     493: istore        15
+     495: iload         12
+     497: ifeq          518
+     500: iload         15
+     502: ifeq          518
+     505: aload_0
+     506: invokevirtual #22                 // Method cancelAll:()V
+     509: aload_0
+     510: getfield      #15                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+     513: aload_1
+     514: invokevirtual #28                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryTerminateConsumer:(Lorg/reactivestreams/Subscriber;)V
+     517: return
+     518: iload         15
+     520: ifne          530
+     523: aload         4
+     525: iload         10
+     527: aload         14
+     529: aastore
+     530: iinc          10, 1
+     533: goto          385
+     536: lload         8
+     538: lconst_0
+     539: lcmp
+     540: ifeq          601
+     543: aload_2
+     544: astore        10
+     546: aload         10
+     548: arraylength
+     549: istore        11
+     551: iconst_0
+     552: istore        12
+     554: iload         12
+     556: iload         11
+     558: if_icmpge     581
+     561: aload         10
+     563: iload         12
+     565: aaload
+     566: astore        13
+     568: aload         13
+     570: lload         8
+     572: invokevirtual #39                 // Method io/reactivex/rxjava3/internal/operators/flowable/FlowableZip$ZipSubscriber.request:(J)V
+     575: iinc          12, 1
+     578: goto          554
+     581: lload         6
+     583: ldc2_w        #41                 // long 9223372036854775807l
+     586: lcmp
+     587: ifeq          601
+     590: aload_0
+     591: getfield      #12                 // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+     594: lload         8
+     596: lneg
+     597: invokevirtual #43                 // Method java/util/concurrent/atomic/AtomicLong.addAndGet:(J)J
+     600: pop2
+     601: aload_0
+     602: iload         5
+     604: ineg
+     605: invokevirtual #44                 // Method addAndGet:(I)I
+     608: istore        5
+     610: iload         5
+     612: ifne          618
+     615: goto          621
+     618: goto          30
+     621: return
+    Exception table:
+       from    to  target type
+         131   149   152   Class java/lang/Throwable
+         259   280   283   Class java/lang/Throwable
+         422   440   443   Class java/lang/Throwable
+}
