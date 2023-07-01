@@ -1,0 +1,373 @@
+Compiled from "MaybeMergeArray.java"
+final class io.reactivex.rxjava3.internal.operators.maybe.MaybeMergeArray$MergeMaybeObserver<T> extends io.reactivex.rxjava3.internal.subscriptions.BasicIntQueueSubscription<T> implements io.reactivex.rxjava3.core.MaybeObserver<T> {
+  private static final long serialVersionUID;
+
+  final org.reactivestreams.Subscriber<? super T> downstream;
+
+  final io.reactivex.rxjava3.disposables.CompositeDisposable set;
+
+  final java.util.concurrent.atomic.AtomicLong requested;
+
+  final io.reactivex.rxjava3.internal.operators.maybe.MaybeMergeArray$SimpleQueueWithConsumerIndex<java.lang.Object> queue;
+
+  final io.reactivex.rxjava3.internal.util.AtomicThrowable errors;
+
+  final int sourceCount;
+
+  volatile boolean cancelled;
+
+  boolean outputFused;
+
+  long consumed;
+
+  io.reactivex.rxjava3.internal.operators.maybe.MaybeMergeArray$MergeMaybeObserver(org.reactivestreams.Subscriber<? super T>, int, io.reactivex.rxjava3.internal.operators.maybe.MaybeMergeArray$SimpleQueueWithConsumerIndex<java.lang.Object>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method io/reactivex/rxjava3/internal/subscriptions/BasicIntQueueSubscription."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       9: aload_0
+      10: iload_2
+      11: putfield      #3                  // Field sourceCount:I
+      14: aload_0
+      15: new           #4                  // class io/reactivex/rxjava3/disposables/CompositeDisposable
+      18: dup
+      19: invokespecial #5                  // Method io/reactivex/rxjava3/disposables/CompositeDisposable."<init>":()V
+      22: putfield      #6                  // Field set:Lio/reactivex/rxjava3/disposables/CompositeDisposable;
+      25: aload_0
+      26: new           #7                  // class java/util/concurrent/atomic/AtomicLong
+      29: dup
+      30: invokespecial #8                  // Method java/util/concurrent/atomic/AtomicLong."<init>":()V
+      33: putfield      #9                  // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+      36: aload_0
+      37: new           #10                 // class io/reactivex/rxjava3/internal/util/AtomicThrowable
+      40: dup
+      41: invokespecial #11                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable."<init>":()V
+      44: putfield      #12                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      47: aload_0
+      48: aload_3
+      49: putfield      #13                 // Field queue:Lio/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex;
+      52: return
+
+  public int requestFusion(int);
+    Code:
+       0: iload_1
+       1: iconst_2
+       2: iand
+       3: ifeq          13
+       6: aload_0
+       7: iconst_1
+       8: putfield      #15                 // Field outputFused:Z
+      11: iconst_2
+      12: ireturn
+      13: iconst_0
+      14: ireturn
+
+  public T poll();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field queue:Lio/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex;
+       4: invokeinterface #16,  1           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.poll:()Ljava/lang/Object;
+       9: astore_1
+      10: aload_1
+      11: getstatic     #17                 // Field io/reactivex/rxjava3/internal/util/NotificationLite.COMPLETE:Lio/reactivex/rxjava3/internal/util/NotificationLite;
+      14: if_acmpeq     19
+      17: aload_1
+      18: areturn
+      19: goto          0
+
+  public boolean isEmpty();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field queue:Lio/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex;
+       4: invokeinterface #18,  1           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.isEmpty:()Z
+       9: ireturn
+
+  public void clear();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field queue:Lio/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex;
+       4: invokeinterface #19,  1           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.clear:()V
+       9: return
+
+  public void request(long);
+    Code:
+       0: lload_1
+       1: invokestatic  #20                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.validate:(J)Z
+       4: ifeq          20
+       7: aload_0
+       8: getfield      #9                  // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+      11: lload_1
+      12: invokestatic  #21                 // Method io/reactivex/rxjava3/internal/util/BackpressureHelper.add:(Ljava/util/concurrent/atomic/AtomicLong;J)J
+      15: pop2
+      16: aload_0
+      17: invokevirtual #22                 // Method drain:()V
+      20: return
+
+  public void cancel();
+    Code:
+       0: aload_0
+       1: getfield      #23                 // Field cancelled:Z
+       4: ifne          35
+       7: aload_0
+       8: iconst_1
+       9: putfield      #23                 // Field cancelled:Z
+      12: aload_0
+      13: getfield      #6                  // Field set:Lio/reactivex/rxjava3/disposables/CompositeDisposable;
+      16: invokevirtual #24                 // Method io/reactivex/rxjava3/disposables/CompositeDisposable.dispose:()V
+      19: aload_0
+      20: invokevirtual #25                 // Method getAndIncrement:()I
+      23: ifne          35
+      26: aload_0
+      27: getfield      #13                 // Field queue:Lio/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex;
+      30: invokeinterface #19,  1           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.clear:()V
+      35: return
+
+  public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field set:Lio/reactivex/rxjava3/disposables/CompositeDisposable;
+       4: aload_1
+       5: invokevirtual #26                 // Method io/reactivex/rxjava3/disposables/CompositeDisposable.add:(Lio/reactivex/rxjava3/disposables/Disposable;)Z
+       8: pop
+       9: return
+
+  public void onSuccess(T);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field queue:Lio/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex;
+       4: aload_1
+       5: invokeinterface #27,  2           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.offer:(Ljava/lang/Object;)Z
+      10: pop
+      11: aload_0
+      12: invokevirtual #22                 // Method drain:()V
+      15: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #12                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+       4: aload_1
+       5: invokevirtual #28                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryAddThrowableOrReport:(Ljava/lang/Throwable;)Z
+       8: ifeq          35
+      11: aload_0
+      12: getfield      #6                  // Field set:Lio/reactivex/rxjava3/disposables/CompositeDisposable;
+      15: invokevirtual #24                 // Method io/reactivex/rxjava3/disposables/CompositeDisposable.dispose:()V
+      18: aload_0
+      19: getfield      #13                 // Field queue:Lio/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex;
+      22: getstatic     #17                 // Field io/reactivex/rxjava3/internal/util/NotificationLite.COMPLETE:Lio/reactivex/rxjava3/internal/util/NotificationLite;
+      25: invokeinterface #27,  2           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.offer:(Ljava/lang/Object;)Z
+      30: pop
+      31: aload_0
+      32: invokevirtual #22                 // Method drain:()V
+      35: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field queue:Lio/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex;
+       4: getstatic     #17                 // Field io/reactivex/rxjava3/internal/util/NotificationLite.COMPLETE:Lio/reactivex/rxjava3/internal/util/NotificationLite;
+       7: invokeinterface #27,  2           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.offer:(Ljava/lang/Object;)Z
+      12: pop
+      13: aload_0
+      14: invokevirtual #22                 // Method drain:()V
+      17: return
+
+  boolean isCancelled();
+    Code:
+       0: aload_0
+       1: getfield      #23                 // Field cancelled:Z
+       4: ireturn
+
+  void drainNormal();
+    Code:
+       0: iconst_1
+       1: istore_1
+       2: aload_0
+       3: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       6: astore_2
+       7: aload_0
+       8: getfield      #13                 // Field queue:Lio/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex;
+      11: astore_3
+      12: aload_0
+      13: getfield      #29                 // Field consumed:J
+      16: lstore        4
+      18: aload_0
+      19: getfield      #9                  // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+      22: invokevirtual #30                 // Method java/util/concurrent/atomic/AtomicLong.get:()J
+      25: lstore        6
+      27: lload         4
+      29: lload         6
+      31: lcmp
+      32: ifeq          145
+      35: aload_0
+      36: getfield      #23                 // Field cancelled:Z
+      39: ifeq          49
+      42: aload_3
+      43: invokeinterface #19,  1           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.clear:()V
+      48: return
+      49: aload_0
+      50: getfield      #12                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      53: invokevirtual #31                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.get:()Ljava/lang/Object;
+      56: checkcast     #32                 // class java/lang/Throwable
+      59: astore        8
+      61: aload         8
+      63: ifnull        84
+      66: aload_3
+      67: invokeinterface #19,  1           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.clear:()V
+      72: aload_0
+      73: getfield      #12                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      76: aload_0
+      77: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      80: invokevirtual #33                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryTerminateConsumer:(Lorg/reactivestreams/Subscriber;)V
+      83: return
+      84: aload_3
+      85: invokeinterface #34,  1           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.consumerIndex:()I
+      90: aload_0
+      91: getfield      #3                  // Field sourceCount:I
+      94: if_icmpne     104
+      97: aload_2
+      98: invokeinterface #35,  1           // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+     103: return
+     104: aload_3
+     105: invokeinterface #16,  1           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.poll:()Ljava/lang/Object;
+     110: astore        9
+     112: aload         9
+     114: ifnonnull     120
+     117: goto          145
+     120: aload         9
+     122: getstatic     #17                 // Field io/reactivex/rxjava3/internal/util/NotificationLite.COMPLETE:Lio/reactivex/rxjava3/internal/util/NotificationLite;
+     125: if_acmpeq     142
+     128: aload_2
+     129: aload         9
+     131: invokeinterface #36,  2           // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+     136: lload         4
+     138: lconst_1
+     139: ladd
+     140: lstore        4
+     142: goto          27
+     145: lload         4
+     147: lload         6
+     149: lcmp
+     150: ifne          229
+     153: aload_0
+     154: getfield      #12                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+     157: invokevirtual #31                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.get:()Ljava/lang/Object;
+     160: checkcast     #32                 // class java/lang/Throwable
+     163: astore        8
+     165: aload         8
+     167: ifnull        188
+     170: aload_3
+     171: invokeinterface #19,  1           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.clear:()V
+     176: aload_0
+     177: getfield      #12                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+     180: aload_0
+     181: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+     184: invokevirtual #33                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryTerminateConsumer:(Lorg/reactivestreams/Subscriber;)V
+     187: return
+     188: aload_3
+     189: invokeinterface #37,  1           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.peek:()Ljava/lang/Object;
+     194: getstatic     #17                 // Field io/reactivex/rxjava3/internal/util/NotificationLite.COMPLETE:Lio/reactivex/rxjava3/internal/util/NotificationLite;
+     197: if_acmpne     209
+     200: aload_3
+     201: invokeinterface #38,  1           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.drop:()V
+     206: goto          188
+     209: aload_3
+     210: invokeinterface #34,  1           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.consumerIndex:()I
+     215: aload_0
+     216: getfield      #3                  // Field sourceCount:I
+     219: if_icmpne     229
+     222: aload_2
+     223: invokeinterface #35,  1           // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+     228: return
+     229: aload_0
+     230: lload         4
+     232: putfield      #29                 // Field consumed:J
+     235: aload_0
+     236: iload_1
+     237: ineg
+     238: invokevirtual #39                 // Method addAndGet:(I)I
+     241: istore_1
+     242: iload_1
+     243: ifne          249
+     246: goto          252
+     249: goto          18
+     252: return
+
+  void drainFused();
+    Code:
+       0: iconst_1
+       1: istore_1
+       2: aload_0
+       3: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       6: astore_2
+       7: aload_0
+       8: getfield      #13                 // Field queue:Lio/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex;
+      11: astore_3
+      12: aload_0
+      13: getfield      #23                 // Field cancelled:Z
+      16: ifeq          26
+      19: aload_3
+      20: invokeinterface #19,  1           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.clear:()V
+      25: return
+      26: aload_0
+      27: getfield      #12                 // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      30: invokevirtual #31                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.get:()Ljava/lang/Object;
+      33: checkcast     #32                 // class java/lang/Throwable
+      36: astore        4
+      38: aload         4
+      40: ifnull        58
+      43: aload_3
+      44: invokeinterface #19,  1           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.clear:()V
+      49: aload_2
+      50: aload         4
+      52: invokeinterface #40,  2           // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      57: return
+      58: aload_3
+      59: invokeinterface #41,  1           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.producerIndex:()I
+      64: aload_0
+      65: getfield      #3                  // Field sourceCount:I
+      68: if_icmpne     75
+      71: iconst_1
+      72: goto          76
+      75: iconst_0
+      76: istore        5
+      78: aload_3
+      79: invokeinterface #18,  1           // InterfaceMethod io/reactivex/rxjava3/internal/operators/maybe/MaybeMergeArray$SimpleQueueWithConsumerIndex.isEmpty:()Z
+      84: ifne          94
+      87: aload_2
+      88: aconst_null
+      89: invokeinterface #36,  2           // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+      94: iload         5
+      96: ifeq          106
+      99: aload_2
+     100: invokeinterface #35,  1           // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+     105: return
+     106: aload_0
+     107: iload_1
+     108: ineg
+     109: invokevirtual #39                 // Method addAndGet:(I)I
+     112: istore_1
+     113: iload_1
+     114: ifne          120
+     117: goto          123
+     120: goto          12
+     123: return
+
+  void drain();
+    Code:
+       0: aload_0
+       1: invokevirtual #25                 // Method getAndIncrement:()I
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: getfield      #15                 // Field outputFused:Z
+      12: ifeq          22
+      15: aload_0
+      16: invokevirtual #42                 // Method drainFused:()V
+      19: goto          26
+      22: aload_0
+      23: invokevirtual #43                 // Method drainNormal:()V
+      26: return
+}

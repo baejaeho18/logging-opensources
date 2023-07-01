@@ -1,0 +1,157 @@
+Compiled from "BlockingObservableNext.java"
+final class io.reactivex.rxjava3.internal.operators.observable.BlockingObservableNext$NextIterator<T> implements java.util.Iterator<T> {
+  private final io.reactivex.rxjava3.internal.operators.observable.BlockingObservableNext$NextObserver<T> observer;
+
+  private final io.reactivex.rxjava3.core.ObservableSource<T> items;
+
+  private T next;
+
+  private boolean hasNext;
+
+  private boolean isNextConsumed;
+
+  private java.lang.Throwable error;
+
+  private boolean started;
+
+  io.reactivex.rxjava3.internal.operators.observable.BlockingObservableNext$NextIterator(io.reactivex.rxjava3.core.ObservableSource<T>, io.reactivex.rxjava3.internal.operators.observable.BlockingObservableNext$NextObserver<T>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: iconst_1
+       6: putfield      #2                  // Field hasNext:Z
+       9: aload_0
+      10: iconst_1
+      11: putfield      #3                  // Field isNextConsumed:Z
+      14: aload_0
+      15: aload_1
+      16: putfield      #4                  // Field items:Lio/reactivex/rxjava3/core/ObservableSource;
+      19: aload_0
+      20: aload_2
+      21: putfield      #5                  // Field observer:Lio/reactivex/rxjava3/internal/operators/observable/BlockingObservableNext$NextObserver;
+      24: return
+
+  public boolean hasNext();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field error:Ljava/lang/Throwable;
+       4: ifnull        15
+       7: aload_0
+       8: getfield      #6                  // Field error:Ljava/lang/Throwable;
+      11: invokestatic  #7                  // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;
+      14: athrow
+      15: aload_0
+      16: getfield      #2                  // Field hasNext:Z
+      19: ifne          24
+      22: iconst_0
+      23: ireturn
+      24: aload_0
+      25: getfield      #3                  // Field isNextConsumed:Z
+      28: ifeq          38
+      31: aload_0
+      32: invokespecial #8                  // Method moveToNext:()Z
+      35: ifeq          42
+      38: iconst_1
+      39: goto          43
+      42: iconst_0
+      43: ireturn
+
+  private boolean moveToNext();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field started:Z
+       4: ifne          37
+       7: aload_0
+       8: iconst_1
+       9: putfield      #9                  // Field started:Z
+      12: aload_0
+      13: getfield      #5                  // Field observer:Lio/reactivex/rxjava3/internal/operators/observable/BlockingObservableNext$NextObserver;
+      16: invokevirtual #10                 // Method io/reactivex/rxjava3/internal/operators/observable/BlockingObservableNext$NextObserver.setWaiting:()V
+      19: new           #11                 // class io/reactivex/rxjava3/internal/operators/observable/ObservableMaterialize
+      22: dup
+      23: aload_0
+      24: getfield      #4                  // Field items:Lio/reactivex/rxjava3/core/ObservableSource;
+      27: invokespecial #12                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableMaterialize."<init>":(Lio/reactivex/rxjava3/core/ObservableSource;)V
+      30: aload_0
+      31: getfield      #5                  // Field observer:Lio/reactivex/rxjava3/internal/operators/observable/BlockingObservableNext$NextObserver;
+      34: invokevirtual #13                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableMaterialize.subscribe:(Lio/reactivex/rxjava3/core/Observer;)V
+      37: aload_0
+      38: getfield      #5                  // Field observer:Lio/reactivex/rxjava3/internal/operators/observable/BlockingObservableNext$NextObserver;
+      41: invokevirtual #14                 // Method io/reactivex/rxjava3/internal/operators/observable/BlockingObservableNext$NextObserver.takeNext:()Lio/reactivex/rxjava3/core/Notification;
+      44: astore_1
+      45: goto          66
+      48: astore_2
+      49: aload_0
+      50: getfield      #5                  // Field observer:Lio/reactivex/rxjava3/internal/operators/observable/BlockingObservableNext$NextObserver;
+      53: invokevirtual #16                 // Method io/reactivex/rxjava3/internal/operators/observable/BlockingObservableNext$NextObserver.dispose:()V
+      56: aload_0
+      57: aload_2
+      58: putfield      #6                  // Field error:Ljava/lang/Throwable;
+      61: aload_2
+      62: invokestatic  #7                  // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;
+      65: athrow
+      66: aload_1
+      67: invokevirtual #17                 // Method io/reactivex/rxjava3/core/Notification.isOnNext:()Z
+      70: ifeq          88
+      73: aload_0
+      74: iconst_0
+      75: putfield      #3                  // Field isNextConsumed:Z
+      78: aload_0
+      79: aload_1
+      80: invokevirtual #18                 // Method io/reactivex/rxjava3/core/Notification.getValue:()Ljava/lang/Object;
+      83: putfield      #19                 // Field next:Ljava/lang/Object;
+      86: iconst_1
+      87: ireturn
+      88: aload_0
+      89: iconst_0
+      90: putfield      #2                  // Field hasNext:Z
+      93: aload_1
+      94: invokevirtual #20                 // Method io/reactivex/rxjava3/core/Notification.isOnComplete:()Z
+      97: ifeq          102
+     100: iconst_0
+     101: ireturn
+     102: aload_0
+     103: aload_1
+     104: invokevirtual #21                 // Method io/reactivex/rxjava3/core/Notification.getError:()Ljava/lang/Throwable;
+     107: putfield      #6                  // Field error:Ljava/lang/Throwable;
+     110: aload_0
+     111: getfield      #6                  // Field error:Ljava/lang/Throwable;
+     114: invokestatic  #7                  // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;
+     117: athrow
+    Exception table:
+       from    to  target type
+          37    45    48   Class java/lang/InterruptedException
+
+  public T next();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field error:Ljava/lang/Throwable;
+       4: ifnull        15
+       7: aload_0
+       8: getfield      #6                  // Field error:Ljava/lang/Throwable;
+      11: invokestatic  #7                  // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;
+      14: athrow
+      15: aload_0
+      16: invokevirtual #22                 // Method hasNext:()Z
+      19: ifeq          32
+      22: aload_0
+      23: iconst_1
+      24: putfield      #3                  // Field isNextConsumed:Z
+      27: aload_0
+      28: getfield      #19                 // Field next:Ljava/lang/Object;
+      31: areturn
+      32: new           #23                 // class java/util/NoSuchElementException
+      35: dup
+      36: ldc           #24                 // String No more elements
+      38: invokespecial #25                 // Method java/util/NoSuchElementException."<init>":(Ljava/lang/String;)V
+      41: athrow
+
+  public void remove();
+    Code:
+       0: new           #26                 // class java/lang/UnsupportedOperationException
+       3: dup
+       4: ldc           #27                 // String Read only iterator
+       6: invokespecial #28                 // Method java/lang/UnsupportedOperationException."<init>":(Ljava/lang/String;)V
+       9: athrow
+}

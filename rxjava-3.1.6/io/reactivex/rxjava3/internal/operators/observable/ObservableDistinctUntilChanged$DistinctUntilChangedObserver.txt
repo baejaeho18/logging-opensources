@@ -1,0 +1,131 @@
+Compiled from "ObservableDistinctUntilChanged.java"
+final class io.reactivex.rxjava3.internal.operators.observable.ObservableDistinctUntilChanged$DistinctUntilChangedObserver<T, K> extends io.reactivex.rxjava3.internal.observers.BasicFuseableObserver<T, T> {
+  final io.reactivex.rxjava3.functions.Function<? super T, K> keySelector;
+
+  final io.reactivex.rxjava3.functions.BiPredicate<? super K, ? super K> comparer;
+
+  K last;
+
+  boolean hasValue;
+
+  io.reactivex.rxjava3.internal.operators.observable.ObservableDistinctUntilChanged$DistinctUntilChangedObserver(io.reactivex.rxjava3.core.Observer<? super T>, io.reactivex.rxjava3.functions.Function<? super T, K>, io.reactivex.rxjava3.functions.BiPredicate<? super K, ? super K>);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #1                  // Method io/reactivex/rxjava3/internal/observers/BasicFuseableObserver."<init>":(Lio/reactivex/rxjava3/core/Observer;)V
+       5: aload_0
+       6: aload_2
+       7: putfield      #2                  // Field keySelector:Lio/reactivex/rxjava3/functions/Function;
+      10: aload_0
+      11: aload_3
+      12: putfield      #3                  // Field comparer:Lio/reactivex/rxjava3/functions/BiPredicate;
+      15: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field done:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: getfield      #5                  // Field sourceMode:I
+      12: ifeq          26
+      15: aload_0
+      16: getfield      #6                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      19: aload_1
+      20: invokeinterface #7,  2            // InterfaceMethod io/reactivex/rxjava3/core/Observer.onNext:(Ljava/lang/Object;)V
+      25: return
+      26: aload_0
+      27: getfield      #2                  // Field keySelector:Lio/reactivex/rxjava3/functions/Function;
+      30: aload_1
+      31: invokeinterface #8,  2            // InterfaceMethod io/reactivex/rxjava3/functions/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+      36: astore_2
+      37: aload_0
+      38: getfield      #9                  // Field hasValue:Z
+      41: ifeq          72
+      44: aload_0
+      45: getfield      #3                  // Field comparer:Lio/reactivex/rxjava3/functions/BiPredicate;
+      48: aload_0
+      49: getfield      #10                 // Field last:Ljava/lang/Object;
+      52: aload_2
+      53: invokeinterface #11,  3           // InterfaceMethod io/reactivex/rxjava3/functions/BiPredicate.test:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      58: istore_3
+      59: aload_0
+      60: aload_2
+      61: putfield      #10                 // Field last:Ljava/lang/Object;
+      64: iload_3
+      65: ifeq          69
+      68: return
+      69: goto          82
+      72: aload_0
+      73: iconst_1
+      74: putfield      #9                  // Field hasValue:Z
+      77: aload_0
+      78: aload_2
+      79: putfield      #10                 // Field last:Ljava/lang/Object;
+      82: goto          92
+      85: astore_3
+      86: aload_0
+      87: aload_3
+      88: invokevirtual #13                 // Method fail:(Ljava/lang/Throwable;)V
+      91: return
+      92: aload_0
+      93: getfield      #6                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      96: aload_1
+      97: invokeinterface #7,  2            // InterfaceMethod io/reactivex/rxjava3/core/Observer.onNext:(Ljava/lang/Object;)V
+     102: return
+    Exception table:
+       from    to  target type
+          26    68    85   Class java/lang/Throwable
+          69    82    85   Class java/lang/Throwable
+
+  public int requestFusion(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: invokevirtual #14                 // Method transitiveBoundaryFusion:(I)I
+       5: ireturn
+
+  public T poll() throws java.lang.Throwable;
+    Code:
+       0: aload_0
+       1: getfield      #15                 // Field qd:Lio/reactivex/rxjava3/operators/QueueDisposable;
+       4: invokeinterface #16,  1           // InterfaceMethod io/reactivex/rxjava3/operators/QueueDisposable.poll:()Ljava/lang/Object;
+       9: astore_1
+      10: aload_1
+      11: ifnonnull     16
+      14: aconst_null
+      15: areturn
+      16: aload_0
+      17: getfield      #2                  // Field keySelector:Lio/reactivex/rxjava3/functions/Function;
+      20: aload_1
+      21: invokeinterface #8,  2            // InterfaceMethod io/reactivex/rxjava3/functions/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+      26: astore_2
+      27: aload_0
+      28: getfield      #9                  // Field hasValue:Z
+      31: ifne          46
+      34: aload_0
+      35: iconst_1
+      36: putfield      #9                  // Field hasValue:Z
+      39: aload_0
+      40: aload_2
+      41: putfield      #10                 // Field last:Ljava/lang/Object;
+      44: aload_1
+      45: areturn
+      46: aload_0
+      47: getfield      #3                  // Field comparer:Lio/reactivex/rxjava3/functions/BiPredicate;
+      50: aload_0
+      51: getfield      #10                 // Field last:Ljava/lang/Object;
+      54: aload_2
+      55: invokeinterface #11,  3           // InterfaceMethod io/reactivex/rxjava3/functions/BiPredicate.test:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      60: ifne          70
+      63: aload_0
+      64: aload_2
+      65: putfield      #10                 // Field last:Ljava/lang/Object;
+      68: aload_1
+      69: areturn
+      70: aload_0
+      71: aload_2
+      72: putfield      #10                 // Field last:Ljava/lang/Object;
+      75: goto          0
+}

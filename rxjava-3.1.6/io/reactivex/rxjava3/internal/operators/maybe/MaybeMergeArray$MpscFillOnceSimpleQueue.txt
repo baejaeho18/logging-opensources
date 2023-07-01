@@ -1,0 +1,157 @@
+Compiled from "MaybeMergeArray.java"
+final class io.reactivex.rxjava3.internal.operators.maybe.MaybeMergeArray$MpscFillOnceSimpleQueue<T> extends java.util.concurrent.atomic.AtomicReferenceArray<T> implements io.reactivex.rxjava3.internal.operators.maybe.MaybeMergeArray$SimpleQueueWithConsumerIndex<T> {
+  private static final long serialVersionUID;
+
+  final java.util.concurrent.atomic.AtomicInteger producerIndex;
+
+  int consumerIndex;
+
+  io.reactivex.rxjava3.internal.operators.maybe.MaybeMergeArray$MpscFillOnceSimpleQueue(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicReferenceArray."<init>":(I)V
+       5: aload_0
+       6: new           #2                  // class java/util/concurrent/atomic/AtomicInteger
+       9: dup
+      10: invokespecial #3                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+      13: putfield      #4                  // Field producerIndex:Ljava/util/concurrent/atomic/AtomicInteger;
+      16: return
+
+  public boolean offer(T);
+    Code:
+       0: aload_1
+       1: ldc           #5                  // String value is null
+       3: invokestatic  #6                  // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+       6: pop
+       7: aload_0
+       8: getfield      #4                  // Field producerIndex:Ljava/util/concurrent/atomic/AtomicInteger;
+      11: invokevirtual #7                  // Method java/util/concurrent/atomic/AtomicInteger.getAndIncrement:()I
+      14: istore_2
+      15: iload_2
+      16: aload_0
+      17: invokevirtual #8                  // Method length:()I
+      20: if_icmpge     31
+      23: aload_0
+      24: iload_2
+      25: aload_1
+      26: invokevirtual #9                  // Method lazySet:(ILjava/lang/Object;)V
+      29: iconst_1
+      30: ireturn
+      31: iconst_0
+      32: ireturn
+
+  public boolean offer(T, T);
+    Code:
+       0: new           #10                 // class java/lang/UnsupportedOperationException
+       3: dup
+       4: invokespecial #11                 // Method java/lang/UnsupportedOperationException."<init>":()V
+       7: athrow
+
+  public T poll();
+    Code:
+       0: aload_0
+       1: getfield      #12                 // Field consumerIndex:I
+       4: istore_1
+       5: iload_1
+       6: aload_0
+       7: invokevirtual #8                  // Method length:()I
+      10: if_icmpne     15
+      13: aconst_null
+      14: areturn
+      15: aload_0
+      16: getfield      #4                  // Field producerIndex:Ljava/util/concurrent/atomic/AtomicInteger;
+      19: astore_2
+      20: aload_0
+      21: iload_1
+      22: invokevirtual #13                 // Method get:(I)Ljava/lang/Object;
+      25: astore_3
+      26: aload_3
+      27: ifnull        45
+      30: aload_0
+      31: iload_1
+      32: iconst_1
+      33: iadd
+      34: putfield      #12                 // Field consumerIndex:I
+      37: aload_0
+      38: iload_1
+      39: aconst_null
+      40: invokevirtual #9                  // Method lazySet:(ILjava/lang/Object;)V
+      43: aload_3
+      44: areturn
+      45: aload_2
+      46: invokevirtual #14                 // Method java/util/concurrent/atomic/AtomicInteger.get:()I
+      49: iload_1
+      50: if_icmpne     55
+      53: aconst_null
+      54: areturn
+      55: goto          20
+
+  public T peek();
+    Code:
+       0: aload_0
+       1: getfield      #12                 // Field consumerIndex:I
+       4: istore_1
+       5: iload_1
+       6: aload_0
+       7: invokevirtual #8                  // Method length:()I
+      10: if_icmpne     15
+      13: aconst_null
+      14: areturn
+      15: aload_0
+      16: iload_1
+      17: invokevirtual #13                 // Method get:(I)Ljava/lang/Object;
+      20: areturn
+
+  public void drop();
+    Code:
+       0: aload_0
+       1: getfield      #12                 // Field consumerIndex:I
+       4: istore_1
+       5: aload_0
+       6: iload_1
+       7: aconst_null
+       8: invokevirtual #9                  // Method lazySet:(ILjava/lang/Object;)V
+      11: aload_0
+      12: iload_1
+      13: iconst_1
+      14: iadd
+      15: putfield      #12                 // Field consumerIndex:I
+      18: return
+
+  public boolean isEmpty();
+    Code:
+       0: aload_0
+       1: getfield      #12                 // Field consumerIndex:I
+       4: aload_0
+       5: invokevirtual #15                 // Method producerIndex:()I
+       8: if_icmpne     15
+      11: iconst_1
+      12: goto          16
+      15: iconst_0
+      16: ireturn
+
+  public void clear();
+    Code:
+       0: aload_0
+       1: invokevirtual #16                 // Method poll:()Ljava/lang/Object;
+       4: ifnull        17
+       7: aload_0
+       8: invokevirtual #17                 // Method isEmpty:()Z
+      11: ifne          17
+      14: goto          0
+      17: return
+
+  public int consumerIndex();
+    Code:
+       0: aload_0
+       1: getfield      #12                 // Field consumerIndex:I
+       4: ireturn
+
+  public int producerIndex();
+    Code:
+       0: aload_0
+       1: getfield      #4                  // Field producerIndex:Ljava/util/concurrent/atomic/AtomicInteger;
+       4: invokevirtual #14                 // Method java/util/concurrent/atomic/AtomicInteger.get:()I
+       7: ireturn
+}

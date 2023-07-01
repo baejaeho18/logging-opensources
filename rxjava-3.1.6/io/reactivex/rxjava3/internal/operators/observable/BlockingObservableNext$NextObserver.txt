@@ -1,0 +1,93 @@
+Compiled from "BlockingObservableNext.java"
+final class io.reactivex.rxjava3.internal.operators.observable.BlockingObservableNext$NextObserver<T> extends io.reactivex.rxjava3.observers.DisposableObserver<io.reactivex.rxjava3.core.Notification<T>> {
+  private final java.util.concurrent.BlockingQueue<io.reactivex.rxjava3.core.Notification<T>> buf;
+
+  final java.util.concurrent.atomic.AtomicInteger waiting;
+
+  io.reactivex.rxjava3.internal.operators.observable.BlockingObservableNext$NextObserver();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method io/reactivex/rxjava3/observers/DisposableObserver."<init>":()V
+       4: aload_0
+       5: new           #2                  // class java/util/concurrent/ArrayBlockingQueue
+       8: dup
+       9: iconst_1
+      10: invokespecial #3                  // Method java/util/concurrent/ArrayBlockingQueue."<init>":(I)V
+      13: putfield      #4                  // Field buf:Ljava/util/concurrent/BlockingQueue;
+      16: aload_0
+      17: new           #5                  // class java/util/concurrent/atomic/AtomicInteger
+      20: dup
+      21: invokespecial #6                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+      24: putfield      #7                  // Field waiting:Ljava/util/concurrent/atomic/AtomicInteger;
+      27: return
+
+  public void onComplete();
+    Code:
+       0: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_1
+       1: invokestatic  #8                  // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+       4: return
+
+  public void onNext(io.reactivex.rxjava3.core.Notification<T>);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field waiting:Ljava/util/concurrent/atomic/AtomicInteger;
+       4: iconst_0
+       5: invokevirtual #9                  // Method java/util/concurrent/atomic/AtomicInteger.getAndSet:(I)I
+       8: iconst_1
+       9: if_icmpeq     19
+      12: aload_1
+      13: invokevirtual #10                 // Method io/reactivex/rxjava3/core/Notification.isOnNext:()Z
+      16: ifne          63
+      19: aload_1
+      20: astore_2
+      21: aload_0
+      22: getfield      #4                  // Field buf:Ljava/util/concurrent/BlockingQueue;
+      25: aload_2
+      26: invokeinterface #11,  2           // InterfaceMethod java/util/concurrent/BlockingQueue.offer:(Ljava/lang/Object;)Z
+      31: ifne          63
+      34: aload_0
+      35: getfield      #4                  // Field buf:Ljava/util/concurrent/BlockingQueue;
+      38: invokeinterface #12,  1           // InterfaceMethod java/util/concurrent/BlockingQueue.poll:()Ljava/lang/Object;
+      43: checkcast     #13                 // class io/reactivex/rxjava3/core/Notification
+      46: astore_3
+      47: aload_3
+      48: ifnull        60
+      51: aload_3
+      52: invokevirtual #10                 // Method io/reactivex/rxjava3/core/Notification.isOnNext:()Z
+      55: ifne          60
+      58: aload_3
+      59: astore_2
+      60: goto          21
+      63: return
+
+  public io.reactivex.rxjava3.core.Notification<T> takeNext() throws java.lang.InterruptedException;
+    Code:
+       0: aload_0
+       1: invokevirtual #14                 // Method setWaiting:()V
+       4: invokestatic  #15                 // Method io/reactivex/rxjava3/internal/util/BlockingHelper.verifyNonBlocking:()V
+       7: aload_0
+       8: getfield      #4                  // Field buf:Ljava/util/concurrent/BlockingQueue;
+      11: invokeinterface #16,  1           // InterfaceMethod java/util/concurrent/BlockingQueue.take:()Ljava/lang/Object;
+      16: checkcast     #13                 // class io/reactivex/rxjava3/core/Notification
+      19: areturn
+
+  void setWaiting();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field waiting:Ljava/util/concurrent/atomic/AtomicInteger;
+       4: iconst_1
+       5: invokevirtual #17                 // Method java/util/concurrent/atomic/AtomicInteger.set:(I)V
+       8: return
+
+  public void onNext(java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: checkcast     #13                 // class io/reactivex/rxjava3/core/Notification
+       5: invokevirtual #18                 // Method onNext:(Lio/reactivex/rxjava3/core/Notification;)V
+       8: return
+}

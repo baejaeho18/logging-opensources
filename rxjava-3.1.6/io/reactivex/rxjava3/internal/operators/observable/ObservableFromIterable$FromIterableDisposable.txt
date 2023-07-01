@@ -1,0 +1,151 @@
+Compiled from "ObservableFromIterable.java"
+final class io.reactivex.rxjava3.internal.operators.observable.ObservableFromIterable$FromIterableDisposable<T> extends io.reactivex.rxjava3.internal.observers.BasicQueueDisposable<T> {
+  final io.reactivex.rxjava3.core.Observer<? super T> downstream;
+
+  final java.util.Iterator<? extends T> it;
+
+  volatile boolean disposed;
+
+  boolean fusionMode;
+
+  boolean done;
+
+  boolean checkNext;
+
+  io.reactivex.rxjava3.internal.operators.observable.ObservableFromIterable$FromIterableDisposable(io.reactivex.rxjava3.core.Observer<? super T>, java.util.Iterator<? extends T>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method io/reactivex/rxjava3/internal/observers/BasicQueueDisposable."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field it:Ljava/util/Iterator;
+      14: return
+
+  void run();
+    Code:
+       0: aload_0
+       1: invokevirtual #4                  // Method isDisposed:()Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: getfield      #3                  // Field it:Ljava/util/Iterator;
+      12: invokeinterface #5,  1            // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      17: ldc           #6                  // String The iterator returned a null value
+      19: invokestatic  #7                  // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+      22: astore_2
+      23: goto          42
+      26: astore_3
+      27: aload_3
+      28: invokestatic  #9                  // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      31: aload_0
+      32: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      35: aload_3
+      36: invokeinterface #10,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      41: return
+      42: aload_0
+      43: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      46: aload_2
+      47: invokeinterface #11,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onNext:(Ljava/lang/Object;)V
+      52: aload_0
+      53: invokevirtual #4                  // Method isDisposed:()Z
+      56: ifeq          60
+      59: return
+      60: aload_0
+      61: getfield      #3                  // Field it:Ljava/util/Iterator;
+      64: invokeinterface #12,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      69: istore_1
+      70: goto          89
+      73: astore_3
+      74: aload_3
+      75: invokestatic  #9                  // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      78: aload_0
+      79: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      82: aload_3
+      83: invokeinterface #10,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      88: return
+      89: iload_1
+      90: ifne          0
+      93: aload_0
+      94: invokevirtual #4                  // Method isDisposed:()Z
+      97: ifne          109
+     100: aload_0
+     101: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+     104: invokeinterface #13,  1           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onComplete:()V
+     109: return
+    Exception table:
+       from    to  target type
+           8    23    26   Class java/lang/Throwable
+          60    70    73   Class java/lang/Throwable
+
+  public int requestFusion(int);
+    Code:
+       0: iload_1
+       1: iconst_1
+       2: iand
+       3: ifeq          13
+       6: aload_0
+       7: iconst_1
+       8: putfield      #15                 // Field fusionMode:Z
+      11: iconst_1
+      12: ireturn
+      13: iconst_0
+      14: ireturn
+
+  public T poll();
+    Code:
+       0: aload_0
+       1: getfield      #16                 // Field done:Z
+       4: ifeq          9
+       7: aconst_null
+       8: areturn
+       9: aload_0
+      10: getfield      #17                 // Field checkNext:Z
+      13: ifeq          35
+      16: aload_0
+      17: getfield      #3                  // Field it:Ljava/util/Iterator;
+      20: invokeinterface #12,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      25: ifne          40
+      28: aload_0
+      29: iconst_1
+      30: putfield      #16                 // Field done:Z
+      33: aconst_null
+      34: areturn
+      35: aload_0
+      36: iconst_1
+      37: putfield      #17                 // Field checkNext:Z
+      40: aload_0
+      41: getfield      #3                  // Field it:Ljava/util/Iterator;
+      44: invokeinterface #5,  1            // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      49: ldc           #6                  // String The iterator returned a null value
+      51: invokestatic  #7                  // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+      54: areturn
+
+  public boolean isEmpty();
+    Code:
+       0: aload_0
+       1: getfield      #16                 // Field done:Z
+       4: ireturn
+
+  public void clear();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: putfield      #16                 // Field done:Z
+       5: return
+
+  public void dispose();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: putfield      #18                 // Field disposed:Z
+       5: return
+
+  public boolean isDisposed();
+    Code:
+       0: aload_0
+       1: getfield      #18                 // Field disposed:Z
+       4: ireturn
+}

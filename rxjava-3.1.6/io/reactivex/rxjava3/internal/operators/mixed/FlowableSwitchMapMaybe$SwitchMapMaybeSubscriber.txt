@@ -1,0 +1,355 @@
+Compiled from "FlowableSwitchMapMaybe.java"
+final class io.reactivex.rxjava3.internal.operators.mixed.FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber<T, R> extends java.util.concurrent.atomic.AtomicInteger implements io.reactivex.rxjava3.core.FlowableSubscriber<T>, org.reactivestreams.Subscription {
+  private static final long serialVersionUID;
+
+  final org.reactivestreams.Subscriber<? super R> downstream;
+
+  final io.reactivex.rxjava3.functions.Function<? super T, ? extends io.reactivex.rxjava3.core.MaybeSource<? extends R>> mapper;
+
+  final boolean delayErrors;
+
+  final io.reactivex.rxjava3.internal.util.AtomicThrowable errors;
+
+  final java.util.concurrent.atomic.AtomicLong requested;
+
+  final java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.internal.operators.mixed.FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver<R>> inner;
+
+  static final io.reactivex.rxjava3.internal.operators.mixed.FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver<java.lang.Object> INNER_DISPOSED;
+
+  org.reactivestreams.Subscription upstream;
+
+  volatile boolean done;
+
+  volatile boolean cancelled;
+
+  long emitted;
+
+  io.reactivex.rxjava3.internal.operators.mixed.FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber(org.reactivestreams.Subscriber<? super R>, io.reactivex.rxjava3.functions.Function<? super T, ? extends io.reactivex.rxjava3.core.MaybeSource<? extends R>>, boolean);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field mapper:Lio/reactivex/rxjava3/functions/Function;
+      14: aload_0
+      15: iload_3
+      16: putfield      #4                  // Field delayErrors:Z
+      19: aload_0
+      20: new           #5                  // class io/reactivex/rxjava3/internal/util/AtomicThrowable
+      23: dup
+      24: invokespecial #6                  // Method io/reactivex/rxjava3/internal/util/AtomicThrowable."<init>":()V
+      27: putfield      #7                  // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      30: aload_0
+      31: new           #8                  // class java/util/concurrent/atomic/AtomicLong
+      34: dup
+      35: invokespecial #9                  // Method java/util/concurrent/atomic/AtomicLong."<init>":()V
+      38: putfield      #10                 // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+      41: aload_0
+      42: new           #11                 // class java/util/concurrent/atomic/AtomicReference
+      45: dup
+      46: invokespecial #12                 // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+      49: putfield      #13                 // Field inner:Ljava/util/concurrent/atomic/AtomicReference;
+      52: return
+
+  public void onSubscribe(org.reactivestreams.Subscription);
+    Code:
+       0: aload_0
+       1: getfield      #14                 // Field upstream:Lorg/reactivestreams/Subscription;
+       4: aload_1
+       5: invokestatic  #15                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.validate:(Lorg/reactivestreams/Subscription;Lorg/reactivestreams/Subscription;)Z
+       8: ifeq          35
+      11: aload_0
+      12: aload_1
+      13: putfield      #14                 // Field upstream:Lorg/reactivestreams/Subscription;
+      16: aload_0
+      17: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      20: aload_0
+      21: invokeinterface #16,  2           // InterfaceMethod org/reactivestreams/Subscriber.onSubscribe:(Lorg/reactivestreams/Subscription;)V
+      26: aload_1
+      27: ldc2_w        #18                 // long 9223372036854775807l
+      30: invokeinterface #20,  3           // InterfaceMethod org/reactivestreams/Subscription.request:(J)V
+      35: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field inner:Ljava/util/concurrent/atomic/AtomicReference;
+       4: invokevirtual #21                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+       7: checkcast     #22                 // class io/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver
+      10: astore_2
+      11: aload_2
+      12: ifnull        19
+      15: aload_2
+      16: invokevirtual #23                 // Method io/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver.dispose:()V
+      19: aload_0
+      20: getfield      #3                  // Field mapper:Lio/reactivex/rxjava3/functions/Function;
+      23: aload_1
+      24: invokeinterface #24,  2           // InterfaceMethod io/reactivex/rxjava3/functions/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+      29: ldc           #25                 // String The mapper returned a null MaybeSource
+      31: invokestatic  #26                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+      34: checkcast     #27                 // class io/reactivex/rxjava3/core/MaybeSource
+      37: astore_3
+      38: goto          75
+      41: astore        4
+      43: aload         4
+      45: invokestatic  #29                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      48: aload_0
+      49: getfield      #14                 // Field upstream:Lorg/reactivestreams/Subscription;
+      52: invokeinterface #30,  1           // InterfaceMethod org/reactivestreams/Subscription.cancel:()V
+      57: aload_0
+      58: getfield      #13                 // Field inner:Ljava/util/concurrent/atomic/AtomicReference;
+      61: getstatic     #31                 // Field INNER_DISPOSED:Lio/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver;
+      64: invokevirtual #32                 // Method java/util/concurrent/atomic/AtomicReference.getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;
+      67: pop
+      68: aload_0
+      69: aload         4
+      71: invokevirtual #33                 // Method onError:(Ljava/lang/Throwable;)V
+      74: return
+      75: new           #22                 // class io/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver
+      78: dup
+      79: aload_0
+      80: invokespecial #34                 // Method io/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver."<init>":(Lio/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber;)V
+      83: astore        4
+      85: aload_0
+      86: getfield      #13                 // Field inner:Ljava/util/concurrent/atomic/AtomicReference;
+      89: invokevirtual #21                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+      92: checkcast     #22                 // class io/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver
+      95: astore_2
+      96: aload_2
+      97: getstatic     #31                 // Field INNER_DISPOSED:Lio/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver;
+     100: if_acmpne     106
+     103: goto          130
+     106: aload_0
+     107: getfield      #13                 // Field inner:Ljava/util/concurrent/atomic/AtomicReference;
+     110: aload_2
+     111: aload         4
+     113: invokevirtual #35                 // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+     116: ifeq          85
+     119: aload_3
+     120: aload         4
+     122: invokeinterface #36,  2           // InterfaceMethod io/reactivex/rxjava3/core/MaybeSource.subscribe:(Lio/reactivex/rxjava3/core/MaybeObserver;)V
+     127: goto          130
+     130: return
+    Exception table:
+       from    to  target type
+          19    38    41   Class java/lang/Throwable
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+       4: aload_1
+       5: invokevirtual #37                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryAddThrowableOrReport:(Ljava/lang/Throwable;)Z
+       8: ifeq          31
+      11: aload_0
+      12: getfield      #4                  // Field delayErrors:Z
+      15: ifne          22
+      18: aload_0
+      19: invokevirtual #38                 // Method disposeInner:()V
+      22: aload_0
+      23: iconst_1
+      24: putfield      #39                 // Field done:Z
+      27: aload_0
+      28: invokevirtual #40                 // Method drain:()V
+      31: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: putfield      #39                 // Field done:Z
+       5: aload_0
+       6: invokevirtual #40                 // Method drain:()V
+       9: return
+
+  void disposeInner();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field inner:Ljava/util/concurrent/atomic/AtomicReference;
+       4: getstatic     #31                 // Field INNER_DISPOSED:Lio/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver;
+       7: invokevirtual #32                 // Method java/util/concurrent/atomic/AtomicReference.getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;
+      10: checkcast     #22                 // class io/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver
+      13: astore_1
+      14: aload_1
+      15: ifnull        29
+      18: aload_1
+      19: getstatic     #31                 // Field INNER_DISPOSED:Lio/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver;
+      22: if_acmpeq     29
+      25: aload_1
+      26: invokevirtual #23                 // Method io/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver.dispose:()V
+      29: return
+
+  public void request(long);
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+       4: lload_1
+       5: invokestatic  #41                 // Method io/reactivex/rxjava3/internal/util/BackpressureHelper.add:(Ljava/util/concurrent/atomic/AtomicLong;J)J
+       8: pop2
+       9: aload_0
+      10: invokevirtual #40                 // Method drain:()V
+      13: return
+
+  public void cancel();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: putfield      #42                 // Field cancelled:Z
+       5: aload_0
+       6: getfield      #14                 // Field upstream:Lorg/reactivestreams/Subscription;
+       9: invokeinterface #30,  1           // InterfaceMethod org/reactivestreams/Subscription.cancel:()V
+      14: aload_0
+      15: invokevirtual #38                 // Method disposeInner:()V
+      18: aload_0
+      19: getfield      #7                  // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      22: invokevirtual #43                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryTerminateAndReport:()V
+      25: return
+
+  void innerError(io.reactivex.rxjava3.internal.operators.mixed.FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver<R>, java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field inner:Ljava/util/concurrent/atomic/AtomicReference;
+       4: aload_1
+       5: aconst_null
+       6: invokevirtual #35                 // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+       9: ifeq          50
+      12: aload_0
+      13: getfield      #7                  // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      16: aload_2
+      17: invokevirtual #37                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryAddThrowableOrReport:(Ljava/lang/Throwable;)Z
+      20: ifeq          54
+      23: aload_0
+      24: getfield      #4                  // Field delayErrors:Z
+      27: ifne          43
+      30: aload_0
+      31: getfield      #14                 // Field upstream:Lorg/reactivestreams/Subscription;
+      34: invokeinterface #30,  1           // InterfaceMethod org/reactivestreams/Subscription.cancel:()V
+      39: aload_0
+      40: invokevirtual #38                 // Method disposeInner:()V
+      43: aload_0
+      44: invokevirtual #40                 // Method drain:()V
+      47: goto          54
+      50: aload_2
+      51: invokestatic  #44                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      54: return
+
+  void innerComplete(io.reactivex.rxjava3.internal.operators.mixed.FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver<R>);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field inner:Ljava/util/concurrent/atomic/AtomicReference;
+       4: aload_1
+       5: aconst_null
+       6: invokevirtual #35                 // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+       9: ifeq          16
+      12: aload_0
+      13: invokevirtual #40                 // Method drain:()V
+      16: return
+
+  void drain();
+    Code:
+       0: aload_0
+       1: invokevirtual #45                 // Method getAndIncrement:()I
+       4: ifeq          8
+       7: return
+       8: iconst_1
+       9: istore_1
+      10: aload_0
+      11: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      14: astore_2
+      15: aload_0
+      16: getfield      #7                  // Field errors:Lio/reactivex/rxjava3/internal/util/AtomicThrowable;
+      19: astore_3
+      20: aload_0
+      21: getfield      #13                 // Field inner:Ljava/util/concurrent/atomic/AtomicReference;
+      24: astore        4
+      26: aload_0
+      27: getfield      #10                 // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+      30: astore        5
+      32: aload_0
+      33: getfield      #46                 // Field emitted:J
+      36: lstore        6
+      38: aload_0
+      39: getfield      #42                 // Field cancelled:Z
+      42: ifeq          46
+      45: return
+      46: aload_3
+      47: invokevirtual #47                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.get:()Ljava/lang/Object;
+      50: ifnull        66
+      53: aload_0
+      54: getfield      #4                  // Field delayErrors:Z
+      57: ifne          66
+      60: aload_3
+      61: aload_2
+      62: invokevirtual #48                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryTerminateConsumer:(Lorg/reactivestreams/Subscriber;)V
+      65: return
+      66: aload_0
+      67: getfield      #39                 // Field done:Z
+      70: istore        8
+      72: aload         4
+      74: invokevirtual #21                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+      77: checkcast     #22                 // class io/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver
+      80: astore        9
+      82: aload         9
+      84: ifnonnull     91
+      87: iconst_1
+      88: goto          92
+      91: iconst_0
+      92: istore        10
+      94: iload         8
+      96: ifeq          110
+      99: iload         10
+     101: ifeq          110
+     104: aload_3
+     105: aload_2
+     106: invokevirtual #48                 // Method io/reactivex/rxjava3/internal/util/AtomicThrowable.tryTerminateConsumer:(Lorg/reactivestreams/Subscriber;)V
+     109: return
+     110: iload         10
+     112: ifne          166
+     115: aload         9
+     117: getfield      #49                 // Field io/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver.item:Ljava/lang/Object;
+     120: ifnull        166
+     123: lload         6
+     125: aload         5
+     127: invokevirtual #50                 // Method java/util/concurrent/atomic/AtomicLong.get:()J
+     130: lcmp
+     131: ifne          137
+     134: goto          166
+     137: aload         4
+     139: aload         9
+     141: aconst_null
+     142: invokevirtual #35                 // Method java/util/concurrent/atomic/AtomicReference.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z
+     145: pop
+     146: aload_2
+     147: aload         9
+     149: getfield      #49                 // Field io/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver.item:Ljava/lang/Object;
+     152: invokeinterface #51,  2           // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+     157: lload         6
+     159: lconst_1
+     160: ladd
+     161: lstore        6
+     163: goto          38
+     166: aload_0
+     167: lload         6
+     169: putfield      #46                 // Field emitted:J
+     172: aload_0
+     173: iload_1
+     174: ineg
+     175: invokevirtual #52                 // Method addAndGet:(I)I
+     178: istore_1
+     179: iload_1
+     180: ifne          38
+     183: goto          186
+     186: return
+
+  static {};
+    Code:
+       0: new           #22                 // class io/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver
+       3: dup
+       4: aconst_null
+       5: invokespecial #34                 // Method io/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver."<init>":(Lio/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber;)V
+       8: putstatic     #31                 // Field INNER_DISPOSED:Lio/reactivex/rxjava3/internal/operators/mixed/FlowableSwitchMapMaybe$SwitchMapMaybeSubscriber$SwitchMapMaybeObserver;
+      11: return
+}

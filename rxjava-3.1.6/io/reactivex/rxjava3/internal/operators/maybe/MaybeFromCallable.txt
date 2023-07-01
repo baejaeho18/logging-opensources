@@ -1,0 +1,64 @@
+Compiled from "MaybeFromCallable.java"
+public final class io.reactivex.rxjava3.internal.operators.maybe.MaybeFromCallable<T> extends io.reactivex.rxjava3.core.Maybe<T> implements io.reactivex.rxjava3.functions.Supplier<T> {
+  final java.util.concurrent.Callable<? extends T> callable;
+
+  public io.reactivex.rxjava3.internal.operators.maybe.MaybeFromCallable(java.util.concurrent.Callable<? extends T>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method io/reactivex/rxjava3/core/Maybe."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field callable:Ljava/util/concurrent/Callable;
+       9: return
+
+  protected void subscribeActual(io.reactivex.rxjava3.core.MaybeObserver<? super T>);
+    Code:
+       0: invokestatic  #3                  // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.empty:()Lio/reactivex/rxjava3/disposables/Disposable;
+       3: astore_2
+       4: aload_1
+       5: aload_2
+       6: invokeinterface #4,  2            // InterfaceMethod io/reactivex/rxjava3/core/MaybeObserver.onSubscribe:(Lio/reactivex/rxjava3/disposables/Disposable;)V
+      11: aload_2
+      12: invokeinterface #5,  1            // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.isDisposed:()Z
+      17: ifne          95
+      20: aload_0
+      21: getfield      #2                  // Field callable:Ljava/util/concurrent/Callable;
+      24: invokeinterface #6,  1            // InterfaceMethod java/util/concurrent/Callable.call:()Ljava/lang/Object;
+      29: astore_3
+      30: goto          66
+      33: astore        4
+      35: aload         4
+      37: invokestatic  #8                  // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      40: aload_2
+      41: invokeinterface #5,  1            // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.isDisposed:()Z
+      46: ifne          60
+      49: aload_1
+      50: aload         4
+      52: invokeinterface #9,  2            // InterfaceMethod io/reactivex/rxjava3/core/MaybeObserver.onError:(Ljava/lang/Throwable;)V
+      57: goto          65
+      60: aload         4
+      62: invokestatic  #10                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      65: return
+      66: aload_2
+      67: invokeinterface #5,  1            // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.isDisposed:()Z
+      72: ifne          95
+      75: aload_3
+      76: ifnonnull     88
+      79: aload_1
+      80: invokeinterface #11,  1           // InterfaceMethod io/reactivex/rxjava3/core/MaybeObserver.onComplete:()V
+      85: goto          95
+      88: aload_1
+      89: aload_3
+      90: invokeinterface #12,  2           // InterfaceMethod io/reactivex/rxjava3/core/MaybeObserver.onSuccess:(Ljava/lang/Object;)V
+      95: return
+    Exception table:
+       from    to  target type
+          20    30    33   Class java/lang/Throwable
+
+  public T get() throws java.lang.Exception;
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field callable:Ljava/util/concurrent/Callable;
+       4: invokeinterface #6,  1            // InterfaceMethod java/util/concurrent/Callable.call:()Ljava/lang/Object;
+       9: areturn
+}

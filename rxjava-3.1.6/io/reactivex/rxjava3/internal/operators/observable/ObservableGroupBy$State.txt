@@ -1,0 +1,341 @@
+Compiled from "ObservableGroupBy.java"
+final class io.reactivex.rxjava3.internal.operators.observable.ObservableGroupBy$State<T, K> extends java.util.concurrent.atomic.AtomicInteger implements io.reactivex.rxjava3.disposables.Disposable, io.reactivex.rxjava3.core.ObservableSource<T> {
+  private static final long serialVersionUID;
+
+  final K key;
+
+  final io.reactivex.rxjava3.operators.SpscLinkedArrayQueue<T> queue;
+
+  final io.reactivex.rxjava3.internal.operators.observable.ObservableGroupBy$GroupByObserver<?, K, T> parent;
+
+  final boolean delayError;
+
+  volatile boolean done;
+
+  java.lang.Throwable error;
+
+  final java.util.concurrent.atomic.AtomicBoolean cancelled;
+
+  final java.util.concurrent.atomic.AtomicReference<io.reactivex.rxjava3.core.Observer<? super T>> actual;
+
+  final java.util.concurrent.atomic.AtomicInteger once;
+
+  static final int FRESH;
+
+  static final int HAS_SUBSCRIBER;
+
+  static final int ABANDONED;
+
+  static final int ABANDONED_HAS_SUBSCRIBER;
+
+  io.reactivex.rxjava3.internal.operators.observable.ObservableGroupBy$State(int, io.reactivex.rxjava3.internal.operators.observable.ObservableGroupBy$GroupByObserver<?, K, T>, K, boolean);
+    Code:
+       0: aload_0
+       1: invokespecial #2                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+       4: aload_0
+       5: new           #3                  // class java/util/concurrent/atomic/AtomicBoolean
+       8: dup
+       9: invokespecial #4                  // Method java/util/concurrent/atomic/AtomicBoolean."<init>":()V
+      12: putfield      #5                  // Field cancelled:Ljava/util/concurrent/atomic/AtomicBoolean;
+      15: aload_0
+      16: new           #6                  // class java/util/concurrent/atomic/AtomicReference
+      19: dup
+      20: invokespecial #7                  // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+      23: putfield      #8                  // Field actual:Ljava/util/concurrent/atomic/AtomicReference;
+      26: aload_0
+      27: new           #9                  // class java/util/concurrent/atomic/AtomicInteger
+      30: dup
+      31: invokespecial #2                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":()V
+      34: putfield      #10                 // Field once:Ljava/util/concurrent/atomic/AtomicInteger;
+      37: aload_0
+      38: new           #11                 // class io/reactivex/rxjava3/operators/SpscLinkedArrayQueue
+      41: dup
+      42: iload_1
+      43: invokespecial #12                 // Method io/reactivex/rxjava3/operators/SpscLinkedArrayQueue."<init>":(I)V
+      46: putfield      #13                 // Field queue:Lio/reactivex/rxjava3/operators/SpscLinkedArrayQueue;
+      49: aload_0
+      50: aload_2
+      51: putfield      #14                 // Field parent:Lio/reactivex/rxjava3/internal/operators/observable/ObservableGroupBy$GroupByObserver;
+      54: aload_0
+      55: aload_3
+      56: putfield      #15                 // Field key:Ljava/lang/Object;
+      59: aload_0
+      60: iload         4
+      62: putfield      #16                 // Field delayError:Z
+      65: return
+
+  public void dispose();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field cancelled:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: iconst_0
+       5: iconst_1
+       6: invokevirtual #17                 // Method java/util/concurrent/atomic/AtomicBoolean.compareAndSet:(ZZ)Z
+       9: ifeq          31
+      12: aload_0
+      13: invokevirtual #18                 // Method getAndIncrement:()I
+      16: ifne          31
+      19: aload_0
+      20: getfield      #8                  // Field actual:Ljava/util/concurrent/atomic/AtomicReference;
+      23: aconst_null
+      24: invokevirtual #19                 // Method java/util/concurrent/atomic/AtomicReference.lazySet:(Ljava/lang/Object;)V
+      27: aload_0
+      28: invokevirtual #20                 // Method cancelParent:()V
+      31: return
+
+  public boolean isDisposed();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field cancelled:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: invokevirtual #21                 // Method java/util/concurrent/atomic/AtomicBoolean.get:()Z
+       7: ireturn
+
+  public void subscribe(io.reactivex.rxjava3.core.Observer<? super T>);
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field once:Ljava/util/concurrent/atomic/AtomicInteger;
+       4: invokevirtual #22                 // Method java/util/concurrent/atomic/AtomicInteger.get:()I
+       7: istore_2
+       8: iload_2
+       9: iconst_1
+      10: iand
+      11: ifeq          17
+      14: goto          77
+      17: iload_2
+      18: iconst_1
+      19: ior
+      20: istore_3
+      21: aload_0
+      22: getfield      #10                 // Field once:Ljava/util/concurrent/atomic/AtomicInteger;
+      25: iload_2
+      26: iload_3
+      27: invokevirtual #23                 // Method java/util/concurrent/atomic/AtomicInteger.compareAndSet:(II)Z
+      30: ifeq          74
+      33: aload_1
+      34: aload_0
+      35: invokeinterface #24,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onSubscribe:(Lio/reactivex/rxjava3/disposables/Disposable;)V
+      40: aload_0
+      41: getfield      #8                  // Field actual:Ljava/util/concurrent/atomic/AtomicReference;
+      44: aload_1
+      45: invokevirtual #19                 // Method java/util/concurrent/atomic/AtomicReference.lazySet:(Ljava/lang/Object;)V
+      48: aload_0
+      49: getfield      #5                  // Field cancelled:Ljava/util/concurrent/atomic/AtomicBoolean;
+      52: invokevirtual #21                 // Method java/util/concurrent/atomic/AtomicBoolean.get:()Z
+      55: ifeq          69
+      58: aload_0
+      59: getfield      #8                  // Field actual:Ljava/util/concurrent/atomic/AtomicReference;
+      62: aconst_null
+      63: invokevirtual #19                 // Method java/util/concurrent/atomic/AtomicReference.lazySet:(Ljava/lang/Object;)V
+      66: goto          73
+      69: aload_0
+      70: invokevirtual #25                 // Method drain:()V
+      73: return
+      74: goto          0
+      77: new           #26                 // class java/lang/IllegalStateException
+      80: dup
+      81: ldc           #27                 // String Only one Observer allowed!
+      83: invokespecial #28                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      86: aload_1
+      87: invokestatic  #29                 // Method io/reactivex/rxjava3/internal/disposables/EmptyDisposable.error:(Ljava/lang/Throwable;Lio/reactivex/rxjava3/core/Observer;)V
+      90: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field queue:Lio/reactivex/rxjava3/operators/SpscLinkedArrayQueue;
+       4: aload_1
+       5: invokevirtual #30                 // Method io/reactivex/rxjava3/operators/SpscLinkedArrayQueue.offer:(Ljava/lang/Object;)Z
+       8: pop
+       9: aload_0
+      10: invokevirtual #25                 // Method drain:()V
+      13: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #31                 // Field error:Ljava/lang/Throwable;
+       5: aload_0
+       6: iconst_1
+       7: putfield      #32                 // Field done:Z
+      10: aload_0
+      11: invokevirtual #25                 // Method drain:()V
+      14: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: putfield      #32                 // Field done:Z
+       5: aload_0
+       6: invokevirtual #25                 // Method drain:()V
+       9: return
+
+  void drain();
+    Code:
+       0: aload_0
+       1: invokevirtual #18                 // Method getAndIncrement:()I
+       4: ifeq          8
+       7: return
+       8: iconst_1
+       9: istore_1
+      10: aload_0
+      11: getfield      #13                 // Field queue:Lio/reactivex/rxjava3/operators/SpscLinkedArrayQueue;
+      14: astore_2
+      15: aload_0
+      16: getfield      #16                 // Field delayError:Z
+      19: istore_3
+      20: aload_0
+      21: getfield      #8                  // Field actual:Ljava/util/concurrent/atomic/AtomicReference;
+      24: invokevirtual #33                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+      27: checkcast     #34                 // class io/reactivex/rxjava3/core/Observer
+      30: astore        4
+      32: aload         4
+      34: ifnull        96
+      37: aload_0
+      38: getfield      #32                 // Field done:Z
+      41: istore        5
+      43: aload_2
+      44: invokevirtual #35                 // Method io/reactivex/rxjava3/operators/SpscLinkedArrayQueue.poll:()Ljava/lang/Object;
+      47: astore        6
+      49: aload         6
+      51: ifnonnull     58
+      54: iconst_1
+      55: goto          59
+      58: iconst_0
+      59: istore        7
+      61: aload_0
+      62: iload         5
+      64: iload         7
+      66: aload         4
+      68: iload_3
+      69: invokevirtual #36                 // Method checkTerminated:(ZZLio/reactivex/rxjava3/core/Observer;Z)Z
+      72: ifeq          76
+      75: return
+      76: iload         7
+      78: ifeq          84
+      81: goto          96
+      84: aload         4
+      86: aload         6
+      88: invokeinterface #37,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onNext:(Ljava/lang/Object;)V
+      93: goto          37
+      96: aload_0
+      97: iload_1
+      98: ineg
+      99: invokevirtual #38                 // Method addAndGet:(I)I
+     102: istore_1
+     103: iload_1
+     104: ifne          110
+     107: goto          130
+     110: aload         4
+     112: ifnonnull     32
+     115: aload_0
+     116: getfield      #8                  // Field actual:Ljava/util/concurrent/atomic/AtomicReference;
+     119: invokevirtual #33                 // Method java/util/concurrent/atomic/AtomicReference.get:()Ljava/lang/Object;
+     122: checkcast     #34                 // class io/reactivex/rxjava3/core/Observer
+     125: astore        4
+     127: goto          32
+     130: return
+
+  void cancelParent();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field once:Ljava/util/concurrent/atomic/AtomicInteger;
+       4: invokevirtual #22                 // Method java/util/concurrent/atomic/AtomicInteger.get:()I
+       7: iconst_2
+       8: iand
+       9: ifne          23
+      12: aload_0
+      13: getfield      #14                 // Field parent:Lio/reactivex/rxjava3/internal/operators/observable/ObservableGroupBy$GroupByObserver;
+      16: aload_0
+      17: getfield      #15                 // Field key:Ljava/lang/Object;
+      20: invokevirtual #39                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableGroupBy$GroupByObserver.cancel:(Ljava/lang/Object;)V
+      23: return
+
+  boolean tryAbandon();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field once:Ljava/util/concurrent/atomic/AtomicInteger;
+       4: invokevirtual #22                 // Method java/util/concurrent/atomic/AtomicInteger.get:()I
+       7: ifne          26
+      10: aload_0
+      11: getfield      #10                 // Field once:Ljava/util/concurrent/atomic/AtomicInteger;
+      14: iconst_0
+      15: iconst_2
+      16: invokevirtual #23                 // Method java/util/concurrent/atomic/AtomicInteger.compareAndSet:(II)Z
+      19: ifeq          26
+      22: iconst_1
+      23: goto          27
+      26: iconst_0
+      27: ireturn
+
+  boolean checkTerminated(boolean, boolean, io.reactivex.rxjava3.core.Observer<? super T>, boolean);
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field cancelled:Ljava/util/concurrent/atomic/AtomicBoolean;
+       4: invokevirtual #21                 // Method java/util/concurrent/atomic/AtomicBoolean.get:()Z
+       7: ifeq          31
+      10: aload_0
+      11: getfield      #13                 // Field queue:Lio/reactivex/rxjava3/operators/SpscLinkedArrayQueue;
+      14: invokevirtual #40                 // Method io/reactivex/rxjava3/operators/SpscLinkedArrayQueue.clear:()V
+      17: aload_0
+      18: getfield      #8                  // Field actual:Ljava/util/concurrent/atomic/AtomicReference;
+      21: aconst_null
+      22: invokevirtual #19                 // Method java/util/concurrent/atomic/AtomicReference.lazySet:(Ljava/lang/Object;)V
+      25: aload_0
+      26: invokevirtual #20                 // Method cancelParent:()V
+      29: iconst_1
+      30: ireturn
+      31: iload_1
+      32: ifeq          138
+      35: iload         4
+      37: ifeq          82
+      40: iload_2
+      41: ifeq          138
+      44: aload_0
+      45: getfield      #31                 // Field error:Ljava/lang/Throwable;
+      48: astore        5
+      50: aload_0
+      51: getfield      #8                  // Field actual:Ljava/util/concurrent/atomic/AtomicReference;
+      54: aconst_null
+      55: invokevirtual #19                 // Method java/util/concurrent/atomic/AtomicReference.lazySet:(Ljava/lang/Object;)V
+      58: aload         5
+      60: ifnull        74
+      63: aload_3
+      64: aload         5
+      66: invokeinterface #41,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      71: goto          80
+      74: aload_3
+      75: invokeinterface #42,  1           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onComplete:()V
+      80: iconst_1
+      81: ireturn
+      82: aload_0
+      83: getfield      #31                 // Field error:Ljava/lang/Throwable;
+      86: astore        5
+      88: aload         5
+      90: ifnull        118
+      93: aload_0
+      94: getfield      #13                 // Field queue:Lio/reactivex/rxjava3/operators/SpscLinkedArrayQueue;
+      97: invokevirtual #40                 // Method io/reactivex/rxjava3/operators/SpscLinkedArrayQueue.clear:()V
+     100: aload_0
+     101: getfield      #8                  // Field actual:Ljava/util/concurrent/atomic/AtomicReference;
+     104: aconst_null
+     105: invokevirtual #19                 // Method java/util/concurrent/atomic/AtomicReference.lazySet:(Ljava/lang/Object;)V
+     108: aload_3
+     109: aload         5
+     111: invokeinterface #41,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+     116: iconst_1
+     117: ireturn
+     118: iload_2
+     119: ifeq          138
+     122: aload_0
+     123: getfield      #8                  // Field actual:Ljava/util/concurrent/atomic/AtomicReference;
+     126: aconst_null
+     127: invokevirtual #19                 // Method java/util/concurrent/atomic/AtomicReference.lazySet:(Ljava/lang/Object;)V
+     130: aload_3
+     131: invokeinterface #42,  1           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onComplete:()V
+     136: iconst_1
+     137: ireturn
+     138: iconst_0
+     139: ireturn
+}

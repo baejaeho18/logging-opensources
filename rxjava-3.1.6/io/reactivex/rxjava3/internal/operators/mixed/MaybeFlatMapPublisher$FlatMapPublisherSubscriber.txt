@@ -1,0 +1,128 @@
+Compiled from "MaybeFlatMapPublisher.java"
+final class io.reactivex.rxjava3.internal.operators.mixed.MaybeFlatMapPublisher$FlatMapPublisherSubscriber<T, R> extends java.util.concurrent.atomic.AtomicReference<org.reactivestreams.Subscription> implements io.reactivex.rxjava3.core.FlowableSubscriber<R>, io.reactivex.rxjava3.core.MaybeObserver<T>, org.reactivestreams.Subscription {
+  private static final long serialVersionUID;
+
+  final org.reactivestreams.Subscriber<? super R> downstream;
+
+  final io.reactivex.rxjava3.functions.Function<? super T, ? extends org.reactivestreams.Publisher<? extends R>> mapper;
+
+  io.reactivex.rxjava3.disposables.Disposable upstream;
+
+  final java.util.concurrent.atomic.AtomicLong requested;
+
+  io.reactivex.rxjava3.internal.operators.mixed.MaybeFlatMapPublisher$FlatMapPublisherSubscriber(org.reactivestreams.Subscriber<? super R>, io.reactivex.rxjava3.functions.Function<? super T, ? extends org.reactivestreams.Publisher<? extends R>>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicReference."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       9: aload_0
+      10: aload_2
+      11: putfield      #3                  // Field mapper:Lio/reactivex/rxjava3/functions/Function;
+      14: aload_0
+      15: new           #4                  // class java/util/concurrent/atomic/AtomicLong
+      18: dup
+      19: invokespecial #5                  // Method java/util/concurrent/atomic/AtomicLong."<init>":()V
+      22: putfield      #6                  // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+      25: return
+
+  public void onNext(R);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       4: aload_1
+       5: invokeinterface #7,  2            // InterfaceMethod org/reactivestreams/Subscriber.onNext:(Ljava/lang/Object;)V
+      10: return
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       4: aload_1
+       5: invokeinterface #8,  2            // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      10: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+       4: invokeinterface #9,  1            // InterfaceMethod org/reactivestreams/Subscriber.onComplete:()V
+       9: return
+
+  public void request(long);
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #6                  // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+       5: lload_1
+       6: invokestatic  #10                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.deferredRequest:(Ljava/util/concurrent/atomic/AtomicReference;Ljava/util/concurrent/atomic/AtomicLong;J)V
+       9: return
+
+  public void cancel();
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+       4: invokeinterface #12,  1           // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.dispose:()V
+       9: aload_0
+      10: invokestatic  #13                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.cancel:(Ljava/util/concurrent/atomic/AtomicReference;)Z
+      13: pop
+      14: return
+
+  public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: aload_0
+       1: getfield      #11                 // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+       4: aload_1
+       5: invokestatic  #14                 // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.validate:(Lio/reactivex/rxjava3/disposables/Disposable;Lio/reactivex/rxjava3/disposables/Disposable;)Z
+       8: ifeq          26
+      11: aload_0
+      12: aload_1
+      13: putfield      #11                 // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+      16: aload_0
+      17: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      20: aload_0
+      21: invokeinterface #15,  2           // InterfaceMethod org/reactivestreams/Subscriber.onSubscribe:(Lorg/reactivestreams/Subscription;)V
+      26: return
+
+  public void onSuccess(T);
+    Code:
+       0: aload_0
+       1: getfield      #3                  // Field mapper:Lio/reactivex/rxjava3/functions/Function;
+       4: aload_1
+       5: invokeinterface #16,  2           // InterfaceMethod io/reactivex/rxjava3/functions/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+      10: ldc           #17                 // String The mapper returned a null Publisher
+      12: invokestatic  #18                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+      15: checkcast     #19                 // class org/reactivestreams/Publisher
+      18: astore_2
+      19: goto          38
+      22: astore_3
+      23: aload_3
+      24: invokestatic  #21                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      27: aload_0
+      28: getfield      #2                  // Field downstream:Lorg/reactivestreams/Subscriber;
+      31: aload_3
+      32: invokeinterface #8,  2            // InterfaceMethod org/reactivestreams/Subscriber.onError:(Ljava/lang/Throwable;)V
+      37: return
+      38: aload_0
+      39: invokevirtual #22                 // Method get:()Ljava/lang/Object;
+      42: getstatic     #23                 // Field io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.CANCELLED:Lio/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper;
+      45: if_acmpeq     55
+      48: aload_2
+      49: aload_0
+      50: invokeinterface #24,  2           // InterfaceMethod org/reactivestreams/Publisher.subscribe:(Lorg/reactivestreams/Subscriber;)V
+      55: return
+    Exception table:
+       from    to  target type
+           0    19    22   Class java/lang/Throwable
+
+  public void onSubscribe(org.reactivestreams.Subscription);
+    Code:
+       0: aload_0
+       1: aload_0
+       2: getfield      #6                  // Field requested:Ljava/util/concurrent/atomic/AtomicLong;
+       5: aload_1
+       6: invokestatic  #25                 // Method io/reactivex/rxjava3/internal/subscriptions/SubscriptionHelper.deferredSetOnce:(Ljava/util/concurrent/atomic/AtomicReference;Ljava/util/concurrent/atomic/AtomicLong;Lorg/reactivestreams/Subscription;)Z
+       9: pop
+      10: return
+}

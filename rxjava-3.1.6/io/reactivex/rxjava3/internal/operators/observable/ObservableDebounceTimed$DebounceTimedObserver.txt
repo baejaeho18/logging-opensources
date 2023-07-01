@@ -1,0 +1,215 @@
+Compiled from "ObservableDebounceTimed.java"
+final class io.reactivex.rxjava3.internal.operators.observable.ObservableDebounceTimed$DebounceTimedObserver<T> implements io.reactivex.rxjava3.core.Observer<T>, io.reactivex.rxjava3.disposables.Disposable {
+  final io.reactivex.rxjava3.core.Observer<? super T> downstream;
+
+  final long timeout;
+
+  final java.util.concurrent.TimeUnit unit;
+
+  final io.reactivex.rxjava3.core.Scheduler$Worker worker;
+
+  final io.reactivex.rxjava3.functions.Consumer<? super T> onDropped;
+
+  io.reactivex.rxjava3.disposables.Disposable upstream;
+
+  io.reactivex.rxjava3.internal.operators.observable.ObservableDebounceTimed$DebounceEmitter<T> timer;
+
+  volatile long index;
+
+  boolean done;
+
+  io.reactivex.rxjava3.internal.operators.observable.ObservableDebounceTimed$DebounceTimedObserver(io.reactivex.rxjava3.core.Observer<? super T>, long, java.util.concurrent.TimeUnit, io.reactivex.rxjava3.core.Scheduler$Worker, io.reactivex.rxjava3.functions.Consumer<? super T>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+       9: aload_0
+      10: lload_2
+      11: putfield      #3                  // Field timeout:J
+      14: aload_0
+      15: aload         4
+      17: putfield      #4                  // Field unit:Ljava/util/concurrent/TimeUnit;
+      20: aload_0
+      21: aload         5
+      23: putfield      #5                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      26: aload_0
+      27: aload         6
+      29: putfield      #6                  // Field onDropped:Lio/reactivex/rxjava3/functions/Consumer;
+      32: return
+
+  public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+       4: aload_1
+       5: invokestatic  #8                  // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.validate:(Lio/reactivex/rxjava3/disposables/Disposable;Lio/reactivex/rxjava3/disposables/Disposable;)Z
+       8: ifeq          26
+      11: aload_0
+      12: aload_1
+      13: putfield      #7                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+      16: aload_0
+      17: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      20: aload_0
+      21: invokeinterface #9,  2            // InterfaceMethod io/reactivex/rxjava3/core/Observer.onSubscribe:(Lio/reactivex/rxjava3/disposables/Disposable;)V
+      26: return
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field done:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: getfield      #11                 // Field index:J
+      12: lconst_1
+      13: ladd
+      14: lstore_2
+      15: aload_0
+      16: lload_2
+      17: putfield      #11                 // Field index:J
+      20: aload_0
+      21: getfield      #12                 // Field timer:Lio/reactivex/rxjava3/internal/operators/observable/ObservableDebounceTimed$DebounceEmitter;
+      24: astore        4
+      26: aload         4
+      28: ifnull        36
+      31: aload         4
+      33: invokevirtual #13                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableDebounceTimed$DebounceEmitter.dispose:()V
+      36: aload_0
+      37: getfield      #6                  // Field onDropped:Lio/reactivex/rxjava3/functions/Consumer;
+      40: ifnull        99
+      43: aload         4
+      45: ifnull        99
+      48: aload_0
+      49: getfield      #6                  // Field onDropped:Lio/reactivex/rxjava3/functions/Consumer;
+      52: aload_0
+      53: getfield      #12                 // Field timer:Lio/reactivex/rxjava3/internal/operators/observable/ObservableDebounceTimed$DebounceEmitter;
+      56: getfield      #14                 // Field io/reactivex/rxjava3/internal/operators/observable/ObservableDebounceTimed$DebounceEmitter.value:Ljava/lang/Object;
+      59: invokeinterface #15,  2           // InterfaceMethod io/reactivex/rxjava3/functions/Consumer.accept:(Ljava/lang/Object;)V
+      64: goto          99
+      67: astore        5
+      69: aload         5
+      71: invokestatic  #17                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      74: aload_0
+      75: getfield      #7                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+      78: invokeinterface #18,  1           // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.dispose:()V
+      83: aload_0
+      84: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      87: aload         5
+      89: invokeinterface #19,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      94: aload_0
+      95: iconst_1
+      96: putfield      #10                 // Field done:Z
+      99: new           #20                 // class io/reactivex/rxjava3/internal/operators/observable/ObservableDebounceTimed$DebounceEmitter
+     102: dup
+     103: aload_1
+     104: lload_2
+     105: aload_0
+     106: invokespecial #21                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableDebounceTimed$DebounceEmitter."<init>":(Ljava/lang/Object;JLio/reactivex/rxjava3/internal/operators/observable/ObservableDebounceTimed$DebounceTimedObserver;)V
+     109: astore        5
+     111: aload_0
+     112: aload         5
+     114: putfield      #12                 // Field timer:Lio/reactivex/rxjava3/internal/operators/observable/ObservableDebounceTimed$DebounceEmitter;
+     117: aload         5
+     119: aload_0
+     120: getfield      #5                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+     123: aload         5
+     125: aload_0
+     126: getfield      #3                  // Field timeout:J
+     129: aload_0
+     130: getfield      #4                  // Field unit:Ljava/util/concurrent/TimeUnit;
+     133: invokevirtual #22                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.schedule:(Ljava/lang/Runnable;JLjava/util/concurrent/TimeUnit;)Lio/reactivex/rxjava3/disposables/Disposable;
+     136: invokevirtual #23                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableDebounceTimed$DebounceEmitter.setResource:(Lio/reactivex/rxjava3/disposables/Disposable;)V
+     139: return
+    Exception table:
+       from    to  target type
+          48    64    67   Class java/lang/Throwable
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field done:Z
+       4: ifeq          12
+       7: aload_1
+       8: invokestatic  #24                 // Method io/reactivex/rxjava3/plugins/RxJavaPlugins.onError:(Ljava/lang/Throwable;)V
+      11: return
+      12: aload_0
+      13: getfield      #12                 // Field timer:Lio/reactivex/rxjava3/internal/operators/observable/ObservableDebounceTimed$DebounceEmitter;
+      16: astore_2
+      17: aload_2
+      18: ifnull        27
+      21: aload_2
+      22: invokeinterface #18,  1           // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.dispose:()V
+      27: aload_0
+      28: iconst_1
+      29: putfield      #10                 // Field done:Z
+      32: aload_0
+      33: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      36: aload_1
+      37: invokeinterface #19,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      42: aload_0
+      43: getfield      #5                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      46: invokevirtual #25                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+      49: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #10                 // Field done:Z
+       4: ifeq          8
+       7: return
+       8: aload_0
+       9: iconst_1
+      10: putfield      #10                 // Field done:Z
+      13: aload_0
+      14: getfield      #12                 // Field timer:Lio/reactivex/rxjava3/internal/operators/observable/ObservableDebounceTimed$DebounceEmitter;
+      17: astore_1
+      18: aload_1
+      19: ifnull        26
+      22: aload_1
+      23: invokevirtual #13                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableDebounceTimed$DebounceEmitter.dispose:()V
+      26: aload_1
+      27: ifnull        34
+      30: aload_1
+      31: invokevirtual #26                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableDebounceTimed$DebounceEmitter.run:()V
+      34: aload_0
+      35: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      38: invokeinterface #27,  1           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onComplete:()V
+      43: aload_0
+      44: getfield      #5                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      47: invokevirtual #25                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+      50: return
+
+  public void dispose();
+    Code:
+       0: aload_0
+       1: getfield      #7                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+       4: invokeinterface #18,  1           // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.dispose:()V
+       9: aload_0
+      10: getfield      #5                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+      13: invokevirtual #25                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.dispose:()V
+      16: return
+
+  public boolean isDisposed();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field worker:Lio/reactivex/rxjava3/core/Scheduler$Worker;
+       4: invokevirtual #28                 // Method io/reactivex/rxjava3/core/Scheduler$Worker.isDisposed:()Z
+       7: ireturn
+
+  void emit(long, T, io.reactivex.rxjava3.internal.operators.observable.ObservableDebounceTimed$DebounceEmitter<T>);
+    Code:
+       0: lload_1
+       1: aload_0
+       2: getfield      #11                 // Field index:J
+       5: lcmp
+       6: ifne          24
+       9: aload_0
+      10: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      13: aload_3
+      14: invokeinterface #29,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onNext:(Ljava/lang/Object;)V
+      19: aload         4
+      21: invokevirtual #13                 // Method io/reactivex/rxjava3/internal/operators/observable/ObservableDebounceTimed$DebounceEmitter.dispose:()V
+      24: return
+}

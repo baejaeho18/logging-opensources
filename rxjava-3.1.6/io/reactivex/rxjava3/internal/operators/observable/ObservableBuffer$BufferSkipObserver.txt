@@ -1,0 +1,175 @@
+Compiled from "ObservableBuffer.java"
+final class io.reactivex.rxjava3.internal.operators.observable.ObservableBuffer$BufferSkipObserver<T, U extends java.util.Collection<? super T>> extends java.util.concurrent.atomic.AtomicBoolean implements io.reactivex.rxjava3.core.Observer<T>, io.reactivex.rxjava3.disposables.Disposable {
+  private static final long serialVersionUID;
+
+  final io.reactivex.rxjava3.core.Observer<? super U> downstream;
+
+  final int count;
+
+  final int skip;
+
+  final io.reactivex.rxjava3.functions.Supplier<U> bufferSupplier;
+
+  io.reactivex.rxjava3.disposables.Disposable upstream;
+
+  final java.util.ArrayDeque<U> buffers;
+
+  long index;
+
+  io.reactivex.rxjava3.internal.operators.observable.ObservableBuffer$BufferSkipObserver(io.reactivex.rxjava3.core.Observer<? super U>, int, int, io.reactivex.rxjava3.functions.Supplier<U>);
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/util/concurrent/atomic/AtomicBoolean."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+       9: aload_0
+      10: iload_2
+      11: putfield      #3                  // Field count:I
+      14: aload_0
+      15: iload_3
+      16: putfield      #4                  // Field skip:I
+      19: aload_0
+      20: aload         4
+      22: putfield      #5                  // Field bufferSupplier:Lio/reactivex/rxjava3/functions/Supplier;
+      25: aload_0
+      26: new           #6                  // class java/util/ArrayDeque
+      29: dup
+      30: invokespecial #7                  // Method java/util/ArrayDeque."<init>":()V
+      33: putfield      #8                  // Field buffers:Ljava/util/ArrayDeque;
+      36: return
+
+  public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable);
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+       4: aload_1
+       5: invokestatic  #10                 // Method io/reactivex/rxjava3/internal/disposables/DisposableHelper.validate:(Lio/reactivex/rxjava3/disposables/Disposable;Lio/reactivex/rxjava3/disposables/Disposable;)Z
+       8: ifeq          26
+      11: aload_0
+      12: aload_1
+      13: putfield      #9                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+      16: aload_0
+      17: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      20: aload_0
+      21: invokeinterface #11,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onSubscribe:(Lio/reactivex/rxjava3/disposables/Disposable;)V
+      26: return
+
+  public void dispose();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+       4: invokeinterface #12,  1           // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.dispose:()V
+       9: return
+
+  public boolean isDisposed();
+    Code:
+       0: aload_0
+       1: getfield      #9                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+       4: invokeinterface #13,  1           // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.isDisposed:()Z
+       9: ireturn
+
+  public void onNext(T);
+    Code:
+       0: aload_0
+       1: dup
+       2: getfield      #14                 // Field index:J
+       5: dup2_x1
+       6: lconst_1
+       7: ladd
+       8: putfield      #14                 // Field index:J
+      11: aload_0
+      12: getfield      #4                  // Field skip:I
+      15: i2l
+      16: lrem
+      17: lconst_0
+      18: lcmp
+      19: ifne          84
+      22: aload_0
+      23: getfield      #5                  // Field bufferSupplier:Lio/reactivex/rxjava3/functions/Supplier;
+      26: invokeinterface #15,  1           // InterfaceMethod io/reactivex/rxjava3/functions/Supplier.get:()Ljava/lang/Object;
+      31: ldc           #16                 // String The bufferSupplier returned a null Collection.
+      33: invokestatic  #17                 // Method io/reactivex/rxjava3/internal/util/ExceptionHelper.nullCheck:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+      36: checkcast     #18                 // class java/util/Collection
+      39: astore_2
+      40: goto          75
+      43: astore_3
+      44: aload_3
+      45: invokestatic  #20                 // Method io/reactivex/rxjava3/exceptions/Exceptions.throwIfFatal:(Ljava/lang/Throwable;)V
+      48: aload_0
+      49: getfield      #8                  // Field buffers:Ljava/util/ArrayDeque;
+      52: invokevirtual #21                 // Method java/util/ArrayDeque.clear:()V
+      55: aload_0
+      56: getfield      #9                  // Field upstream:Lio/reactivex/rxjava3/disposables/Disposable;
+      59: invokeinterface #12,  1           // InterfaceMethod io/reactivex/rxjava3/disposables/Disposable.dispose:()V
+      64: aload_0
+      65: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      68: aload_3
+      69: invokeinterface #22,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      74: return
+      75: aload_0
+      76: getfield      #8                  // Field buffers:Ljava/util/ArrayDeque;
+      79: aload_2
+      80: invokevirtual #23                 // Method java/util/ArrayDeque.offer:(Ljava/lang/Object;)Z
+      83: pop
+      84: aload_0
+      85: getfield      #8                  // Field buffers:Ljava/util/ArrayDeque;
+      88: invokevirtual #24                 // Method java/util/ArrayDeque.iterator:()Ljava/util/Iterator;
+      91: astore_2
+      92: aload_2
+      93: invokeinterface #25,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+      98: ifeq          151
+     101: aload_2
+     102: invokeinterface #26,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     107: checkcast     #18                 // class java/util/Collection
+     110: astore_3
+     111: aload_3
+     112: aload_1
+     113: invokeinterface #27,  2           // InterfaceMethod java/util/Collection.add:(Ljava/lang/Object;)Z
+     118: pop
+     119: aload_0
+     120: getfield      #3                  // Field count:I
+     123: aload_3
+     124: invokeinterface #28,  1           // InterfaceMethod java/util/Collection.size:()I
+     129: if_icmpgt     148
+     132: aload_2
+     133: invokeinterface #29,  1           // InterfaceMethod java/util/Iterator.remove:()V
+     138: aload_0
+     139: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+     142: aload_3
+     143: invokeinterface #30,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onNext:(Ljava/lang/Object;)V
+     148: goto          92
+     151: return
+    Exception table:
+       from    to  target type
+          22    40    43   Class java/lang/Throwable
+
+  public void onError(java.lang.Throwable);
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field buffers:Ljava/util/ArrayDeque;
+       4: invokevirtual #21                 // Method java/util/ArrayDeque.clear:()V
+       7: aload_0
+       8: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      11: aload_1
+      12: invokeinterface #22,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onError:(Ljava/lang/Throwable;)V
+      17: return
+
+  public void onComplete();
+    Code:
+       0: aload_0
+       1: getfield      #8                  // Field buffers:Ljava/util/ArrayDeque;
+       4: invokevirtual #31                 // Method java/util/ArrayDeque.isEmpty:()Z
+       7: ifne          29
+      10: aload_0
+      11: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      14: aload_0
+      15: getfield      #8                  // Field buffers:Ljava/util/ArrayDeque;
+      18: invokevirtual #32                 // Method java/util/ArrayDeque.poll:()Ljava/lang/Object;
+      21: invokeinterface #30,  2           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onNext:(Ljava/lang/Object;)V
+      26: goto          0
+      29: aload_0
+      30: getfield      #2                  // Field downstream:Lio/reactivex/rxjava3/core/Observer;
+      33: invokeinterface #33,  1           // InterfaceMethod io/reactivex/rxjava3/core/Observer.onComplete:()V
+      38: return
+}
