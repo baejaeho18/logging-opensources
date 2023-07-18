@@ -1,0 +1,427 @@
+commit 34c55a0bde701e18fbe064bfe574caedb752ff4f
+Author: Gian Merlino <gianmerlino@gmail.com>
+Date:   Wed Jun 28 13:43:05 2023 -0700
+
+    SQL: SUBSTRING support for non-literals. (#14480)
+    
+    * SQL: SUBSTRING support for non-literals.
+    
+    * Fix AssertionError test.
+    
+    * Fix header.
+
+diff --git a/sql/src/main/java/org/apache/druid/sql/calcite/expression/builtin/SubstringOperatorConversion.java b/sql/src/main/java/org/apache/druid/sql/calcite/expression/builtin/SubstringOperatorConversion.java
+index ae470922c1..41f97b9322 100644
+--- a/sql/src/main/java/org/apache/druid/sql/calcite/expression/builtin/SubstringOperatorConversion.java
++++ b/sql/src/main/java/org/apache/druid/sql/calcite/expression/builtin/SubstringOperatorConversion.java
+@@ -22,6 +22,7 @@ package org.apache.druid.sql.calcite.expression.builtin;
+ import org.apache.calcite.rex.RexCall;
+ import org.apache.calcite.rex.RexLiteral;
+ import org.apache.calcite.rex.RexNode;
++import org.apache.calcite.rex.RexUtil;
+ import org.apache.calcite.sql.SqlFunction;
+ import org.apache.calcite.sql.SqlFunctionCategory;
+ import org.apache.calcite.sql.SqlOperator;
+@@ -36,6 +37,8 @@ import org.apache.druid.sql.calcite.expression.OperatorConversions;
+ import org.apache.druid.sql.calcite.expression.SqlOperatorConversion;
+ import org.apache.druid.sql.calcite.planner.PlannerContext;
+ 
++import java.util.List;
++
+ public class SubstringOperatorConversion implements SqlOperatorConversion
+ {
+   private static final SqlFunction SQL_FUNCTION = OperatorConversions
+@@ -63,29 +66,56 @@ public class SubstringOperatorConversion implements SqlOperatorConversion
+     // SQL is 1-indexed, Druid is 0-indexed.
+ 
+     final RexCall call = (RexCall) rexNode;
+-    final DruidExpression input = Expressions.toDruidExpression(
+-        plannerContext,
+-        rowSignature,
+-        call.getOperands().get(0)
+-    );
++    final List<RexNode> operands = call.getOperands();
++    final RexNode inputNode = operands.get(0);
++    final DruidExpression input = Expressions.toDruidExpression(plannerContext, rowSignature, inputNode);
+     if (input == null) {
+       return null;
+     }
+-    final int index = RexLiteral.intValue(call.getOperands().get(1)) - 1;
+-    final int length;
+-    if (call.getOperands().size() > 2) {
+-      length = RexLiteral.intValue(call.getOperands().get(2));
++
++    final RexNode indexNode = operands.get(1);
++    final Integer adjustedIndexLiteral = RexUtil.isLiteral(indexNode, true) ? RexLiteral.intValue(indexNode) - 1 : null;
++    final String adjustedIndexExpr;
++    if (adjustedIndexLiteral != null) {
++      adjustedIndexExpr = String.valueOf(adjustedIndexLiteral);
++    } else {
++      final DruidExpression indexExpr = Expressions.toDruidExpression(plannerContext, rowSignature, indexNode);
++      if (indexExpr == null) {
++        return null;
++      }
++      adjustedIndexExpr = StringUtils.format("(%s - 1)", indexExpr.getExpression());
++    }
++    if (adjustedIndexExpr == null) {
++      return null;
++    }
++
++    final RexNode lengthNode = operands.size() > 2 ? operands.get(2) : null;
++    final Integer lengthLiteral =
++        lengthNode != null && RexUtil.isLiteral(lengthNode, true) ? RexLiteral.intValue(lengthNode) : null;
++    final String lengthExpr;
++    if (lengthNode != null) {
++      final DruidExpression lengthExpression = Expressions.toDruidExpression(plannerContext, rowSignature, lengthNode);
++      if (lengthExpression == null) {
++        return null;
++      }
++      lengthExpr = lengthExpression.getExpression();
+     } else {
+-      length = -1;
++      lengthExpr = "-1";
+     }
+ 
+     return input.map(
+-        simpleExtraction -> simpleExtraction.cascade(new SubstringDimExtractionFn(index, length < 0 ? null : length)),
++        simpleExtraction -> {
++          if (adjustedIndexLiteral != null && (lengthNode == null || lengthLiteral != null)) {
++            return simpleExtraction.cascade(new SubstringDimExtractionFn(adjustedIndexLiteral, lengthLiteral));
++          } else {
++            return null;
++          }
++        },
+         expression -> StringUtils.format(
+             "substring(%s, %s, %s)",
+             expression,
+-            DruidExpression.longLiteral(index),
+-            DruidExpression.longLiteral(length)
++            adjustedIndexExpr,
++            lengthExpr
+         )
+     );
+   }
+diff --git a/sql/src/test/java/org/apache/druid/sql/calcite/expression/ExpressionsTest.java b/sql/src/test/java/org/apache/druid/sql/calcite/expression/ExpressionsTest.java
+index 9b269ecde3..3fbd517e1c 100644
+--- a/sql/src/test/java/org/apache/druid/sql/calcite/expression/ExpressionsTest.java
++++ b/sql/src/test/java/org/apache/druid/sql/calcite/expression/ExpressionsTest.java
+@@ -34,6 +34,7 @@ import org.apache.druid.java.util.common.DateTimes;
+ import org.apache.druid.math.expr.ExpressionValidationException;
+ import org.apache.druid.query.expression.TestExprMacroTable;
+ import org.apache.druid.query.extraction.RegexDimExtractionFn;
++import org.apache.druid.query.extraction.SubstringDimExtractionFn;
+ import org.apache.druid.query.filter.RegexDimFilter;
+ import org.apache.druid.query.filter.SearchQueryDimFilter;
+ import org.apache.druid.query.search.ContainsSearchQuerySpec;
+@@ -55,6 +56,7 @@ import org.apache.druid.sql.calcite.expression.builtin.RightOperatorConversion;
+ import org.apache.druid.sql.calcite.expression.builtin.RoundOperatorConversion;
+ import org.apache.druid.sql.calcite.expression.builtin.StringFormatOperatorConversion;
+ import org.apache.druid.sql.calcite.expression.builtin.StrposOperatorConversion;
++import org.apache.druid.sql.calcite.expression.builtin.SubstringOperatorConversion;
+ import org.apache.druid.sql.calcite.expression.builtin.TimeCeilOperatorConversion;
+ import org.apache.druid.sql.calcite.expression.builtin.TimeExtractOperatorConversion;
+ import org.apache.druid.sql.calcite.expression.builtin.TimeFloorOperatorConversion;
+@@ -167,6 +169,96 @@ public class ExpressionsTest extends ExpressionTestBase
+     );
+   }
+ 
++  @Test
++  public void testSubstring()
++  {
++    testHelper.testExpressionString(
++        new SubstringOperatorConversion().calciteOperator(),
++        ImmutableList.of(
++            testHelper.makeInputRef("s"),
++            testHelper.makeLiteral(1),
++            testHelper.makeLiteral(2)
++        ),
++        makeExpression(
++            SimpleExtraction.of("s", new SubstringDimExtractionFn(0, 2)),
++            "substring(\"s\", 0, 2)"
++        ),
++        "fo"
++    );
++
++    testHelper.testExpressionString(
++        new SubstringOperatorConversion().calciteOperator(),
++        ImmutableList.of(
++            testHelper.makeInputRef("s"),
++            testHelper.makeLiteral(2),
++            testHelper.makeLiteral(1)
++        ),
++        makeExpression(
++            SimpleExtraction.of("s", new SubstringDimExtractionFn(1, 1)),
++            "substring(\"s\", 1, 1)"
++        ),
++        "o"
++    );
++
++    testHelper.testExpressionString(
++        new SubstringOperatorConversion().calciteOperator(),
++        ImmutableList.of(
++            testHelper.makeInputRef("s"),
++            testHelper.makeLiteral(1)
++        ),
++        makeExpression(
++            SimpleExtraction.of("s", new SubstringDimExtractionFn(0, null)),
++            "substring(\"s\", 0, -1)"
++        ),
++        "foo"
++    );
++
++    testHelper.testExpressionString(
++        new SubstringOperatorConversion().calciteOperator(),
++        ImmutableList.of(
++            testHelper.makeInputRef("s"),
++            testHelper.makeLiteral(2)
++        ),
++        makeExpression(
++            SimpleExtraction.of("s", new SubstringDimExtractionFn(1, null)),
++            "substring(\"s\", 1, -1)"
++        ),
++        "oo"
++    );
++
++    testHelper.testExpressionString(
++        new SubstringOperatorConversion().calciteOperator(),
++        ImmutableList.of(
++            testHelper.makeInputRef("s"),
++            testHelper.makeLiteral(1),
++            testHelper.makeInputRef("p") // p is 3
++        ),
++        makeExpression("substring(\"s\", 0, \"p\")"),
++        "foo"
++    );
++
++    testHelper.testExpressionString(
++        new SubstringOperatorConversion().calciteOperator(),
++        ImmutableList.of(
++            testHelper.makeInputRef("spacey"),
++            testHelper.makeInputRef("p") // p is 3
++        ),
++        makeExpression("substring(\"spacey\", (\"p\" - 1), -1)"),
++        "hey there  "
++    );
++
++    testHelper.testExpressionString(
++        new SubstringOperatorConversion().calciteOperator(),
++        ImmutableList.of(
++            testHelper.makeInputRef("spacey"),
++            testHelper.makeInputRef("p"), // p is 3
++            testHelper.makeInputRef("p") // p is 3
++        ),
++        makeExpression("substring(\"spacey\", (\"p\" - 1), \"p\")"),
++        "hey"
++    );
++  }
++
+   @Test
+   public void testRegexpExtract()
+   {
+diff --git a/sql/src/test/java/org/apache/druid/sql/calcite/util/CalciteTestInjectorBuilder.java b/sql/src/test/java/org/apache/druid/sql/calcite/util/CalciteTestInjectorBuilder.java
+index 4dc825cac6..345b8b3ad9 100644
+--- a/sql/src/test/java/org/apache/druid/sql/calcite/util/CalciteTestInjectorBuilder.java
++++ b/sql/src/test/java/org/apache/druid/sql/calcite/util/CalciteTestInjectorBuilder.java
+@@ -26,6 +26,7 @@ import org.apache.druid.initialization.CoreInjectorBuilder;
+ import org.apache.druid.math.expr.ExprMacroTable;
+ import org.apache.druid.query.expression.TestExprMacroTable;
+ import org.apache.druid.sql.calcite.aggregation.SqlAggregationModule;
++import org.apache.druid.sql.calcite.util.testoperator.CalciteTestOperatorModule;
+ 
+ /**
+  * Create the injector used for {@link CalciteTests#INJECTOR}, but in a way
+@@ -41,7 +42,8 @@ public class CalciteTestInjectorBuilder extends CoreInjectorBuilder
+     add(
+         new SegmentWranglerModule(),
+         new LookylooModule(),
+-        new SqlAggregationModule()
++        new SqlAggregationModule(),
++        new CalciteTestOperatorModule()
+     );
+   }
+ 
+diff --git a/sql/src/test/java/org/apache/druid/sql/calcite/util/CalciteTests.java b/sql/src/test/java/org/apache/druid/sql/calcite/util/CalciteTests.java
+index 0dfec3759e..905c28c5fa 100644
+--- a/sql/src/test/java/org/apache/druid/sql/calcite/util/CalciteTests.java
++++ b/sql/src/test/java/org/apache/druid/sql/calcite/util/CalciteTests.java
+@@ -327,7 +327,6 @@ public class CalciteTests
+   public static SystemSchema createMockSystemSchema(
+       final DruidSchema druidSchema,
+       final SpecificSegmentsQuerySegmentWalker walker,
+-      final PlannerConfig plannerConfig,
+       final AuthorizerMapper authorizerMapper
+   )
+   {
+diff --git a/sql/src/test/java/org/apache/druid/sql/calcite/util/QueryFrameworkUtils.java b/sql/src/test/java/org/apache/druid/sql/calcite/util/QueryFrameworkUtils.java
+index ed4459ba38..63235a76c7 100644
+--- a/sql/src/test/java/org/apache/druid/sql/calcite/util/QueryFrameworkUtils.java
++++ b/sql/src/test/java/org/apache/druid/sql/calcite/util/QueryFrameworkUtils.java
+@@ -146,7 +146,7 @@ public class QueryFrameworkUtils
+         druidSchemaManager
+     );
+     SystemSchema systemSchema =
+-        CalciteTests.createMockSystemSchema(druidSchema, walker, plannerConfig, authorizerMapper);
++        CalciteTests.createMockSystemSchema(druidSchema, walker, authorizerMapper);
+ 
+     LookupSchema lookupSchema = createMockLookupSchema(injector);
+     ViewSchema viewSchema = viewManager != null ? new ViewSchema(viewManager) : null;
+diff --git a/sql/src/test/java/org/apache/druid/sql/calcite/util/testoperator/AssertionErrorOperatorConversion.java b/sql/src/test/java/org/apache/druid/sql/calcite/util/testoperator/AssertionErrorOperatorConversion.java
+new file mode 100644
+index 0000000000..6d4aa44e5e
+--- /dev/null
++++ b/sql/src/test/java/org/apache/druid/sql/calcite/util/testoperator/AssertionErrorOperatorConversion.java
+@@ -0,0 +1,66 @@
++/*
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++
++package org.apache.druid.sql.calcite.util.testoperator;
++
++import org.apache.calcite.rex.RexLiteral;
++import org.apache.calcite.rex.RexNode;
++import org.apache.calcite.sql.SqlOperator;
++import org.apache.calcite.sql.type.SqlTypeName;
++import org.apache.druid.segment.column.RowSignature;
++import org.apache.druid.sql.calcite.expression.DruidExpression;
++import org.apache.druid.sql.calcite.expression.OperatorConversions;
++import org.apache.druid.sql.calcite.expression.SqlOperatorConversion;
++import org.apache.druid.sql.calcite.planner.PlannerContext;
++import org.apache.druid.sql.http.SqlResourceTest;
++
++import javax.annotation.Nullable;
++
++/**
++ * There are various points where Calcite feels it is acceptable to throw an AssertionError when it receives bad
++ * input. This is unfortunate as a java.lang.Error is very clearly documented to be something that nobody should
++ * try to catch. But, we can editorialize all we want, we still have to deal with it. So, this operator triggers
++ * the AssertionError behavior by using RexLiteral.intValue with bad input (a RexNode that is not a literal).
++ *
++ * The test {@link SqlResourceTest#testAssertionErrorThrowsErrorWithFilterResponse()} verifies that our exception
++ * handling deals with this meaningfully.
++ */
++public class AssertionErrorOperatorConversion implements SqlOperatorConversion
++{
++  private static final SqlOperator OPERATOR =
++      OperatorConversions.operatorBuilder("assertion_error")
++                         .operandTypes()
++                         .returnTypeNonNull(SqlTypeName.BIGINT)
++                         .build();
++
++  @Override
++  public SqlOperator calciteOperator()
++  {
++    return OPERATOR;
++  }
++
++  @Nullable
++  @Override
++  public DruidExpression toDruidExpression(PlannerContext plannerContext, RowSignature rowSignature, RexNode rexNode)
++  {
++    // Throws AssertionError. See class-level javadoc for rationale about why we're doing this.
++    RexLiteral.intValue(rexNode);
++    return null;
++  }
++}
+diff --git a/sql/src/test/java/org/apache/druid/sql/calcite/util/testoperator/CalciteTestOperatorModule.java b/sql/src/test/java/org/apache/druid/sql/calcite/util/testoperator/CalciteTestOperatorModule.java
+new file mode 100644
+index 0000000000..16dfac5e3d
+--- /dev/null
++++ b/sql/src/test/java/org/apache/druid/sql/calcite/util/testoperator/CalciteTestOperatorModule.java
+@@ -0,0 +1,36 @@
++/*
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++
++package org.apache.druid.sql.calcite.util.testoperator;
++
++import com.google.inject.Binder;
++import com.google.inject.Module;
++import org.apache.druid.sql.guice.SqlBindings;
++
++/**
++ * Adds operators that are only used in tests -- not production.
++ */
++public class CalciteTestOperatorModule implements Module
++{
++  @Override
++  public void configure(Binder binder)
++  {
++    SqlBindings.addOperatorConversion(binder, AssertionErrorOperatorConversion.class);
++  }
++}
+diff --git a/sql/src/test/java/org/apache/druid/sql/http/SqlResourceTest.java b/sql/src/test/java/org/apache/druid/sql/http/SqlResourceTest.java
+index d92b1cbcd4..2c7e002a5f 100644
+--- a/sql/src/test/java/org/apache/druid/sql/http/SqlResourceTest.java
++++ b/sql/src/test/java/org/apache/druid/sql/http/SqlResourceTest.java
+@@ -1589,28 +1589,22 @@ public class SqlResourceTest extends CalciteTestBase
+   }
+ 
+   /**
+-   * There are various points where Calcite feels it is acceptable to throw an AssertionError when it receives bad
+-   * input.  This is unfortunate as a java.lang.Error is very clearly documented to be something that nobody should
+-   * try to catch.  But, we can editorialize all we want, we still have to deal with it.  So, this test reproduces
+-   * the AssertionError behavior by using the substr() command.  At the time that this test was written, the
+-   * SQL substr assumes a literal for the second argument.  The code ends up calling `RexLiteral.intValue` on the
+-   * argument, which ends up calling a method that fails with an AssertionError, so this should generate the
+-   * bad behavior for us.  This test is validating that our exception handling deals with this meaningfully.
++   * See class-level javadoc for {@link org.apache.druid.sql.calcite.util.testoperator.AssertionErrorOperatorConversion}
++   * for rationale as to why this test exists.
++   *
+    * If this test starts failing, it could be indicative of us not handling the AssertionErrors well anymore,
+    * OR it could be indicative of this specific code path not throwing an AssertionError anymore.  If we run
+    * into the latter case, we should seek out a new code path that generates the error from Calcite.  In the best
+    * world, this test starts failing because Calcite has moved all of its execptions away from AssertionErrors
+    * and we can no longer reproduce the behavior through Calcite, in that world, we should remove our own handling
+    * and this test at the same time.
+-   *
+-   * @throws Exception
+    */
+   @Test
+   public void testAssertionErrorThrowsErrorWithFilterResponse() throws Exception
+   {
+     ErrorResponse exception = postSyncForException(
+         new SqlQuery(
+-            "SELECT *, substr(dim2, strpos(dim2, 'hi')+2, 2) FROM foo LIMIT 2",
++            "SELECT assertion_error() FROM foo LIMIT 2",
+             ResultFormat.OBJECT,
+             false,
+             false,
+@@ -1625,7 +1619,7 @@ public class SqlResourceTest extends CalciteTestBase
+         exception.getUnderlyingException(),
+         DruidExceptionMatcher
+             .invalidSqlInput()
+-            .expectMessageIs("Calcite assertion violated: [not a literal: +(STRPOS($2, 'hi'), 2)]")
++            .expectMessageIs("Calcite assertion violated: [not a literal: assertion_error()]")
+     );
+     Assert.assertTrue(lifecycleManager.getAll("id").isEmpty());
+   }

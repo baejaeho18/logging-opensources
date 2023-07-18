@@ -1,0 +1,47 @@
+commit c798d3fb2e840df5700615a0fb994f61acbed46e
+Author: Gian Merlino <gianmerlino@gmail.com>
+Date:   Wed Jun 28 17:12:44 2023 -0700
+
+    Fix flaky SqlStatementResourceTest. (#14498)
+    
+    Mocks generally have state and should not be static. In particular, the
+    "Yielder" included in one of the mocks can only be iterated once, which
+    made the test suite order-dependent.
+
+diff --git a/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/SqlStatementResourceTest.java b/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/SqlStatementResourceTest.java
+index 3f2e7288b6..b5d5addecd 100644
+--- a/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/SqlStatementResourceTest.java
++++ b/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/SqlStatementResourceTest.java
+@@ -222,7 +222,7 @@ public class SqlStatementResourceTest extends MSQTestBase
+       new Object[]{234, "foo1", "bar1"}
+   );
+ 
+-  private static final MSQTaskReport MSQ_SELECT_TASK_REPORT = new MSQTaskReport(
++  private final MSQTaskReport selectTaskReport = new MSQTaskReport(
+       FINISHED_SELECT_MSQ_QUERY,
+       new MSQTaskReportPayload(
+           new MSQStatusReport(
+@@ -315,10 +315,11 @@ public class SqlStatementResourceTest extends MSQTestBase
+   );
+   private static final String FAILURE_MSG = "failure msg";
+   private static SqlStatementResource resource;
++
+   @Mock
+-  private static OverlordClient overlordClient;
++  private OverlordClient overlordClient;
+ 
+-  private static void setupMocks(OverlordClient indexingServiceClient) throws JsonProcessingException
++  private void setupMocks(OverlordClient indexingServiceClient) throws JsonProcessingException
+   {
+ 
+     Mockito.when(indexingServiceClient.taskStatus(ArgumentMatchers.eq(ACCEPTED_SELECT_MSQ_QUERY)))
+@@ -392,8 +393,7 @@ public class SqlStatementResourceTest extends MSQTestBase
+ 
+     Mockito.when(indexingServiceClient.taskReportAsMap(FINISHED_SELECT_MSQ_QUERY))
+            .thenReturn(Futures.immediateFuture(mapper.readValue(
+-               mapper.writeValueAsString(TaskReport.buildTaskReports(
+-                   MSQ_SELECT_TASK_REPORT)),
++               mapper.writeValueAsString(TaskReport.buildTaskReports(selectTaskReport)),
+                new TypeReference<Map<String, Object>>()
+                {
+                }
