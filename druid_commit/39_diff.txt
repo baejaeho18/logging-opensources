@@ -1,0 +1,489 @@
+commit 6ba10c8b6caf1de5afd782ba70edda406466c892
+Author: Clint Wylie <cwylie@apache.org>
+Date:   Mon Jun 26 21:02:44 2023 -0700
+
+    fix bug with json_value expression array extraction (#14461)
+
+diff --git a/processing/src/main/java/org/apache/druid/query/expression/NestedDataExpressions.java b/processing/src/main/java/org/apache/druid/query/expression/NestedDataExpressions.java
+index 7e62207111..57b81116fa 100644
+--- a/processing/src/main/java/org/apache/druid/query/expression/NestedDataExpressions.java
++++ b/processing/src/main/java/org/apache/druid/query/expression/NestedDataExpressions.java
+@@ -349,10 +349,14 @@ public class NestedDataExpressions
+           @Override
+           public ExprEval eval(ObjectBinding bindings)
+           {
+-            ExprEval input = args.get(0).eval(bindings);
+-            return ExprEval.bestEffortOf(
+-                NestedPathFinder.findLiteral(unwrap(input), parts)
+-            ).castTo(castTo);
++            final ExprEval input = args.get(0).eval(bindings);
++            final ExprEval valAtPath = ExprEval.bestEffortOf(
++                NestedPathFinder.find(unwrap(input), parts)
++            );
++            if (valAtPath.type().isPrimitive() || valAtPath.type().isPrimitiveArray()) {
++              return valAtPath.castTo(castTo);
++            }
++            return ExprEval.ofType(castTo, null);
+           }
+ 
+           @Override
+@@ -382,10 +386,14 @@ public class NestedDataExpressions
+           @Override
+           public ExprEval eval(ObjectBinding bindings)
+           {
+-            ExprEval input = args.get(0).eval(bindings);
+-            return ExprEval.bestEffortOf(
+-                NestedPathFinder.findLiteral(unwrap(input), parts)
++            final ExprEval input = args.get(0).eval(bindings);
++            final ExprEval valAtPath = ExprEval.bestEffortOf(
++                NestedPathFinder.find(unwrap(input), parts)
+             );
++            if (valAtPath.type().isPrimitive() || valAtPath.type().isPrimitiveArray()) {
++              return valAtPath;
++            }
++            return ExprEval.of(null);
+           }
+ 
+           @Override
+@@ -489,7 +497,7 @@ public class NestedDataExpressions
+         {
+           // we only want to return a non-null value here if the value is an array of primitive values
+           ExprEval<?> eval = ExprEval.bestEffortArray(array);
+-          if (eval.type().isArray() && eval.type().getElementType().isPrimitive()) {
++          if (eval.type().isPrimitiveArray()) {
+             return ProcessedValue.NULL_LITERAL;
+           }
+           return null;
+diff --git a/processing/src/main/java/org/apache/druid/segment/AutoTypeColumnIndexer.java b/processing/src/main/java/org/apache/druid/segment/AutoTypeColumnIndexer.java
+index c52c15d063..3ce8b5f4ba 100644
+--- a/processing/src/main/java/org/apache/druid/segment/AutoTypeColumnIndexer.java
++++ b/processing/src/main/java/org/apache/druid/segment/AutoTypeColumnIndexer.java
+@@ -104,7 +104,7 @@ public class AutoTypeColumnIndexer implements DimensionIndexer<StructuredData, S
+     )
+     {
+       final ExprEval<?> eval = ExprEval.bestEffortArray(array);
+-      if (eval.type().isArray() && eval.type().getElementType().isPrimitive()) {
++      if (eval.type().isPrimitiveArray()) {
+         final String fieldName = NestedPathFinder.toNormalizedJsonPath(fieldPath);
+         FieldIndexer fieldIndexer = fieldIndexers.get(fieldName);
+         if (fieldIndexer == null) {
+diff --git a/processing/src/main/java/org/apache/druid/segment/column/TypeSignature.java b/processing/src/main/java/org/apache/druid/segment/column/TypeSignature.java
+index 0c35a2934f..330a2bb9d5 100644
+--- a/processing/src/main/java/org/apache/druid/segment/column/TypeSignature.java
++++ b/processing/src/main/java/org/apache/druid/segment/column/TypeSignature.java
+@@ -167,6 +167,12 @@ public interface TypeSignature<Type extends TypeDescriptor>
+     return getType().isArray();
+   }
+ 
++  @JsonIgnore
++  default boolean isPrimitiveArray()
++  {
++    return getType().isArray() && getElementType() != null && getElementType().isPrimitive();
++  }
++
+   /**
+    * Convert a {@link TypeSignature} into a simple string. This value can be converted back into a {@link TypeSignature}
+    * with {@link Types#fromString(TypeFactory, String)}.
+diff --git a/processing/src/main/java/org/apache/druid/segment/nested/NestedDataColumnSerializer.java b/processing/src/main/java/org/apache/druid/segment/nested/NestedDataColumnSerializer.java
+index 020298b1b3..3e49edc32a 100644
+--- a/processing/src/main/java/org/apache/druid/segment/nested/NestedDataColumnSerializer.java
++++ b/processing/src/main/java/org/apache/druid/segment/nested/NestedDataColumnSerializer.java
+@@ -98,7 +98,7 @@ public class NestedDataColumnSerializer extends NestedCommonFormatColumnSerializ
+       if (writer != null) {
+         try {
+           final ExprEval<?> eval = ExprEval.bestEffortOf(fieldValue);
+-          if (eval.type().isPrimitive() || (eval.type().isArray() && eval.type().getElementType().isPrimitive())) {
++          if (eval.type().isPrimitive() || eval.type().isPrimitiveArray()) {
+             writer.addValue(rowCount, eval.value());
+           } else {
+             // behave consistently with nested column indexer, which defaults to string
+@@ -122,7 +122,7 @@ public class NestedDataColumnSerializer extends NestedCommonFormatColumnSerializ
+     )
+     {
+       final ExprEval<?> eval = ExprEval.bestEffortArray(array);
+-      if (eval.type().isArray() && eval.type().getElementType().isPrimitive()) {
++      if (eval.type().isPrimitiveArray()) {
+         final GlobalDictionaryEncodedFieldColumnWriter<?> writer = fieldWriters.get(
+             NestedPathFinder.toNormalizedJsonPath(fieldPath)
+         );
+diff --git a/processing/src/main/java/org/apache/druid/segment/nested/NestedDataColumnSerializerV4.java b/processing/src/main/java/org/apache/druid/segment/nested/NestedDataColumnSerializerV4.java
+index 034c7bc64f..d33d5f68f4 100644
+--- a/processing/src/main/java/org/apache/druid/segment/nested/NestedDataColumnSerializerV4.java
++++ b/processing/src/main/java/org/apache/druid/segment/nested/NestedDataColumnSerializerV4.java
+@@ -90,7 +90,7 @@ public class NestedDataColumnSerializerV4 implements GenericColumnSerializer<Str
+       if (writer != null) {
+         try {
+           final ExprEval<?> eval = ExprEval.bestEffortOf(fieldValue);
+-          if (eval.type().isPrimitive() || (eval.type().isArray() && eval.type().getElementType().isPrimitive())) {
++          if (eval.type().isPrimitive() || eval.type().isPrimitiveArray()) {
+             writer.addValue(rowCount, eval.value());
+           } else {
+             // behave consistently with nested column indexer, which defaults to string
+diff --git a/processing/src/main/java/org/apache/druid/segment/nested/NestedPathFinder.java b/processing/src/main/java/org/apache/druid/segment/nested/NestedPathFinder.java
+index 5d0596a6cc..2fc52f88df 100644
+--- a/processing/src/main/java/org/apache/druid/segment/nested/NestedPathFinder.java
++++ b/processing/src/main/java/org/apache/druid/segment/nested/NestedPathFinder.java
+@@ -34,6 +34,45 @@ public class NestedPathFinder
+   public static final String JSON_PATH_ROOT = "$";
+   public static final String JQ_PATH_ROOT = ".";
+ 
++  /**
++   * Dig through a thing to find stuff
++   */
++  @Nullable
++  public static Object find(@Nullable Object data, List<NestedPathPart> path)
++  {
++    Object currentObject = data;
++    for (NestedPathPart pathPart : path) {
++      Object objectAtPath = pathPart.find(currentObject);
++      if (objectAtPath == null) {
++        return null;
++      }
++      currentObject = objectAtPath;
++    }
++    return currentObject;
++  }
++
++  /**
++   * find the list of 'keys' at some path.
++   * - if the thing at a path is an object (map), return the fields
++   * - if the thing at a path is an array (list or array), return the 0 based element numbers
++   * - if the thing is a simple value, return null
++   */
++  @Nullable
++  public static Object[] findKeys(@Nullable Object data, List<NestedPathPart> path)
++  {
++    Object currentObject = find(data, path);
++    if (currentObject instanceof Map) {
++      return ((Map) currentObject).keySet().toArray();
++    }
++    if (currentObject instanceof List) {
++      return IntStream.range(0, ((List) currentObject).size()).mapToObj(Integer::toString).toArray();
++    }
++    if (currentObject instanceof Object[]) {
++      return IntStream.range(0, ((Object[]) currentObject).length).mapToObj(Integer::toString).toArray();
++    }
++    return null;
++  }
++
+   public static String toNormalizedJsonPath(List<NestedPathPart> paths)
+   {
+     if (paths.isEmpty()) {
+@@ -305,71 +344,4 @@ public class NestedPathFinder
+   {
+     throw InvalidInput.exception("JSONPath [%s] is invalid, %s", path, StringUtils.format(message, args));
+   }
+-
+-  /**
+-   * Dig through a thing to find stuff, if that stuff is a not nested itself
+-   */
+-  @Nullable
+-  public static String findStringLiteral(@Nullable Object data, List<NestedPathPart> path)
+-  {
+-    Object currentObject = find(data, path);
+-    if (currentObject instanceof Map || currentObject instanceof List || currentObject instanceof Object[]) {
+-      return null;
+-    } else {
+-      // a literal of some sort, huzzah!
+-      if (currentObject == null) {
+-        return null;
+-      }
+-      return String.valueOf(currentObject);
+-    }
+-  }
+-
+-  @Nullable
+-  public static Object findLiteral(@Nullable Object data, List<NestedPathPart> path)
+-  {
+-    Object currentObject = find(data, path);
+-    if (currentObject instanceof Map || currentObject instanceof List || currentObject instanceof Object[]) {
+-      return null;
+-    } else {
+-      // a literal of some sort, huzzah!
+-      if (currentObject == null) {
+-        return null;
+-      }
+-      return currentObject;
+-    }
+-  }
+-
+-  @Nullable
+-  public static Object[] findKeys(@Nullable Object data, List<NestedPathPart> path)
+-  {
+-    Object currentObject = find(data, path);
+-    if (currentObject instanceof Map) {
+-      return ((Map) currentObject).keySet().toArray();
+-    }
+-    if (currentObject instanceof List) {
+-      return IntStream.range(0, ((List) currentObject).size()).mapToObj(Integer::toString).toArray();
+-    }
+-    if (currentObject instanceof Object[]) {
+-      return IntStream.range(0, ((Object[]) currentObject).length).mapToObj(Integer::toString).toArray();
+-    }
+-    return null;
+-  }
+-
+-  /**
+-   * Dig through a thing to find stuff
+-   */
+-  @Nullable
+-  public static Object find(@Nullable Object data, List<NestedPathPart> path)
+-  {
+-    Object currentObject = data;
+-    for (NestedPathPart pathPart : path) {
+-      Object objectAtPath = pathPart.find(currentObject);
+-      if (objectAtPath == null) {
+-        return null;
+-      }
+-      currentObject = objectAtPath;
+-    }
+-    return currentObject;
+-  }
+-
+ }
+diff --git a/processing/src/main/java/org/apache/druid/segment/virtual/NestedFieldVirtualColumn.java b/processing/src/main/java/org/apache/druid/segment/virtual/NestedFieldVirtualColumn.java
+index 486448c2e9..02c3d879e8 100644
+--- a/processing/src/main/java/org/apache/druid/segment/virtual/NestedFieldVirtualColumn.java
++++ b/processing/src/main/java/org/apache/druid/segment/virtual/NestedFieldVirtualColumn.java
+@@ -169,7 +169,7 @@ public class NestedFieldVirtualColumn implements VirtualColumn
+       String columnName,
+       String path,
+       String outputName,
+-      ColumnType expectedType
++      @Nullable ColumnType expectedType
+   )
+   {
+     this(columnName, outputName, expectedType, null, null, path, false);
+@@ -1266,8 +1266,8 @@ public class NestedFieldVirtualColumn implements VirtualColumn
+   }
+ 
+   /**
+-   * Process the "raw" data to extract literals with {@link NestedPathFinder#findLiteral(Object, List)}. Like
+-   * {@link RawFieldColumnSelector} but only literals and does not wrap the results in {@link StructuredData}.
++   * Process the "raw" data to extract non-complex values. Like {@link RawFieldColumnSelector} but does not return
++   * complex nested objects and does not wrap the results in {@link StructuredData}.
+    * <p>
+    * This is used as a selector on realtime data when the native field columns are not available.
+    */
+@@ -1312,7 +1312,7 @@ public class NestedFieldVirtualColumn implements VirtualColumn
+     @Override
+     public boolean isNull()
+     {
+-      Object o = getObject();
++      final Object o = getObject();
+       return !(o instanceof Number || (o instanceof String && Doubles.tryParse((String) o) != null));
+     }
+ 
+@@ -1320,8 +1320,18 @@ public class NestedFieldVirtualColumn implements VirtualColumn
+     @Override
+     public Object getObject()
+     {
+-      StructuredData data = StructuredData.wrap(baseSelector.getObject());
+-      return NestedPathFinder.findLiteral(data == null ? null : data.getValue(), parts);
++      final StructuredData data = StructuredData.wrap(baseSelector.getObject());
++      if (data == null) {
++        return null;
++      }
++
++      final Object valAtPath = NestedPathFinder.find(data.getValue(), parts);
++      final ExprEval eval = ExprEval.bestEffortOf(valAtPath);
++      if (eval.type().isPrimitive() || eval.type().isPrimitiveArray()) {
++        return eval.valueOrDefault();
++      }
++      // not a primitive value, return null;
++      return null;
+     }
+ 
+     @Override
+diff --git a/processing/src/test/java/org/apache/druid/query/expression/NestedDataExpressionsTest.java b/processing/src/test/java/org/apache/druid/query/expression/NestedDataExpressionsTest.java
+index afb6c9298c..06726289ce 100644
+--- a/processing/src/test/java/org/apache/druid/query/expression/NestedDataExpressionsTest.java
++++ b/processing/src/test/java/org/apache/druid/query/expression/NestedDataExpressionsTest.java
+@@ -36,6 +36,7 @@ import org.apache.druid.testing.InitializedNullHandlingTest;
+ import org.junit.Assert;
+ import org.junit.Test;
+ 
++import java.util.Arrays;
+ import java.util.Map;
+ 
+ public class NestedDataExpressionsTest extends InitializedNullHandlingTest
+@@ -64,11 +65,27 @@ public class NestedDataExpressionsTest extends InitializedNullHandlingTest
+       "y", ImmutableMap.of("a", "hello", "b", "world")
+   );
+ 
++  private static final Map<String, Object> NESTERER = ImmutableMap.of(
++      "x",
++      ImmutableMap.of(
++          "a1", Arrays.asList(1, null, 3),
++          "a2", Arrays.asList(1.1, null, 3.3),
++          "a3", Arrays.asList("a", null, "b", "100")
++      ),
++      "y",
++      ImmutableList.of(
++          ImmutableMap.of("x", 1L, "y", 1.1),
++          ImmutableMap.of("x", 2L, "y", 2.2),
++          ImmutableMap.of("x", 3L, "y", 3.3)
++      )
++  );
++
+   Expr.ObjectBinding inputBindings = InputBindings.forInputSuppliers(
+       new ImmutableMap.Builder<String, InputBindings.InputSupplier>()
+           .put("nest", InputBindings.inputSupplier(ExpressionType.NESTED_DATA, () -> NEST))
+           .put("nestWrapped", InputBindings.inputSupplier(ExpressionType.NESTED_DATA, () -> new StructuredData(NEST)))
+           .put("nester", InputBindings.inputSupplier(ExpressionType.NESTED_DATA, () -> NESTER))
++          .put("nesterer", InputBindings.inputSupplier(ExpressionType.NESTED_DATA, () -> NESTERER))
+           .put("string", InputBindings.inputSupplier(ExpressionType.STRING, () -> "abcdef"))
+           .put("long", InputBindings.inputSupplier(ExpressionType.LONG, () -> 1234L))
+           .put("double", InputBindings.inputSupplier(ExpressionType.DOUBLE, () -> 1.234))
+@@ -144,7 +161,8 @@ public class NestedDataExpressionsTest extends InitializedNullHandlingTest
+ 
+     expr = Parser.parse("json_value(nester, '$.x')", MACRO_TABLE);
+     eval = expr.eval(inputBindings);
+-    Assert.assertNull(eval.value());
++    Assert.assertArrayEquals(new Object[]{"a", "b", "c"}, (Object[]) eval.value());
++    Assert.assertEquals(ExpressionType.STRING_ARRAY, eval.type());
+ 
+     expr = Parser.parse("json_value(nester, '$.x[1]')", MACRO_TABLE);
+     eval = expr.eval(inputBindings);
+@@ -201,6 +219,59 @@ public class NestedDataExpressionsTest extends InitializedNullHandlingTest
+     eval = expr.eval(inputBindings);
+     Assert.assertEquals("100", eval.value());
+     Assert.assertEquals(ExpressionType.STRING, eval.type());
++
++    expr = Parser.parse("json_value(nesterer, '$.x.a1')", MACRO_TABLE);
++    eval = expr.eval(inputBindings);
++    Assert.assertArrayEquals(new Object[]{1L, null, 3L}, (Object[]) eval.value());
++    Assert.assertEquals(ExpressionType.LONG_ARRAY, eval.type());
++
++    expr = Parser.parse("json_value(nesterer, '$.x.a1', 'ARRAY<STRING>')", MACRO_TABLE);
++    eval = expr.eval(inputBindings);
++    Assert.assertArrayEquals(new Object[]{"1", null, "3"}, (Object[]) eval.value());
++    Assert.assertEquals(ExpressionType.STRING_ARRAY, eval.type());
++
++    expr = Parser.parse("json_value(nesterer, '$.x.a1', 'ARRAY<DOUBLE>')", MACRO_TABLE);
++    eval = expr.eval(inputBindings);
++    Assert.assertArrayEquals(new Object[]{1.0, null, 3.0}, (Object[]) eval.value());
++    Assert.assertEquals(ExpressionType.DOUBLE_ARRAY, eval.type());
++
++    expr = Parser.parse("json_value(nesterer, '$.x.a2')", MACRO_TABLE);
++    eval = expr.eval(inputBindings);
++    Assert.assertArrayEquals(new Object[]{1.1, null, 3.3}, (Object[]) eval.value());
++    Assert.assertEquals(ExpressionType.DOUBLE_ARRAY, eval.type());
++
++    expr = Parser.parse("json_value(nesterer, '$.x.a2', 'ARRAY<LONG>')", MACRO_TABLE);
++    eval = expr.eval(inputBindings);
++    Assert.assertArrayEquals(new Object[]{1L, null, 3L}, (Object[]) eval.value());
++    Assert.assertEquals(ExpressionType.LONG_ARRAY, eval.type());
++
++    expr = Parser.parse("json_value(nesterer, '$.x.a2', 'ARRAY<STRING>')", MACRO_TABLE);
++    eval = expr.eval(inputBindings);
++    Assert.assertArrayEquals(new Object[]{"1.1", null, "3.3"}, (Object[]) eval.value());
++    Assert.assertEquals(ExpressionType.STRING_ARRAY, eval.type());
++
++    expr = Parser.parse("json_value(nesterer, '$.x.a3')", MACRO_TABLE);
++    eval = expr.eval(inputBindings);
++    Assert.assertArrayEquals(new Object[]{"a", null, "b", "100"}, (Object[]) eval.value());
++    Assert.assertEquals(ExpressionType.STRING_ARRAY, eval.type());
++
++    expr = Parser.parse("json_value(nesterer, '$.x.a3', 'ARRAY<LONG>')", MACRO_TABLE);
++    eval = expr.eval(inputBindings);
++    Assert.assertArrayEquals(
++        new Object[]{null, null, null, 100L},
++        (Object[]) eval.value()
++    );
++    Assert.assertEquals(ExpressionType.LONG_ARRAY, eval.type());
++
++    // arrays of objects are not primitive
++    expr = Parser.parse("json_value(nesterer, '$.y')", MACRO_TABLE);
++    eval = expr.eval(inputBindings);
++    Assert.assertNull(eval.value());
++
++    expr = Parser.parse("json_value(json_object('k1', array(1,2,3), 'k2', array('a', 'b', 'c')), '$.k1', 'ARRAY<STRING>')", MACRO_TABLE);
++    eval = expr.eval(inputBindings);
++    Assert.assertArrayEquals(new Object[]{"1", "2", "3"}, (Object[]) eval.value());
++    Assert.assertEquals(ExpressionType.STRING_ARRAY, eval.type());
+   }
+ 
+   @Test
+diff --git a/processing/src/test/java/org/apache/druid/segment/nested/NestedPathFinderTest.java b/processing/src/test/java/org/apache/druid/segment/nested/NestedPathFinderTest.java
+index b22131833c..5f0a328f68 100644
+--- a/processing/src/test/java/org/apache/druid/segment/nested/NestedPathFinderTest.java
++++ b/processing/src/test/java/org/apache/druid/segment/nested/NestedPathFinderTest.java
+@@ -417,51 +417,39 @@ public class NestedPathFinderTest
+ 
+     pathParts = NestedPathFinder.parseJqPath(".");
+     Assert.assertEquals(NESTER, NestedPathFinder.find(NESTER, pathParts));
+-    Assert.assertNull(NestedPathFinder.findStringLiteral(NESTER, pathParts));
+ 
+     pathParts = NestedPathFinder.parseJqPath(".z");
+     Assert.assertEquals("foo", NestedPathFinder.find(NESTER, pathParts));
+-    Assert.assertEquals("foo", NestedPathFinder.findStringLiteral(NESTER, pathParts));
+ 
+     pathParts = NestedPathFinder.parseJqPath(".x");
+     Assert.assertEquals(NESTER.get("x"), NestedPathFinder.find(NESTER, pathParts));
+-    Assert.assertNull(NestedPathFinder.findStringLiteral(NESTER, pathParts));
+ 
+     pathParts = NestedPathFinder.parseJqPath(".x[1]");
+     Assert.assertEquals("b", NestedPathFinder.find(NESTER, pathParts));
+-    Assert.assertEquals("b", NestedPathFinder.findStringLiteral(NESTER, pathParts));
+ 
+     pathParts = NestedPathFinder.parseJqPath(".x[-1]");
+     Assert.assertEquals("c", NestedPathFinder.find(NESTER, pathParts));
+-    Assert.assertEquals("c", NestedPathFinder.findStringLiteral(NESTER, pathParts));
+ 
+     pathParts = NestedPathFinder.parseJqPath(".x[-2]");
+     Assert.assertEquals("b", NestedPathFinder.find(NESTER, pathParts));
+-    Assert.assertEquals("b", NestedPathFinder.findStringLiteral(NESTER, pathParts));
+ 
+     pathParts = NestedPathFinder.parseJqPath(".x[-4]");
+     Assert.assertNull(NestedPathFinder.find(NESTER, pathParts));
+-    Assert.assertNull(NestedPathFinder.findStringLiteral(NESTER, pathParts));
+ 
+     // nonexistent
+     pathParts = NestedPathFinder.parseJqPath(".x[1].y.z");
+     Assert.assertNull(NestedPathFinder.find(NESTER, pathParts));
+-    Assert.assertNull(NestedPathFinder.findStringLiteral(NESTER, pathParts));
+ 
+     pathParts = NestedPathFinder.parseJqPath(".y.a");
+     Assert.assertEquals("hello", NestedPathFinder.find(NESTER, pathParts));
+-    Assert.assertEquals("hello", NestedPathFinder.findStringLiteral(NESTER, pathParts));
+ 
+     pathParts = NestedPathFinder.parseJqPath(".y[1]");
+     Assert.assertNull(NestedPathFinder.find(NESTER, pathParts));
+-    Assert.assertNull(NestedPathFinder.findStringLiteral(NESTER, pathParts));
+ 
+     pathParts = NestedPathFinder.parseJqPath(".\"[sneaky]\"");
+     Assert.assertEquals("bar", NestedPathFinder.find(NESTER, pathParts));
+-    Assert.assertEquals("bar", NestedPathFinder.findStringLiteral(NESTER, pathParts));
+ 
+     pathParts = NestedPathFinder.parseJqPath(".\"[also_sneaky]\"[1].c");
+     Assert.assertEquals("z", NestedPathFinder.find(NESTER, pathParts));
+-    Assert.assertEquals("z", NestedPathFinder.findStringLiteral(NESTER, pathParts));
+   }
+ }
+diff --git a/sql/src/main/java/org/apache/druid/sql/calcite/expression/builtin/NestedDataOperatorConversions.java b/sql/src/main/java/org/apache/druid/sql/calcite/expression/builtin/NestedDataOperatorConversions.java
+index c5503f7eb8..949b8b8879 100644
+--- a/sql/src/main/java/org/apache/druid/sql/calcite/expression/builtin/NestedDataOperatorConversions.java
++++ b/sql/src/main/java/org/apache/druid/sql/calcite/expression/builtin/NestedDataOperatorConversions.java
+@@ -686,7 +686,7 @@ public class NestedDataOperatorConversions
+             (name, outputType, expression, macroTable) -> new NestedFieldVirtualColumn(
+                 druidExpressions.get(0).getDirectColumn(),
+                 name,
+-                outputType,
++                null,
+                 parts,
+                 false,
+                 null,
+diff --git a/sql/src/test/java/org/apache/druid/sql/calcite/CalciteNestedDataQueryTest.java b/sql/src/test/java/org/apache/druid/sql/calcite/CalciteNestedDataQueryTest.java
+index 8386148596..628d7dc324 100644
+--- a/sql/src/test/java/org/apache/druid/sql/calcite/CalciteNestedDataQueryTest.java
++++ b/sql/src/test/java/org/apache/druid/sql/calcite/CalciteNestedDataQueryTest.java
+@@ -440,7 +440,7 @@ public class CalciteNestedDataQueryTest extends BaseCalciteQueryTest
+                         .setInterval(querySegmentSpec(Filtration.eternity()))
+                         .setGranularity(Granularities.ALL)
+                         .setVirtualColumns(
+-                            new NestedFieldVirtualColumn("nest", "$.x", "v0", ColumnType.STRING)
++                            new NestedFieldVirtualColumn("nest", "$.x", "v0", null)
+                         )
+                         .setDimensions(
+                             dimensions(

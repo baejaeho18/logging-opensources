@@ -1,0 +1,78 @@
+commit 970288067ac2979dff0ddeed97003cd631ad9ee8
+Author: Gian Merlino <gianmerlino@gmail.com>
+Date:   Fri Jun 23 16:27:11 2023 -0700
+
+    Fix flaky HttpEmitterConfigTest and ParametrizedUriEmitterConfigTest. (#14481)
+    
+    Recently, we have seen flakiness in these two tests, apparently due to
+    computations based on Runtime.getRuntime().maxMemory() differing during
+    static initialization and in the actual tests. I can't think of a reason
+    why this would be happening, but anyway, this patch switches the tests to
+    use the statics instead of recomputing Runtime.getRuntime().maxMemory().
+
+diff --git a/processing/src/test/java/org/apache/druid/java/util/emitter/core/HttpEmitterConfigTest.java b/processing/src/test/java/org/apache/druid/java/util/emitter/core/HttpEmitterConfigTest.java
+index 1191b83b73..ebc213303d 100644
+--- a/processing/src/test/java/org/apache/druid/java/util/emitter/core/HttpEmitterConfigTest.java
++++ b/processing/src/test/java/org/apache/druid/java/util/emitter/core/HttpEmitterConfigTest.java
+@@ -21,7 +21,6 @@ package org.apache.druid.java.util.emitter.core;
+ 
+ import com.fasterxml.jackson.databind.ObjectMapper;
+ import org.apache.druid.java.util.common.Pair;
+-import org.apache.druid.utils.JvmUtils;
+ import org.junit.Assert;
+ import org.junit.Test;
+ 
+@@ -46,11 +45,8 @@ public class HttpEmitterConfigTest
+     Assert.assertEquals("http://example.com/", config.getRecipientBaseUrl());
+     Assert.assertNull(config.getBasicAuthentication());
+     Assert.assertEquals(BatchingStrategy.ARRAY, config.getBatchingStrategy());
+-    Pair<Integer, Integer> batchConfigPair = BaseHttpEmittingConfig.getDefaultBatchSizeAndLimit(
+-        JvmUtils.getRuntimeInfo().getMaxHeapSizeBytes()
+-    );
+-    Assert.assertEquals(batchConfigPair.lhs.intValue(), config.getMaxBatchSize());
+-    Assert.assertEquals(batchConfigPair.rhs.intValue(), config.getBatchQueueSizeLimit());
++    Assert.assertEquals(BaseHttpEmittingConfig.DEFAULT_MAX_BATCH_SIZE, config.getMaxBatchSize());
++    Assert.assertEquals(BaseHttpEmittingConfig.DEFAULT_BATCH_QUEUE_SIZE_LIMIT, config.getBatchQueueSizeLimit());
+     Assert.assertEquals(Long.MAX_VALUE, config.getFlushTimeOut());
+     Assert.assertEquals(2.0f, config.getHttpTimeoutAllowanceFactor(), 0.0f);
+     Assert.assertEquals(0, config.getMinHttpTimeoutMillis());
+@@ -70,11 +66,8 @@ public class HttpEmitterConfigTest
+     Assert.assertEquals("http://example.com/", config.getRecipientBaseUrl());
+     Assert.assertNull(config.getBasicAuthentication());
+     Assert.assertEquals(BatchingStrategy.ARRAY, config.getBatchingStrategy());
+-    Pair<Integer, Integer> batchConfigPair = BaseHttpEmittingConfig.getDefaultBatchSizeAndLimit(
+-        JvmUtils.getRuntimeInfo().getMaxHeapSizeBytes()
+-    );
+-    Assert.assertEquals(batchConfigPair.lhs.intValue(), config.getMaxBatchSize());
+-    Assert.assertEquals(batchConfigPair.rhs.intValue(), config.getBatchQueueSizeLimit());
++    Assert.assertEquals(BaseHttpEmittingConfig.DEFAULT_MAX_BATCH_SIZE, config.getMaxBatchSize());
++    Assert.assertEquals(BaseHttpEmittingConfig.DEFAULT_BATCH_QUEUE_SIZE_LIMIT, config.getBatchQueueSizeLimit());
+     Assert.assertEquals(Long.MAX_VALUE, config.getFlushTimeOut());
+     Assert.assertEquals(2.0f, config.getHttpTimeoutAllowanceFactor(), 0.0f);
+     Assert.assertEquals(0, config.getMinHttpTimeoutMillis());
+diff --git a/processing/src/test/java/org/apache/druid/java/util/emitter/core/ParametrizedUriEmitterConfigTest.java b/processing/src/test/java/org/apache/druid/java/util/emitter/core/ParametrizedUriEmitterConfigTest.java
+index 53740a7914..e99b1d4f9d 100644
+--- a/processing/src/test/java/org/apache/druid/java/util/emitter/core/ParametrizedUriEmitterConfigTest.java
++++ b/processing/src/test/java/org/apache/druid/java/util/emitter/core/ParametrizedUriEmitterConfigTest.java
+@@ -22,7 +22,6 @@ package org.apache.druid.java.util.emitter.core;
+ import com.fasterxml.jackson.databind.ObjectMapper;
+ import com.google.inject.Guice;
+ import com.google.inject.Injector;
+-import org.apache.druid.java.util.common.Pair;
+ import org.apache.druid.utils.JvmUtils;
+ import org.apache.druid.utils.RuntimeInfo;
+ import org.junit.AfterClass;
+@@ -67,11 +66,8 @@ public class ParametrizedUriEmitterConfigTest
+     final Injector injector = makeInjector(new Properties());
+     final HttpEmitterConfig config = injector.getInstance(HttpEmitterConfig.class);
+ 
+-    Pair<Integer, Integer> batchConfigPair = BaseHttpEmittingConfig.getDefaultBatchSizeAndLimit(
+-        JvmUtils.getRuntimeInfo().getMaxHeapSizeBytes()
+-    );
+-    Assert.assertEquals(batchConfigPair.lhs.intValue(), config.getMaxBatchSize());
+-    Assert.assertEquals(batchConfigPair.rhs.intValue(), config.getBatchQueueSizeLimit());
++    Assert.assertEquals(BaseHttpEmittingConfig.DEFAULT_MAX_BATCH_SIZE, config.getMaxBatchSize());
++    Assert.assertEquals(BaseHttpEmittingConfig.DEFAULT_BATCH_QUEUE_SIZE_LIMIT, config.getBatchQueueSizeLimit());
+     Assert.assertEquals(Long.MAX_VALUE, config.getFlushTimeOut());
+   }
+ 
