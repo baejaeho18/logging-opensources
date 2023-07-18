@@ -1,0 +1,361 @@
+commit 2d5b27358e0a1abefcc3c7ddeb3af613ddf88df5
+Author: Pranav <pranavbhole@gmail.com>
+Date:   Mon Jul 3 01:43:27 2023 -0700
+
+    Logging the fieldName in the coerce exceptions  (#14483)
+    
+    Logging the fieldName in the coerce exceptions
+
+diff --git a/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/exec/ControllerImpl.java b/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/exec/ControllerImpl.java
+index eebc95077b..1a8ef12cb2 100644
+--- a/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/exec/ControllerImpl.java
++++ b/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/exec/ControllerImpl.java
+@@ -1471,7 +1471,8 @@ public class ControllerImpl implements Controller
+                                      context.jsonMapper(),
+                                      task.getSqlResultsContext(),
+                                      value,
+-                                     sqlTypeNames.get(i)
++                                     sqlTypeNames.get(i),
++                                     columnMappings.getOutputColumnName(i)
+                                  );
+                                }
+                              }
+diff --git a/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/indexing/MSQControllerTask.java b/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/indexing/MSQControllerTask.java
+index 0228052573..30047f227f 100644
+--- a/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/indexing/MSQControllerTask.java
++++ b/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/indexing/MSQControllerTask.java
+@@ -82,7 +82,7 @@ public class MSQControllerTask extends AbstractTask implements ClientTaskQuery
+   private final Map<String, Object> sqlQueryContext;
+ 
+   /**
+-   * Enables usage of {@link SqlResults#coerce(ObjectMapper, SqlResults.Context, Object, SqlTypeName)}.
++   * Enables usage of {@link SqlResults#coerce(ObjectMapper, SqlResults.Context, Object, SqlTypeName, String)}.
+    */
+   @Nullable
+   private final SqlResults.Context sqlResultsContext;
+diff --git a/sql/src/main/java/org/apache/druid/sql/calcite/run/NativeQueryMaker.java b/sql/src/main/java/org/apache/druid/sql/calcite/run/NativeQueryMaker.java
+index e2b3059190..e831960a39 100644
+--- a/sql/src/main/java/org/apache/druid/sql/calcite/run/NativeQueryMaker.java
++++ b/sql/src/main/java/org/apache/druid/sql/calcite/run/NativeQueryMaker.java
+@@ -241,7 +241,8 @@ public class NativeQueryMaker implements QueryMaker
+                     jsonMapper,
+                     sqlResultsContext,
+                     array[mapping[i]],
+-                    newTypes.get(i).getSqlTypeName()
++                    newTypes.get(i).getSqlTypeName(),
++                    originalFields.get(mapping[i])
+                 );
+               }
+               return newArray;
+diff --git a/sql/src/main/java/org/apache/druid/sql/calcite/run/SqlResults.java b/sql/src/main/java/org/apache/druid/sql/calcite/run/SqlResults.java
+index ab400b97a3..d314a3a4cc 100644
+--- a/sql/src/main/java/org/apache/druid/sql/calcite/run/SqlResults.java
++++ b/sql/src/main/java/org/apache/druid/sql/calcite/run/SqlResults.java
+@@ -28,8 +28,8 @@ import com.google.common.primitives.Ints;
+ import org.apache.calcite.sql.type.SqlTypeName;
+ import org.apache.calcite.util.NlsString;
+ import org.apache.druid.common.config.NullHandling;
++import org.apache.druid.error.DruidException;
+ import org.apache.druid.java.util.common.DateTimes;
+-import org.apache.druid.java.util.common.ISE;
+ import org.apache.druid.math.expr.Evals;
+ import org.apache.druid.segment.DimensionHandlerUtils;
+ import org.apache.druid.segment.data.ComparableList;
+@@ -48,7 +48,7 @@ import java.util.Objects;
+ import java.util.stream.Collectors;
+ 
+ /**
+- * Holder for the utility method {@link #coerce(ObjectMapper, Context, Object, SqlTypeName)}.
++ * Holder for the utility method {@link #coerce(ObjectMapper, Context, Object, SqlTypeName, String)}.
+  */
+ public class SqlResults
+ {
+@@ -56,7 +56,8 @@ public class SqlResults
+       final ObjectMapper jsonMapper,
+       final Context context,
+       final Object value,
+-      final SqlTypeName sqlTypeName
++      final SqlTypeName sqlTypeName,
++      final String fieldName
+   )
+   {
+     final Object coercedValue;
+@@ -79,21 +80,21 @@ public class SqlResults
+           final List<String> valueStrings =
+               ((Collection<?>) maybeList)
+                   .stream()
+-                  .map(v -> (String) coerce(jsonMapper, context, v, sqlTypeName))
++                  .map(v -> (String) coerce(jsonMapper, context, v, sqlTypeName, fieldName))
+                   .collect(Collectors.toList());
+ 
+           // Must stringify since the caller is expecting CHAR_TYPES.
+-          coercedValue = coerceUsingObjectMapper(jsonMapper, valueStrings, sqlTypeName);
++          coercedValue = coerceUsingObjectMapper(jsonMapper, valueStrings, sqlTypeName, fieldName);
+         } else {
+-          throw cannotCoerce(value, sqlTypeName);
++          throw cannotCoerce(value, sqlTypeName, fieldName);
+         }
+       }
+     } else if (value == null) {
+       coercedValue = null;
+     } else if (sqlTypeName == SqlTypeName.DATE) {
+-      return Calcites.jodaToCalciteDate(coerceDateTime(value, sqlTypeName), context.getTimeZone());
++      return Calcites.jodaToCalciteDate(coerceDateTime(value, sqlTypeName, fieldName), context.getTimeZone());
+     } else if (sqlTypeName == SqlTypeName.TIMESTAMP) {
+-      return Calcites.jodaToCalciteTimestamp(coerceDateTime(value, sqlTypeName), context.getTimeZone());
++      return Calcites.jodaToCalciteTimestamp(coerceDateTime(value, sqlTypeName, fieldName), context.getTimeZone());
+     } else if (sqlTypeName == SqlTypeName.BOOLEAN) {
+       if (value instanceof Boolean) {
+         coercedValue = value;
+@@ -102,7 +103,7 @@ public class SqlResults
+       } else if (value instanceof Number) {
+         coercedValue = Evals.asBoolean(((Number) value).longValue());
+       } else {
+-        throw cannotCoerce(value, sqlTypeName);
++        throw cannotCoerce(value, sqlTypeName, fieldName);
+       }
+     } else if (sqlTypeName == SqlTypeName.INTEGER) {
+       if (value instanceof String) {
+@@ -110,33 +111,33 @@ public class SqlResults
+       } else if (value instanceof Number) {
+         coercedValue = ((Number) value).intValue();
+       } else {
+-        throw cannotCoerce(value, sqlTypeName);
++        throw cannotCoerce(value, sqlTypeName, fieldName);
+       }
+     } else if (sqlTypeName == SqlTypeName.BIGINT) {
+       try {
+         coercedValue = DimensionHandlerUtils.convertObjectToLong(value);
+       }
+       catch (Exception e) {
+-        throw cannotCoerce(value, sqlTypeName);
++        throw cannotCoerce(value, sqlTypeName, fieldName);
+       }
+     } else if (sqlTypeName == SqlTypeName.FLOAT) {
+       try {
+         coercedValue = DimensionHandlerUtils.convertObjectToFloat(value);
+       }
+       catch (Exception e) {
+-        throw cannotCoerce(value, sqlTypeName);
++        throw cannotCoerce(value, sqlTypeName, fieldName);
+       }
+     } else if (SqlTypeName.FRACTIONAL_TYPES.contains(sqlTypeName)) {
+       try {
+         coercedValue = DimensionHandlerUtils.convertObjectToDouble(value);
+       }
+       catch (Exception e) {
+-        throw cannotCoerce(value, sqlTypeName);
++        throw cannotCoerce(value, sqlTypeName, fieldName);
+       }
+     } else if (sqlTypeName == SqlTypeName.OTHER) {
+       // Complex type, try to serialize if we should, else print class name
+       if (context.isSerializeComplexValues()) {
+-        coercedValue = coerceUsingObjectMapper(jsonMapper, value, sqlTypeName);
++        coercedValue = coerceUsingObjectMapper(jsonMapper, value, sqlTypeName, fieldName);
+       } else {
+         coercedValue = value.getClass().getName();
+       }
+@@ -147,7 +148,7 @@ public class SqlResults
+         } else if (value instanceof NlsString) {
+           coercedValue = ((NlsString) value).getValue();
+         } else {
+-          coercedValue = coerceUsingObjectMapper(jsonMapper, value, sqlTypeName);
++          coercedValue = coerceUsingObjectMapper(jsonMapper, value, sqlTypeName, fieldName);
+         }
+       } else {
+         // the protobuf jdbc handler prefers lists (it actually can't handle java arrays as sql arrays, only java lists)
+@@ -155,11 +156,11 @@ public class SqlResults
+         // here if needed
+         coercedValue = maybeCoerceArrayToList(value, true);
+         if (coercedValue == null) {
+-          throw cannotCoerce(value, sqlTypeName);
++          throw cannotCoerce(value, sqlTypeName, fieldName);
+         }
+       }
+     } else {
+-      throw cannotCoerce(value, sqlTypeName);
++      throw cannotCoerce(value, sqlTypeName, fieldName);
+     }
+ 
+     return coercedValue;
+@@ -209,7 +210,7 @@ public class SqlResults
+     return value;
+   }
+ 
+-  private static DateTime coerceDateTime(Object value, SqlTypeName sqlType)
++  private static DateTime coerceDateTime(final Object value, final SqlTypeName sqlType, final String fieldName)
+   {
+     final DateTime dateTime;
+ 
+@@ -220,7 +221,7 @@ public class SqlResults
+     } else if (value instanceof DateTime) {
+       dateTime = (DateTime) value;
+     } else {
+-      throw cannotCoerce(value, sqlType);
++      throw cannotCoerce(value, sqlType, fieldName);
+     }
+     return dateTime;
+   }
+@@ -228,33 +229,52 @@ public class SqlResults
+   private static String coerceUsingObjectMapper(
+       final ObjectMapper jsonMapper,
+       final Object value,
+-      final SqlTypeName sqlTypeName
++      final SqlTypeName sqlTypeName,
++      final String fieldName
+   )
+   {
+     try {
+       return jsonMapper.writeValueAsString(value);
+     }
+     catch (JsonProcessingException e) {
+-      throw cannotCoerce(e, value, sqlTypeName);
++      throw cannotCoerce(e, value, sqlTypeName, fieldName);
+     }
+   }
+ 
+-  private static IllegalStateException cannotCoerce(
+-      final Throwable t,
+-      final Object value,
+-      final SqlTypeName sqlTypeName
+-  )
++  private static DruidException cannotCoerce(final Throwable t, final Object value, final SqlTypeName sqlTypeName, final String fieldName)
++  {
++    return DruidException.forPersona(DruidException.Persona.USER)
++                         .ofCategory(DruidException.Category.INVALID_INPUT)
++                         .build(
++                             t,
++                             "Cannot coerce field [%s] from type [%s] to type [%s]",
++                             fieldName,
++                             value == null
++                             ? "unknown"
++                             : mapPriveArrayClassNameToReadableStrings(value.getClass().getName()),
++                             sqlTypeName
++                         );
++  }
++
++  private static String mapPriveArrayClassNameToReadableStrings(String name)
+   {
+-    return new ISE(t, "Cannot coerce [%s] to [%s]", value == null ? "null" : value.getClass().getName(), sqlTypeName);
++    switch (name) {
++      case "[B":
++        return "Byte Array";
++      case "[Z":
++        return "Boolean Array";
++      default:
++        return name;
++    }
+   }
+ 
+-  private static IllegalStateException cannotCoerce(final Object value, final SqlTypeName sqlTypeName)
++  private static DruidException cannotCoerce(final Object value, final SqlTypeName sqlTypeName, final String fieldName)
+   {
+-    return cannotCoerce(null, value, sqlTypeName);
++    return cannotCoerce(null, value, sqlTypeName, fieldName);
+   }
+ 
+   /**
+-   * Context for {@link #coerce(ObjectMapper, Context, Object, SqlTypeName)}
++   * Context for {@link #coerce(ObjectMapper, Context, Object, SqlTypeName, String)}
+    */
+   public static class Context
+   {
+diff --git a/sql/src/test/java/org/apache/druid/sql/calcite/CalciteScanSignatureTest.java b/sql/src/test/java/org/apache/druid/sql/calcite/CalciteScanSignatureTest.java
+index 13568f4e7a..424a2e8895 100644
+--- a/sql/src/test/java/org/apache/druid/sql/calcite/CalciteScanSignatureTest.java
++++ b/sql/src/test/java/org/apache/druid/sql/calcite/CalciteScanSignatureTest.java
+@@ -81,6 +81,35 @@ public class CalciteScanSignatureTest extends BaseCalciteQueryTest
+     );
+   }
+ 
++  @Test
++  public void testScanSignatureWithDimAsValuePrimitiveByteArr()
++  {
++    final Map<String, Object> context = new HashMap<>(QUERY_CONTEXT_DEFAULT);
++    testQuery(
++        "SELECT CAST(dim1 AS BIGINT) as dimX FROM foo2 limit 2",
++        ImmutableList.of(
++            newScanQueryBuilder()
++                .dataSource(CalciteTests.DATASOURCE2)
++                .intervals(querySegmentSpec(Filtration.eternity()))
++                .columns("v0")
++                .virtualColumns(expressionVirtualColumn(
++                    "v0",
++                    "CAST(\"dim1\", 'LONG')",
++                    ColumnType.LONG
++                ))
++                .resultFormat(ScanQuery.ResultFormat.RESULT_FORMAT_COMPACTED_LIST)
++                .context(context)
++                .limit(2)
++                .build()
++        ),
++        useDefault ? ImmutableList.of(
++            new Object[]{0L}, new Object[]{0L}
++        ) : ImmutableList.of(
++            new Object[]{null}, new Object[]{null}
++        )
++    );
++  }
++
+   @Override
+   public SqlEngine createEngine(
+       QueryLifecycleFactory qlf,
+diff --git a/sql/src/test/java/org/apache/druid/sql/calcite/run/SqlResultsTest.java b/sql/src/test/java/org/apache/druid/sql/calcite/run/SqlResultsTest.java
+index 954170fffe..3c06e52238 100644
+--- a/sql/src/test/java/org/apache/druid/sql/calcite/run/SqlResultsTest.java
++++ b/sql/src/test/java/org/apache/druid/sql/calcite/run/SqlResultsTest.java
+@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableList;
+ import com.google.common.collect.ImmutableSortedSet;
+ import org.apache.calcite.sql.type.SqlTypeName;
+ import org.apache.druid.common.config.NullHandling;
++import org.apache.druid.error.DruidException;
+ import org.apache.druid.java.util.common.StringUtils;
+ import org.apache.druid.segment.TestHelper;
+ import org.apache.druid.segment.data.ComparableList;
+@@ -171,6 +172,7 @@ public class SqlResultsTest extends InitializedNullHandlingTest
+     assertCoerce(1L, true, SqlTypeName.BIGINT);
+ 
+     assertCannotCoerce(Collections.emptyList(), SqlTypeName.BIGINT);
++    assertCannotCoerce(new byte[]{(byte) 0xe0, 0x4f}, SqlTypeName.BIGINT);
+   }
+ 
+   @Test
+@@ -222,6 +224,17 @@ public class SqlResultsTest extends InitializedNullHandlingTest
+     assertCannotCoerce(new Object(), SqlTypeName.VARCHAR);
+   }
+ 
++  @Test
++  public void testCoerceOfArrayOfPrimitives()
++  {
++    try {
++      assertCoerce("", new byte[1], SqlTypeName.BIGINT);
++      Assert.fail("Should throw an exception");
++    }
++    catch (Exception e) {
++      Assert.assertEquals("Cannot coerce field [fieldName] from type [Byte Array] to type [BIGINT]", e.getMessage());
++    }
++  }
+   @Test
+   public void testCoerceArrayFails()
+   {
+@@ -251,16 +264,16 @@ public class SqlResultsTest extends InitializedNullHandlingTest
+     Assert.assertEquals(
+         StringUtils.format("Coerce [%s] to [%s]", toCoerce, typeName),
+         expected,
+-        SqlResults.coerce(jsonMapper, DEFAULT_CONTEXT, toCoerce, typeName)
++        SqlResults.coerce(jsonMapper, DEFAULT_CONTEXT, toCoerce, typeName, "fieldName")
+     );
+   }
+ 
+   private void assertCannotCoerce(Object toCoerce, SqlTypeName typeName)
+   {
+-    final IllegalStateException e = Assert.assertThrows(
++    final DruidException e = Assert.assertThrows(
+         StringUtils.format("Coerce [%s] to [%s]", toCoerce, typeName),
+-        IllegalStateException.class,
+-        () -> SqlResults.coerce(jsonMapper, DEFAULT_CONTEXT, toCoerce, typeName)
++        DruidException.class,
++        () -> SqlResults.coerce(jsonMapper, DEFAULT_CONTEXT, toCoerce, typeName, "")
+     );
+ 
+     MatcherAssert.assertThat(e, ThrowableMessageMatcher.hasMessage(CoreMatchers.containsString("Cannot coerce")));

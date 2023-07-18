@@ -1,0 +1,680 @@
+commit 27a70d569db7a0274e222d5ba1aa32cb587ce529
+Author: Adarsh Sanjeev <adarshsanjeev@gmail.com>
+Date:   Mon Jul 3 15:20:14 2023 +0530
+
+    Add page information to SqlStatementResource API (#14512)
+    
+    
+        * Changes the get results API in SqlStatementResource to take a page number instead of row/offset.
+        * Adds "pages" containing information on each page to the results status.
+        * Update the "numRows" and "sizeInByes" to "numTotalRows" and "totalSizeInBytes" respectively, which are totalled across all pages.
+
+diff --git a/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/sql/entity/PageInformation.java b/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/sql/entity/PageInformation.java
+new file mode 100644
+index 0000000000..2754c52f1f
+--- /dev/null
++++ b/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/sql/entity/PageInformation.java
+@@ -0,0 +1,103 @@
++/*
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++
++package org.apache.druid.msq.sql.entity;
++
++
++import com.fasterxml.jackson.annotation.JsonCreator;
++import com.fasterxml.jackson.annotation.JsonProperty;
++
++import javax.annotation.Nullable;
++import java.util.Objects;
++
++/**
++ * Contains information about a single page in the results.
++ */
++public class PageInformation
++{
++  @Nullable
++  private final Long numRows;
++  @Nullable
++  private final Long sizeInBytes;
++  private final long id;
++
++  @JsonCreator
++  public PageInformation(
++      @JsonProperty("numRows") @Nullable Long numRows,
++      @JsonProperty("sizeInBytes") @Nullable Long sizeInBytes,
++      @JsonProperty("id") long id
++  )
++  {
++    this.numRows = numRows;
++    this.sizeInBytes = sizeInBytes;
++    this.id = id;
++  }
++
++  @JsonProperty
++  @Nullable
++  public Long getNumRows()
++  {
++    return numRows;
++  }
++
++  @JsonProperty
++  @Nullable
++  public Long getSizeInBytes()
++  {
++    return sizeInBytes;
++  }
++
++  @JsonProperty
++  public long getId()
++  {
++    return id;
++  }
++
++  @Override
++  public boolean equals(Object o)
++  {
++    if (this == o) {
++      return true;
++    }
++    if (o == null || getClass() != o.getClass()) {
++      return false;
++    }
++    PageInformation that = (PageInformation) o;
++    return id == that.id && Objects.equals(numRows, that.numRows) && Objects.equals(
++        sizeInBytes,
++        that.sizeInBytes
++    );
++  }
++
++  @Override
++  public int hashCode()
++  {
++    return Objects.hash(numRows, sizeInBytes, id);
++  }
++
++  @Override
++  public String toString()
++  {
++    return "PageInformation{" +
++           "numRows=" + numRows +
++           ", sizeInBytes=" + sizeInBytes +
++           ", id=" + id +
++           '}';
++  }
++}
+diff --git a/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/sql/entity/ResultSetInformation.java b/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/sql/entity/ResultSetInformation.java
+index 43201fdac6..e131fa85c7 100644
+--- a/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/sql/entity/ResultSetInformation.java
++++ b/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/sql/entity/ResultSetInformation.java
+@@ -32,50 +32,50 @@ public class ResultSetInformation
+ {
+ 
+   @Nullable
+-  private final Long numRows;
++  private final Long numTotalRows;
+   @Nullable
+-  private final Long sizeInBytes;
+-
++  private final Long totalSizeInBytes;
+   @Nullable
+   private final ResultFormat resultFormat;
+-
+   @Nullable
+   private final List<Object> records;
+-
+   @Nullable
+   private final String dataSource;
++  @Nullable
++  private final List<PageInformation> pages;
+ 
+   @JsonCreator
+   public ResultSetInformation(
++      @JsonProperty("numTotalRows") @Nullable Long numTotalRows,
++      @JsonProperty("totalSizeInBytes") @Nullable Long totalSizeInBytes,
+       @JsonProperty("resultFormat") @Nullable ResultFormat resultFormat,
+-      @JsonProperty("numRows") @Nullable Long numRows,
+-      @JsonProperty("sizeInBytes") @Nullable Long sizeInBytes,
+       @JsonProperty("dataSource") @Nullable String dataSource,
+-      @JsonProperty("sampleRecords") @Nullable
+-      List<Object> records
++      @JsonProperty("sampleRecords") @Nullable List<Object> records,
++      @JsonProperty("pages") @Nullable List<PageInformation> pages
+   )
+   {
+-    this.numRows = numRows;
+-    this.sizeInBytes = sizeInBytes;
++    this.numTotalRows = numTotalRows;
++    this.totalSizeInBytes = totalSizeInBytes;
+     this.resultFormat = resultFormat;
+     this.dataSource = dataSource;
+     this.records = records;
++    this.pages = pages;
+   }
+ 
+-  @Nullable
+   @JsonProperty
++  @Nullable
+   @JsonInclude(JsonInclude.Include.NON_NULL)
+-  public Long getNumRows()
++  public Long getNumTotalRows()
+   {
+-    return numRows;
++    return numTotalRows;
+   }
+ 
+-  @Nullable
+   @JsonProperty
++  @Nullable
+   @JsonInclude(JsonInclude.Include.NON_NULL)
+-  public Long getSizeInBytes()
++  public Long getTotalSizeInBytes()
+   {
+-    return sizeInBytes;
++    return totalSizeInBytes;
+   }
+ 
+   @JsonProperty
+@@ -94,14 +94,21 @@ public class ResultSetInformation
+     return dataSource;
+   }
+ 
+-  @Nullable
+   @JsonProperty("sampleRecords")
++  @Nullable
+   @JsonInclude(JsonInclude.Include.NON_NULL)
+   public List<Object> getRecords()
+   {
+     return records;
+   }
+ 
++  @JsonProperty
++  @Nullable
++  @JsonInclude(JsonInclude.Include.NON_NULL)
++  public List<PageInformation> getPages()
++  {
++    return pages;
++  }
+ 
+   @Override
+   public boolean equals(Object o)
+@@ -113,30 +120,31 @@ public class ResultSetInformation
+       return false;
+     }
+     ResultSetInformation that = (ResultSetInformation) o;
+-    return Objects.equals(numRows, that.numRows)
+-           && Objects.equals(sizeInBytes, that.sizeInBytes)
+-           && resultFormat == that.resultFormat
+-           && Objects.equals(records, that.records)
+-           && Objects.equals(dataSource, that.dataSource);
++    return Objects.equals(numTotalRows, that.numTotalRows) && Objects.equals(
++        totalSizeInBytes,
++        that.totalSizeInBytes
++    ) && resultFormat == that.resultFormat && Objects.equals(records, that.records) && Objects.equals(
++        dataSource,
++        that.dataSource
++    ) && Objects.equals(pages, that.pages);
+   }
+ 
+   @Override
+   public int hashCode()
+   {
+-    return Objects.hash(numRows, sizeInBytes, resultFormat, records, dataSource);
++    return Objects.hash(numTotalRows, totalSizeInBytes, resultFormat, records, dataSource, pages);
+   }
+ 
+   @Override
+   public String toString()
+   {
+     return "ResultSetInformation{" +
+-           "totalRows=" + numRows +
+-           ", totalSize=" + sizeInBytes +
++           "numTotalRows=" + numTotalRows +
++           ", totalSizeInBytes=" + totalSizeInBytes +
+            ", resultFormat=" + resultFormat +
+            ", records=" + records +
+            ", dataSource='" + dataSource + '\'' +
++           ", pages=" + pages +
+            '}';
+   }
+-
+ }
+-
+diff --git a/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/sql/resources/SqlStatementResource.java b/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/sql/resources/SqlStatementResource.java
+index 6ce5c78005..ce30284e59 100644
+--- a/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/sql/resources/SqlStatementResource.java
++++ b/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/sql/resources/SqlStatementResource.java
+@@ -21,6 +21,7 @@ package org.apache.druid.msq.sql.resources;
+ 
+ 
+ import com.fasterxml.jackson.databind.ObjectMapper;
++import com.google.common.collect.ImmutableList;
+ import com.google.common.collect.ImmutableMap;
+ import com.google.common.io.CountingOutputStream;
+ import com.google.common.util.concurrent.ListenableFuture;
+@@ -46,6 +47,7 @@ import org.apache.druid.msq.sql.MSQTaskQueryMaker;
+ import org.apache.druid.msq.sql.MSQTaskSqlEngine;
+ import org.apache.druid.msq.sql.SqlStatementState;
+ import org.apache.druid.msq.sql.entity.ColumnNameAndTypes;
++import org.apache.druid.msq.sql.entity.PageInformation;
+ import org.apache.druid.msq.sql.entity.ResultSetInformation;
+ import org.apache.druid.msq.sql.entity.SqlStatementResult;
+ import org.apache.druid.msq.util.SqlStatementResourceHelper;
+@@ -268,8 +270,7 @@ public class SqlStatementResource
+   @Produces(MediaType.APPLICATION_JSON)
+   public Response doGetResults(
+       @PathParam("id") final String queryId,
+-      @QueryParam("offset") Long offset,
+-      @QueryParam("numRows") Long numberOfRows,
++      @QueryParam("page") Long page,
+       @Context final HttpServletRequest req
+   )
+   {
+@@ -284,28 +285,16 @@ public class SqlStatementResource
+       }
+       final AuthenticationResult authenticationResult = AuthorizationUtils.authenticationResultFromRequest(req);
+ 
+-      if (offset != null && offset < 0) {
++      if (page != null && page < 0) {
+         return buildNonOkResponse(
+             DruidException.forPersona(DruidException.Persona.USER)
+                           .ofCategory(DruidException.Category.INVALID_INPUT)
+                           .build(
+-                              "offset cannot be negative. Please pass a positive number."
+-                          )
+-        );
+-      }
+-      if (numberOfRows != null && numberOfRows < 0) {
+-        return buildNonOkResponse(
+-            DruidException.forPersona(DruidException.Persona.USER)
+-                          .ofCategory(DruidException.Category.INVALID_INPUT)
+-                          .build(
+-                              "numRows cannot be negative. Please pass a positive number."
++                              "Page cannot be negative. Please pass a positive number."
+                           )
+         );
+       }
+ 
+-      final long start = offset == null ? 0 : offset;
+-      final long last = SqlStatementResourceHelper.getLastIndex(numberOfRows, start);
+-
+       TaskStatusResponse taskResponse = contactOverlord(overlordClient.taskStatus(queryId));
+       if (taskResponse == null) {
+         return Response.status(Response.Status.NOT_FOUND).build();
+@@ -343,8 +332,21 @@ public class SqlStatementResource
+         if (!signature.isPresent()) {
+           return Response.ok().build();
+         }
+-        Optional<List<Object>> results = SqlStatementResourceHelper.getResults(SqlStatementResourceHelper.getPayload(
+-            contactOverlord(overlordClient.taskReportAsMap(queryId))));
++
++        if (page != null && page > 0) {
++          // Results from task report are only present as one page.
++          return buildNonOkResponse(
++              DruidException.forPersona(DruidException.Persona.USER)
++                            .ofCategory(DruidException.Category.INVALID_INPUT)
++                            .build("Page number is out of range of the results.")
++          );
++        }
++
++        Optional<List<Object>> results = SqlStatementResourceHelper.getResults(
++            SqlStatementResourceHelper.getPayload(
++                contactOverlord(overlordClient.taskReportAsMap(queryId))
++            )
++        );
+ 
+         return Response.ok((StreamingOutput) outputStream -> {
+           CountingOutputStream os = new CountingOutputStream(outputStream);
+@@ -353,7 +355,7 @@ public class SqlStatementResource
+             List<ColumnNameAndTypes> rowSignature = signature.get();
+             writer.writeResponseStart();
+ 
+-            for (long k = start; k < Math.min(last, results.get().size()); k++) {
++            for (long k = 0; k < results.get().size(); k++) {
+               writer.writeRowStart();
+               for (int i = 0; i < rowSignature.size(); i++) {
+                 writer.writeRowField(
+@@ -575,13 +577,19 @@ public class SqlStatementResource
+           isSelectQuery
+       );
+       return Optional.of(new ResultSetInformation(
+-          null,
+-          // since the rows can be sampled, get the number of rows from counters
+           rowsAndSize.orElse(new Pair<>(null, null)).lhs,
+           rowsAndSize.orElse(new Pair<>(null, null)).rhs,
++          null,
+           dataSource,
+           // only populate sample results in case a select query is successful
+-          isSelectQuery ? SqlStatementResourceHelper.getResults(payload).orElse(null) : null
++          isSelectQuery ? SqlStatementResourceHelper.getResults(payload).orElse(null) : null,
++          ImmutableList.of(
++              new PageInformation(
++                  rowsAndSize.orElse(new Pair<>(null, null)).lhs,
++                  rowsAndSize.orElse(new Pair<>(null, null)).rhs,
++                  0
++              )
++          )
+       ));
+     } else {
+       return Optional.empty();
+diff --git a/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/SqlMsqStatementResourcePostTest.java b/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/SqlMsqStatementResourcePostTest.java
+index ceae64dcf7..51e10a93b2 100644
+--- a/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/SqlMsqStatementResourcePostTest.java
++++ b/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/SqlMsqStatementResourcePostTest.java
+@@ -30,6 +30,7 @@ import org.apache.druid.msq.indexing.MSQControllerTask;
+ import org.apache.druid.msq.indexing.error.InsertCannotBeEmptyFault;
+ import org.apache.druid.msq.indexing.error.MSQException;
+ import org.apache.druid.msq.sql.entity.ColumnNameAndTypes;
++import org.apache.druid.msq.sql.entity.PageInformation;
+ import org.apache.druid.msq.sql.entity.ResultSetInformation;
+ import org.apache.druid.msq.sql.entity.SqlStatementResult;
+ import org.apache.druid.msq.sql.resources.SqlStatementResource;
+@@ -112,9 +113,9 @@ public class SqlMsqStatementResourcePostTest extends MSQTestBase
+                                ),
+                                MSQTestOverlordServiceClient.DURATION,
+                                new ResultSetInformation(
+-                                   null,
+                                    6L,
+                                    316L,
++                                   null,
+                                    MSQControllerTask.DUMMY_DATASOURCE_FOR_SELECT,
+                                    objectMapper.readValue(
+                                        objectMapper.writeValueAsString(
+@@ -122,7 +123,8 @@ public class SqlMsqStatementResourcePostTest extends MSQTestBase
+                                        new TypeReference<List<Object>>()
+                                        {
+                                        }
+-                                   )
++                                   ),
++                                   ImmutableList.of(new PageInformation(6L, 316L, 0))
+                                ),
+                                null
+         );
+diff --git a/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/SqlStatementResourceTest.java b/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/SqlStatementResourceTest.java
+index b5d5addecd..6a19f3f792 100644
+--- a/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/SqlStatementResourceTest.java
++++ b/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/SqlStatementResourceTest.java
+@@ -54,6 +54,7 @@ import org.apache.druid.msq.indexing.report.MSQTaskReport;
+ import org.apache.druid.msq.indexing.report.MSQTaskReportPayload;
+ import org.apache.druid.msq.indexing.report.MSQTaskReportTest;
+ import org.apache.druid.msq.sql.entity.ColumnNameAndTypes;
++import org.apache.druid.msq.sql.entity.PageInformation;
+ import org.apache.druid.msq.sql.entity.ResultSetInformation;
+ import org.apache.druid.msq.sql.entity.SqlStatementResult;
+ import org.apache.druid.msq.sql.resources.SqlStatementResource;
+@@ -650,7 +651,7 @@ public class SqlStatementResourceTest extends MSQTestBase
+     );
+ 
+     assertExceptionMessage(
+-        resource.doGetResults(ACCEPTED_SELECT_MSQ_QUERY, null, null, makeOkRequest()),
++        resource.doGetResults(ACCEPTED_SELECT_MSQ_QUERY, 0L, makeOkRequest()),
+         StringUtils.format(
+             "Query[%s] is currently in [%s] state. Please wait for it to complete.",
+             ACCEPTED_SELECT_MSQ_QUERY,
+@@ -665,7 +666,6 @@ public class SqlStatementResourceTest extends MSQTestBase
+   }
+ 
+   @Test
+-
+   public void testMSQSelectRunningQuery()
+   {
+ 
+@@ -685,7 +685,7 @@ public class SqlStatementResourceTest extends MSQTestBase
+     );
+ 
+     assertExceptionMessage(
+-        resource.doGetResults(RUNNING_SELECT_MSQ_QUERY, null, null, makeOkRequest()),
++        resource.doGetResults(RUNNING_SELECT_MSQ_QUERY, 0L, makeOkRequest()),
+         StringUtils.format(
+             "Query[%s] is currently in [%s] state. Please wait for it to complete.",
+             RUNNING_SELECT_MSQ_QUERY,
+@@ -717,12 +717,13 @@ public class SqlStatementResourceTest extends MSQTestBase
+             MSQControllerTask.DUMMY_DATASOURCE_FOR_SELECT,
+             RESULT_ROWS.stream()
+                        .map(Arrays::asList)
+-                       .collect(Collectors.toList())
++                       .collect(Collectors.toList()),
++            ImmutableList.of(new PageInformation(null, null, 0L))
+         ),
+         null
+     ), response.getEntity());
+ 
+-    Response resultsResponse = resource.doGetResults(FINISHED_SELECT_MSQ_QUERY, null, null, makeOkRequest());
++    Response resultsResponse = resource.doGetResults(FINISHED_SELECT_MSQ_QUERY, 0L, makeOkRequest());
+     Assert.assertEquals(Response.Status.OK.getStatusCode(), resultsResponse.getStatus());
+ 
+     List<Map<String, Object>> rows = new ArrayList<>();
+@@ -737,42 +738,27 @@ public class SqlStatementResourceTest extends MSQTestBase
+     );
+ 
+     Assert.assertEquals(
+-        rows.subList(1, 2),
+-        getResultRowsFromResponse(resource.doGetResults(
+-            FINISHED_SELECT_MSQ_QUERY,
+-            1L,
+-            null,
+-            makeOkRequest()
+-        ))
+-    );
+-    Assert.assertEquals(
+-        rows.subList(0, 1),
++        rows,
+         getResultRowsFromResponse(resource.doGetResults(
+             FINISHED_SELECT_MSQ_QUERY,
+             0L,
+-            1L,
+             makeOkRequest()
+         ))
+     );
++
+     Assert.assertEquals(
+         rows,
+         getResultRowsFromResponse(resource.doGetResults(
+             FINISHED_SELECT_MSQ_QUERY,
+-            0L,
+-            3L,
++            null,
+             makeOkRequest()
+         ))
+     );
+ 
+     Assert.assertEquals(
+         Response.Status.BAD_REQUEST.getStatusCode(),
+-        resource.doGetResults(FINISHED_SELECT_MSQ_QUERY, -1L, 3L, makeOkRequest()).getStatus()
+-    );
+-    Assert.assertEquals(
+-        Response.Status.BAD_REQUEST.getStatusCode(),
+-        resource.doGetResults(FINISHED_SELECT_MSQ_QUERY, null, -1L, makeOkRequest()).getStatus()
++        resource.doGetResults(FINISHED_SELECT_MSQ_QUERY, -1L, makeOkRequest()).getStatus()
+     );
+-
+   }
+ 
+   @Test
+@@ -781,7 +767,7 @@ public class SqlStatementResourceTest extends MSQTestBase
+     for (String queryID : ImmutableList.of(ERRORED_SELECT_MSQ_QUERY, ERRORED_INSERT_MSQ_QUERY)) {
+       assertExceptionMessage(resource.doGetStatus(queryID, makeOkRequest()), FAILURE_MSG, Response.Status.OK);
+       assertExceptionMessage(
+-          resource.doGetResults(queryID, null, null, makeOkRequest()),
++          resource.doGetResults(queryID, 0L, makeOkRequest()),
+           StringUtils.format(
+               "Query[%s] failed. Hit status api for more details.",
+               queryID
+@@ -797,7 +783,7 @@ public class SqlStatementResourceTest extends MSQTestBase
+   }
+ 
+   @Test
+-  public void testFinishedInsertMSQQuery() throws Exception
++  public void testFinishedInsertMSQQuery()
+   {
+     Response response = resource.doGetStatus(FINISHED_INSERT_MSQ_QUERY, makeOkRequest());
+     Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+@@ -807,42 +793,17 @@ public class SqlStatementResourceTest extends MSQTestBase
+         CREATED_TIME,
+         null,
+         100L,
+-        new ResultSetInformation(null, null, null, "test", null),
++        new ResultSetInformation(null, null, null, "test", null, ImmutableList.of(new PageInformation(null, null, 0))),
+         null
+     ), response.getEntity());
+ 
+-    Response resultsResponse = resource.doGetResults(FINISHED_INSERT_MSQ_QUERY, null, null, makeOkRequest());
+-    Assert.assertEquals(Response.Status.OK.getStatusCode(), resultsResponse.getStatus());
+-
+-
+-    Assert.assertNull(getResultRowsFromResponse(resource.doGetResults(
+-        FINISHED_INSERT_MSQ_QUERY,
+-        1L,
+-        null,
+-        makeOkRequest()
+-    )));
+-    Assert.assertNull(getResultRowsFromResponse(resource.doGetResults(
+-        FINISHED_INSERT_MSQ_QUERY,
+-        0L,
+-        1L,
+-        makeOkRequest()
+-    )));
+-    Assert.assertNull(getResultRowsFromResponse(resource.doGetResults(
+-        FINISHED_INSERT_MSQ_QUERY,
+-        0L,
+-        3L,
+-        makeOkRequest()
+-    )));
++    Assert.assertEquals(Response.Status.OK.getStatusCode(), resource.doGetResults(FINISHED_INSERT_MSQ_QUERY, 0L, makeOkRequest()).getStatus());
++    Assert.assertEquals(Response.Status.OK.getStatusCode(), resource.doGetResults(FINISHED_INSERT_MSQ_QUERY, null, makeOkRequest()).getStatus());
+ 
+     Assert.assertEquals(
+         Response.Status.BAD_REQUEST.getStatusCode(),
+-        resource.doGetResults(FINISHED_INSERT_MSQ_QUERY, -1L, 3L, makeOkRequest()).getStatus()
+-    );
+-    Assert.assertEquals(
+-        Response.Status.BAD_REQUEST.getStatusCode(),
+-        resource.doGetResults(FINISHED_INSERT_MSQ_QUERY, null, -1L, makeOkRequest()).getStatus()
++        resource.doGetResults(FINISHED_INSERT_MSQ_QUERY, -1L, makeOkRequest()).getStatus()
+     );
+-
+   }
+ 
+   @Test
+@@ -850,7 +811,7 @@ public class SqlStatementResourceTest extends MSQTestBase
+   {
+     for (String queryID : ImmutableList.of(RUNNING_NON_MSQ_TASK, FAILED_NON_MSQ_TASK, FINISHED_NON_MSQ_TASK)) {
+       assertNullResponse(resource.doGetStatus(queryID, makeOkRequest()), Response.Status.NOT_FOUND);
+-      assertNullResponse(resource.doGetResults(queryID, null, null, makeOkRequest()), Response.Status.NOT_FOUND);
++      assertNullResponse(resource.doGetResults(queryID, 0L, makeOkRequest()), Response.Status.NOT_FOUND);
+       assertNullResponse(resource.deleteQuery(queryID, makeOkRequest()), Response.Status.NOT_FOUND);
+     }
+   }
+@@ -874,7 +835,7 @@ public class SqlStatementResourceTest extends MSQTestBase
+     );
+ 
+     assertExceptionMessage(
+-        resource.doGetResults(ACCEPTED_INSERT_MSQ_TASK, null, null, makeOkRequest()),
++        resource.doGetResults(ACCEPTED_INSERT_MSQ_TASK, 0L, makeOkRequest()),
+         StringUtils.format(
+             "Query[%s] is currently in [%s] state. Please wait for it to complete.",
+             ACCEPTED_INSERT_MSQ_TASK,
+@@ -907,7 +868,7 @@ public class SqlStatementResourceTest extends MSQTestBase
+     );
+ 
+     assertExceptionMessage(
+-        resource.doGetResults(RUNNING_INSERT_MSQ_QUERY, null, null, makeOkRequest()),
++        resource.doGetResults(RUNNING_INSERT_MSQ_QUERY, 0L, makeOkRequest()),
+         StringUtils.format(
+             "Query[%s] is currently in [%s] state. Please wait for it to complete.",
+             RUNNING_INSERT_MSQ_QUERY,
+@@ -924,15 +885,12 @@ public class SqlStatementResourceTest extends MSQTestBase
+   @Test
+   public void forbiddenTests()
+   {
+-
+     Assert.assertEquals(Response.Status.FORBIDDEN.getStatusCode(),
+                         resource.doGetStatus(RUNNING_SELECT_MSQ_QUERY,
+                                              makeExpectedReq(CalciteTests.SUPER_USER_AUTH_RESULT)).getStatus());
+-
+     Assert.assertEquals(Response.Status.FORBIDDEN.getStatusCode(),
+                         resource.doGetResults(RUNNING_SELECT_MSQ_QUERY,
+-                                              null,
+-                                              null,
++                                              1L,
+                                               makeExpectedReq(CalciteTests.SUPER_USER_AUTH_RESULT)).getStatus());
+     Assert.assertEquals(Response.Status.FORBIDDEN.getStatusCode(),
+                         resource.deleteQuery(RUNNING_SELECT_MSQ_QUERY,
+diff --git a/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/entity/ResultSetInformationTest.java b/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/entity/ResultSetInformationTest.java
+index 14d04b1b76..8e40d8daf1 100644
+--- a/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/entity/ResultSetInformationTest.java
++++ b/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/entity/ResultSetInformationTest.java
+@@ -31,15 +31,19 @@ public class ResultSetInformationTest
+ {
+   public static final ObjectMapper MAPPER = new ObjectMapper();
+ 
+-  public static final ResultSetInformation RESULTS = new ResultSetInformation(ResultFormat.OBJECT, 1L, 1L, "ds",
+-                                                                              ImmutableList.of(
+-                                                                                  ImmutableList.of("1"),
+-                                                                                  ImmutableList.of("2"),
+-                                                                                  ImmutableList.of("3")
+-                                                                              )
++  public static final ResultSetInformation RESULTS = new ResultSetInformation(
++      1L,
++      1L,
++      ResultFormat.OBJECT,
++      "ds",
++      ImmutableList.of(
++          ImmutableList.of("1"),
++          ImmutableList.of("2"),
++          ImmutableList.of("3")
++      ),
++      ImmutableList.of(new PageInformation(1L, 1L, 0))
+   );
+-  public static final String JSON_STRING = "{\"resultFormat\":\"object\",\"numRows\":1,\"sizeInBytes\":1,\"dataSource\":\"ds\",\"sampleRecords\":[[\"1\"],[\"2\"],[\"3\"]]}";
+-
++  public static final String JSON_STRING = "{\"numTotalRows\":1,\"totalSizeInBytes\":1,\"resultFormat\":\"object\",\"dataSource\":\"ds\",\"sampleRecords\":[[\"1\"],[\"2\"],[\"3\"]],\"pages\":[{\"numRows\":1,\"sizeInBytes\":1,\"id\":0}]}";
+ 
+   @Test
+   public void sanityTest() throws JsonProcessingException
+@@ -51,7 +55,7 @@ public class ResultSetInformationTest
+         MAPPER.readValue(MAPPER.writeValueAsString(RESULTS), ResultSetInformation.class).hashCode()
+     );
+     Assert.assertEquals(
+-        "ResultSetInformation{totalRows=1, totalSize=1, resultFormat=object, records=[[1], [2], [3]], dataSource='ds'}",
++        "ResultSetInformation{numTotalRows=1, totalSizeInBytes=1, resultFormat=object, records=[[1], [2], [3]], dataSource='ds', pages=[PageInformation{numRows=1, sizeInBytes=1, id=0}]}",
+         RESULTS.toString()
+     );
+   }
+diff --git a/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/entity/SqlStatementResultTest.java b/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/entity/SqlStatementResultTest.java
+index a0be3afcf7..1409450c69 100644
+--- a/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/entity/SqlStatementResultTest.java
++++ b/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/sql/entity/SqlStatementResultTest.java
+@@ -43,7 +43,7 @@ public class SqlStatementResultTest
+                                            + "\"createdAt\":\"2023-05-31T12:00:00.000Z\","
+                                            + "\"schema\":[{\"name\":\"_time\",\"type\":\"TIMESTAMP\",\"nativeType\":\"LONG\"},{\"name\":\"alias\",\"type\":\"VARCHAR\",\"nativeType\":\"STRING\"},{\"name\":\"market\",\"type\":\"VARCHAR\",\"nativeType\":\"STRING\"}],"
+                                            + "\"durationMs\":100,"
+-                                           + "\"result\":{\"resultFormat\":\"object\",\"numRows\":1,\"sizeInBytes\":1,\"dataSource\":\"ds\",\"sampleRecords\":[[\"1\"],[\"2\"],[\"3\"]]},"
++                                           + "\"result\":{\"numTotalRows\":1,\"totalSizeInBytes\":1,\"resultFormat\":\"object\",\"dataSource\":\"ds\",\"sampleRecords\":[[\"1\"],[\"2\"],[\"3\"]],\"pages\":[{\"numRows\":1,\"sizeInBytes\":1,\"id\":0}]},"
+                                            + "\"errorDetails\":{\"error\":\"druidException\",\"errorCode\":\"QueryNotSupported\",\"persona\":\"USER\",\"category\":\"UNCATEGORIZED\",\"errorMessage\":\"QueryNotSupported\",\"context\":{}}}";
+ 
+   public static final SqlStatementResult SQL_STATEMENT_RESULT = new SqlStatementResult(
+@@ -87,7 +87,7 @@ public class SqlStatementResultTest
+         + " createdAt=2023-05-31T12:00:00.000Z,"
+         + " sqlRowSignature=[ColumnNameAndTypes{colName='_time', sqlTypeName='TIMESTAMP', nativeTypeName='LONG'}, ColumnNameAndTypes{colName='alias', sqlTypeName='VARCHAR', nativeTypeName='STRING'}, ColumnNameAndTypes{colName='market', sqlTypeName='VARCHAR', nativeTypeName='STRING'}],"
+         + " durationInMs=100,"
+-        + " resultSetInformation=ResultSetInformation{totalRows=1, totalSize=1, resultFormat=object, records=[[1], [2], [3]], dataSource='ds'},"
++        + " resultSetInformation=ResultSetInformation{numTotalRows=1, totalSizeInBytes=1, resultFormat=object, records=[[1], [2], [3]], dataSource='ds', pages=[PageInformation{numRows=1, sizeInBytes=1, id=0}]},"
+         + " errorResponse={error=druidException, errorCode=QueryNotSupported, persona=USER, category=UNCATEGORIZED, errorMessage=QueryNotSupported, context={}}}",
+         SQL_STATEMENT_RESULT.toString()
+     );

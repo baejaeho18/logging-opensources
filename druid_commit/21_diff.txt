@@ -1,0 +1,70 @@
+commit 78db7a44148bfba0acdfe6612daa3113914808b7
+Author: Soumyava <93540295+somu-imply@users.noreply.github.com>
+Date:   Wed Jul 5 20:29:35 2023 -0700
+
+    A query in MSQ would issue wrong error code (#14531)
+    
+    with a RuntimeException. Now the RuntimeException is being replaced by an user facing DruidException of Invalid category which would allow calcite not to throw an uncategorized exception.
+
+diff --git a/sql/src/main/java/org/apache/druid/sql/calcite/external/ExternalOperatorConversion.java b/sql/src/main/java/org/apache/druid/sql/calcite/external/ExternalOperatorConversion.java
+index f2f667af4e..26fdd514e8 100644
+--- a/sql/src/main/java/org/apache/druid/sql/calcite/external/ExternalOperatorConversion.java
++++ b/sql/src/main/java/org/apache/druid/sql/calcite/external/ExternalOperatorConversion.java
+@@ -29,6 +29,7 @@ import org.apache.druid.catalog.model.table.BaseTableFunction;
+ import org.apache.druid.catalog.model.table.ExternalTableSpec;
+ import org.apache.druid.data.input.InputFormat;
+ import org.apache.druid.data.input.InputSource;
++import org.apache.druid.error.DruidException;
+ import org.apache.druid.guice.annotations.Json;
+ import org.apache.druid.java.util.common.IAE;
+ import org.apache.druid.segment.column.RowSignature;
+@@ -120,7 +121,9 @@ public class ExternalOperatorConversion extends DruidExternTableMacroConversion
+         );
+       }
+       catch (JsonProcessingException e) {
+-        throw new RuntimeException(e);
++        throw DruidException.forPersona(DruidException.Persona.USER)
++                            .ofCategory(DruidException.Category.INVALID_INPUT)
++                            .build(e, e.getMessage());
+       }
+     }
+   }
+diff --git a/sql/src/test/java/org/apache/druid/sql/calcite/CalciteInsertDmlTest.java b/sql/src/test/java/org/apache/druid/sql/calcite/CalciteInsertDmlTest.java
+index 1679b86fb0..71672ae8d5 100644
+--- a/sql/src/test/java/org/apache/druid/sql/calcite/CalciteInsertDmlTest.java
++++ b/sql/src/test/java/org/apache/druid/sql/calcite/CalciteInsertDmlTest.java
+@@ -1410,4 +1410,34 @@ public class CalciteInsertDmlTest extends CalciteIngestionDmlTest
+         )
+         .verify();
+   }
++
++  @Test
++  public void testErrorWithUnableToConstructColumnSignatureWithExtern()
++  {
++    final String sqlString = "insert into dst \n"
++                             + "select time_parse(\"time\") as __time, * \n"
++                             + "from table( \n"
++                             + "extern(\n"
++                             + "'{\"type\": \"s3\", \"uris\": [\\\"s3://imply-eng-datasets/qa/IngestionTest/wikipedia/files/wikiticker-2015-09-12-sampled.mini.json.gz\\\"]}',\n"
++                             + "'{\"type\": \"json\"}',\n"
++                             + "'[{\"name\": \"time\", \"type\": \"string\"}, {\"name\": \"channel\", \"type\": \"string\"}, {\"countryName\": \"string\"}]'\n"
++                             + ")\n"
++                             + ")\n"
++                             + "partitioned by DAY\n"
++                             + "clustered by channel";
++    HashMap<String, Object> context = new HashMap<>(DEFAULT_CONTEXT);
++    context.put(PlannerContext.CTX_SQL_OUTER_LIMIT, 100);
++    testIngestionQuery().context(context).sql(sqlString)
++                        .expectValidationError(
++                            new DruidExceptionMatcher(
++                                DruidException.Persona.USER,
++                                DruidException.Category.INVALID_INPUT,
++                                "general"
++                            )
++                                .expectMessageContains(
++                                    "Cannot construct instance of `org.apache.druid.segment.column.ColumnSignature`, problem: `java.lang.NullPointerException`\n"
++                                )
++                        )
++                        .verify();
++  }
+ }

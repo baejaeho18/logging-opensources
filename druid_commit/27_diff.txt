@@ -1,0 +1,141 @@
+commit 048dbcee8846d51a38b228c8aaac88851278277e
+Author: Gian Merlino <gianmerlino@gmail.com>
+Date:   Sat Jul 1 13:14:19 2023 -0700
+
+    MSQ: Improve InsertTimeOutOfBounds error message. (#14511)
+    
+    Nicer and actionable error message for `InsertTimeOutOfBounds` fault
+
+diff --git a/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/exec/ControllerImpl.java b/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/exec/ControllerImpl.java
+index 72657ed0e2..eebc95077b 100644
+--- a/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/exec/ControllerImpl.java
++++ b/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/exec/ControllerImpl.java
+@@ -1007,7 +1007,7 @@ public class ControllerImpl implements Controller
+ 
+       // Validate interval against the replaceTimeChunks set of intervals.
+       if (destination.getReplaceTimeChunks().stream().noneMatch(chunk -> chunk.contains(interval))) {
+-        throw new MSQException(new InsertTimeOutOfBoundsFault(interval));
++        throw new MSQException(new InsertTimeOutOfBoundsFault(interval, destination.getReplaceTimeChunks()));
+       }
+ 
+       final List<Pair<Integer, ClusterByPartition>> ranges = bucketEntry.getValue();
+diff --git a/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/indexing/error/InsertTimeOutOfBoundsFault.java b/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/indexing/error/InsertTimeOutOfBoundsFault.java
+index c15a3fb6d1..3a204cb79c 100644
+--- a/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/indexing/error/InsertTimeOutOfBoundsFault.java
++++ b/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/indexing/error/InsertTimeOutOfBoundsFault.java
+@@ -22,6 +22,7 @@ package org.apache.druid.msq.indexing.error;
+ import com.fasterxml.jackson.annotation.JsonProperty;
+ import org.joda.time.Interval;
+ 
++import java.util.List;
+ import java.util.Objects;
+ 
+ public class InsertTimeOutOfBoundsFault extends BaseMSQFault
+@@ -29,11 +30,23 @@ public class InsertTimeOutOfBoundsFault extends BaseMSQFault
+   static final String CODE = "InsertTimeOutOfBounds";
+ 
+   private final Interval interval;
++  private final List<Interval> intervalBounds;
+ 
+-  public InsertTimeOutOfBoundsFault(@JsonProperty("interval") Interval interval)
++  public InsertTimeOutOfBoundsFault(
++      @JsonProperty("interval") Interval interval,
++      @JsonProperty("intervalBounds") List<Interval> intervalBounds
++  )
+   {
+-    super(CODE, "Query generated time chunk [%s] out of bounds specified by replaceExistingTimeChunks", interval);
++    super(
++        CODE,
++        "Inserted data contains time chunk[%s] outside of bounds specified by OVERWRITE WHERE[%s]. "
++        + "If you want to include this data, expand your OVERWRITE WHERE. "
++        + "If you do not want to include this data, use SELECT ... WHERE to filter it from your inserted data.",
++        interval,
++        intervalBounds
++    );
+     this.interval = interval;
++    this.intervalBounds = intervalBounds;
+   }
+ 
+   @JsonProperty
+@@ -42,6 +55,12 @@ public class InsertTimeOutOfBoundsFault extends BaseMSQFault
+     return interval;
+   }
+ 
++  @JsonProperty
++  public List<Interval> getIntervalBounds()
++  {
++    return intervalBounds;
++  }
++
+   @Override
+   public boolean equals(Object o)
+   {
+@@ -55,12 +74,24 @@ public class InsertTimeOutOfBoundsFault extends BaseMSQFault
+       return false;
+     }
+     InsertTimeOutOfBoundsFault that = (InsertTimeOutOfBoundsFault) o;
+-    return Objects.equals(interval, that.interval);
++    return Objects.equals(interval, that.interval) && Objects.equals(
++        intervalBounds,
++        that.intervalBounds
++    );
+   }
+ 
+   @Override
+   public int hashCode()
+   {
+-    return Objects.hash(super.hashCode(), interval);
++    return Objects.hash(super.hashCode(), interval, intervalBounds);
++  }
++
++  @Override
++  public String toString()
++  {
++    return "InsertTimeOutOfBoundsFault{" +
++           "interval=" + interval +
++           ", intervalBounds=" + intervalBounds +
++           '}';
+   }
+ }
+diff --git a/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/exec/MSQFaultsTest.java b/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/exec/MSQFaultsTest.java
+index cfcc107333..b3bf3c408a 100644
+--- a/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/exec/MSQFaultsTest.java
++++ b/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/exec/MSQFaultsTest.java
+@@ -153,7 +153,12 @@ public class MSQFaultsTest extends MSQTestBase
+                          "replace into foo1 overwrite where __time >= TIMESTAMP '2002-01-02 00:00:00' and __time < TIMESTAMP '2002-01-03 00:00:00' select  __time, dim1 , count(*) as cnt from foo where dim1 is not null group by 1, 2 PARTITIONED by day clustered by dim1")
+                      .setExpectedDataSource("foo1")
+                      .setExpectedRowSignature(rowSignature)
+-                     .setExpectedMSQFault(new InsertTimeOutOfBoundsFault(Intervals.of("2000-01-02T00:00:00.000Z/2000-01-03T00:00:00.000Z")))
++                     .setExpectedMSQFault(
++                         new InsertTimeOutOfBoundsFault(
++                             Intervals.of("2000-01-02T00:00:00.000Z/2000-01-03T00:00:00.000Z"),
++                             Collections.singletonList(Intervals.of("2002-01-02/2002-01-03"))
++                         )
++                     )
+                      .verifyResults();
+   }
+ 
+diff --git a/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/indexing/error/MSQFaultSerdeTest.java b/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/indexing/error/MSQFaultSerdeTest.java
+index bcd0de1ef6..9e0dbd8acc 100644
+--- a/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/indexing/error/MSQFaultSerdeTest.java
++++ b/extensions-core/multi-stage-query/src/test/java/org/apache/druid/msq/indexing/error/MSQFaultSerdeTest.java
+@@ -32,6 +32,7 @@ import org.junit.Test;
+ 
+ import java.io.IOException;
+ import java.util.Arrays;
++import java.util.Collections;
+ 
+ public class MSQFaultSerdeTest
+ {
+@@ -63,7 +64,10 @@ public class MSQFaultSerdeTest
+     assertFaultSerde(new InsertCannotBeEmptyFault("the datasource"));
+     assertFaultSerde(InsertLockPreemptedFault.INSTANCE);
+     assertFaultSerde(InsertTimeNullFault.INSTANCE);
+-    assertFaultSerde(new InsertTimeOutOfBoundsFault(Intervals.ETERNITY));
++    assertFaultSerde(new InsertTimeOutOfBoundsFault(
++        Intervals.of("2001/2002"),
++        Collections.singletonList(Intervals.of("2000/2001"))
++    ));
+     assertFaultSerde(new InvalidNullByteFault("the source", 1, "the column", "the value", 2));
+     assertFaultSerde(new NotEnoughMemoryFault(1000, 1000, 900, 1, 2));
+     assertFaultSerde(QueryNotSupportedFault.INSTANCE);

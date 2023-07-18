@@ -1,0 +1,99 @@
+commit f29a9faa94839bacfaad94bdeb4f439fe379dd18
+Author: Jonathan Wei <jon-wei@users.noreply.github.com>
+Date:   Wed Jul 5 17:12:54 2023 -0500
+
+    Better surfacing of invalid pattern errors for SQL REGEXP_EXTRACT function (#14505)
+
+diff --git a/sql/src/main/java/org/apache/druid/sql/calcite/expression/builtin/RegexpExtractOperatorConversion.java b/sql/src/main/java/org/apache/druid/sql/calcite/expression/builtin/RegexpExtractOperatorConversion.java
+index d131e5a66a..0de6095413 100644
+--- a/sql/src/main/java/org/apache/druid/sql/calcite/expression/builtin/RegexpExtractOperatorConversion.java
++++ b/sql/src/main/java/org/apache/druid/sql/calcite/expression/builtin/RegexpExtractOperatorConversion.java
+@@ -24,6 +24,7 @@ import org.apache.calcite.sql.SqlFunction;
+ import org.apache.calcite.sql.SqlFunctionCategory;
+ import org.apache.calcite.sql.type.SqlTypeFamily;
+ import org.apache.calcite.sql.type.SqlTypeName;
++import org.apache.druid.error.InvalidSqlInput;
+ import org.apache.druid.java.util.common.StringUtils;
+ import org.apache.druid.math.expr.Expr;
+ import org.apache.druid.query.extraction.RegexDimExtractionFn;
+@@ -33,6 +34,8 @@ import org.apache.druid.sql.calcite.expression.OperatorConversions;
+ import org.apache.druid.sql.calcite.expression.SqlOperatorConversion;
+ import org.apache.druid.sql.calcite.planner.PlannerContext;
+ 
++import java.util.regex.PatternSyntaxException;
++
+ public class RegexpExtractOperatorConversion implements SqlOperatorConversion
+ {
+   private static final SqlFunction SQL_FUNCTION = OperatorConversions
+@@ -74,16 +77,29 @@ public class RegexpExtractOperatorConversion implements SqlOperatorConversion
+           if (arg.isSimpleExtraction() && patternExpr.isLiteral() && (indexExpr == null || indexExpr.isLiteral())) {
+             final String pattern = (String) patternExpr.getLiteralValue();
+ 
+-            return arg.getSimpleExtraction().cascade(
+-                new RegexDimExtractionFn(
+-                    // Undo the empty-to-null conversion from patternExpr parsing (patterns cannot be null, even in
+-                    // non-SQL-compliant null handling mode).
+-                    StringUtils.nullToEmptyNonDruidDataString(pattern),
+-                    indexExpr == null ? DEFAULT_INDEX : ((Number) indexExpr.getLiteralValue()).intValue(),
+-                    true,
+-                    null
+-                )
+-            );
++
++            try {
++              return arg.getSimpleExtraction().cascade(
++                  new RegexDimExtractionFn(
++                      // Undo the empty-to-null conversion from patternExpr parsing (patterns cannot be null, even in
++                      // non-SQL-compliant null handling mode).
++                      StringUtils.nullToEmptyNonDruidDataString(pattern),
++                      indexExpr == null ? DEFAULT_INDEX : ((Number) indexExpr.getLiteralValue()).intValue(),
++                      true,
++                      null
++                  )
++              );
++            }
++            catch (PatternSyntaxException e) {
++              throw InvalidSqlInput.exception(
++                  e,
++                  StringUtils.format(
++                      "An invalid pattern [%s] was provided for the REGEXP_EXTRACT function, error: [%s]",
++                      e.getPattern(),
++                      e.getMessage()
++                  )
++              );
++            }
+           } else {
+             return null;
+           }
+diff --git a/sql/src/test/java/org/apache/druid/sql/calcite/CalciteQueryTest.java b/sql/src/test/java/org/apache/druid/sql/calcite/CalciteQueryTest.java
+index de6697388f..54c8b36070 100644
+--- a/sql/src/test/java/org/apache/druid/sql/calcite/CalciteQueryTest.java
++++ b/sql/src/test/java/org/apache/druid/sql/calcite/CalciteQueryTest.java
+@@ -7511,6 +7511,27 @@ public class CalciteQueryTest extends BaseCalciteQueryTest
+     );
+   }
+ 
++  @Test
++  public void testRegexpExtractWithBadRegexPattern()
++  {
++    // Cannot vectorize due to extractionFn in dimension spec.
++    cannotVectorize();
++
++    expectedException.expect(DruidException.class);
++    expectedException.expectMessage(
++        "An invalid pattern [^(.))] was provided for the REGEXP_EXTRACT function, " +
++        "error: [Unmatched closing ')' near index 3\n^(.))\n   ^]"
++    );
++
++    testQuery(
++        "SELECT DISTINCT\n"
++        + "  REGEXP_EXTRACT(dim1, '^(.))', 1)\n"
++        + "FROM foo",
++        ImmutableList.of(),
++        ImmutableList.of()
++    );
++  }
++
+   @Test
+   public void testRegexpExtractFilterViaNotNullCheck()
+   {
