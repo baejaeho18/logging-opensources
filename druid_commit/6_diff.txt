@@ -1,0 +1,32 @@
+commit cc8b210e4c6acc4f1ccb0af6fe163209357ddf18
+Author: Gian Merlino <gianmerlino@gmail.com>
+Date:   Wed Jul 12 07:33:27 2023 -0700
+
+    AggregatorFactory: Use guessAggregatorHeapFootprint when factorizeWithSize is not implemented. (#14567)
+    
+    There are two ways of estimating heap footprint of an Aggregator:
+    
+    1) AggregatorFactory#guessAggregatorHeapFootprint
+    2) AggregatorFactory#factorizeWithSize + Aggregator#aggregateWithSize
+    
+    When the second path is used, the default implementation of factorizeWithSize
+    is now updated to delegate to guessAggregatorHeapFootprint, making these equivalent.
+    The old logic used getMaxIntermediateSize, which is less accurate.
+    
+    Also fixes a bug where, when using the second path, calling factorizeWithSize
+    on PassthroughAggregatorFactory would fail because getMaxIntermediateSize was
+    not implemented. (There is no buffer aggregator, so there would be no need.)
+
+diff --git a/processing/src/main/java/org/apache/druid/query/aggregation/AggregatorFactory.java b/processing/src/main/java/org/apache/druid/query/aggregation/AggregatorFactory.java
+index 023cb1654e..3e54f449d6 100644
+--- a/processing/src/main/java/org/apache/druid/query/aggregation/AggregatorFactory.java
++++ b/processing/src/main/java/org/apache/druid/query/aggregation/AggregatorFactory.java
+@@ -87,7 +87,7 @@ public abstract class AggregatorFactory implements Cacheable
+    */
+   public AggregatorAndSize factorizeWithSize(ColumnSelectorFactory metricFactory)
+   {
+-    return new AggregatorAndSize(factorize(metricFactory), getMaxIntermediateSize());
++    return new AggregatorAndSize(factorize(metricFactory), guessAggregatorHeapFootprint(0));
+   }
+ 
+   /**
