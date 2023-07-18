@@ -1,0 +1,30 @@
+commit 589aac8b317104fd34b5c57e0ca248e6ca3e4703
+Author: zachjsh <zachjsh@gmail.com>
+Date:   Thu Jul 13 14:34:21 2023 -0400
+
+    Make errorCode of InsertTimeOutOfBoundsFault consistent with others (#14495)
+    
+    The errorCode of this fault when serialized over the wire was being
+    set to the name of the class `InsertTimeOutOfBoundsFault` instead of
+    the CODE `InsertTimeOutOfBounds`. All other faults' errorCodes are
+    serialized as the respective Fault's code, so making consistent here
+    as well.
+
+diff --git a/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/indexing/error/InsertTimeOutOfBoundsFault.java b/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/indexing/error/InsertTimeOutOfBoundsFault.java
+index 3a204cb79c..97638b9570 100644
+--- a/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/indexing/error/InsertTimeOutOfBoundsFault.java
++++ b/extensions-core/multi-stage-query/src/main/java/org/apache/druid/msq/indexing/error/InsertTimeOutOfBoundsFault.java
+@@ -20,11 +20,13 @@
+ package org.apache.druid.msq.indexing.error;
+ 
+ import com.fasterxml.jackson.annotation.JsonProperty;
++import com.fasterxml.jackson.annotation.JsonTypeName;
+ import org.joda.time.Interval;
+ 
+ import java.util.List;
+ import java.util.Objects;
+ 
++@JsonTypeName(InsertTimeOutOfBoundsFault.CODE)
+ public class InsertTimeOutOfBoundsFault extends BaseMSQFault
+ {
+   static final String CODE = "InsertTimeOutOfBounds";
