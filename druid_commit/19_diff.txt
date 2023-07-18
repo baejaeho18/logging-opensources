@@ -1,0 +1,715 @@
+commit d02bb8bb6e1e6d0aae3ebdb06f2f1ea335b8ad6d
+Author: Abhishek Radhakrishnan <abhishek.rb19@gmail.com>
+Date:   Thu Jul 6 11:13:32 2023 -0700
+
+    Set explain attributes after the query is prepared (#14490)
+    
+    * Add support for DML WITH AS.
+    
+    * One more UT for with as subquery.
+    
+    * Add a test with join query
+    
+    * Use root query prepared node instead of individual SqlNode types.
+    
+    - Set the explain plan attributes after the query is prepared when
+    the query is planned and we've the finalized output names in the root
+    source rel node.
+    - Adjust tests; add unit test for negative ordinal case.
+    - Remove the exception / error handling logic from resolveClusteredBy
+    function since the validations now happen before it comes to the function
+    
+    * Update comment.
+
+diff --git a/sql/src/main/java/org/apache/druid/sql/calcite/parser/DruidSqlParserUtils.java b/sql/src/main/java/org/apache/druid/sql/calcite/parser/DruidSqlParserUtils.java
+index 36fe62e2db..0cd11b5e02 100644
+--- a/sql/src/main/java/org/apache/druid/sql/calcite/parser/DruidSqlParserUtils.java
++++ b/sql/src/main/java/org/apache/druid/sql/calcite/parser/DruidSqlParserUtils.java
+@@ -32,13 +32,11 @@ import org.apache.calcite.sql.SqlLiteral;
+ import org.apache.calcite.sql.SqlNode;
+ import org.apache.calcite.sql.SqlNodeList;
+ import org.apache.calcite.sql.SqlNumericLiteral;
+-import org.apache.calcite.sql.SqlOperator;
+ import org.apache.calcite.sql.SqlOrderBy;
+-import org.apache.calcite.sql.SqlSelect;
+ import org.apache.calcite.sql.SqlTimestampLiteral;
+-import org.apache.calcite.sql.SqlUtil;
+ import org.apache.calcite.sql.dialect.CalciteSqlDialect;
+ import org.apache.calcite.tools.ValidationException;
++import org.apache.calcite.util.Pair;
+ import org.apache.druid.error.DruidException;
+ import org.apache.druid.error.InvalidSqlInput;
+ import org.apache.druid.java.util.common.StringUtils;
+@@ -327,67 +325,41 @@ public class DruidSqlParserUtils
+    * </pre>
+    *
+    * <p>
+-   * The function will return the following clusteredBy columns for the above SQL: ["__time", "page_alias", "FLOOR(\"cost\")", cityName"]
++   * The function will return the following clusteredBy columns for the above SQL: ["__time", "page_alias", "FLOOR(\"cost\")", cityName"].
+    * Any ordinal and expression specified in the CLUSTERED BY clause will resolve to the final output column name.
+    * </p>
++   * <p>
++   * This function must be called after the query is prepared when all the validations are complete, including {@link #validateClusteredByColumns},
++   * so we can safely access the arguments.
++   * </p>
+    * @param clusteredByNodes  List of {@link SqlNode}s representing columns to be clustered by.
+-   * @param sourceNode The select or order by source node.
++   * @param sourceFieldMappings The source field output mappings extracted from the validated root query rel node post prepare phase.
++   *
+    */
+   @Nullable
+-  public static List<String> resolveClusteredByColumnsToOutputColumns(SqlNodeList clusteredByNodes, SqlNode sourceNode)
++  public static List<String> resolveClusteredByColumnsToOutputColumns(
++      final SqlNodeList clusteredByNodes,
++      final ImmutableList<Pair<Integer, String>> sourceFieldMappings
++  )
+   {
+     // CLUSTERED BY is an optional clause
+     if (clusteredByNodes == null) {
+       return null;
+     }
+ 
+-    Preconditions.checkArgument(
+-        sourceNode instanceof SqlSelect || sourceNode instanceof SqlOrderBy,
+-        "Source node must be either SqlSelect or SqlOrderBy, but found [%s]",
+-        sourceNode == null ? null : sourceNode.getKind()
+-    );
+-
+-    final SqlSelect selectNode = (sourceNode instanceof SqlSelect) ? (SqlSelect) sourceNode
+-                                                                   : (SqlSelect) ((SqlOrderBy) sourceNode).query;
+-    final List<SqlNode> selectList = selectNode.getSelectList().getList();
+     final List<String> retClusteredByNames = new ArrayList<>();
+ 
+     for (SqlNode clusteredByNode : clusteredByNodes) {
+ 
+-      if (SqlUtil.isLiteral(clusteredByNode)) {
+-        // The node is a literal number -- an ordinal is specified in the CLUSTERED BY clause. Validate and lookup the
+-        // ordinal in the select list.
+-        int ordinal = ((SqlNumericLiteral) clusteredByNode).getValueAs(Integer.class);
+-        if (ordinal < 1 || ordinal > selectList.size()) {
+-          throw InvalidSqlInput.exception(
+-              "Ordinal[%d] specified in the CLUSTERED BY clause is invalid. It must be between 1 and %d.",
+-              ordinal,
+-              selectList.size()
+-          );
+-        }
+-        SqlNode node = selectList.get(ordinal - 1);
+-
+-        if (node instanceof SqlBasicCall) {
+-          retClusteredByNames.add(getColumnNameFromSqlCall(node));
+-        } else {
+-          Preconditions.checkArgument(
+-              node instanceof SqlIdentifier,
+-              "Node must be a SqlIdentifier, but found [%s]",
+-              node.getKind()
+-          );
+-          SqlIdentifier n = ((SqlIdentifier) node);
+-          retClusteredByNames.add(n.isSimple() ? n.getSimple() : n.names.get(1));
+-        }
++      if (clusteredByNode instanceof SqlNumericLiteral) {
++        // The node is a literal number -- an ordinal in the CLUSTERED BY clause. Lookup the ordinal in field mappings.
++        final int ordinal = ((SqlNumericLiteral) clusteredByNode).getValueAs(Integer.class);
++        retClusteredByNames.add(sourceFieldMappings.get(ordinal - 1).right);
+       } else if (clusteredByNode instanceof SqlBasicCall) {
+         // The node is an expression/operator.
+-        retClusteredByNames.add(getColumnNameFromSqlCall(clusteredByNode));
++        retClusteredByNames.add(getColumnNameFromSqlCall((SqlBasicCall) clusteredByNode));
+       } else {
+-        // The node is a simple SqlIdentifier, add the name.
+-        Preconditions.checkArgument(
+-            clusteredByNode instanceof SqlIdentifier,
+-            "ClusteredBy node must be a SqlIdentifier, but found [%s]",
+-            clusteredByNode.getKind()
+-        );
++        // For everything else, just return the simple string representation of the node.
+         retClusteredByNames.add(clusteredByNode.toString());
+       }
+     }
+@@ -395,16 +367,12 @@ public class DruidSqlParserUtils
+     return retClusteredByNames;
+   }
+ 
+-  private static String getColumnNameFromSqlCall(final SqlNode sqlCallNode)
++  private static String getColumnNameFromSqlCall(final SqlBasicCall sqlCallNode)
+   {
+-    Preconditions.checkArgument(sqlCallNode instanceof SqlBasicCall, "Node must be a SqlBasicCall type");
+-
+     // The node may be an alias or expression, in which case we'll get the output name
+-    SqlBasicCall sqlBasicCall = (SqlBasicCall) sqlCallNode;
+-    SqlOperator operator = (sqlBasicCall).getOperator();
+-    if (operator instanceof SqlAsOperator) {
++    if (sqlCallNode.getOperator() instanceof SqlAsOperator) {
+       // Get the output name for the alias operator.
+-      SqlNode sqlNode = (sqlBasicCall).getOperandList().get(1);
++      SqlNode sqlNode = sqlCallNode.getOperandList().get(1);
+       return sqlNode.toString();
+     } else {
+       // Return the expression as-is.
+@@ -430,6 +398,18 @@ public class DruidSqlParserUtils
+             clusteredByNode
+         );
+       }
++
++      // Calcite already throws Ordinal out of range exception for positive non-existent ordinals. This negative ordinal check
++      // is for completeness and is fixed in later Calcite versions.
++      if (clusteredByNode instanceof SqlNumericLiteral) {
++        final int ordinal = ((SqlNumericLiteral) clusteredByNode).getValueAs(Integer.class);
++        if (ordinal < 1) {
++          throw InvalidSqlInput.exception(
++              "Ordinal [%d] specified in the CLUSTERED BY clause is invalid. It must be a positive integer.",
++              ordinal
++          );
++        }
++      }
+     }
+   }
+ 
+diff --git a/sql/src/main/java/org/apache/druid/sql/calcite/planner/DruidPlanner.java b/sql/src/main/java/org/apache/druid/sql/calcite/planner/DruidPlanner.java
+index 7d7bdc8d54..490f220ea9 100644
+--- a/sql/src/main/java/org/apache/druid/sql/calcite/planner/DruidPlanner.java
++++ b/sql/src/main/java/org/apache/druid/sql/calcite/planner/DruidPlanner.java
+@@ -151,9 +151,6 @@ public class DruidPlanner implements Closeable
+     handler = createHandler(root);
+     handler.validate();
+     plannerContext.setResourceActions(handler.resourceActions());
+-    if (root.getKind() == SqlKind.EXPLAIN) {
+-      plannerContext.setExplainAttributes(handler.explainAttributes());
+-    }
+     state = State.VALIDATED;
+   }
+ 
+diff --git a/sql/src/main/java/org/apache/druid/sql/calcite/planner/IngestHandler.java b/sql/src/main/java/org/apache/druid/sql/calcite/planner/IngestHandler.java
+index 2ce19acbba..3d38c6b3f2 100644
+--- a/sql/src/main/java/org/apache/druid/sql/calcite/planner/IngestHandler.java
++++ b/sql/src/main/java/org/apache/druid/sql/calcite/planner/IngestHandler.java
+@@ -277,7 +277,7 @@ public abstract class IngestHandler extends QueryHandler
+           DruidSqlInsert.OPERATOR.getName(),
+           targetDatasource,
+           ingestionGranularity,
+-          DruidSqlParserUtils.resolveClusteredByColumnsToOutputColumns(sqlNode.getClusteredBy(), sqlNode.getSource()),
++          DruidSqlParserUtils.resolveClusteredByColumnsToOutputColumns(sqlNode.getClusteredBy(), rootQueryRel.fields),
+           null
+       );
+     }
+@@ -351,7 +351,7 @@ public abstract class IngestHandler extends QueryHandler
+           DruidSqlReplace.OPERATOR.getName(),
+           targetDatasource,
+           ingestionGranularity,
+-          DruidSqlParserUtils.resolveClusteredByColumnsToOutputColumns(sqlNode.getClusteredBy(), sqlNode.getSource()),
++          DruidSqlParserUtils.resolveClusteredByColumnsToOutputColumns(sqlNode.getClusteredBy(), rootQueryRel.fields),
+           replaceIntervals
+       );
+     }
+diff --git a/sql/src/main/java/org/apache/druid/sql/calcite/planner/QueryHandler.java b/sql/src/main/java/org/apache/druid/sql/calcite/planner/QueryHandler.java
+index ac3c6faff1..bb313222dc 100644
+--- a/sql/src/main/java/org/apache/druid/sql/calcite/planner/QueryHandler.java
++++ b/sql/src/main/java/org/apache/druid/sql/calcite/planner/QueryHandler.java
+@@ -162,6 +162,7 @@ public abstract class QueryHandler extends SqlStatementHandler.BaseStatementHand
+     final RelDataType returnedRowType;
+ 
+     if (explain != null) {
++      handlerContext.plannerContext().setExplainAttributes(explainAttributes());
+       returnedRowType = getExplainStructType(typeFactory);
+     } else {
+       returnedRowType = returnedRowType();
+diff --git a/sql/src/test/java/org/apache/druid/sql/calcite/CalciteInsertDmlTest.java b/sql/src/test/java/org/apache/druid/sql/calcite/CalciteInsertDmlTest.java
+index 71672ae8d5..395543f082 100644
+--- a/sql/src/test/java/org/apache/druid/sql/calcite/CalciteInsertDmlTest.java
++++ b/sql/src/test/java/org/apache/druid/sql/calcite/CalciteInsertDmlTest.java
+@@ -755,6 +755,209 @@ public class CalciteInsertDmlTest extends CalciteIngestionDmlTest
+     didTest = true;
+   }
+ 
++  @Test
++  public void testExplainPlanInsertWithAsSubQueryClusteredBy()
++  {
++    skipVectorize();
++
++    final String resources = "[{\"name\":\"EXTERNAL\",\"type\":\"EXTERNAL\"},{\"name\":\"foo\",\"type\":\"DATASOURCE\"}]";
++    final String attributes = "{\"statementType\":\"INSERT\",\"targetDataSource\":\"foo\",\"partitionedBy\":{\"type\":\"all\"},\"clusteredBy\":[\"namespace\",\"country\"]}";
++
++    final String sql = "EXPLAIN PLAN FOR\n"
++                       + "INSERT INTO \"foo\"\n"
++                       + "WITH dd AS (\n"
++                       + "SELECT * FROM TABLE(\n"
++                       + "  EXTERN(\n"
++                       + "    '{\"type\":\"inline\",\"data\":\"{\\\" \\\": 1681794225551, \\\"namespace\\\": \\\"day1\\\", \\\"country\\\": \\\"one\\\"}\\n{\\\"__time\\\": 1681794225558, \\\"namespace\\\": \\\"day2\\\", \\\"country\\\": \\\"two\\\"}\"}',\n"
++                       + "    '{\"type\":\"json\"}',\n"
++                       + "    '[{\"name\":\"__time\",\"type\":\"long\"},{\"name\":\"namespace\",\"type\":\"string\"},{\"name\":\"country\",\"type\":\"string\"}]'\n"
++                       + "  )\n"
++                       + "))\n"
++                       + "\n"
++                       + "SELECT\n"
++                       + " __time,\n"
++                       + "  namespace,\n"
++                       + "  country\n"
++                       + "FROM dd\n"
++                       + "PARTITIONED BY ALL\n"
++                       + "CLUSTERED BY 2, 3";
++
++    final String legacyExplanation = "DruidQueryRel("
++                                     + "query=[{\"queryType\":\"scan\",\"dataSource\":{\"type\":\"external\","
++                                     + "\"inputSource\":{\"type\":\"inline\",\"data\":\"{\\\" \\\": 1681794225551, \\\"namespace\\\": \\\"day1\\\", \\\"country\\\": \\\"one\\\"}\\n"
++                                     + "{\\\"__time\\\": 1681794225558, \\\"namespace\\\": \\\"day2\\\", \\\"country\\\": \\\"two\\\"}\"},"
++                                     + "\"inputFormat\":{\"type\":\"json\",\"keepNullColumns\":false,\"assumeNewlineDelimited\":false,\"useJsonNodeReader\":false},"
++                                     + "\"signature\":[{\"name\":\"__time\",\"type\":\"LONG\"},{\"name\":\"namespace\",\"type\":\"STRING\"},{\"name\":\"country\",\"type\":\"STRING\"}]},"
++                                     + "\"intervals\":{\"type\":\"intervals\",\"intervals\":[\"-146136543-09-08T08:23:32.096Z/146140482-04-24T15:36:27.903Z\"]},"
++                                     + "\"resultFormat\":\"compactedList\",\"orderBy\":[{\"columnName\":\"namespace\",\"order\":\"ascending\"},{\"columnName\":\"country\",\"order\":\"ascending\"}],"
++                                     + "\"columns\":[\"__time\",\"country\",\"namespace\"],\"legacy\":false,\"context\":{\"sqlInsertSegmentGranularity\":\"{\\\"type\\\":\\\"all\\\"}\","
++                                     + "\"sqlQueryId\":\"dummy\",\"vectorize\":\"false\",\"vectorizeVirtualColumns\":\"false\"},\"granularity\":{\"type\":\"all\"}}],"
++                                     + " signature=[{__time:LONG, namespace:STRING, country:STRING}])\n";
++
++    // Use testQuery for EXPLAIN (not testIngestionQuery).
++    testQuery(
++        PLANNER_CONFIG_LEGACY_QUERY_EXPLAIN,
++        ImmutableMap.of("sqlQueryId", "dummy"),
++        Collections.emptyList(),
++        sql,
++        CalciteTests.SUPER_USER_AUTH_RESULT,
++        ImmutableList.of(),
++        new DefaultResultsVerifier(
++            ImmutableList.of(
++                new Object[]{
++                    legacyExplanation,
++                    resources,
++                    attributes
++                }
++            ),
++            null
++        ),
++        null
++    );
++
++    // Test correctness of the query when only the CLUSTERED BY clause is present
++    final String explanation = "[{\"query\":{\"queryType\":\"scan\"," + "\"dataSource\":{\"type\":\"external\",\"inputSource\":{\"type\":\"inline\","
++                               + "\"data\":\"{\\\" \\\": 1681794225551, \\\"namespace\\\": \\\"day1\\\", \\\"country\\\": \\\"one\\\"}\\n"
++                               + "{\\\"__time\\\": 1681794225558, \\\"namespace\\\": \\\"day2\\\", \\\"country\\\": \\\"two\\\"}\"},"
++                               + "\"inputFormat\":{\"type\":\"json\",\"keepNullColumns\":false,\"assumeNewlineDelimited\":false,\"useJsonNodeReader\":false},"
++                               + "\"signature\":[{\"name\":\"__time\",\"type\":\"LONG\"},{\"name\":\"namespace\",\"type\":\"STRING\"},{\"name\":\"country\",\"type\":\"STRING\"}]},"
++                               + "\"intervals\":{\"type\":\"intervals\",\"intervals\":[\"-146136543-09-08T08:23:32.096Z/146140482-04-24T15:36:27.903Z\"]},"
++                               + "\"resultFormat\":\"compactedList\",\"orderBy\":[{\"columnName\":\"namespace\",\"order\":\"ascending\"},{\"columnName\":\"country\",\"order\":\"ascending\"}],"
++                               + "\"columns\":[\"__time\",\"country\",\"namespace\"],\"legacy\":false,\"context\":{\"sqlInsertSegmentGranularity\":\"{\\\"type\\\":\\\"all\\\"}\","
++                               + "\"sqlQueryId\":\"dummy\",\"vectorize\":\"false\",\"vectorizeVirtualColumns\":\"false\"},\"granularity\":{\"type\":\"all\"}},"
++                               + "\"signature\":[{\"name\":\"__time\",\"type\":\"LONG\"},{\"name\":\"namespace\",\"type\":\"STRING\"},{\"name\":\"country\",\"type\":\"STRING\"}],"
++                               + "\"columnMappings\":[{\"queryColumn\":\"__time\",\"outputColumn\":\"__time\"},{\"queryColumn\":\"namespace\",\"outputColumn\":\"namespace\"},"
++                               + "{\"queryColumn\":\"country\",\"outputColumn\":\"country\"}]}]";
++
++    testQuery(
++        PLANNER_CONFIG_NATIVE_QUERY_EXPLAIN,
++        ImmutableMap.of("sqlQueryId", "dummy"),
++        Collections.emptyList(),
++        sql,
++        CalciteTests.SUPER_USER_AUTH_RESULT,
++        ImmutableList.of(),
++        new DefaultResultsVerifier(
++            ImmutableList.of(
++                new Object[]{
++                    explanation,
++                    resources,
++                    attributes
++                }
++            ),
++            null
++        ),
++        null
++    );
++
++    // Not using testIngestionQuery, so must set didTest manually to satisfy the check in tearDown.
++    didTest = true;
++  }
++
++  @Test
++  public void testExplainPlanInsertJoinQuery()
++  {
++    skipVectorize();
++
++    final String resources = "[{\"name\":\"EXTERNAL\",\"type\":\"EXTERNAL\"},{\"name\":\"my_table\",\"type\":\"DATASOURCE\"}]";
++    final String attributes = "{\"statementType\":\"INSERT\",\"targetDataSource\":\"my_table\",\"partitionedBy\":\"HOUR\",\"clusteredBy\":[\"__time\",\"isRobotAlias\",\"countryCapital\",\"regionName\"]}";
++
++    final String sql = "EXPLAIN PLAN FOR\n"
++                       + "INSERT INTO my_table\n"
++                       + "WITH\n"
++                       + "wikidata AS (SELECT * FROM TABLE(\n"
++                       + "  EXTERN(\n"
++                       + "    '{\"type\":\"http\",\"uris\":[\"https://boo.gz\"]}',\n"
++                       + "    '{\"type\":\"json\"}',\n"
++                       + "    '[{\"name\":\"isRobot\",\"type\":\"string\"},{\"name\":\"timestamp\",\"type\":\"string\"},{\"name\":\"cityName\",\"type\":\"string\"},{\"name\":\"countryIsoCode\",\"type\":\"string\"},{\"name\":\"regionName\",\"type\":\"string\"}]'\n"
++                       + "  )\n"
++                       + ")),\n"
++                       + "countries AS (SELECT * FROM TABLE(\n"
++                       + "  EXTERN(\n"
++                       + "    '{\"type\":\"http\",\"uris\":[\"https://foo.tsv\"]}',\n"
++                       + "    '{\"type\":\"tsv\",\"findColumnsFromHeader\":true}',\n"
++                       + "    '[{\"name\":\"Country\",\"type\":\"string\"},{\"name\":\"Capital\",\"type\":\"string\"},"
++                       + "{\"name\":\"ISO3\",\"type\":\"string\"},{\"name\":\"ISO2\",\"type\":\"string\"}]'\n"
++                       + "  )\n"
++                       + "))\n"
++                       + "SELECT\n"
++                       + "  TIME_PARSE(\"timestamp\") AS __time,\n"
++                       + "  isRobot AS isRobotAlias,\n"
++                       + "  countries.Capital AS countryCapital,\n"
++                       + "  regionName\n"
++                       + "FROM wikidata\n"
++                       + "LEFT JOIN countries ON wikidata.countryIsoCode = countries.ISO2\n"
++                       + "PARTITIONED BY HOUR\n"
++                       + "CLUSTERED BY 1, 2, 3, regionName";
++
++    final String legacyExplanation = "DruidJoinQueryRel(condition=[=($3, $6)], joinType=[left], query=[{\"queryType\":\"scan\",\"dataSource\":{\"type\":\"table\",\"name\":\"__join__\"},"
++                                     + "\"intervals\":{\"type\":\"intervals\",\"intervals\":[\"-146136543-09-08T08:23:32.096Z/146140482-04-24T15:36:27.903Z\"]},\"virtualColumns\":[{\"type\":\"expression\",\"name\":\"v0\","
++                                     + "\"expression\":\"timestamp_parse(\\\"timestamp\\\",null,'UTC')\",\"outputType\":\"LONG\"}],\"resultFormat\":\"compactedList\",\"orderBy\":[{\"columnName\":\"v0\",\"order\":\"ascending\"},{\"columnName\":\"isRobot\",\"order\":\"ascending\"},"
++                                     + "{\"columnName\":\"Capital\",\"order\":\"ascending\"},{\"columnName\":\"regionName\",\"order\":\"ascending\"}],\"columns\":[\"Capital\",\"isRobot\",\"regionName\",\"v0\"],\"legacy\":false,\"context\":{\"sqlInsertSegmentGranularity\":\"\\\"HOUR\\\"\",\"sqlQueryId\":\"dummy\","
++                                     + "\"vectorize\":\"false\",\"vectorizeVirtualColumns\":\"false\"},\"granularity\":{\"type\":\"all\"}}], signature=[{v0:LONG, isRobot:STRING, Capital:STRING, regionName:STRING}])\n"
++                                     + "  DruidQueryRel(query=[{\"queryType\":\"scan\",\"dataSource\":{\"type\":\"external\",\"inputSource\":{\"type\":\"http\",\"uris\":[\"https://boo.gz\"]},\"inputFormat\":{\"type\":\"json\",\"keepNullColumns\":false,\"assumeNewlineDelimited\":false,"
++                                     + "\"useJsonNodeReader\":false},\"signature\":[{\"name\":\"isRobot\",\"type\":\"STRING\"},{\"name\":\"timestamp\",\"type\":\"STRING\"},{\"name\":\"cityName\",\"type\":\"STRING\"},{\"name\":\"countryIsoCode\",\"type\":\"STRING\"},{\"name\":\"regionName\",\"type\":\"STRING\"}]},"
++                                     + "\"intervals\":{\"type\":\"intervals\",\"intervals\":[\"-146136543-09-08T08:23:32.096Z/146140482-04-24T15:36:27.903Z\"]},\"resultFormat\":\"compactedList\",\"columns\":[\"cityName\",\"countryIsoCode\",\"isRobot\",\"regionName\",\"timestamp\"],\"legacy\":false,"
++                                     + "\"context\":{\"sqlInsertSegmentGranularity\":\"\\\"HOUR\\\"\",\"sqlQueryId\":\"dummy\",\"vectorize\":\"false\",\"vectorizeVirtualColumns\":\"false\"},\"granularity\":{\"type\":\"all\"}}], signature=[{isRobot:STRING, timestamp:STRING, cityName:STRING, countryIsoCode:STRING, regionName:STRING}])\n"
++                                     + "  DruidQueryRel(query=[{\"queryType\":\"scan\",\"dataSource\":{\"type\":\"external\",\"inputSource\":{\"type\":\"http\",\"uris\":[\"https://foo.tsv\"]},\"inputFormat\":{\"type\":\"tsv\",\"delimiter\":\"\\t\",\"findColumnsFromHeader\":true},"
++                                     + "\"signature\":[{\"name\":\"Country\",\"type\":\"STRING\"},{\"name\":\"Capital\",\"type\":\"STRING\"},{\"name\":\"ISO3\",\"type\":\"STRING\"},{\"name\":\"ISO2\",\"type\":\"STRING\"}]},\"intervals\":{\"type\":\"intervals\",\"intervals\":[\"-146136543-09-08T08:23:32.096Z/146140482-04-24T15:36:27.903Z\"]},"
++                                     + "\"resultFormat\":\"compactedList\",\"columns\":[\"Capital\",\"ISO2\"],\"legacy\":false,\"context\":{\"sqlInsertSegmentGranularity\":\"\\\"HOUR\\\"\",\"sqlQueryId\":\"dummy\",\"vectorize\":\"false\",\"vectorizeVirtualColumns\":\"false\"},\"granularity\":{\"type\":\"all\"}}], signature=[{Capital:STRING, ISO2:STRING}])\n";
++    // Use testQuery for EXPLAIN (not testIngestionQuery).
++    testQuery(
++        PLANNER_CONFIG_LEGACY_QUERY_EXPLAIN,
++        ImmutableMap.of("sqlQueryId", "dummy"),
++        Collections.emptyList(),
++        sql,
++        CalciteTests.SUPER_USER_AUTH_RESULT,
++        ImmutableList.of(),
++        new DefaultResultsVerifier(
++            ImmutableList.of(
++                new Object[]{
++                    legacyExplanation,
++                    resources,
++                    attributes
++                }
++            ),
++            null
++        ),
++        null
++    );
++
++    // Test correctness of the query when only the CLUSTERED BY clause is present
++    final String explanation = "[{\"query\":{\"queryType\":\"scan\",\"dataSource\":{\"type\":\"join\",\"left\":{\"type\":\"external\",\"inputSource\":{\"type\":\"http\",\"uris\":[\"https://boo.gz\"]},\"inputFormat\":{\"type\":\"json\",\"keepNullColumns\":false,"
++                               + "\"assumeNewlineDelimited\":false,\"useJsonNodeReader\":false},\"signature\":[{\"name\":\"isRobot\",\"type\":\"STRING\"},{\"name\":\"timestamp\",\"type\":\"STRING\"},{\"name\":\"cityName\",\"type\":\"STRING\"},{\"name\":\"countryIsoCode\",\"type\":\"STRING\"},"
++                               + "{\"name\":\"regionName\",\"type\":\"STRING\"}]},\"right\":{\"type\":\"query\",\"query\":{\"queryType\":\"scan\",\"dataSource\":{\"type\":\"external\",\"inputSource\":{\"type\":\"http\",\"uris\":[\"https://foo.tsv\"]},\"inputFormat\":{\"type\":\"tsv\",\"delimiter\":\"\\t\",\"findColumnsFromHeader\":true},"
++                               + "\"signature\":[{\"name\":\"Country\",\"type\":\"STRING\"},{\"name\":\"Capital\",\"type\":\"STRING\"},{\"name\":\"ISO3\",\"type\":\"STRING\"},{\"name\":\"ISO2\",\"type\":\"STRING\"}]},\"intervals\":{\"type\":\"intervals\","
++                               + "\"intervals\":[\"-146136543-09-08T08:23:32.096Z/146140482-04-24T15:36:27.903Z\"]},\"resultFormat\":\"compactedList\",\"columns\":[\"Capital\",\"ISO2\"],\"legacy\":false,\"context\":{\"sqlInsertSegmentGranularity\":\"\\\"HOUR\\\"\",\"sqlQueryId\":\"dummy\",\"vectorize\":\"false\","
++                               + "\"vectorizeVirtualColumns\":\"false\"},\"granularity\":{\"type\":\"all\"}}},\"rightPrefix\":\"j0.\",\"condition\":\"(\\\"countryIsoCode\\\" == \\\"j0.ISO2\\\")\",\"joinType\":\"LEFT\"},\"intervals\":{\"type\":\"intervals\",\"intervals\":[\"-146136543-09-08T08:23:32.096Z/146140482-04-24T15:36:27.903Z\"]},"
++                               + "\"virtualColumns\":[{\"type\":\"expression\",\"name\":\"v0\",\"expression\":\"timestamp_parse(\\\"timestamp\\\",null,'UTC')\",\"outputType\":\"LONG\"}],\"resultFormat\":\"compactedList\",\"orderBy\":[{\"columnName\":\"v0\",\"order\":\"ascending\"},{\"columnName\":\"isRobot\",\"order\":\"ascending\"},"
++                               + "{\"columnName\":\"j0.Capital\",\"order\":\"ascending\"},{\"columnName\":\"regionName\",\"order\":\"ascending\"}],\"columns\":[\"isRobot\",\"j0.Capital\",\"regionName\",\"v0\"],\"legacy\":false,\"context\":{\"sqlInsertSegmentGranularity\":\"\\\"HOUR\\\"\",\"sqlQueryId\":\"dummy\",\"vectorize\":\"false\","
++                               + "\"vectorizeVirtualColumns\":\"false\"},\"granularity\":{\"type\":\"all\"}},\"signature\":[{\"name\":\"v0\",\"type\":\"LONG\"},{\"name\":\"isRobot\",\"type\":\"STRING\"},{\"name\":\"j0.Capital\",\"type\":\"STRING\"},{\"name\":\"regionName\",\"type\":\"STRING\"}],\"columnMappings\":[{\"queryColumn\":\"v0\",\"outputColumn\":\"__time\"},"
++                               + "{\"queryColumn\":\"isRobot\",\"outputColumn\":\"isRobotAlias\"},{\"queryColumn\":\"j0.Capital\",\"outputColumn\":\"countryCapital\"},{\"queryColumn\":\"regionName\",\"outputColumn\":\"regionName\"}]}]";
++
++    testQuery(
++        PLANNER_CONFIG_NATIVE_QUERY_EXPLAIN,
++        ImmutableMap.of("sqlQueryId", "dummy"),
++        Collections.emptyList(),
++        sql,
++        CalciteTests.SUPER_USER_AUTH_RESULT,
++        ImmutableList.of(),
++        new DefaultResultsVerifier(
++            ImmutableList.of(
++                new Object[]{
++                    explanation,
++                    resources,
++                    attributes
++                }
++            ),
++            null
++        ),
++        null
++    );
++
++    // Not using testIngestionQuery, so must set didTest manually to satisfy the check in tearDown.
++    didTest = true;
++  }
++
+   @Test
+   public void testExplainPlanInsertWithClusteredByDescThrowsException()
+   {
+diff --git a/sql/src/test/java/org/apache/druid/sql/calcite/CalciteReplaceDmlTest.java b/sql/src/test/java/org/apache/druid/sql/calcite/CalciteReplaceDmlTest.java
+index 282ea7d825..c4f9503d4c 100644
+--- a/sql/src/test/java/org/apache/druid/sql/calcite/CalciteReplaceDmlTest.java
++++ b/sql/src/test/java/org/apache/druid/sql/calcite/CalciteReplaceDmlTest.java
+@@ -936,6 +936,44 @@ public class CalciteReplaceDmlTest extends CalciteIngestionDmlTest
+         .verify();
+   }
+ 
++  @Test
++  public void testReplaceWithNonExistentOrdinalInClusteredBy()
++  {
++    skipVectorize();
++
++    final String sql = "REPLACE INTO dst"
++                       + " OVERWRITE WHERE __time >= TIMESTAMP '2000-01-01 00:00:00' AND __time < TIMESTAMP '2000-01-02 00:00:00' "
++                       + " SELECT * FROM foo"
++                       + " PARTITIONED BY DAY"
++                       + " CLUSTERED BY 1, 2, 100";
++
++    testIngestionQuery()
++        .sql(sql)
++        .expectValidationError(
++            invalidSqlContains("Ordinal out of range")
++        )
++        .verify();
++  }
++
++  @Test
++  public void testReplaceWithNegativeOrdinalInClusteredBy()
++  {
++    skipVectorize();
++
++    final String sql = "REPLACE INTO dst"
++                       + " OVERWRITE WHERE __time >= TIMESTAMP '2000-01-01 00:00:00' AND __time < TIMESTAMP '2000-01-02 00:00:00' "
++                       + " SELECT * FROM foo"
++                       + " PARTITIONED BY DAY"
++                       + " CLUSTERED BY 1, -2, 3 DESC";
++
++    testIngestionQuery()
++        .sql(sql)
++        .expectValidationError(
++            invalidSqlIs("Ordinal [-2] specified in the CLUSTERED BY clause is invalid. It must be a positive integer.")
++        )
++        .verify();
++  }
++
+   @Test
+   public void testReplaceFromExternalProjectSort()
+   {
+diff --git a/sql/src/test/java/org/apache/druid/sql/calcite/parser/DruidSqlParserUtilsTest.java b/sql/src/test/java/org/apache/druid/sql/calcite/parser/DruidSqlParserUtilsTest.java
+index b47e5bfeaa..4abc210b83 100644
+--- a/sql/src/test/java/org/apache/druid/sql/calcite/parser/DruidSqlParserUtilsTest.java
++++ b/sql/src/test/java/org/apache/druid/sql/calcite/parser/DruidSqlParserUtilsTest.java
+@@ -29,11 +29,10 @@ import org.apache.calcite.sql.SqlKind;
+ import org.apache.calcite.sql.SqlLiteral;
+ import org.apache.calcite.sql.SqlNode;
+ import org.apache.calcite.sql.SqlNodeList;
+-import org.apache.calcite.sql.SqlOrderBy;
+ import org.apache.calcite.sql.SqlPostfixOperator;
+-import org.apache.calcite.sql.SqlSelect;
+ import org.apache.calcite.sql.fun.SqlStdOperatorTable;
+ import org.apache.calcite.sql.parser.SqlParserPos;
++import org.apache.calcite.util.Pair;
+ import org.apache.druid.error.DruidException;
+ import org.apache.druid.error.DruidExceptionMatcher;
+ import org.apache.druid.java.util.common.granularity.Granularities;
+@@ -144,49 +143,47 @@ public class DruidSqlParserUtilsTest
+     @Test
+     public void testNullClusteredBy()
+     {
+-      final SqlNodeList selectArgs = new SqlNodeList(SqlParserPos.ZERO);
+-      selectArgs.add(new SqlIdentifier("__time", new SqlParserPos(0, 1)));
+-      Assert.assertNull(DruidSqlParserUtils.resolveClusteredByColumnsToOutputColumns(
+-          null,
+-          new SqlSelect(SqlParserPos.ZERO, null, selectArgs, null, null, null, null, null, null, null, null)
+-        )
++      final ImmutableList<Pair<Integer, String>> fields = ImmutableList.of(
++          Pair.of(1, "__time"),
++          Pair.of(2, "foo"),
++          Pair.of(3, "bar")
++      );
++      Assert.assertNull(
++          DruidSqlParserUtils.resolveClusteredByColumnsToOutputColumns(
++              null,
++              fields
++          )
+       );
+     }
+ 
+     @Test
+-    public void testNullSource()
++    public void testSimpledClusteredByWithNullSource()
+     {
+       final SqlNodeList args = new SqlNodeList(SqlParserPos.ZERO);
+       args.add(new SqlIdentifier("__time", SqlParserPos.ZERO));
+-      args.add(new SqlIntervalQualifier(TimeUnit.DAY, null, SqlParserPos.ZERO));
+-
+-      IllegalArgumentException iae = Assert.assertThrows(
+-          IllegalArgumentException.class,
+-          () -> DruidSqlParserUtils.resolveClusteredByColumnsToOutputColumns(args, null)
++      args.add(new SqlIdentifier("FOO", new SqlParserPos(0, 2)));
++      SqlBasicCall sqlBasicCall1 = new SqlBasicCall(
++          new SqlAsOperator(),
++          new SqlNode[]{
++              new SqlIdentifier("DIM3", SqlParserPos.ZERO),
++              new SqlIdentifier("DIM3_ALIAS", SqlParserPos.ZERO)
++          },
++          new SqlParserPos(0, 3)
++      );
++      args.add(sqlBasicCall1);
++      Assert.assertEquals(
++          Arrays.asList("__time", "FOO", "DIM3_ALIAS"),
++          DruidSqlParserUtils.resolveClusteredByColumnsToOutputColumns(args, null)
+       );
+-      Assert.assertEquals("Source node must be either SqlSelect or SqlOrderBy, but found [null]", iae.getMessage());
+     }
+ 
+     @Test
+     public void testSimpleClusteredBy()
+     {
+-      final SqlNodeList selectArgs = new SqlNodeList(SqlParserPos.ZERO);
+-      selectArgs.add(new SqlIdentifier("__time", new SqlParserPos(0, 1)));
+-      selectArgs.add(new SqlIdentifier("FOO", new SqlParserPos(0, 2)));
+-      selectArgs.add(new SqlIdentifier("BOO", new SqlParserPos(0, 3)));
+-
+-      final SqlSelect sqlSelect = new SqlSelect(
+-          SqlParserPos.ZERO,
+-          null,
+-          selectArgs,
+-          null,
+-          null,
+-          null,
+-          null,
+-          null,
+-          null,
+-          null,
+-          null
++      final ImmutableList<Pair<Integer, String>> sourceFieldMappings = ImmutableList.of(
++          Pair.of(1, "__time"),
++          Pair.of(2, "FOO"),
++          Pair.of(3, "BOO")
+       );
+ 
+       final SqlNodeList clusteredByArgs = new SqlNodeList(SqlParserPos.ZERO);
+@@ -196,42 +193,7 @@ public class DruidSqlParserUtilsTest
+ 
+       Assert.assertEquals(
+           Arrays.asList("__time", "FOO", "BOO"),
+-          DruidSqlParserUtils.resolveClusteredByColumnsToOutputColumns(clusteredByArgs, sqlSelect)
+-      );
+-    }
+-
+-    @Test
+-    public void testClusteredByOrdinalInvalidThrowsException()
+-    {
+-      final SqlNodeList selectArgs = new SqlNodeList(SqlParserPos.ZERO);
+-      selectArgs.add(new SqlIdentifier("__time", new SqlParserPos(0, 1)));
+-      selectArgs.add(new SqlIdentifier("FOO", new SqlParserPos(0, 2)));
+-      selectArgs.add(new SqlIdentifier("BOO", new SqlParserPos(0, 3)));
+-
+-      final SqlSelect sqlSelect = new SqlSelect(
+-          SqlParserPos.ZERO,
+-          null,
+-          selectArgs,
+-          null,
+-          null,
+-          null,
+-          null,
+-          null,
+-          null,
+-          null,
+-          null
+-      );
+-
+-      final SqlNodeList clusteredByArgs = new SqlNodeList(SqlParserPos.ZERO);
+-      clusteredByArgs.add(new SqlIdentifier("__time", SqlParserPos.ZERO));
+-      clusteredByArgs.add(new SqlIdentifier("FOO", SqlParserPos.ZERO));
+-      clusteredByArgs.add(SqlLiteral.createExactNumeric("4", SqlParserPos.ZERO));
+-
+-      MatcherAssert.assertThat(
+-          Assert.assertThrows(DruidException.class, () -> DruidSqlParserUtils.resolveClusteredByColumnsToOutputColumns(clusteredByArgs, sqlSelect)),
+-          DruidExceptionMatcher.invalidSqlInput().expectMessageIs(
+-              "Ordinal[4] specified in the CLUSTERED BY clause is invalid. It must be between 1 and 3."
+-          )
++          DruidSqlParserUtils.resolveClusteredByColumnsToOutputColumns(clusteredByArgs, sourceFieldMappings)
+       );
+     }
+ 
+@@ -272,18 +234,14 @@ public class DruidSqlParserUtilsTest
+       args3.add(SqlLiteral.createCharString("PT1H", SqlParserPos.ZERO));
+       selectArgs.add(TimeFloorOperatorConversion.SQL_FUNCTION.createCall(args3));
+ 
+-      final SqlSelect sqlSelect = new SqlSelect(
+-          SqlParserPos.ZERO,
+-          null,
+-          selectArgs,
+-          null,
+-          null,
+-          null,
+-          null,
+-          null,
+-          null,
+-          null,
+-          null
++      final ImmutableList<Pair<Integer, String>> sourceFieldMappings = ImmutableList.of(
++          Pair.of(1, "__time"),
++          Pair.of(2, "DIM3"),
++          Pair.of(3, "DIM3_ALIAS"),
++          Pair.of(4, "floor_dim4_time"),
++          Pair.of(5, "DIM5"),
++          Pair.of(5, "DIM6"),
++          Pair.of(7, "TIME_FLOOR(\"timestamps\", 'PT1H')")
+       );
+ 
+       // Construct the clustered by args
+@@ -295,45 +253,7 @@ public class DruidSqlParserUtilsTest
+ 
+       Assert.assertEquals(
+           Arrays.asList("DIM3_ALIAS", "floor_dim4_time", "DIM5", "TIME_FLOOR(\"timestamps\", 'PT1H')"),
+-          DruidSqlParserUtils.resolveClusteredByColumnsToOutputColumns(clusteredByArgs, sqlSelect)
+-      );
+-    }
+-
+-    @Test
+-    public void testSimpleClusteredByWithOrderBy()
+-    {
+-      final SqlNodeList selectArgs = new SqlNodeList(SqlParserPos.ZERO);
+-      selectArgs.add(new SqlIdentifier("__time", new SqlParserPos(0, 1)));
+-      selectArgs.add(new SqlIdentifier("FOO", new SqlParserPos(0, 2)));
+-      selectArgs.add(new SqlIdentifier("BOO", new SqlParserPos(0, 3)));
+-
+-      final SqlSelect sqlSelect = new SqlSelect(
+-          SqlParserPos.ZERO,
+-          null,
+-          selectArgs,
+-          null,
+-          null,
+-          null,
+-          null,
+-          null,
+-          null,
+-          null,
+-          null
+-      );
+-
+-      SqlNodeList orderList = new SqlNodeList(SqlParserPos.ZERO);
+-      orderList.add(sqlSelect);
+-
+-      SqlNode orderByNode = new SqlOrderBy(SqlParserPos.ZERO, sqlSelect, orderList, null, null);
+-
+-      final SqlNodeList clusteredByArgs = new SqlNodeList(SqlParserPos.ZERO);
+-      clusteredByArgs.add(new SqlIdentifier("__time", SqlParserPos.ZERO));
+-      clusteredByArgs.add(new SqlIdentifier("FOO", SqlParserPos.ZERO));
+-      clusteredByArgs.add(SqlLiteral.createExactNumeric("3", SqlParserPos.ZERO));
+-
+-      Assert.assertEquals(
+-          Arrays.asList("__time", "FOO", "BOO"),
+-          DruidSqlParserUtils.resolveClusteredByColumnsToOutputColumns(clusteredByArgs, orderByNode)
++          DruidSqlParserUtils.resolveClusteredByColumnsToOutputColumns(clusteredByArgs, sourceFieldMappings)
+       );
+     }
+   }
+@@ -390,6 +310,24 @@ public class DruidSqlParserUtilsTest
+           .expectMessageIs("Invalid CLUSTERED BY clause [`DIM4` DESC]: cannot sort in descending order.")
+           .assertThrowsAndMatches(() -> DruidSqlParserUtils.validateClusteredByColumns(clusteredByArgs));
+     }
++
++    /**
++     * Tests clause "CLUSTERED BY DIM1, DIM2, 3, -10"
++     */
++    @Test
++    public void testClusteredByColumnsWithNegativeOrdinalThrowsException()
++    {
++      final SqlNodeList clusteredByArgs = new SqlNodeList(SqlParserPos.ZERO);
++      clusteredByArgs.add(new SqlIdentifier("DIM1", SqlParserPos.ZERO));
++      clusteredByArgs.add(new SqlIdentifier("DIM2", SqlParserPos.ZERO));
++      clusteredByArgs.add(new SqlIdentifier("3", SqlParserPos.ZERO));
++      clusteredByArgs.add(SqlLiteral.createExactNumeric("-10", SqlParserPos.ZERO));
++
++      DruidExceptionMatcher
++          .invalidSqlInput()
++          .expectMessageIs("Ordinal [-10] specified in the CLUSTERED BY clause is invalid. It must be a positive integer.")
++          .assertThrowsAndMatches(() -> DruidSqlParserUtils.validateClusteredByColumns(clusteredByArgs));
++    }
+   }
+ 
+   public static class FloorToGranularityConversionErrorsTest

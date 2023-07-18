@@ -1,0 +1,24 @@
+commit d63eff3b1b6b15fac1bb278a784ce6c391a52ce2
+Author: Kashif Faraz <kashif.faraz@gmail.com>
+Date:   Fri Jul 7 13:43:59 2023 +0530
+
+    Reduce contention in HttpRemoteTaskRunner.getKnownTasks() (#14541)
+
+diff --git a/indexing-service/src/main/java/org/apache/druid/indexing/overlord/hrtr/HttpRemoteTaskRunner.java b/indexing-service/src/main/java/org/apache/druid/indexing/overlord/hrtr/HttpRemoteTaskRunner.java
+index 7d0d210736..935f2bc61c 100644
+--- a/indexing-service/src/main/java/org/apache/druid/indexing/overlord/hrtr/HttpRemoteTaskRunner.java
++++ b/indexing-service/src/main/java/org/apache/druid/indexing/overlord/hrtr/HttpRemoteTaskRunner.java
+@@ -1431,11 +1431,10 @@ public class HttpRemoteTaskRunner implements WorkerTaskRunner, TaskLogStreamer
+   }
+ 
+   @Override
++  @SuppressWarnings("GuardedBy") // Read on tasks is safe
+   public Collection<? extends TaskRunnerWorkItem> getKnownTasks()
+   {
+-    synchronized (statusLock) {
+-      return ImmutableList.copyOf(tasks.values());
+-    }
++    return ImmutableList.copyOf(tasks.values());
+   }
+ 
+   @SuppressWarnings("GuardedBy") // Read on tasks is safe

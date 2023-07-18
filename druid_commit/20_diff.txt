@@ -1,0 +1,199 @@
+commit 277b35725619d6d6b63b5c925a72ffb19a37d703
+Author: imply-cheddar <86940447+imply-cheddar@users.noreply.github.com>
+Date:   Thu Jul 6 18:14:23 2023 +0900
+
+    Optimize IntervalIterator (#14530)
+    
+    
+    
+    UniformGranularityTest's test to test a large number of intervals
+    runs through 10 years of 1 second intervals.  This pushes a lot of
+    stuff through IntervalIterator and shows up in terms of test
+    runtime as one of the hottest tests.  Most of the time is going to
+    constructing jodatime objects because it is doing things with
+    DateTime objects instead of millis.  Change the calls to use
+    millis instead and things go faster.
+
+diff --git a/indexing-hadoop/src/test/java/org/apache/druid/indexer/DetermineHashedPartitionsJobTest.java b/indexing-hadoop/src/test/java/org/apache/druid/indexer/DetermineHashedPartitionsJobTest.java
+index d80a60306c..5f7b0157fb 100644
+--- a/indexing-hadoop/src/test/java/org/apache/druid/indexer/DetermineHashedPartitionsJobTest.java
++++ b/indexing-hadoop/src/test/java/org/apache/druid/indexer/DetermineHashedPartitionsJobTest.java
+@@ -47,6 +47,7 @@ import org.junit.runners.Parameterized;
+ 
+ import javax.annotation.Nullable;
+ import java.io.File;
++import java.util.ArrayList;
+ import java.util.Arrays;
+ import java.util.Collection;
+ import java.util.List;
+@@ -57,20 +58,17 @@ public class DetermineHashedPartitionsJobTest
+ {
+   private HadoopDruidIndexerConfig indexerConfig;
+   private int expectedNumTimeBuckets;
+-  private int[] expectedNumOfShards;
++  private ArrayList<Integer> expectedNumOfShards;
+   private int errorMargin;
+ 
+   @Parameterized.Parameters(name = "File={0}, TargetPartitionSize={1}, Interval={2}, ErrorMargin={3}, NumTimeBuckets={4}, NumShards={5}, SegmentGranularity={6}")
+   public static Collection<?> data()
+   {
+-    int[] first = new int[1];
+-    Arrays.fill(first, 13);
+-    int[] second = new int[6];
+-    Arrays.fill(second, 1);
+-    int[] third = new int[6];
+-    Arrays.fill(third, 13);
+-    third[2] = 12;
+-    third[5] = 11;
++    ArrayList<Integer> first = makeListOf(1, 13);
++    ArrayList<Integer> second = makeListOf(6, 1);
++    ArrayList<Integer> third = makeListOf(6, 13);
++    third.set(2, 12);
++    third.set(5, 11);
+ 
+     return Arrays.asList(
+         new Object[][]{
+@@ -144,7 +142,7 @@ public class DetermineHashedPartitionsJobTest
+       String interval,
+       int errorMargin,
+       int expectedNumTimeBuckets,
+-      int[] expectedNumOfShards,
++      ArrayList<Integer> expectedNumOfShards,
+       Granularity segmentGranularity,
+       @Nullable HashPartitionFunction partitionFunction
+   )
+@@ -254,7 +252,7 @@ public class DetermineHashedPartitionsJobTest
+     int i = 0;
+     for (Map.Entry<Long, List<HadoopyShardSpec>> entry : shardSpecs.entrySet()) {
+       Assert.assertEquals(
+-          expectedNumOfShards[i++],
++          expectedNumOfShards.get(i++),
+           entry.getValue().size(),
+           errorMargin
+       );
+@@ -264,4 +262,13 @@ public class DetermineHashedPartitionsJobTest
+       }
+     }
+   }
++
++  private static ArrayList<Integer> makeListOf(int capacity, int value)
++  {
++    ArrayList<Integer> retVal = new ArrayList<>();
++    for (int i = 0; i < capacity; ++i) {
++      retVal.add(value);
++    }
++    return retVal;
++  }
+ }
+diff --git a/processing/src/main/java/org/apache/druid/java/util/common/granularity/Granularity.java b/processing/src/main/java/org/apache/druid/java/util/common/granularity/Granularity.java
+index 6f5d9fb61e..ca307886a7 100644
+--- a/processing/src/main/java/org/apache/druid/java/util/common/granularity/Granularity.java
++++ b/processing/src/main/java/org/apache/druid/java/util/common/granularity/Granularity.java
+@@ -150,6 +150,11 @@ public abstract class Granularity implements Cacheable
+    */
+   public abstract boolean isAligned(Interval interval);
+ 
++  public DateTimeZone getTimeZone()
++  {
++    return DateTimeZone.UTC;
++  }
++
+   public DateTime bucketEnd(DateTime time)
+   {
+     return increment(bucketStart(time));
+@@ -255,21 +260,21 @@ public abstract class Granularity implements Cacheable
+   {
+     private final Interval inputInterval;
+ 
+-    private DateTime currStart;
+-    private DateTime currEnd;
++    private long currStart;
++    private long currEnd;
+ 
+     private IntervalIterator(Interval inputInterval)
+     {
+       this.inputInterval = inputInterval;
+ 
+-      currStart = bucketStart(inputInterval.getStart());
++      currStart = bucketStart(inputInterval.getStartMillis());
+       currEnd = increment(currStart);
+     }
+ 
+     @Override
+     public boolean hasNext()
+     {
+-      return currStart.isBefore(inputInterval.getEnd());
++      return currStart < inputInterval.getEndMillis();
+     }
+ 
+     @Override
+@@ -278,7 +283,7 @@ public abstract class Granularity implements Cacheable
+       if (!hasNext()) {
+         throw new NoSuchElementException("There are no more intervals");
+       }
+-      Interval retVal = new Interval(currStart, currEnd);
++      Interval retVal = new Interval(currStart, currEnd, getTimeZone());
+ 
+       currStart = currEnd;
+       currEnd = increment(currStart);
+diff --git a/processing/src/main/java/org/apache/druid/java/util/common/granularity/IntervalsByGranularity.java b/processing/src/main/java/org/apache/druid/java/util/common/granularity/IntervalsByGranularity.java
+index ea742a4ec8..1e5f0240fd 100644
+--- a/processing/src/main/java/org/apache/druid/java/util/common/granularity/IntervalsByGranularity.java
++++ b/processing/src/main/java/org/apache/druid/java/util/common/granularity/IntervalsByGranularity.java
+@@ -68,14 +68,15 @@ public class IntervalsByGranularity
+       // intervals will be returned, both with the same value 2013-01-01T00:00:00.000Z/2013-02-01T00:00:00.000Z.
+       // Thus dups can be created given the right conditions....
+       final SettableSupplier<Interval> previous = new SettableSupplier<>();
+-      return FluentIterable.from(sortedNonOverlappingIntervals).transformAndConcat(granularity::getIterable)
+-                          .filter(interval -> {
+-                            if (previous.get() != null && previous.get().equals(interval)) {
+-                              return false;
+-                            }
+-                            previous.set(interval);
+-                            return true;
+-                          }).iterator();
++      return FluentIterable.from(sortedNonOverlappingIntervals)
++                           .transformAndConcat(granularity::getIterable)
++                           .filter(interval -> {
++                             if (previous.get() != null && previous.get().equals(interval)) {
++                               return false;
++                             }
++                             previous.set(interval);
++                             return true;
++                           }).iterator();
+     }
+   }
+ }
+diff --git a/processing/src/main/java/org/apache/druid/java/util/common/granularity/PeriodGranularity.java b/processing/src/main/java/org/apache/druid/java/util/common/granularity/PeriodGranularity.java
+index 09960e33cd..4f9acefd28 100644
+--- a/processing/src/main/java/org/apache/druid/java/util/common/granularity/PeriodGranularity.java
++++ b/processing/src/main/java/org/apache/druid/java/util/common/granularity/PeriodGranularity.java
+@@ -79,6 +79,7 @@ public class PeriodGranularity extends Granularity implements JsonSerializable
+     return period;
+   }
+ 
++  @Override
+   @JsonProperty("timeZone")
+   public DateTimeZone getTimeZone()
+   {
+diff --git a/server/src/test/java/org/apache/druid/segment/indexing/granularity/UniformGranularityTest.java b/server/src/test/java/org/apache/druid/segment/indexing/granularity/UniformGranularityTest.java
+index 0c19724883..5ec9577472 100644
+--- a/server/src/test/java/org/apache/druid/segment/indexing/granularity/UniformGranularityTest.java
++++ b/server/src/test/java/org/apache/druid/segment/indexing/granularity/UniformGranularityTest.java
+@@ -27,6 +27,7 @@ import com.google.common.collect.Lists;
+ import org.apache.druid.jackson.DefaultObjectMapper;
+ import org.apache.druid.java.util.common.DateTimes;
+ import org.apache.druid.java.util.common.Intervals;
++import org.apache.druid.java.util.common.granularity.DurationGranularity;
+ import org.apache.druid.java.util.common.granularity.Granularities;
+ import org.apache.druid.java.util.common.granularity.PeriodGranularity;
+ import org.joda.time.Interval;
+@@ -343,7 +344,7 @@ public class UniformGranularityTest
+   {
+     // just make sure that intervals for uniform spec are not materialized (causing OOM) when created
+     final GranularitySpec spec = new UniformGranularitySpec(
+-        Granularities.SECOND,
++        new DurationGranularity(1000, 0),
+         null,
+         Collections.singletonList(
+             Intervals.of("2012-01-01T00Z/P10Y")

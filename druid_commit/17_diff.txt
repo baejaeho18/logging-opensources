@@ -1,0 +1,47 @@
+commit dd78e00dc543609db2c75c23f9546fc46cb86ad8
+Author: Gian Merlino <gianmerlino@gmail.com>
+Date:   Thu Jul 6 15:10:59 2023 -0700
+
+    Fix ColumnSignature error message and jdk17 test issue. (#14538)
+    
+    * Fix ColumnSignature error message and jdk17 test issue.
+    
+    On jdk17, the "problem" part of the error message could change from
+    NullPointerException to:
+    
+      Cannot invoke "String.length()" because "s" is null
+    
+    Due to the new more-helpful NPEs in Java 17. This broke the expectation
+    and led to test failures on this case.
+    
+    This patch fixes the problem by improving the error message so it isn't
+    a generic NullPointerException.
+    
+    * Fix format.
+
+diff --git a/processing/src/main/java/org/apache/druid/segment/column/ColumnSignature.java b/processing/src/main/java/org/apache/druid/segment/column/ColumnSignature.java
+index 62553ddaf4..2ea9f96060 100644
+--- a/processing/src/main/java/org/apache/druid/segment/column/ColumnSignature.java
++++ b/processing/src/main/java/org/apache/druid/segment/column/ColumnSignature.java
+@@ -50,7 +50,7 @@ class ColumnSignature
+ 
+     // Name must be nonnull, but type can be null (if the type is unknown)
+     if (name == null || name.isEmpty()) {
+-      throw new IAE(name, "Column name must be non-empty");
++      throw new IAE("Column name must be provided and non-empty");
+     }
+   }
+ 
+diff --git a/sql/src/test/java/org/apache/druid/sql/calcite/CalciteInsertDmlTest.java b/sql/src/test/java/org/apache/druid/sql/calcite/CalciteInsertDmlTest.java
+index 395543f082..1a19f9ddf7 100644
+--- a/sql/src/test/java/org/apache/druid/sql/calcite/CalciteInsertDmlTest.java
++++ b/sql/src/test/java/org/apache/druid/sql/calcite/CalciteInsertDmlTest.java
+@@ -1638,7 +1638,7 @@ public class CalciteInsertDmlTest extends CalciteIngestionDmlTest
+                                 "general"
+                             )
+                                 .expectMessageContains(
+-                                    "Cannot construct instance of `org.apache.druid.segment.column.ColumnSignature`, problem: `java.lang.NullPointerException`\n"
++                                    "Cannot construct instance of `org.apache.druid.segment.column.ColumnSignature`, problem: Column name must be provided and non-empty"
+                                 )
+                         )
+                         .verify();

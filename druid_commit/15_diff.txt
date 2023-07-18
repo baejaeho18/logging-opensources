@@ -1,0 +1,66 @@
+commit 1fe61bc869924d51a3e3133a5894afb3896640af
+Author: Gian Merlino <gianmerlino@gmail.com>
+Date:   Fri Jul 7 05:54:39 2023 -0700
+
+    ChangeRequestHttpSyncer: Don't wait 1ms when checking isInitialized(). (#14547)
+    
+    The wait doesn't seem to serve a purpose, other than causing delays
+    when checking isInitialized() for a large number of things that have
+    not yet been initialized.
+
+diff --git a/indexing-service/src/main/java/org/apache/druid/indexing/overlord/hrtr/WorkerHolder.java b/indexing-service/src/main/java/org/apache/druid/indexing/overlord/hrtr/WorkerHolder.java
+index a8fc530604..5e581d815c 100644
+--- a/indexing-service/src/main/java/org/apache/druid/indexing/overlord/hrtr/WorkerHolder.java
++++ b/indexing-service/src/main/java/org/apache/druid/indexing/overlord/hrtr/WorkerHolder.java
+@@ -346,13 +346,7 @@ public class WorkerHolder
+ 
+   public boolean isInitialized()
+   {
+-    try {
+-      return syncer.isInitialized();
+-    }
+-    catch (InterruptedException ignored) {
+-      Thread.currentThread().interrupt();
+-      return false;
+-    }
++    return syncer.isInitialized();
+   }
+ 
+   public boolean isEnabled()
+diff --git a/server/src/main/java/org/apache/druid/client/HttpServerInventoryView.java b/server/src/main/java/org/apache/druid/client/HttpServerInventoryView.java
+index ebc6752794..2c30c16813 100644
+--- a/server/src/main/java/org/apache/druid/client/HttpServerInventoryView.java
++++ b/server/src/main/java/org/apache/druid/client/HttpServerInventoryView.java
+@@ -571,12 +571,7 @@ public class HttpServerInventoryView implements ServerInventoryView, FilteredSer
+ 
+     boolean isSyncedSuccessfullyAtleastOnce()
+     {
+-      try {
+-        return syncer.isInitialized();
+-      }
+-      catch (InterruptedException ex) {
+-        throw new ISE(ex, "Interrupted while waiting for first sync with server[%s].", druidServer.getName());
+-      }
++      return syncer.isInitialized();
+     }
+ 
+     private ChangeRequestHttpSyncer.Listener<DataSegmentChangeRequest> createSyncListener()
+diff --git a/server/src/main/java/org/apache/druid/server/coordination/ChangeRequestHttpSyncer.java b/server/src/main/java/org/apache/druid/server/coordination/ChangeRequestHttpSyncer.java
+index 8af89425ae..2d256b6880 100644
+--- a/server/src/main/java/org/apache/druid/server/coordination/ChangeRequestHttpSyncer.java
++++ b/server/src/main/java/org/apache/druid/server/coordination/ChangeRequestHttpSyncer.java
+@@ -172,11 +172,11 @@ public class ChangeRequestHttpSyncer<T>
+   }
+ 
+   /**
+-   * Waits upto 1 millisecond for the first successful sync with this server.
++   * Whether this server has been synced successfully at least once.
+    */
+-  public boolean isInitialized() throws InterruptedException
++  public boolean isInitialized()
+   {
+-    return initializationLatch.await(1, TimeUnit.MILLISECONDS);
++    return initializationLatch.getCount() == 0;
+   }
+ 
+   /**
